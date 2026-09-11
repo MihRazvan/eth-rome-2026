@@ -41,6 +41,8 @@ The comparable-product research also found discrepancies between documentation a
 
 `npm run preflight` checks configuration and permitted read-only network facts without printing secrets or publishing records. A result can be blocked or still unverified; it cannot certify the full live lifecycle. The repository-local `$exit-verify` skill packages the existing acceptance workflow and the new privacy lessons for future sessions.
 
+The [human test guide](../USER-TEST.md) separates user comprehension from chain correctness and includes private-role and outage recovery tasks.
+
 The next live experiment remains the funded Fuji lifecycle with public offers, a custom private quote and outsider observation, followed by actual Arkiv publication/native expiry and Swarm upload/independent retrieval. Measure successful exact payment, ownership, collection, quote invalidity and private-data exposure. Distinguish user comprehension from protocol correctness: ask a tester to explain what transfers, why a stale offer cannot execute, what their remaining exposure is and which information becomes public.
 
 Useful subsequent experiments are larger claim/offer sets, mobile wallet event behavior, pending-transaction recovery after a tab closes, device storage eviction, provider rate limits and a carefully reviewed production content-security policy. These remain separate from passed checks. New sources require complete admission evidence before entering the market.

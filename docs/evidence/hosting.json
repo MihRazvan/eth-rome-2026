@@ -1,17 +1,19 @@
 {
-  "observedAt": "2026-09-11T17:21:07.814845+00:00",
+  "observedAt": "2026-09-11T20:09:18.503754+00:00",
   "provider": "Vercel",
   "project": "exit-ethrome-2026",
-  "sourceImplementationCommit": "d7ed34cc662fa1ddb48a5f197992b39a362a62f2",
-  "deploymentId": "dpl_F7731cVjeRwfG6D5JvHetFotuQbi",
+  "sourceImplementationCommit": "c8ce819b3b867e25b6916f22a3d98d451049ad09",
+  "deploymentId": "dpl_8HFxZ58fsMvq1nHrMwmQ1K6RFbvD",
   "readyState": "READY",
   "url": "https://exit-ethrome-2026.vercel.app/?preview=1",
   "scope": "Explicit static visual fixture preview; no hosted chain trading API",
   "browserVerified": {
     "status": 200,
     "previewLabel": true,
+    "economicsComparisonVisible": true,
     "pageErrors": [],
-    "defaultUnavailableWithoutFixtureFallback": true
+    "defaultUnavailableWithoutFixtureFallback": true,
+    "defaultShowsExplicitError": true
   },
   "livePublicTrading": "blocked: funded Fuji accounts and Arkiv/Swarm write resources missing"
 }

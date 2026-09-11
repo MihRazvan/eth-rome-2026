@@ -14,7 +14,7 @@ To load a project `.env` explicitly with the required Node runtime:
 node --env-file-if-exists=.env --import tsx scripts/preflight.ts
 ```
 
-The integrator owns the optional npm script. Default manifest is `deployments/fuji.json`; `EXIT_DEPLOYMENT` can override it. Local-chain manifests are rejected for this live-test check. An unavailable manifest blocks lifecycle readiness while independent sponsor and RPC reads continue.
+The integrated command is `npm run preflight` (loads `.env` if present). Default manifest is `deployments/fuji.json`; `EXIT_DEPLOYMENT` can override it. Local-chain manifests are rejected for this live-test check. An unavailable manifest blocks lifecycle readiness while independent sponsor and RPC reads continue.
 
 Checks cover valid secp256k1 scalars; four distinct deployer/maker addresses; manifest maker matching; nonzero distinct contract addresses; public manifest RPC shape; actual Fuji/Tiramisu chain IDs; configured signer native balances; deployed bytecode existence; an Arkiv offer query; postage identifier syntax; configured upload and retrieval endpoints; and GET health responses. Dependent balance, code and Arkiv queries do not execute against a mismatched chain.
 
@@ -31,3 +31,5 @@ Reports contain only fixed diagnostic messages, public addresses, observed balan
 - `npx tsx scripts/preflight.ts`: actual read-only run at **19:48:08 UTC**, exit code **1**, overall **blocked**. Fuji chain **43113** and Arkiv Tiramisu **7738577** observed; Arkiv offer-index first page succeeded; Swarm retrieval health endpoint reachable. Process environment had no configured five signer keys, upload endpoint or postage batch, and no Fuji deployment manifest was available in this isolated worktree. No signer balances or deployed code could therefore be checked. No live write, bytes round-trip or native expiry verification occurred.
 
 No new credentials were generated, loaded from wallet storage or printed. No network mutation was performed. The research branch contains no `.env` change or root configuration change.
+
+The integrator reran `npm run preflight` at 19:52:35 UTC with the same blocked result. The redacted [actual report](preflight-integrated.json) preserves the observed reads and missing resources. No writes occurred.
