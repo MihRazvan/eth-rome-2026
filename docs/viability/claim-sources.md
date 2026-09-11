@@ -76,14 +76,20 @@ Neither preferred native claim exists on Avalanche merely because a representati
 
 ## Verification and restart
 
-[NativeClaimAdmission.t.sol](../../packages/source/test/NativeClaimAdmission.t.sol) passed **2/2** pinned local-fork tests. They impersonate the *existing* owners of pending Lido #135118 and ether.fi #82521, transfer to a buyer, check unchanged request economics, reject former-owner transfers and premature claims, then transfer again. Lido's stored original timestamp remains unchanged. No time, source liquidity, balances, rates or operators are modified. This proves those examples' transfer eligibility, not funded sale, callback-safe settlement, every owner's contract authority, or production source admission.
+[NativeClaimAdmission.t.sol](../../packages/source/test/NativeClaimAdmission.t.sol) now passes **4/4** pinned local-fork tests with **RPC storage caching disabled**. Two impersonate the existing owners of pending Lido #135118 and ether.fi #82521, transfer to a buyer, check unchanged request economics, reject former-owner transfers and exact source-specific premature-claim errors, then transfer again. Lido's stored original timestamp remains unchanged.
+
+Two positive controls acquire **already-finalized** Lido #135117 and ether.fi #82510 and collect actual fork ETH to the new owner. Lido pays exactly **1,000 ETH** and rejects the previous owner's collection with `NotOwner(previousOwner, buyer)`. Ether.fi intentionally allows the previous owner to *service* the request, while paying its full 369.547734083722800740 ETH to the current owner. Both controls check exact recipient balance changes, full consumption, burned NFT ownership queries, zero subsequent claimable value and rejected repeat collection. No time, source liquidity, balances, rates or operators are overridden. These controls prove native whole-collection behavior for the examples, not funded sale, callback-safe settlement, every owner's contract authority, or public onchain EXIT settlement. [Collection traces](probes/claims-collection-trace.txt), [four-test results](probes/claims-fork-results.json).
+
+**ABI verification:** the official Lido single-claim method is `claimWithdrawal(uint256)`, which finds its checkpoint internally; its batch methods take hint arrays. The existing selector was valid. The strengthened pending test requires `RequestNotFoundOrNotFinalized(135118)`, and ether.fi requires `RequestNotFinalized()`, eliminating a generic-revert false positive. [Lido implementation source](https://github.com/lidofinance/core/blob/2da0f48f1a2a103a394dcf8760810fe9165697fb/contracts/0.8.9/WithdrawalQueue.sol), [Lido errors and claim checks](https://github.com/lidofinance/core/blob/2da0f48f1a2a103a394dcf8760810fe9165697fb/contracts/0.8.9/WithdrawalQueueBase.sol).
+
+The initial Publicnode rerun passed the two cached pending controls but failed the new collection controls with archive-access HTTP403; that run is **not** collection evidence. The completed four-test run uses public `https://eth.drpc.org`, `--no-storage-caching`, and the exact original block. `EXIT_NATIVE_FORK_RPC` can explicitly override the endpoint; failures must remain visible. Original state observations retain their original Publicnode/Flashbots attribution.
 
 Reproduce from this repository with Python 3 and Foundry installed:
 
 ```sh
 python3 docs/viability/probes/claims-probe.py 25956536 > docs/viability/probes/claims-observations.json
 python3 docs/viability/probes/claims-enrich.py
-FOUNDRY_TEST=packages/source/test forge test --contracts packages/source --match-path packages/source/test/NativeClaimAdmission.t.sol -vv
+FOUNDRY_TEST=packages/source/test forge test --contracts packages/source --match-path packages/source/test/NativeClaimAdmission.t.sol --no-storage-caching -vv
 ```
 
 Dependencies use the project's existing installation. RPC historical access may change; preserve failures and never replace them with fixture results. The source inventory records inspection depth, immutable repository references where available, unresolved deployment/code equivalence and the exact observations needed for a restart.

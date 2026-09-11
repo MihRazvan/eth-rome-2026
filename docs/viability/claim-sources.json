@@ -116,6 +116,18 @@
       "url": "https://makina.finance/strategy/0x165afd0b156355D9D51e9E6Ab317a96787Fb6271",
       "authority": "primary protocol documentation/code or operator firsthand report",
       "inspection": "Targeted search-index extraction of officialpage, crawled2daysago; directwebopen returned shell and urllib403. Attribution evidence, not freshTVL/APY or buyerinterest."
+    },
+    {
+      "id": "lido-single-claim-code",
+      "url": "https://github.com/lidofinance/core/blob/2da0f48f1a2a103a394dcf8760810fe9165697fb/contracts/0.8.9/WithdrawalQueue.sol",
+      "authority": "primary protocol code",
+      "inspection": "Verified claimWithdrawal(uint256) computes checkpoint internally; exact pending failure and positive finalized collection executed on uncached pinned fork."
+    },
+    {
+      "id": "lido-claim-checks",
+      "url": "https://github.com/lidofinance/core/blob/2da0f48f1a2a103a394dcf8760810fe9165697fb/contracts/0.8.9/WithdrawalQueueBase.sol",
+      "authority": "primary protocol code",
+      "inspection": "Verified exact pending, owner and already-claimed errors against actual fork execution."
     }
   ],
   "nativeCandidates": [
@@ -146,14 +158,37 @@
   },
   "fork": {
     "file": "packages/source/test/NativeClaimAdmission.t.sol",
-    "passed": 2,
+    "passed": 4,
     "failed": 0,
     "skipped": 0,
-    "command": "FOUNDRY_TEST=packages/source/test forge test --contracts packages/source --match-path packages/source/test/NativeClaimAdmission.t.sol -vv",
-    "overrides": "Localownerimpersonation only. No sourcebalances, tokenrates, timestamps, finalizations, publictx or paymentsettlement.",
+    "command": "FOUNDRY_TEST=packages/source/test forge test --contracts packages/source --match-path packages/source/test/NativeClaimAdmission.t.sol --no-storage-caching -vv",
+    "overrides": "Local owner/caller impersonation only. No source balances, token rates, timestamps, operator finalization, public transaction or payment settlement.",
     "claimIds": {
-      "lido": 135118,
-      "etherfi": 82521
+      "pending": {
+        "lido": 135118,
+        "etherfi": 82521
+      },
+      "alreadyFinalized": {
+        "lido": 135117,
+        "etherfi": 82510
+      }
+    },
+    "rpc": "https://eth.drpc.org",
+    "rpcStorageCaching": false,
+    "collection": {
+      "etherfiPaidWei": "369547734083722800740",
+      "lidoPayment": "Exact getClaimableEther quote compared to recipient balance delta and locked ETH depletion. See saved trace for amount.",
+      "residual": "Both NFTs burned, source claim consumed, repeated claim rejected.",
+      "publicEXITSettlement": false,
+      "lidoPaidWei": "1000000000000000000000"
+    },
+    "initialRerunFailure": "Publicnode archive403 for new collection slots; two cached pending tests passed, not counted as collection evidence.",
+    "abiVerification": {
+      "lidoSingleClaim": "claimWithdrawal(uint256)",
+      "lidoPendingError": "RequestNotFoundOrNotFinalized(uint256)",
+      "lidoPendingSelector": "0x4ae50228",
+      "etherfiPendingError": "RequestNotFinalized()",
+      "etherfiPendingSelector": "0xd399e3e5"
     }
   },
   "notProven": [

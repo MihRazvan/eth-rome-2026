@@ -1,0 +1,211 @@
+No files changed, compilation skipped
+2026-09-11T20:48:10.100326Z  WARN evm::traces::external: etherscan config not found
+
+Ran 2 tests for packages/source/test/NativeClaimAdmission.t.sol:NativeClaimAdmissionTest
+[PASS] testAlreadyFinalizedEtherfiServicingPaysBuyerAndBurnsWholeNFT() (gas: 217459)
+Traces:
+  [246959] NativeClaimAdmissionTest::testAlreadyFinalizedEtherfiServicingPaysBuyerAndBurnsWholeNFT()
+    ├─ [7485] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::ownerOf(82510 [8.251e4]) [staticcall]
+    │   ├─ [2599] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::ownerOf(82510 [8.251e4]) [delegatecall]
+    │   │   └─ ← [Return] 0xD5F61bFd890169c28858039f6b6c9b517407C852
+    │   └─ ← [Return] 0xD5F61bFd890169c28858039f6b6c9b517407C852
+    ├─ [3392] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::getRequest(82510 [8.251e4]) [staticcall]
+    │   ├─ [2994] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::getRequest(82510 [8.251e4]) [delegatecall]
+    │   │   └─ ← [Return] Request({ amount: 369547734083722800740 [3.695e20], shares: 334926042245342710148 [3.349e20], valid: true, feeGwei: 0 })
+    │   └─ ← [Return] Request({ amount: 369547734083722800740 [3.695e20], shares: 334926042245342710148 [3.349e20], valid: true, feeGwei: 0 })
+    ├─ [2908] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::isFinalized(82510 [8.251e4]) [staticcall]
+    │   ├─ [2522] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::isFinalized(82510 [8.251e4]) [delegatecall]
+    │   │   └─ ← [Return] true
+    │   └─ ← [Return] true
+    ├─ [24258] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::getClaimableAmount(82510 [8.251e4]) [staticcall]
+    │   ├─ [23872] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::getClaimableAmount(82510 [8.251e4]) [delegatecall]
+    │   │   └─ ← [Return] 369547734083722800740 [3.695e20]
+    │   └─ ← [Return] 369547734083722800740 [3.695e20]
+    ├─ [0] VM::prank(0xD5F61bFd890169c28858039f6b6c9b517407C852)
+    │   └─ ← [Return]
+    ├─ [51913] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::transferFrom(0xD5F61bFd890169c28858039f6b6c9b517407C852, 0x0000000000000000000000000000000000000B0b, 82510 [8.251e4])
+    │   ├─ [51521] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::transferFrom(0xD5F61bFd890169c28858039f6b6c9b517407C852, 0x0000000000000000000000000000000000000B0b, 82510 [8.251e4]) [delegatecall]
+    │   │   ├─ [7455] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0xD5F61bFd890169c28858039f6b6c9b517407C852) [staticcall]
+    │   │   │   ├─ [2581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0xD5F61bFd890169c28858039f6b6c9b517407C852) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [2955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0x0000000000000000000000000000000000000B0b) [staticcall]
+    │   │   │   ├─ [2581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0x0000000000000000000000000000000000000B0b) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0xD5F61bFd890169c28858039f6b6c9b517407C852) [staticcall]
+    │   │   │   ├─ [581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0xD5F61bFd890169c28858039f6b6c9b517407C852) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ emit Transfer(from: 0xD5F61bFd890169c28858039f6b6c9b517407C852, to: 0x0000000000000000000000000000000000000B0b, value: 82510 [8.251e4])
+    │   │   └─ ← [Stop]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0xD5F61bFd890169c28858039f6b6c9b517407C852)
+    │   └─ ← [Return]
+    ├─ [126891] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::claimWithdraw(82510 [8.251e4])
+    │   ├─ [126508] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::claimWithdraw(82510 [8.251e4]) [delegatecall]
+    │   │   ├─ [955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0xD5F61bFd890169c28858039f6b6c9b517407C852) [staticcall]
+    │   │   │   ├─ [581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0xD5F61bFd890169c28858039f6b6c9b517407C852) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0x0000000000000000000000000000000000000B0b) [staticcall]
+    │   │   │   ├─ [581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0x0000000000000000000000000000000000000B0b) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0xD5F61bFd890169c28858039f6b6c9b517407C852) [staticcall]
+    │   │   │   ├─ [581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0xD5F61bFd890169c28858039f6b6c9b517407C852) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [2955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0x0000000000000000000000000000000000000000) [staticcall]
+    │   │   │   ├─ [2581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0x0000000000000000000000000000000000000000) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0x0000000000000000000000000000000000000B0b) [staticcall]
+    │   │   │   ├─ [581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0x0000000000000000000000000000000000000B0b) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ emit Transfer(from: 0x0000000000000000000000000000000000000B0b, to: 0x0000000000000000000000000000000000000000, value: 82510 [8.251e4])
+    │   │   ├─ [61504] 0x308861A430be4cce5502d0A12724771Fc6DaF216::withdraw(369547734083722800740 [3.695e20], 334926042245342710148 [3.349e20])
+    │   │   │   ├─ [56618] 0x17A16747D03006c9754548AC0d0afF48783A4a45::withdraw(369547734083722800740 [3.695e20], 334926042245342710148 [3.349e20]) [delegatecall]
+    │   │   │   │   ├─ [47477] 0x35fA164735182de50811E8e2E824cFb9B6118ac2::burnShares(0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c, 334926042245342710148 [3.349e20])
+    │   │   │   │   │   ├─ [42591] 0xd1901dD36CBf4a81386d0162DF2707f7dDb60527::burnShares(0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c, 334926042245342710148 [3.349e20]) [delegatecall]
+    │   │   │   │   │   │   ├─ [2955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c) [staticcall]
+    │   │   │   │   │   │   │   ├─ [2581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c) [delegatecall]
+    │   │   │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   │   │   ├─ [2539] 0x308861A430be4cce5502d0A12724771Fc6DaF216::amountForShare(334926042245342710148 [3.349e20]) [staticcall]
+    │   │   │   │   │   │   │   ├─ [2153] 0x17A16747D03006c9754548AC0d0afF48783A4a45::amountForShare(334926042245342710148 [3.349e20]) [delegatecall]
+    │   │   │   │   │   │   │   │   ├─ [767] 0x35fA164735182de50811E8e2E824cFb9B6118ac2::totalShares() [staticcall]
+    │   │   │   │   │   │   │   │   │   ├─ [384] 0xd1901dD36CBf4a81386d0162DF2707f7dDb60527::totalShares() [delegatecall]
+    │   │   │   │   │   │   │   │   │   │   └─ ← [Return] 0x00000000000000000000000000000000000000000001a9f213a8921518d943f5
+    │   │   │   │   │   │   │   │   │   └─ ← [Return] 0x00000000000000000000000000000000000000000001a9f213a8921518d943f5
+    │   │   │   │   │   │   │   │   └─ ← [Return] 0x00000000000000000000000000000000000000000000001408ea94c760f999eb
+    │   │   │   │   │   │   │   └─ ← [Return] 0x00000000000000000000000000000000000000000000001408ea94c760f999eb
+    │   │   │   │   │   │   ├─ [14163] 0x6C7c54cfC2225fA985cD25F04d923B93c60a02F8::consumeToken(0x31f08af9e3989e3dfc1bd83bcdc0b63dc1946a46e598156f6fe782a61dab3ebd, 369577370956 [3.695e11])
+    │   │   │   │   │   │   │   ├─ [9286] 0x9Ea4D0Fd09B628E23B1998F2153e27E5261B1B67::consumeToken(0x31f08af9e3989e3dfc1bd83bcdc0b63dc1946a46e598156f6fe782a61dab3ebd, 369577370956 [3.695e11]) [delegatecall]
+    │   │   │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   │   │   ├─ emit Transfer(from: 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c, to: 0x0000000000000000000000000000000000000000, value: 369577370955091122667 [3.695e20])
+    │   │   │   │   │   │   ├─ emit TransferShares(param0: 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c, param1: 0x0000000000000000000000000000000000000000, param2: 334926042245342710148 [3.349e20])
+    │   │   │   │   │   │   └─ ← [Stop]
+    │   │   │   │   │   └─ ← [Return]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   ├─ [0] 0x0000000000000000000000000000000000000B0b::fallback{value: 369547734083722800740}()
+    │   │   │   └─ ← [Stop]
+    │   │   ├─ emit WithdrawRequestClaimed(param0: 369547734083722800740 [3.695e20], param1: 334926042245342710148 [3.349e20], param2: 2827, param3: 0x000000000000000000000000000000000001424e)
+    │   │   └─ ← [Stop]
+    │   └─ ← [Return]
+    ├─ [1392] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::getRequest(82510 [8.251e4]) [staticcall]
+    │   ├─ [994] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::getRequest(82510 [8.251e4]) [delegatecall]
+    │   │   └─ ← [Return] Request({ amount: 0, shares: 0, valid: false, feeGwei: 0 })
+    │   └─ ← [Return] Request({ amount: 0, shares: 0, valid: false, feeGwei: 0 })
+    ├─ [6271] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::getClaimableAmount(82510 [8.251e4]) [staticcall]
+    │   ├─ [5885] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::getClaimableAmount(82510 [8.251e4]) [delegatecall]
+    │   │   └─ ← [Return] 0
+    │   └─ ← [Return] 0
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3: 0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006408c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000184552433732313a20696e76616c696420746f6b656e204944000000000000000000000000000000000000000000000000000000000000000000000000)
+    │   └─ ← [Return]
+    ├─ [1017] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::ownerOf(82510 [8.251e4]) [staticcall]
+    │   ├─ [618] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::ownerOf(82510 [8.251e4]) [delegatecall]
+    │   │   └─ ← [Revert] ERC721: invalid token ID
+    │   └─ ← [Revert] ERC721: invalid token ID
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3: 0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000006408c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000184552433732313a20696e76616c696420746f6b656e204944000000000000000000000000000000000000000000000000000000000000000000000000)
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000B0b)
+    │   └─ ← [Return]
+    ├─ [2629] 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c::claimWithdraw(82510 [8.251e4])
+    │   ├─ [2230] 0x41617D01362770ebAAC10311aB899FBc8a4E4A7E::claimWithdraw(82510 [8.251e4]) [delegatecall]
+    │   │   ├─ [955] 0x5585996E7cFE95f2D99e61168B8b35C66Ff99B18::nonBlacklisted(0x0000000000000000000000000000000000000B0b) [staticcall]
+    │   │   │   ├─ [581] 0xBC870C47c6eB10009A0720e76F166f104C124ecF::nonBlacklisted(0x0000000000000000000000000000000000000B0b) [delegatecall]
+    │   │   │   │   └─ ← [Stop]
+    │   │   │   └─ ← [Return]
+    │   │   └─ ← [Revert] ERC721: invalid token ID
+    │   └─ ← [Revert] ERC721: invalid token ID
+    ├─ emit NativeCollectionProof(source: 0x7d5706f6ef3F89B3951E23e557CDFBC3239D4E2c, id: 82510 [8.251e4], paidWei: 369547734083722800740 [3.695e20])
+    └─ ← [Return]
+
+[PASS] testAlreadyFinalizedLidoCollectsActualETHToBuyerAndBurnsWholeNFT() (gas: 182888)
+Traces:
+  [233876] NativeClaimAdmissionTest::testAlreadyFinalizedLidoCollectsActualETHToBuyerAndBurnsWholeNFT()
+    ├─ [21146] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::getWithdrawalStatus([135117 [1.351e5]]) [staticcall]
+    │   ├─ [16024] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::getWithdrawalStatus([135117 [1.351e5]]) [delegatecall]
+    │   │   └─ ← [Return] [Status({ amount: 1000000000000000000000 [1e21], shares: 804193128911326291078 [8.041e20], owner: 0x176F3DAb24a159341c0509bB36B833E7fdd0a132, timestamp: 1788805247 [1.788e9], finalized: true, claimed: false })]
+    │   └─ ← [Return] [Status({ amount: 1000000000000000000000 [1e21], shares: 804193128911326291078 [8.041e20], owner: 0x176F3DAb24a159341c0509bB36B833E7fdd0a132, timestamp: 1788805247 [1.788e9], finalized: true, claimed: false })]
+    ├─ [2976] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::getLastCheckpointIndex() [staticcall]
+    │   ├─ [2420] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::getLastCheckpointIndex() [delegatecall]
+    │   │   └─ ← [Return] 1215
+    │   └─ ← [Return] 1215
+    ├─ [5033] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::findCheckpointHints([135117 [1.351e5]], 1, 1215) [staticcall]
+    │   ├─ [4447] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::findCheckpointHints([135117 [1.351e5]], 1, 1215) [delegatecall]
+    │   │   └─ ← [Return] [1215]
+    │   └─ ← [Return] [1215]
+    ├─ [9074] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::getClaimableEther([135117 [1.351e5]], [1215]) [staticcall]
+    │   ├─ [8461] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::getClaimableEther([135117 [1.351e5]], [1215]) [delegatecall]
+    │   │   └─ ← [Return] [1000000000000000000000 [1e21]]
+    │   └─ ← [Return] [1000000000000000000000 [1e21]]
+    ├─ [0] VM::prank(0x176F3DAb24a159341c0509bB36B833E7fdd0a132)
+    │   └─ ← [Return]
+    ├─ [102523] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::transferFrom(0x176F3DAb24a159341c0509bB36B833E7fdd0a132, 0x0000000000000000000000000000000000000B0b, 135117 [1.351e5])
+    │   ├─ [101958] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::transferFrom(0x176F3DAb24a159341c0509bB36B833E7fdd0a132, 0x0000000000000000000000000000000000000B0b, 135117 [1.351e5]) [delegatecall]
+    │   │   ├─ emit Transfer(from: 0x176F3DAb24a159341c0509bB36B833E7fdd0a132, to: 0x0000000000000000000000000000000000000B0b, value: 135117 [1.351e5])
+    │   │   └─ ← [Stop]
+    │   └─ ← [Return]
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3: 0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004423295f0e000000000000000000000000176f3dab24a159341c0509bb36b833e7fdd0a1320000000000000000000000000000000000000000000000000000000000000b0b00000000000000000000000000000000000000000000000000000000)
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x176F3DAb24a159341c0509bB36B833E7fdd0a132)
+    │   └─ ← [Return]
+    ├─ [2912] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::claimWithdrawal(135117 [1.351e5])
+    │   ├─ [2325] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::claimWithdrawal(135117 [1.351e5]) [delegatecall]
+    │   │   └─ ← [Revert] NotOwner(0x176F3DAb24a159341c0509bB36B833E7fdd0a132, 0x0000000000000000000000000000000000000B0b)
+    │   └─ ← [Revert] NotOwner(0x176F3DAb24a159341c0509bB36B833E7fdd0a132, 0x0000000000000000000000000000000000000B0b)
+    ├─ [3039] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::getLockedEtherAmount() [staticcall]
+    │   ├─ [2462] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::getLockedEtherAmount() [delegatecall]
+    │   │   └─ ← [Return] 29925057829138065979138 [2.992e22]
+    │   └─ ← [Return] 29925057829138065979138 [2.992e22]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000B0b)
+    │   └─ ← [Return]
+    ├─ [47988] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::claimWithdrawal(135117 [1.351e5])
+    │   ├─ [47411] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::claimWithdrawal(135117 [1.351e5]) [delegatecall]
+    │   │   ├─ [0] 0x0000000000000000000000000000000000000B0b::fallback{value: 1000000000000000000000}()
+    │   │   │   └─ ← [Stop]
+    │   │   ├─  emit topic 0: 0x6ad26c5e238e7d002799f9a5db07e81ef14e37386ae03496d7a7ef04713e145b
+    │   │   │        topic 1: 0x0000000000000000000000000000000000000000000000000000000000020fcd
+    │   │   │        topic 2: 0x0000000000000000000000000000000000000000000000000000000000000b0b
+    │   │   │        topic 3: 0x0000000000000000000000000000000000000000000000000000000000000b0b
+    │   │   │           data: 0x00000000000000000000000000000000000000000000003635c9adc5dea00000
+    │   │   ├─ emit Transfer(from: 0x0000000000000000000000000000000000000B0b, to: 0x0000000000000000000000000000000000000000, value: 135117 [1.351e5])
+    │   │   └─ ← [Stop]
+    │   └─ ← [Return]
+    ├─ [1039] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::getLockedEtherAmount() [staticcall]
+    │   ├─ [462] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::getLockedEtherAmount() [delegatecall]
+    │   │   └─ ← [Return] 28925057829138065979138 [2.892e22]
+    │   └─ ← [Return] 28925057829138065979138 [2.892e22]
+    ├─ [4646] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::getWithdrawalStatus([135117 [1.351e5]]) [staticcall]
+    │   ├─ [4024] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::getWithdrawalStatus([135117 [1.351e5]]) [delegatecall]
+    │   │   └─ ← [Return] [Status({ amount: 1000000000000000000000 [1e21], shares: 804193128911326291078 [8.041e20], owner: 0x0000000000000000000000000000000000000B0b, timestamp: 1788805247 [1.788e9], finalized: true, claimed: true })]
+    │   └─ ← [Return] [Status({ amount: 1000000000000000000000 [1e21], shares: 804193128911326291078 [8.041e20], owner: 0x0000000000000000000000000000000000000B0b, timestamp: 1788805247 [1.788e9], finalized: true, claimed: true })]
+    ├─ [2905] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::getClaimableEther([135117 [1.351e5]], [1215]) [staticcall]
+    │   ├─ [2292] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::getClaimableEther([135117 [1.351e5]], [1215]) [delegatecall]
+    │   │   └─ ← [Return] [0]
+    │   └─ ← [Return] [0]
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3: 00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000024f0e0cc2d0000000000000000000000000000000000000000000000000000000000020fcd00000000000000000000000000000000000000000000000000000000)
+    │   └─ ← [Return]
+    ├─ [1439] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::ownerOf(135117 [1.351e5]) [staticcall]
+    │   ├─ [876] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::ownerOf(135117 [1.351e5]) [delegatecall]
+    │   │   └─ ← [Revert] RequestAlreadyClaimed(135117 [1.351e5])
+    │   └─ ← [Revert] RequestAlreadyClaimed(135117 [1.351e5])
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3: 00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000024f0e0cc2d0000000000000000000000000000000000000000000000000000000000020fcd00000000000000000000000000000000000000000000000000000000)
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000B0b)
+    │   └─ ← [Return]
+    ├─ [2619] 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1::claimWithdrawal(135117 [1.351e5])
+    │   ├─ [2035] 0xE42C659Dc09109566720EA8b2De186c2Be7D94D9::claimWithdrawal(135117 [1.351e5]) [delegatecall]
+    │   │   └─ ← [Revert] RequestAlreadyClaimed(135117 [1.351e5])
+    │   └─ ← [Revert] RequestAlreadyClaimed(135117 [1.351e5])
+    ├─ emit NativeCollectionProof(source: 0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1, id: 135117 [1.351e5], paidWei: 1000000000000000000000 [1e21])
+    └─ ← [Return]
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 3.95s (5.10s CPU time)
+
+Ran 1 test suite in 4.22s (3.95s CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
