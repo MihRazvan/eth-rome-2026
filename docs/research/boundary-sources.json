@@ -1,0 +1,204 @@
+{
+  "researchedAt": "2026-09-11",
+  "reviewedBase": "b36fbf15e3f367caf225a1f8badc96c1449ea35b",
+  "method": "Primary docs and public upstream code; no public service mutations. Source versions are observations, not product dependency upgrades.",
+  "sources": [
+    {
+      "id": "erc20",
+      "title": "ERC-20 Token Standard",
+      "url": "https://eips.ethereum.org/EIPS/eip-20",
+      "versionOrIdentity": "Final ERC, 2015",
+      "relevance": "Approval calls/events expose the allowance value; supports reproduced private-price side channel",
+      "findings": [
+        "private-approval"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "erc1271",
+      "title": "ERC-1271 Contract Signature Validation",
+      "url": "https://eips.ethereum.org/EIPS/eip-1271",
+      "versionOrIdentity": "Final ERC",
+      "relevance": "Signature validity may depend on contract state and time",
+      "findings": [
+        "execution-authentication"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "oz-signaturechecker",
+      "title": "OpenZeppelin Contracts 5.x SignatureChecker",
+      "url": "https://docs.openzeppelin.com/contracts/5.x/api/utils/cryptography#SignatureChecker",
+      "versionOrIdentity": "Current official 5.x docs",
+      "relevance": "Contract signatures can become valid/invalid with state changes",
+      "findings": [
+        "execution-authentication"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "eip1193",
+      "title": "Ethereum Provider JavaScript API",
+      "url": "https://eips.ethereum.org/EIPS/eip-1193",
+      "versionOrIdentity": "Final interface specification",
+      "relevance": "accountsChanged, chainChanged and disconnect semantics",
+      "findings": [
+        "session-race"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "metamask-provider",
+      "title": "MetaMask provider API",
+      "url": "https://docs.metamask.io/metamask-connect/evm/reference/provider-api/",
+      "versionOrIdentity": "Current official docs; old wallet URL redirects",
+      "relevance": "Provider events and removeListener lifecycle",
+      "findings": [
+        "session-race"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "rfc9180",
+      "title": "Hybrid Public Key Encryption",
+      "url": "https://www.rfc-editor.org/rfc/rfc9180.html",
+      "versionOrIdentity": "February 2022; informational CFRG RFC",
+      "relevance": "Application context, replay/forward-secrecy/length-hiding non-goals",
+      "findings": [
+        "hpke-boundary"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "webcrypto",
+      "title": "Web Cryptography Level 2",
+      "url": "https://www.w3.org/TR/webcrypto/",
+      "versionOrIdentity": "Current W3C /TR page",
+      "relevance": "Nonextractable keys, persistence, same-origin script and key-loss boundaries",
+      "findings": [
+        "key-persistence"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "storage",
+      "title": "WHATWG Storage Standard",
+      "url": "https://storage.spec.whatwg.org/#persistence",
+      "versionOrIdentity": "Living standard",
+      "relevance": "Persistent storage versus best-effort storage and eviction",
+      "findings": [
+        "key-persistence"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "mdn-persist",
+      "title": "MDN StorageManager.persist",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist",
+      "versionOrIdentity": "Browser implementer documentation",
+      "relevance": "persist() may be denied and does not prevent explicit user clearing",
+      "findings": [
+        "key-persistence"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "node-http",
+      "title": "Node.js HTTP API",
+      "url": "https://nodejs.org/api/http.html#serverrequesttimeout",
+      "versionOrIdentity": "Fetched page identifies v26.8.2; local locked runtime remains separate",
+      "relevance": "Default whole-request timeout 300000ms, input-receipt timeout semantics",
+      "findings": [
+        "body-queue"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "owasp-api4",
+      "title": "OWASP API4:2023 Unrestricted Resource Consumption",
+      "url": "https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/",
+      "versionOrIdentity": "2023 edition, current project site",
+      "relevance": "Time/size/rate/provider spend limits are complementary controls",
+      "findings": [
+        "body-queue",
+        "publication-budget"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "vite-env",
+      "title": "Vite Environment Variables and Modes",
+      "url": "https://vite.dev/guide/env-and-mode",
+      "versionOrIdentity": "Current official guide",
+      "relevance": "VITE_ values exposed to client code; never place secrets there",
+      "findings": [
+        "frontend-secret-boundary"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "zero-x-orders",
+      "title": "0x Protocol Orders",
+      "url": "https://docs.0xprotocol.org/en/latest/basics/orders.html",
+      "versionOrIdentity": "Protocol docs identify 4.1",
+      "relevance": "RFQ participant, amount, expiry and salt fields; txOrigin is protocol-specific",
+      "findings": [
+        "rfq-prior-art"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "zero-x-code",
+      "title": "0x NativeOrdersFeature",
+      "url": "https://github.com/0xProject/protocol/blob/2c8e51e36ccbafa39f7c9003f4087710665acb02/contracts/zero-ex/contracts/src/features/NativeOrdersFeature.sol",
+      "versionOrIdentity": "development HEAD observed via git ls-remote: 2c8e51e36ccbafa39f7c9003f4087710665acb02",
+      "relevance": "Primary implementation reference; not independently audited here",
+      "findings": [
+        "rfq-prior-art"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    },
+    {
+      "id": "hpke-js",
+      "title": "hpke-js upstream repository",
+      "url": "https://github.com/dajiaji/hpke-js/tree/833f78d7abd37ba21764ed37ec228c3af477cbd6",
+      "versionOrIdentity": "main HEAD observed via git ls-remote: 833f78d7abd37ba21764ed37ec228c3af477cbd6",
+      "relevance": "HPKE library implemented over WebCrypto; no unsolicited dependency update",
+      "findings": [
+        "hpke-boundary"
+      ],
+      "accessed": "2026-09-11",
+      "type": "primary"
+    }
+  ],
+  "failedLookups": [
+    {
+      "url": "https://docs.0x.org/api-reference/openapi-json/swap/allowanceholder/quote",
+      "result": "Web tool rejected URL; not relied upon"
+    },
+    {
+      "url": "https://viem.sh/docs/actions/public/waitForTransactionReceipt",
+      "result": "Web open failed; replacement behavior verified from installed viem implementation in prior runtime review"
+    }
+  ],
+  "localEvidence": {
+    "command": "node --import tsx docs/research/repros/boundaries.ts",
+    "result": "Five baseline defect characterizations reproduced",
+    "artifact": "docs/research/repros/boundary-results.json",
+    "liveIntegration": false
+  }
+}
