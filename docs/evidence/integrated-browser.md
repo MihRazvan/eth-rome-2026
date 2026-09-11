@@ -1,5 +1,7 @@
 # Integrated browser acceptance
 
+**Scope correction:** These historical checks did not cover quote-derived ERC20 approval leaks or cross-wallet refresh races, subsequently reproduced at `b36fbf1`. See [the independent research and correction evidence](../research/security-reliability.md) and the current acceptance ledger before drawing a confidentiality conclusion.
+
 `npm run test:browser` runs five independent Chromium scenarios against actual deployed local contracts; no network mocking or hidden UI fixture is used. Chain31337 is explicitly labelled. Test data begins with funded testUSDC and immutable test vault contracts. Each mutating scenario creates its own claim through visible actions.
 
 0. Idle-time maturity originates a backed claim and waits for its first installment without any test-clock RPC, servicing transaction, injected response or manual refresh. Automatic one-second mixed mining advances the chain and the visible Collect4,000 action becomes enabled.

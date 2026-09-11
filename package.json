@@ -23,7 +23,8 @@
     "probe:sponsors": "tsx scripts/probe-sponsors.ts",
     "test:browser": "playwright test",
     "scenario": "tsx scripts/scenario.ts",
-    "verify:record": "tsx scripts/verify-record.ts"
+    "verify:record": "tsx scripts/verify-record.ts",
+    "preflight": "node --env-file-if-exists=.env --import tsx scripts/preflight.ts"
   },
   "dependencies": {
     "@arkiv-network/sdk": "0.8.1",

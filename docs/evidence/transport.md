@@ -1,5 +1,7 @@
 # Transport and privacy acceptance evidence
 
+**Scope correction:** These historical checks did not cover quote-derived ERC20 approval leaks or cross-wallet refresh races, subsequently reproduced at `b36fbf1`. See [the independent research and correction evidence](../research/security-reliability.md) and the current acceptance ledger before drawing a confidentiality conclusion.
+
 Environment: local Node 25.2.1, dependency versions @arkiv-network/sdk 0.8.1, @hpke/core 1.9.0, viem from root lockfile. Worker based on 9289233; final integration commit supplied by integrator. No secrets copied to evidence.
 
 ## Executed

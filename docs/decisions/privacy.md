@@ -24,3 +24,11 @@ Sellers can disclose bids. Gateway/indexing observers still learn timing, addres
 ## Compatibility probe that changed implementation
 
 Passing only a non-extractable P-256 private key to the HPKE recipient context caused intermittent round-trip failures. Installed `@hpke/common` reconstructs a public key after JWK export fails and canonicalizes Y parity; this can differ from the original recipient's public encoding. EXIT now supplies the full `{privateKey, publicKey}` pair, reconstructing the public CryptoKey from the authenticated public bytes. Tests then passed. No private key is exported. This is recorded as a local finding, not an upstream accepted issue.
+
+## Funding and browser-session correction
+
+Independent research against baseline `b36fbf1` reproduced an exact-price leak through the maker's ERC20 approval and an out-of-order seller refresh exposing decrypted terms in a newer wallet session. Earlier ciphertext evidence did not cover these channels; it must not be read as complete confidentiality evidence. See [independent reproductions and closure](../research/security-reliability.md).
+
+Maker funding now reuses sufficient allowance or requests a separately disclosed fixed 100,000 test-USDC capital limit. It never derives a new approval from the private bid. A bid above that limit without sufficient existing allowance is rejected before authorization. Missing or invalid recipient authentication is rejected before funding or signing. Approval events/calldata remain public, as do balance, address and timing metadata. The browser regression inspects both actual approval calldata and uploaded ciphertext.
+
+Refreshes derive request context from onchain ownership/epoch and pin financial reads to one block. Only the current wallet/session and latest refresh may publish the assembled quote snapshot. Wallet/network/disconnect changes clear confidential UI state; frozen reviews, custom inputs and late notices cannot carry into another identity. Retained public key certificates are republished idempotently after a failed server publication. Discovery outages preserve verified onchain positions and collection while marking offers unavailable.

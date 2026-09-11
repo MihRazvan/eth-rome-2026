@@ -1,0 +1,191 @@
+[
+  {
+    "title": "OpenAI, Subagents",
+    "publisherHost": "learn.chatgpt.com",
+    "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "OpenAI, Build skills",
+    "publisherHost": "learn.chatgpt.com",
+    "url": "https://learn.chatgpt.com/docs/build-skills",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Anthropic, How we built our multi-agent research system, June13,2025",
+    "publisherHost": "www.anthropic.com",
+    "url": "https://www.anthropic.com/engineering/multi-agent-research-system",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Cemri et al., Why Do Multi-Agent LLM Systems Fail?, v3, October26,2025",
+    "publisherHost": "arxiv.org",
+    "url": "https://arxiv.org/abs/2503.13657v3",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "METR, July10,2025 study",
+    "publisherHost": "metr.org",
+    "url": "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "METR, February24,2026 update",
+    "publisherHost": "metr.org",
+    "url": "https://metr.org/blog/2026-02-24-uplift-update/",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "METR, May11,2026 survey",
+    "publisherHost": "metr.org",
+    "url": "https://metr.org/blog/2026-05-11-ai-usage-survey/",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Vercel agent-skills",
+    "publisherHost": "github.com",
+    "url": "https://github.com/vercel-labs/agent-skills/tree/063bee94c3f4df8453406c830b0a7df0f2860278",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "React skill",
+    "publisherHost": "github.com",
+    "url": "https://github.com/vercel-labs/agent-skills/blob/063bee94c3f4df8453406c830b0a7df0f2860278/skills/react-best-practices/SKILL.md",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "web guidelines loader",
+    "publisherHost": "github.com",
+    "url": "https://github.com/vercel-labs/agent-skills/blob/063bee94c3f4df8453406c830b0a7df0f2860278/skills/web-design-guidelines/SKILL.md",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Anthropic frontend-design",
+    "publisherHost": "github.com",
+    "url": "https://github.com/anthropics/skills/tree/34040c9c568585f6929bedeaad110ad08f079624/skills/frontend-design",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Trail of Bits",
+    "publisherHost": "github.com",
+    "url": "https://github.com/trailofbits/skills/tree/321ccfe628eca0d314b0ee4eaffcdd8a05639aaf",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Superpowers entry",
+    "publisherHost": "github.com",
+    "url": "https://github.com/obra/superpowers/blob/b36e0829c6d0140e93cfef2ca599b1b07d4a7797/skills/using-superpowers/SKILL.md",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Superpowers task workflow",
+    "publisherHost": "github.com",
+    "url": "https://github.com/obra/superpowers/blob/b36e0829c6d0140e93cfef2ca599b1b07d4a7797/skills/subagent-driven-development/SKILL.md",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Arkiv skills",
+    "publisherHost": "github.com",
+    "url": "https://github.com/Arkiv-Network/skills/tree/afce96c133276d4195f659b98a1b4d0ba2f0a86a",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "agent-browser",
+    "publisherHost": "github.com",
+    "url": "https://github.com/vercel-labs/agent-browser/tree/8c15ff9f71ae60c7e99e66afe1e2d4b9bf414fe2",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "skills.sh directory",
+    "publisherHost": "www.skills.sh",
+    "url": "https://www.skills.sh/",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Anthropic, Run parallel sessions with worktrees",
+    "publisherHost": "code.claude.com",
+    "url": "https://code.claude.com/docs/en/worktrees",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Effective harnesses, November26,2025",
+    "publisherHost": "www.anthropic.com",
+    "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Harness design for long-running applications, March24,2026",
+    "publisherHost": "www.anthropic.com",
+    "url": "https://www.anthropic.com/engineering/harness-design-long-running-apps",
+    "accessed": "2026-09-11",
+    "type": "primary source or official repository",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  },
+  {
+    "title": "Firsthand community discussion",
+    "publisherHost": "www.reddit.com",
+    "url": "https://www.reddit.com/r/AI_Agents/comments/1ulcleg/in_practice_our_multiagent_failures_were_almost/",
+    "accessed": "2026-09-11",
+    "type": "community lead",
+    "dateOrRevision": "See title, pinned URL, or report table; mutable docs accessed on recorded date",
+    "use": "Agent-workflow and skill-selection analysis; no benchmark generalized to EXIT"
+  }
+]

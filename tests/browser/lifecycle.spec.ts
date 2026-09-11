@@ -517,6 +517,16 @@ test("key rotation and revocation are separate from cancelling a maker signature
     .click();
   await page.getByRole("dialog").getByRole("textbox").fill("9876.543210");
   await page.getByRole("dialog").getByRole("checkbox").check();
+  // The selected private mode persists. A revoked recipient must reject a new
+  // encrypted offer; switching explicitly to public permits an independent order.
+  await page
+    .getByRole("button", { name: "Sign purchase offer", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText(
+    "Recipient key is rotated or revoked",
+  );
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.getByRole("button", { name: "Public offer", exact: true }).click();
   await page
     .getByRole("button", { name: "Sign purchase offer", exact: true })
     .click();

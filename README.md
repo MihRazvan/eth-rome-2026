@@ -21,6 +21,8 @@ Browse first, then select **Seller** in Local test wallets. Portfolio → Get fu
 
 Private Offers generates a separate non-extractable browser key and wallet-signed certificate, registers its active hash onchain, and encrypts bids before byte upload. A buyer can submit a custom private price from Claim detail → Make an offer. Seller reconnect/reload preserves keys in IndexedDB; another device cannot recover them from a wallet signature. Use Private offer device keys below the app to rotate/revoke future encryption. Settlement exposes submitted terms and addresses, including on failed transactions.
 
+Private bids reuse sufficient allowance or request a separately disclosed 100,000 test-USDC spending limit. This public limit is independent of the bid price; it does not reserve funds.
+
 The local identities use the standard public Anvil mnemonic **only on chain 31337**. They are not Fuji keys. The local storage/index adapter is explicitly labelled and is not sponsor evidence. Team-operated demo makers use public rates 99.60%, 99.40%, 99.00%; private demonstration rates are randomly drawn in 99.00–99.60%. These are demonstration quotes, not commercial valuation or guaranteed execution.
 
 ## Verify
@@ -30,7 +32,8 @@ npm run check          # TypeScript, privacy/recovery tests, Solidity tests, pro
 npm run test:browser   # starts local stack if absent; visible actions + independent chain checks
 npm run scenario       # running stack: exact public lifecycle + separate adverse scenario
 npm run test:source    # public mainnet RPC, pinned BENQI fork; explicit operator simulation
-npm run probe:sponsors # live Arkiv read / gateway health; missing writes reported blocked
+npm run preflight      # read-only readiness; never publishes or prints secrets
+npm run probe:sponsors # sponsor probe; performs writes when credentials are configured
 ```
 
 The integrated Solidity suite reports 39 tests: 16 base cases, two invariant campaigns, and 21 reviewer-harness tests (including 16 inherited repeats and five independently authored probes). Invariants each run 128×64 actions with zero reverts. Evidence preserves actual scope rather than calling inherited repeats new coverage. This code is **not audited**.
@@ -43,6 +46,8 @@ The integrated Solidity suite reports 39 tests: 16 base cases, two invariant cam
 - **Arkiv:** SDK 0.8.1 live Tiramisu compound discovery reads verified. Publication/native expiry require a funded Arkiv signer and remain unverified.
 - **Swarm:** gateway reachability verified; actual upload/independent live retrieval require an upload endpoint and funded postage and remain unverified.
 - **Fuji:** deployment/lifecycle blocked by missing funded deployment/maker accounts. No public chain transactions are claimed.
+
+The [product research](docs/research/README.md) covers comparable markets, trading UX, independent privacy findings and inspected agent workflows. The project-local `$exit-verify` skill packages the release checks.
 
 See [acceptance ledger](docs/ACCEPTANCE.md), [independent contract review](docs/evidence/independent-security-review.md), [runtime review](docs/evidence/runtime-review.md), [Arkiv schema](arkiv/schema.md), and [genuine integration friction](friction.md).
 

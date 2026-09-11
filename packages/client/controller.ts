@@ -361,7 +361,7 @@ export class ExitController {
     });
     let replaced = false,
       cancelled = false;
-    const receipt = await this.client.waitForTransactionReceipt({
+    const receipt = await client.waitForTransactionReceipt({
       hash,
       onReplaced: (replacement) => {
         replaced = true;
@@ -375,7 +375,7 @@ export class ExitController {
       );
     }
     if (replaced) {
-      const actual = await this.client.getTransaction({
+      const actual = await client.getTransaction({
         hash: receipt.transactionHash,
       });
       if (
@@ -407,7 +407,7 @@ export class ExitController {
       : undefined;
   }
   async refresh() {
-    if (!this.config) return;
+    if (!this.config || this.disposed) return;
     const d = this.config,
       c = this.client,
       address = this.address,
