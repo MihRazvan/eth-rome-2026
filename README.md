@@ -2,9 +2,24 @@
 
 **Sell your withdrawal. Get paid now. Let the buyer wait.**
 
-EXIT exchanges payment now for the entire remaining withdrawal claim: pending proceeds, claimable proceeds, recognized cash, and supported later recoveries. Makers sign independently funded purchase offers. The seller accepts exact terms onchain. Buyers collect, withdraw, and resell residual rights.
+EXIT is testing a narrower opportunity: an owner whose liquidity needs changed **after entering a noncancellable withdrawal queue** can sell the existing claim to a buyer willing to wait. The [viability assessment](docs/viability/README.md) explains why ordinary BENQI exits and a generic liquid-token marketplace are weak launch choices. Commercial demand and independent buyer capital remain unverified.
 
-[Open the labelled visual preview](https://exit-ethrome-2026.vercel.app/?preview=1). The actual trading demo runs locally using the commands below; the static preview has no hosted settlement backend.
+[Open Exit Check](https://exit-ethrome-2026.vercel.app/?check=1) to inspect a real Lido unstETH or standard ether.fi NFT on Ethereum, without connecting a wallet. It reports source state at one block and provides an optional calculation using your own assumptions. It does not trade native NFTs, publish bids or guarantee collection. Finalized claims point toward the source's collection workflow.
+
+The separate local onchain product demonstrates public/private offers, exact payment, collection and residual resale using a disclosed test vault. [Open its labelled visual preview](https://exit-ethrome-2026.vercel.app/?preview=1). The static preview has no hosted settlement backend.
+
+## Inspect an actual claim
+
+```sh
+npm ci
+npm run dev
+# Open http://127.0.0.1:5173/?check=1; no local chain or maker API needed.
+npm run inspect:claim -- lido 135118          # current public Ethereum read
+npm run inspect:claim -- etherfi 82520       # current public Ethereum read
+npm run research:economics                    # hypothetical, reproducible cost scenarios
+```
+
+NFT IDs in these commands are public research examples, not your assets. Age is not remaining wait; a source amount getter is not a simulated payout. RPC failures remain errors. No fixtures replace source reads. The optional CLI block argument requires an RPC with access to that historical state; public providers can reject older reads.
 
 ## Run the real local product
 
@@ -31,7 +46,7 @@ The local identities use the standard public Anvil mnemonic **only on chain 3133
 npm run check          # TypeScript, privacy/recovery tests, Solidity tests, production build
 npm run test:browser   # starts local stack if absent; visible actions + independent chain checks
 npm run scenario       # running stack: exact public lifecycle + separate adverse scenario
-npm run test:source    # public mainnet RPC, pinned BENQI fork; explicit operator simulation
+npm run test:source    # pinned source forks; BENQI future operator publication explicitly simulated
 npm run preflight      # read-only readiness; never publishes or prints secrets
 npm run probe:sponsors # sponsor probe; performs writes when credentials are configured
 ```
@@ -59,4 +74,4 @@ Use testnet-only accounts with gas; four distinct addresses are required (deploy
 
 ## Repository
 
-`contracts/` settlement + disclosed test source; `packages/shared/` canonical EIP-712 quote and generated ABIs; `packages/transport/` privacy/index/storage; `packages/client/` wallet/chain adapter; `packages/runtime/` maker service; `packages/source/` separate BENQI fork prototype; `apps/web/` receipt market. MIT for new EXIT work; third-party notices preserved. Supplied handoff material predates implementation and is retained in `docs/handoff/`. Git history records actual work; no provenance rewriting.
+`contracts/` settlement + disclosed test source; `packages/shared/` canonical EIP-712 quote and generated ABIs; `packages/transport/` privacy/index/storage; `packages/client/` wallet/chain adapter; `packages/runtime/` maker service; `packages/source/` separate source fork probes; `packages/viability/` native read inspection and explicit economics; `apps/web/` receipt market. MIT for new EXIT work; third-party notices preserved. Supplied handoff material predates implementation and is retained in `docs/handoff/`. Git history records actual work; no provenance rewriting.

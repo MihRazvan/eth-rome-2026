@@ -32,3 +32,7 @@ The tests were run from a temporary `.mts` file using the installed `tsx`, with 
 ## Integration handoff
 
 Both findings were sent to the integrator before this artifact. Their resolution is pending at this reviewed revision; the integrator should update evidence after changing labels/API and rerunning affected tests. No additional economic model, asset integration or settlement feature is requested by this review.
+
+## Integrator disposition
+
+Both label findings were corrected in `2aaeb21`: source status is now `finalized`, every observation declares `collectionExecution: "not-simulated"`, and the historical field is named `legacyStoredFeeWei` with its inactive charging behavior documented. A regression checks that an amount read remains explicitly distinct from collection execution. The pending calculator takes independently entered recovery; it does not deduct this legacy field.
