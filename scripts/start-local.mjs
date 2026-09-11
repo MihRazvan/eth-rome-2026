@@ -79,7 +79,16 @@ try {
     rmSync(folder, { recursive: true, force: true });
   start(
     "anvil",
-    ["--port", "8547", "--chain-id", "31337", "--silent"],
+    [
+      "--port",
+      "8547",
+      "--chain-id",
+      "31337",
+      "--block-time",
+      "1",
+      "--mixed-mining",
+      "--silent",
+    ],
     "anvil",
   );
   await rpcReady();

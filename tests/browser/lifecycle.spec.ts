@@ -44,6 +44,30 @@ async function originate(page: Page) {
   await picker.selectOption(id);
   return id;
 }
+test("an idle claim matures through normal local blocks without a servicing transaction", async ({
+  page,
+  request,
+}) => {
+  test.setTimeout(90000);
+  await page.goto("/");
+  await expect(page.getByLabel("Local demo wallet")).toBeVisible();
+  const id = await originate(page);
+  const d = await (await request.get("/api/config")).json();
+  const chain = createPublicClient({ transport: http(d.rpcUrl) });
+  const before = await chain.getBlock();
+  await page.getByRole("button", { name: "Markets", exact: true }).click();
+  await page
+    .getByRole("button", { name: `View claim ${id}`, exact: true })
+    .click();
+  // No test-clock RPC, transaction, manual refresh or injected response during this wait.
+  await expect(
+    page.getByRole("button", { name: "Collect 4,000.00 USDC", exact: true }),
+  ).toBeEnabled({ timeout: 75000 });
+  const after = await chain.getBlock();
+  expect(after.number).toBeGreaterThan(before.number);
+  expect(after.timestamp - before.timestamp).toBeGreaterThanOrEqual(55n);
+});
+
 test("public sale reconciles exact payment and acquired rights onchain", async ({
   page,
   request,

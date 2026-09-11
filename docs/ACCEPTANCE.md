@@ -18,7 +18,7 @@ Last integrated local verification: 2026-09-11. A passing local result does not 
 | SWARM | Actual upload and independent retrieval verification | transport | implemented; live upload blocked | Gateway HTTP200; byte transport+independent verifier and integrity tests; no supplied funded postage/upload endpoint |
 | SOURCE | Pinned BENQI implementation, origination/collection/recovery | integrator + reviewer | fork verified | Three tests at95031281, implementation+codehash pin. Redemption explicitly simulates future operator publication with1wei; source prototype not an enabled market |
 | UI | Original full market/trade/portfolio/detail | design + independent evaluator | verified local | Three rendered directions, receipt selected; browser widths390/1024/1440, public/private sale and collection, accounting/identity/mobile findings fixed |
-| DEMO | Fresh visitor backed origination and funded makers | integrator | verified local; public Fuji blocked | `npm run start:local`, visible funding/create/request paths; standalone public funding/hosting requires missing network access |
+| DEMO | Fresh visitor backed origination and funded makers | integrator | verified local; public Fuji blocked | `npm run start:local`, visible funding/create/request paths; timed blocks and a real one-minute browser wait verify idle payout maturity; standalone public funding/hosting requires missing network access |
 | RELEASE | CI, runnable commands, licenses, evidence and submissions | integrator | CI passed; static preview published; human steps pending | GitHub run34627028500 passed on d7ed34c, clean local start verified, labelled Vercel preview browser-checked. Human forms/conversation/attendance/camera not done |
 
 ## Evidence interpretation
