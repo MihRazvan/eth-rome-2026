@@ -8,11 +8,12 @@ import { decryptOffer, encryptOffer, generateRecipientKey, keyBindingTypedData, 
 import { purchaseQuoteCodec } from './quotes';
 import { publishPrivateOffer, verifyStoredOffer } from './offers';
 import { SwarmBytes } from './swarm';
+import { offerRequestId } from './registry';
 const seller = privateKeyToAccount(`0x${'11'.repeat(32)}`);
 const maker = privateKeyToAccount(`0x${'22'.repeat(32)}`);
 const market = '0x0000000000000000000000000000000000000001' as const;
 const source = '0x0000000000000000000000000000000000000002' as const;
-const context = { chainId: 43113, market, seller: seller.address, requestId: `0x${'33'.repeat(32)}` as Hex };
+const context = { chainId: 43113, market, seller: seller.address, requestId: offerRequestId(43113, market, 1n, 1n) };
 const verify: VerifyBindingSignature = (data, signature, address) => verifyTypedData({ ...data, signature, address });
 const codec = purchaseQuoteCodec({ claimId: 1n, source, sourceVersion: 1n });
 async function setup() {
@@ -99,6 +100,17 @@ describe('Private Offers — real HPKE ciphertext, local test contexts', () => {
     await expect(publishPrivateOffer(s.quote, s.cert, context, codec, verify, async () => ({ ...await s.status(), revoked: true }),
       { storage, index: { environment: 'explicit-local-test', publish: async () => { throw new Error('unexpected publish'); }, discover: async () => [] } }, 60)).rejects.toThrow('revoked');
     expect(calls).toBe(0);
+  });
+  it('rejects a valid old-epoch quote repackaged into a new ownership request', async () => {
+    const s = await setup();
+    const newContext = { ...context, requestId: offerRequestId(context.chainId, market, 1n, 2n) };
+    const newBinding = { ...s.binding, requestId: newContext.requestId };
+    const newCert = { binding: newBinding, signature: await seller.signTypedData(keyBindingTypedData(newBinding)) };
+    // Certificate is correctly signed for the new request, but the quote still purchases epoch one.
+    await expect(encryptOffer(s.quote, newCert, newContext, codec, verify, s.status)).rejects.toThrow('Purchase quote rejected');
+    const forgedCodec = { ...codec, verify: async () => true };
+    const forgedEnvelope = await encryptOffer(s.quote, newCert, newContext, forgedCodec, verify, s.status);
+    await expect(decryptOffer(forgedEnvelope, newBinding, s.key, newContext, codec)).rejects.toThrow('authenticated');
   });
   it('walks immutable pages completely before comparison', async () => {
     let calls = 0;

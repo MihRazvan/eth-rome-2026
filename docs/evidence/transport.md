@@ -4,7 +4,7 @@ Environment: local Node 25.2.1, dependency versions @arkiv-network/sdk 0.8.1, @h
 
 ## Executed
 
-- `vitest run packages/transport`: 8 tests passed, September 11 2026. Actual HPKE encrypt/decrypt; wrong recipient, changed ciphertext/request/chain/version, substituted key certificate, maker signature mutation, expired/rotated/revoked key, unavailable registry, encryption-before-upload, no plaintext price/signature in captured body/index payload, independent retrieval SHA-256 integrity, all-page discovery, IndexedDB structured clone/reload and permanent key-loss behavior.
+- `vitest run packages/transport`: 9 tests passed, September 11 2026. Actual HPKE encrypt/decrypt; wrong recipient, changed ciphertext/request/chain/version, old-epoch quote repackaging under a newly signed request certificate, substituted key certificate, maker signature mutation, expired/rotated/revoked key, unavailable registry, encryption-before-upload, no plaintext price/signature in captured body/index payload, independent retrieval SHA-256 integrity, all-page discovery, IndexedDB structured clone/reload and permanent key-loss behavior.
 - TypeScript no-emit check for `packages/transport/index.ts`: passed.
 - `tsx scripts/probe-sponsors.ts`: live Tiramisu read succeeded at 2026-09-11T16:39:13.153Z, chain 7738577, block 318199, compound `app=exit && kind=offer` query returned zero first-page entities with no next page. The empty result is real, not demo liquidity.
 - Arkiv event brief HTTP 200. Swarm public gateway `/health` HTTP 200.
