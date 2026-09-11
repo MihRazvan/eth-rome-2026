@@ -31,8 +31,23 @@ The tests were run from a temporary `.mts` file using the installed `tsx`, with 
 
 ## Integration handoff
 
-Both findings were sent to the integrator before this artifact. Their resolution is pending at this reviewed revision; the integrator should update evidence after changing labels/API and rerunning affected tests. No additional economic model, asset integration or settlement feature is requested by this review.
+Both findings were sent to the integrator before this artifact. Their resolution was pending at the original reviewed revision; the final integration review below verifies the subsequent corrections. No additional economic model, asset integration or settlement feature is requested by this review.
+
 
 ## Integrator disposition
 
 Both label findings were corrected in `2aaeb21`: source status is now `finalized`, every observation declares `collectionExecution: "not-simulated"`, and the historical field is named `legacyStoredFeeWei` with its inactive charging behavior documented. A regression checks that an amount read remains explicitly distinct from collection execution. The pending calculator takes independently entered recovery; it does not deduct this legacy field.
+
+## Final integration review — 11 September 2026
+
+Read-only follow-up inspected the integrated `apps/web/src/ExitCheck.tsx`, its stylesheet and the corrected claim inspector after `2aaeb21`, with root HEAD `6f8bf90bcd53263731f3af92eca675bd171b893d` during review. Root files were not modified by the reviewer.
+
+**CR1 resolved:** source status is now `finalized`, the result is labelled “Source-reported finalized amount”, and collection execution is explicitly not simulated. The direct-collection guidance states that restrictions can prevent collection. A deleted ether.fi record remains “closed”, without claiming a payout occurred. **CR2 resolved:** the ABI metadata is now named `legacyStoredFeeWei` and documented as historical, unused metadata under the reviewed implementation; the UI does not present it as a current charge.
+
+The review identified one additional display ambiguity: “Total buyer capital required” originally excluded the separately entered risk reserve. For recovery 100, reserve 10 and zero other costs/time, actual purchase debit is 90 while a purchase plus a retained buffer would require 100. The integrator changed the label to **“Purchase and upfront costs · excludes reserve”**. The reviewer verified that exact correction in the working root file. The arithmetic did not change; its actual purchase-debit semantics are now explicit.
+
+Price inputs and outputs use 18-decimal ETH/WETH base units; percentages convert to basis points, protocol fees accept whole basis points, and fractional assumed days round up to seconds. No floating-point money conversion was introduced. Recovery, duration, hurdle, haircut, gas and reserve remain explicit user assumptions. No funded offer, remaining queue ETA, seller reservation price, approved source admission or NFT acquisition capability is inferred. Observation timestamps and block information remain visible, and changing source or ID clears the previous observation and calculation.
+
+An independent fresh headless Chromium context opened the actual local application at `http://127.0.0.1:5173/?check=1` at **390 × 844** and clicked **Inspect a public example**. With no RPC mocks, the browser read Lido **#135118** at Ethereum block **25956664** (11 September 2026, 20:50 UTC), showing **Still waiting**, historical face **1000 ETH**, owner `0x176F3DAb24a159341c0509bB36B833E7fdd0a132`, and request age **4 completed days**. The page explicitly identified the record as a public example rather than the viewer's asset; it displayed the block time and check time, stated that age is not remaining ETA, and disclosed the absence of a funded EXIT buyer. The browser reported **zero page errors** and **no horizontal document overflow**. This was a live read-only public-chain observation through a locally served frontend, not a live purchase, collection or deployment test. No state was changed and no services were restarted.
+
+No unresolved material issue was found within this bounded final review. The rendered pending example was checked; finalization/restriction behavior was reviewed in source, not established by executing a collection. Independent arithmetic coverage remains the 2,211 fee cases and 48 capital cases above; this follow-up did not repeat or expand that suite.
