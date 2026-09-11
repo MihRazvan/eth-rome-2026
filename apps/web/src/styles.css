@@ -2537,3 +2537,70 @@ dd {
   gap: 16px;
   max-width: 900px;
 }
+/* Recovery context stays readable without competing with the financial ticket. */
+.state-freshness {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: center;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0 0 22px;
+}
+.state-freshness time {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.missing-claim {
+  padding: 25px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 28px;
+}
+.missing-claim p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 12px 0 20px;
+  max-width: 620px;
+}
+.missing-claim > div {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.offer-availability {
+  margin-top: 16px;
+}
+.offer-availability strong {
+  display: block;
+}
+.offer-availability p {
+  font-size: 11px;
+  margin-top: 5px;
+}
+.text-button {
+  min-height: 28px;
+}
+@media (max-width: 700px) {
+  .state-freshness {
+    font-size: 10px;
+    margin-bottom: 20px;
+    gap: 2px 9px;
+  }
+  .missing-claim {
+    padding: 20px;
+  }
+  .missing-claim .button {
+    width: 100%;
+  }
+  .offer-availability {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .offer-availability button {
+    min-height: 30px;
+    padding: 5px 0;
+  }
+}

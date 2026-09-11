@@ -1,5 +1,7 @@
 import { compareAmounts } from "../../../packages/shared/amount";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { readRoute, routeUrl, type AppPage, type AppRoute } from "./navigation";
+import { DEMO_MAKER_CAPITAL } from "../../../packages/shared/capital";
 import type {
   AppActions,
   AppData,
@@ -160,11 +162,10 @@ export default function App({
   data: AppData;
   actions: AppActions;
 }) {
-  const [page, setPage] = useState<"markets" | "trade" | "portfolio" | "claim">(
-    "markets",
+  const [route, setRoute] = useState<AppRoute>(() =>
+    readRoute(window.location.search),
   );
-  const [selectedId, setSelectedId] = useState<string>();
-  const [mode, setMode] = useState<OfferMode>("public");
+  const { page, claimId: selectedId, mode } = route;
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [offerId, setOfferId] = useState<string>();
@@ -183,13 +184,45 @@ export default function App({
   const [bid, setBid] = useState("");
   const [bidMode, setBidMode] = useState<OfferMode>("public");
   const [riskAccepted, setRiskAccepted] = useState(false);
+  const interactionIdentity = `${data.chainId ?? data.chainName}:${data.wallet ?? "disconnected"}:${data.wrongNetwork}`;
+  const previousIdentity = useRef(interactionIdentity);
+  const identityChanged = previousIdentity.current !== interactionIdentity;
+  useLayoutEffect(() => {
+    previousIdentity.current = interactionIdentity;
+    setReview(false);
+    setReviewTerms(undefined);
+    setMakeBid(false);
+    setBid("");
+    setBidMode(mode);
+    setRiskAccepted(false);
+    setOfferId(undefined);
+    setNotice(undefined);
+  }, [interactionIdentity]);
   const [wallNow, setNow] = useState(Date.now());
   const now = wallNow + (data.chainTimeOffsetMs ?? 0);
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
   }, []);
-  const claim = data.claims.find((c) => c.id === selectedId) || data.claims[0];
+  useEffect(() => {
+    const restore = () => {
+      setRoute(readRoute(window.location.search));
+      setReview(false);
+      setReviewTerms(undefined);
+      setMakeBid(false);
+      setBid("");
+      setNotice(undefined);
+      setOfferId(undefined);
+      setRiskAccepted(false);
+    };
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
+  }, []);
+  const claim = route.invalidClaim
+    ? undefined
+    : selectedId !== undefined
+      ? data.claims.find((c) => c.id === selectedId)
+      : data.claims[0];
   const offers = data.offers
     .filter(
       (o) =>
@@ -204,7 +237,9 @@ export default function App({
           : o.status,
     }))
     .sort((a, b) => compareAmounts(b.net, a.net));
-  const validOffers = offers.filter((o) => o.status === "valid");
+  const validOffers = claim?.offersUnavailable
+    ? []
+    : offers.filter((o) => o.status === "valid");
   const offer = validOffers.find((o) => o.id === offerId) || validOffers[0];
   const params = new URLSearchParams(window.location.search);
   const concept =
@@ -240,13 +275,34 @@ export default function App({
       setBusy("");
     }
   }
-  function navigate(next: typeof page, id?: string) {
-    setPage(next);
-    if (id) setSelectedId(id);
+  function changeRoute(next: AppRoute) {
+    const target = routeUrl(window.location.href, next);
+    if (`${location.pathname}${location.search}${location.hash}` !== target)
+      window.history.pushState(null, "", target);
+    setRoute(next);
     setReview(false);
+    setReviewTerms(undefined);
+    setMakeBid(false);
+    setBid("");
     setNotice(undefined);
     setOfferId(undefined);
     setRiskAccepted(false);
+  }
+  function navigate(next: AppPage, id?: string) {
+    const clearMissing = next === "markets" && !claim && !data.loading;
+    changeRoute({
+      page: next,
+      claimId: clearMissing
+        ? undefined
+        : (id ??
+          selectedId ??
+          (next === "trade" || next === "claim" ? claim?.id : undefined)),
+      mode,
+      invalidClaim: clearMissing || id ? false : route.invalidClaim,
+    });
+  }
+  function setMode(nextMode: OfferMode) {
+    changeRoute({ ...route, claimId: claim?.id ?? selectedId, mode: nextMode });
   }
   const unavailable = data.environment === "unavailable";
   const canTransact = !!data.wallet && !data.wrongNetwork && !unavailable;
@@ -344,7 +400,7 @@ export default function App({
           trade. Browsing remains available.
         </div>
       )}
-      <main id="main">
+      <main id="main" tabIndex={-1}>
         {notice && (
           <div
             className={`alert ${notice.error ? "error" : "success"}`}
@@ -382,6 +438,65 @@ export default function App({
             Reading claims and offer records…
           </div>
         )}
+        <div className="state-freshness">
+          {data.environment === "preview" ? (
+            "Illustrative state · no chain checks"
+          ) : data.updatedAt ? (
+            <>
+              <span>
+                Chain state last checked{" "}
+                <time
+                  dateTime={new Date(data.updatedAt).toISOString()}
+                  title={new Date(data.updatedAt).toLocaleString()}
+                >
+                  {new Date(data.updatedAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })}
+                </time>
+              </span>
+              <span>
+                {Math.max(0, Math.floor((wallNow - data.updatedAt) / 1000))}s
+                ago · not an offer guarantee
+              </span>
+            </>
+          ) : data.loading ? (
+            "Checking chain state…"
+          ) : (
+            "Chain state has not been checked"
+          )}
+        </div>
+        {(page === "trade" || page === "claim") &&
+          !claim &&
+          !data.loading &&
+          (selectedId || route.invalidClaim) && (
+            <section className="missing-claim" role="status">
+              <h2>Claim unavailable</h2>
+              <p>
+                {route.invalidClaim
+                  ? "This link contains an invalid claim identifier."
+                  : `Claim #${selectedId} is not present in the current chain data.`}{" "}
+                No other claim has been substituted.
+              </p>
+              <div>
+                <button
+                  className="button secondary"
+                  disabled={!!busy}
+                  onClick={() => run("Refresh", actions.refresh)}
+                >
+                  Refresh chain state
+                </button>
+                <button
+                  className="button primary"
+                  onClick={() => navigate("markets")}
+                >
+                  Browse available claims
+                </button>
+              </div>
+            </section>
+          )}
+
         {page === "markets" && (
           <>
             <div className="page-heading">
@@ -472,7 +587,11 @@ export default function App({
                 <span className="section-kicker">
                   {claim ? `Claim #${claim.id}` : "Withdrawal offers"}
                 </span>
-                <span className="today-label">Best valid offer received</span>
+                <span className="today-label">
+                  {claim?.offersUnavailable
+                    ? "Offers unavailable"
+                    : "Best valid offer received"}
+                </span>
                 <div className="offer-hero">
                   {money(offer?.net, 2)}
                   <span>test USDC to the seller</span>
@@ -688,7 +807,11 @@ export default function App({
                       <select
                         value={claim.id}
                         onChange={(e) => {
-                          setSelectedId(e.target.value);
+                          changeRoute({
+                            ...route,
+                            claimId: e.target.value,
+                            invalidClaim: false,
+                          });
                           setOfferId(undefined);
                         }}
                       >
@@ -805,12 +928,35 @@ export default function App({
                       </div>
                     </div>
                   )}
+                  {claim.offersUnavailable && (
+                    <div
+                      className="alert error offer-availability"
+                      role="status"
+                    >
+                      <div>
+                        <strong>Offers unavailable</strong>
+                        <p>
+                          Discovery could not be completed for this claim. Retry
+                          to load current offers. Chain ownership and collection
+                          remain available.
+                        </p>
+                      </div>
+                      <button
+                        disabled={!!busy}
+                        onClick={() => run("Refresh offers", actions.refresh)}
+                      >
+                        Retry discovery
+                      </button>
+                    </div>
+                  )}
                   <div className="offers-list">
                     {offers.map((o, index) => (
                       <button
                         className={`offer-row ${o.id === offer?.id ? "selected" : ""} ${o.status !== "valid" ? "invalid" : ""}`}
                         key={o.id}
-                        disabled={o.status !== "valid"}
+                        disabled={
+                          o.status !== "valid" || claim.offersUnavailable
+                        }
                         onClick={() => setOfferId(o.id)}
                       >
                         <span className="radio-dot" />
@@ -848,17 +994,17 @@ export default function App({
                       </button>
                     ))}
                   </div>
-                  {offers.length === 0 && (
+                  {offers.length === 0 && !claim.offersUnavailable && (
                     <div className="empty">
                       <h3>
                         {mode === "private"
-                          ? "No readable private offers"
-                          : "No offers received yet"}
+                          ? "No active private offers"
+                          : "No active offers"}
                       </h3>
                       <p>
                         {mode === "private"
-                          ? "Set up your offer key and request new encrypted offers. No plaintext fallback is used."
-                          : "Request fresh offers from the funded demonstration makers. Offers can expire or become unfunded."}
+                          ? "No active encrypted offers were returned. Existing offers may have expired. Set up your offer key if needed, then request fresh private offers. No plaintext fallback is used."
+                          : "No active public offers were returned. Earlier offers may have expired or become unavailable. Request fresh offers from the demonstration makers."}
                       </p>
                     </div>
                   )}
@@ -950,7 +1096,7 @@ export default function App({
                   </button>
                 </aside>
               </div>
-            ) : (
+            ) : !selectedId && !route.invalidClaim ? (
               <div className="empty">
                 <h2>No withdrawal selected</h2>
                 <p>
@@ -963,7 +1109,7 @@ export default function App({
                   Open Portfolio
                 </button>
               </div>
-            )}
+            ) : null}
           </>
         )}
         {page === "portfolio" && (
@@ -1395,7 +1541,7 @@ export default function App({
           {busy}… Check your wallet if prompted. Do not resubmit while pending.
         </div>
       )}
-      {review && reviewTerms && (
+      {!identityChanged && review && reviewTerms && (
         <SaleReview
           terms={reviewTerms}
           busy={busy}
@@ -1409,7 +1555,7 @@ export default function App({
         />
       )}
 
-      {makeBid && claim && (
+      {!identityChanged && makeBid && claim && (
         <Modal title="Make a purchase offer" close={() => setMakeBid(false)}>
           <p>
             Offer to purchase the complete remaining rights to claim #{claim.id}
@@ -1431,7 +1577,7 @@ export default function App({
           </div>
           <p>
             {bidMode === "private"
-              ? "Encrypt this custom price for the seller’s authenticated request key. Submitted settlement terms become public."
+              ? "Encrypt this custom price for the seller’s authenticated request key. Request metadata and timing remain public; submitted settlement terms become public."
               : "The offer amount and signed terms will be publicly readable."}
           </p>
           <label className="bid-input">
@@ -1446,8 +1592,9 @@ export default function App({
             <span>test USDC · fee displayed by settlement</span>
           </label>
           <p>
-            Your signature authorizes your capital. An offer does not reserve
-            funds or guarantee the source payout.
+            If needed, authorize a {money(DEMO_MAKER_CAPITAL, 0)} test USDC
+            spending limit. This public limit is separate from your private
+            price; funds are not reserved. Only your signed offers can spend it.
           </p>
           <label className="checkbox">
             <input
@@ -1456,8 +1603,8 @@ export default function App({
               onChange={(e) => setRiskAccepted(e.target.checked)}
             />
             <span>
-              I accept the source, timing, currency and loss risks.{" "}
-              {claim.sourceRisk}
+              I authorize the stated spending limit if needed and accept the
+              source, timing, currency and loss risks. {claim.sourceRisk}
             </span>
           </label>
           <button
@@ -1490,10 +1637,12 @@ function Modal({
   children: React.ReactNode;
   close: () => void;
 }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  const invoker = useRef(document.activeElement as HTMLElement | null);
   useEffect(() => {
-    const previous = document.activeElement as HTMLElement;
-    const dialog = document.querySelector<HTMLDialogElement>("dialog");
-    dialog?.showModal();
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) dialog.showModal();
     const onCancel = (e: Event) => {
       e.preventDefault();
       close();
@@ -1501,13 +1650,21 @@ function Modal({
     dialog?.addEventListener("cancel", onCancel);
     return () => {
       dialog?.removeEventListener("cancel", onCancel);
-      previous?.focus();
+      dialog?.close();
+      const target = invoker.current;
+      if (
+        target?.isConnected &&
+        !target.matches(":disabled") &&
+        target.getClientRects().length > 0
+      )
+        target.focus();
+      else document.getElementById("main")?.focus();
     };
   }, []);
   return (
-    <dialog className="modal">
+    <dialog ref={dialogRef} className="modal" aria-labelledby={titleId}>
       <div className="modal-heading">
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         <button aria-label="Close dialog" onClick={close}>
           ×
         </button>
