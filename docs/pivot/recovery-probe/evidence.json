@@ -1,0 +1,13 @@
+{
+  "observed_at_utc": "2026-09-11T21:23:26.629984+00:00",
+  "scope": "Isolated local EVM feasibility probe; no RPC, Anvil, public deployment or sponsor integration",
+  "forge_version": "forge Version: 1.5.1-stable\nCommit SHA: b0a9dd9ceda36f63e2326ce530c10e6916f4b8a2\nBuild Timestamp: 2025-12-22T11:41:09.812070000Z (1766403669)\nBuild Profile: maxperf",
+  "solc_version": "0.8.30",
+  "command": "forge test --root docs/pivot/recovery-probe --fuzz-seed 0x52455052495345 -vv",
+  "fuzz_seed": "0x52455052495345",
+  "exit_code": 0,
+  "output_file": "forge-output.txt",
+  "crash_model": "A pays, then omits receipt publication; no operating-system process killed",
+  "time_model": "Foundry vm.warp to lease deadline",
+  "token_model": "Local exact-transfer ERC-20 with actual balance and allowance state changes"
+}
