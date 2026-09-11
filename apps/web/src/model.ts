@@ -2,12 +2,7 @@
 export type Amount = string;
 export type OfferMode = "public" | "private";
 export type OfferStatus =
-  | "valid"
-  | "expired"
-  | "stale"
-  | "unfunded"
-  | "cancelled"
-  | "encrypted";
+  "valid" | "expired" | "stale" | "unfunded" | "cancelled" | "encrypted";
 export interface Offer {
   id: string;
   claimId: string;
@@ -60,6 +55,7 @@ export interface AppData {
   loading: boolean;
   error?: string;
   updatedAt?: number;
+  chainTimeOffsetMs?: number;
   services: {
     name: string;
     status: "connected" | "unavailable" | "preview";

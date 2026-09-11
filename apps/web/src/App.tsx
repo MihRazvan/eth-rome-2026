@@ -1,3 +1,4 @@
+import { compareAmounts } from "../../../packages/shared/amount";
 import { useEffect, useState } from "react";
 import type {
   AppActions,
@@ -182,7 +183,8 @@ export default function App({
   const [bid, setBid] = useState("");
   const [bidMode, setBidMode] = useState<OfferMode>("public");
   const [riskAccepted, setRiskAccepted] = useState(false);
-  const [now, setNow] = useState(Date.now());
+  const [wallNow, setNow] = useState(Date.now());
+  const now = wallNow + (data.chainTimeOffsetMs ?? 0);
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
@@ -201,7 +203,7 @@ export default function App({
           ? ("expired" as const)
           : o.status,
     }))
-    .sort((a, b) => Number(b.net || 0) - Number(a.net || 0));
+    .sort((a, b) => compareAmounts(b.net, a.net));
   const validOffers = offers.filter((o) => o.status === "valid");
   const offer = validOffers.find((o) => o.id === offerId) || validOffers[0];
   const params = new URLSearchParams(window.location.search);
@@ -607,13 +609,15 @@ export default function App({
                                   : "green"
                             }
                           >
-                            {c.status === "partial"
-                              ? "Residual"
-                              : c.status === "loss"
-                                ? "Loss scenario"
-                                : Number(c.claimable) > 0
-                                  ? "Collectible"
-                                  : "Pending"}
+                            {c.status === "exhausted"
+                              ? "Standard payout collected"
+                              : c.status === "partial"
+                                ? "Residual"
+                                : c.status === "loss"
+                                  ? "Loss scenario"
+                                  : Number(c.claimable) > 0
+                                    ? "Collectible"
+                                    : "Pending"}
                           </Status>
                         </td>
                         <td>
@@ -647,7 +651,7 @@ export default function App({
               <div className="market-disclosure">
                 <span>
                   <i className="dot residual" />
-                  Team-operated demo makers use a disclosed pricing formula.
+                  Team-operated makers use disclosed demo pricing ranges.
                 </span>
                 <span>
                   Test source only · no third-party production collateral
@@ -769,9 +773,9 @@ export default function App({
                         <strong>Private negotiation. Public settlement.</strong>
                         <p>
                           Offers are encrypted for your separate device key
-                          before upload. Team-operated demonstration prices
-                          follow a known formula; test bid confidentiality with
-                          a custom private offer. Competing buyers and storage
+                          before upload. Team-operated demonstration prices use
+                          a disclosed range; test bid confidentiality with a
+                          custom private offer. Competing buyers and storage
                           providers cannot read your bids. Accepted terms and
                           addresses become public when submitted onchain—even if
                           settlement fails.
@@ -780,7 +784,7 @@ export default function App({
                           <>
                             <p className="key-warning">
                               {data.privateKeyStatus === "missing"
-                                ? "No offer key is available on this browser. Create or restore a key to read private offers. Losing it can make earlier offers unreadable."
+                                ? "No offer key is available on this browser. Create a new key to read private offers. Losing it can make earlier offers unreadable."
                                 : "Unlock the encryption key on this browser to compare private offers."}
                             </p>
                             <button
@@ -816,9 +820,11 @@ export default function App({
                         <span className="maker-name">
                           <strong>{o.maker}</strong>
                           <small>
-                            {o.teamOperated
-                              ? "Team-operated maker"
-                              : "Independent maker"}{" "}
+                            {o.status === "encrypted"
+                              ? "Identity encrypted"
+                              : o.teamOperated
+                                ? "Team-operated maker"
+                                : "User-authored maker"}{" "}
                             ·{" "}
                             {o.status === "valid"
                               ? `Expires in ${Math.max(0, Math.floor((o.deadline - now) / 60000))}m ${Math.max(0, Math.floor((o.deadline - now) / 1000) % 60)}s`
@@ -1035,7 +1041,9 @@ export default function App({
                           </span>
                         </button>
                         <Status tone={c.status === "loss" ? "orange" : "blue"}>
-                          {c.status}
+                          {c.status === "exhausted"
+                            ? "Standard payout collected"
+                            : c.status}
                         </Status>
                       </div>
                       <div className="cash-flow">
@@ -1050,7 +1058,7 @@ export default function App({
                         </div>
                         <span className="flow-operator">=</span>
                         <div>
-                          <span>Unrecovered cost</span>
+                          <span>Net cost after withdrawals</span>
                           <strong>{money(c.residualCost)}</strong>
                         </div>
                       </div>

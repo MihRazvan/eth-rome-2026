@@ -13,7 +13,17 @@
     "test": "vitest run",
     "test:contracts": "forge test",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm test && npm run test:contracts && npm run build"
+    "check": "npm run typecheck && npm test && npm run test:contracts && npm run build",
+    "test:source": "forge test --root packages/source -vv",
+    "abi": "forge build && tsx scripts/export-abis.ts",
+    "deploy:local": "tsx scripts/deploy.ts",
+    "deploy:fuji": "tsx scripts/deploy.ts --fuji",
+    "start:local": "node scripts/start-local.mjs",
+    "api": "tsx packages/runtime/server.ts",
+    "probe:sponsors": "tsx scripts/probe-sponsors.ts",
+    "test:browser": "playwright test",
+    "scenario": "tsx scripts/scenario.ts",
+    "verify:record": "tsx scripts/verify-record.ts"
   },
   "dependencies": {
     "@arkiv-network/sdk": "0.8.1",
@@ -30,6 +40,8 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.1",
+    "fake-indexeddb": "6.2.5",
+    "prettier": "3.9.6",
     "tsx": "4.23.13",
     "typescript": "7.0.2",
     "vite": "8.3.0",

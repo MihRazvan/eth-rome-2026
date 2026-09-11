@@ -28,6 +28,7 @@ contract BenqiForkTest {
  function setUp() public {
   vm.createSelectFork("https://api.avax.network/ext/bc/C/rpc",BLOCK);
   require(address(uint160(uint256(vm.load(address(source),0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc))))==0xB791C7A42FD0D10F90DEaa906a8735f79719FA53,"implementation changed");
+  require(address(0xB791C7A42FD0D10F90DEaa906a8735f79719FA53).codehash==0x94d7a09bfd88713ac90a6c961e4423bb96eaf9ec89bdd78e48eaa101e530a2b8,"implementation code changed");
   require(source.cooldownPeriod()==15 days && source.redeemPeriod()==2 days,"timing mismatch");
   account=new BenqiClaimAccount(address(source),seller);
   vm.deal(seller,10 ether);vm.prank(seller);account.originate{value:1 ether}();started=block.timestamp;

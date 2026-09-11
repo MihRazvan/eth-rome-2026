@@ -12,3 +12,5 @@ broadcast/
 .playwright-cli/
 test-results/
 playwright-report/
+
+.vercel/
