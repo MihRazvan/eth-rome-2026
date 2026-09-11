@@ -14,7 +14,7 @@ export interface PurchaseQuote {
 }
 export interface SignedQuote { quote: PurchaseQuote; signature: Hex }
 export const quoteDomain = (chainId: number, market: Address) => ({ name: 'EXIT', version: '1', chainId, verifyingContract: market }) as const;
-export const quoteTypedData = (quote: PurchaseQuote, chainId: number, market: Address) => ({ domain: quoteDomain(chainId, market), types: purchaseQuoteTypes, primaryType: 'PurchaseQuote' as const, message: quote });
+export const quoteTypedData = (quote: PurchaseQuote, chainId: number, market: Address) => ({ domain: quoteDomain(chainId, market), types: purchaseQuoteTypes, primaryType: 'PurchaseQuote' as const, message: {...quote} });
 export function serializeSignedQuote(value: SignedQuote): string {
   return JSON.stringify(value, (_, v) => typeof v === 'bigint' ? v.toString() : v);
 }
@@ -36,5 +36,5 @@ export function parseSignedQuote(raw: string): SignedQuote {
 }
 export async function verifySignedQuote(value: SignedQuote, chainId: number, market: Address, client?: PublicClient): Promise<boolean> {
   const args = {...quoteTypedData(value.quote, chainId, market), address: value.quote.maker, signature: value.signature};
-  return client ? client.verifyTypedData(args) : verifyTypedData(args);
+  return client ? client.verifyTypedData({...args, blockTag: 'latest'}) : verifyTypedData(args);
 }
