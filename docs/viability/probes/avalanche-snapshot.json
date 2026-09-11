@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "kind": "historical-public-read-snapshot",
+  "chainId": 43114,
+  "blockNumber": "95044397",
+  "blockHash": "0xad9e1b5b70140e6fdda33a4ace507b7933ab89ea816b3c13c36bf1f6d1e2912f",
+  "blockTimestamp": "1789158328",
+  "observedAt": "2026-09-11T20:25:35.736Z",
+  "inputToken": {
+    "symbol": "sAVAX",
+    "address": "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+    "decimals": 18
+  },
+  "outputToken": {
+    "symbol": "WAVAX",
+    "address": "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+    "decimals": 18
+  },
+  "currentNav": {
+    "nativeAsset": "AVAX",
+    "amountPerWholeShareWei": "1283991691573712883",
+    "shareUnitWei": "1000000000000000000",
+    "description": "BENQI current getPooledAvaxByShares; not a guaranteed future payout"
+  },
+  "source": {
+    "proxy": "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+    "implementation": "0xb791c7a42fd0d10f90deaa906a8735f79719fa53",
+    "implementationCodeHash": "0x94d7a09bfd88713ac90a6c961e4423bb96eaf9ec89bdd78e48eaa101e530a2b8",
+    "explorer": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0xb791c7a42fd0d10f90deaa906a8735f79719fa53",
+    "sourceBundleKeccak": "0x3367f5dea87b459f49d21d78e92b67d767e6f35ce5a6f93256b4f237ed066cef"
+  },
+  "observations": [
+    {
+      "inputShares": "1",
+      "amountInWei": "1000000000000000000",
+      "currentNavWei": "1283991691573712883",
+      "lfjAmountOutWei": "1283816799826404937",
+      "yakAmountOutWei": "1283816799826404937",
+      "bestAmongObserved": {
+        "provider": "LFJ",
+        "amountOutWei": "1283816799826404937",
+        "discountToCurrentNavBps": 1.3620940731601738
+      },
+      "lfj": {
+        "quoter": "0x9A550a522BBaDFB69019b0432800Ed17855A51C3",
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x883eA72c2A46F7AcB3820855344C43666c6cc5c0"
+        ],
+        "binSteps": [
+          "5"
+        ],
+        "versions": [
+          3
+        ]
+      },
+      "yak": {
+        "quoter": "0xC4729E56b831d74bBc18797e0e17A295fA77488c",
+        "maxSteps": 2,
+        "path": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "adapters": [
+          "0xf9F824576F06fF92765f2Af700a5A9923526261e"
+        ]
+      }
+    },
+    {
+      "inputShares": "10",
+      "amountInWei": "10000000000000000000",
+      "currentNavWei": "12839916915737128834",
+      "lfjAmountOutWei": "12838167998264049378",
+      "yakAmountOutWei": "12838167998264049378",
+      "bestAmongObserved": {
+        "provider": "LFJ",
+        "amountOutWei": "12838167998264049378",
+        "discountToCurrentNavBps": 1.3620940731601705
+      },
+      "lfj": {
+        "quoter": "0x9A550a522BBaDFB69019b0432800Ed17855A51C3",
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x883eA72c2A46F7AcB3820855344C43666c6cc5c0"
+        ],
+        "binSteps": [
+          "5"
+        ],
+        "versions": [
+          3
+        ]
+      },
+      "yak": {
+        "quoter": "0xC4729E56b831d74bBc18797e0e17A295fA77488c",
+        "maxSteps": 2,
+        "path": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "adapters": [
+          "0xf9F824576F06fF92765f2Af700a5A9923526261e"
+        ]
+      }
+    },
+    {
+      "inputShares": "100",
+      "amountInWei": "100000000000000000000",
+      "currentNavWei": "128399169157371288343",
+      "lfjAmountOutWei": "128381679982640493787",
+      "yakAmountOutWei": "128381679982640493787",
+      "bestAmongObserved": {
+        "provider": "LFJ",
+        "amountOutWei": "128381679982640493787",
+        "discountToCurrentNavBps": 1.3620940731601703
+      },
+      "lfj": {
+        "quoter": "0x9A550a522BBaDFB69019b0432800Ed17855A51C3",
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x883eA72c2A46F7AcB3820855344C43666c6cc5c0"
+        ],
+        "binSteps": [
+          "5"
+        ],
+        "versions": [
+          3
+        ]
+      },
+      "yak": {
+        "quoter": "0xC4729E56b831d74bBc18797e0e17A295fA77488c",
+        "maxSteps": 2,
+        "path": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "adapters": [
+          "0xf9F824576F06fF92765f2Af700a5A9923526261e"
+        ]
+      }
+    },
+    {
+      "inputShares": "1000",
+      "amountInWei": "1000000000000000000000",
+      "currentNavWei": "1283991691573712883438",
+      "lfjAmountOutWei": "1283267435283304572676",
+      "yakAmountOutWei": "1283329124276828401705",
+      "bestAmongObserved": {
+        "provider": "YakRouter",
+        "amountOutWei": "1283329124276828401705",
+        "discountToCurrentNavBps": 5.16021483030324
+      },
+      "lfj": {
+        "quoter": "0x9A550a522BBaDFB69019b0432800Ed17855A51C3",
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x883eA72c2A46F7AcB3820855344C43666c6cc5c0"
+        ],
+        "binSteps": [
+          "5"
+        ],
+        "versions": [
+          3
+        ]
+      },
+      "yak": {
+        "quoter": "0xC4729E56b831d74bBc18797e0e17A295fA77488c",
+        "maxSteps": 2,
+        "path": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "adapters": [
+          "0xadDB698A6723787624f3286369E588De7D780927"
+        ]
+      }
+    },
+    {
+      "inputShares": "10000",
+      "amountInWei": "10000000000000000000000",
+      "currentNavWei": "12839916915737128834388",
+      "lfjAmountOutWei": "6511125441152686500566",
+      "yakAmountOutWei": "6511125441152686500566",
+      "bestAmongObserved": {
+        "provider": "LFJ",
+        "amountOutWei": "6511125441152686500566",
+        "discountToCurrentNavBps": 4928.997217129665
+      },
+      "lfj": {
+        "quoter": "0x9A550a522BBaDFB69019b0432800Ed17855A51C3",
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x4b946c91C2B1a7d7C40FB3C130CdfBaf8389094d"
+        ],
+        "binSteps": [
+          "0"
+        ],
+        "versions": [
+          0
+        ]
+      },
+      "yak": {
+        "quoter": "0xC4729E56b831d74bBc18797e0e17A295fA77488c",
+        "maxSteps": 2,
+        "path": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "adapters": [
+          "0xDB66686Ac8bEA67400CF9E5DD6c8849575B90148"
+        ]
+      }
+    },
+    {
+      "inputShares": "100000",
+      "amountInWei": "100000000000000000000000",
+      "currentNavWei": "128399169157371288343880",
+      "lfjAmountOutWei": "12035797834458362579716",
+      "yakAmountOutWei": "12035797834458362579716",
+      "bestAmongObserved": {
+        "provider": "LFJ",
+        "amountOutWei": "12035797834458362579716",
+        "discountToCurrentNavBps": 9062.626501912424
+      },
+      "lfj": {
+        "quoter": "0x9A550a522BBaDFB69019b0432800Ed17855A51C3",
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x4b946c91C2B1a7d7C40FB3C130CdfBaf8389094d"
+        ],
+        "binSteps": [
+          "0"
+        ],
+        "versions": [
+          0
+        ]
+      },
+      "yak": {
+        "quoter": "0xC4729E56b831d74bBc18797e0e17A295fA77488c",
+        "maxSteps": 2,
+        "path": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "adapters": [
+          "0xDB66686Ac8bEA67400CF9E5DD6c8849575B90148"
+        ]
+      }
+    }
+  ],
+  "fundedExitOffer": null,
+  "warnings": [
+    "Historical snapshot; rerun quotes for a new observation. No transaction was submitted.",
+    "LFJ paths plus YakRouter max2hop no-split routing; not best market-wide execution.",
+    "Quoter output includes modeled pool fees. Cancel, approval and swap gas are excluded.",
+    "DEX output is WAVAX; native unwrapping and stablecoin conversion are excluded.",
+    "No buyer demand, funded EXIT offer or claim-purchase price was observed."
+  ]
+}

@@ -1,0 +1,209 @@
+[
+  {
+    "publisher": "BENQI",
+    "title": "Liquid staking overview",
+    "date": null,
+    "url": "https://docs.benqi.fi/benqi-liquid-staking/overview",
+    "claim": "15-day source cooldown, secondary-market immediate exit, reward accrual and source positioning.",
+    "confidence": "high: publisher docs; current getter independently checked",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "BENQI",
+    "title": "Getting Started",
+    "date": null,
+    "url": "https://docs.benqi.fi/benqi-liquid-staking/getting-started",
+    "claim": "Claim workflow and two-day claim window.",
+    "confidence": "high: primary workflow; not performance or demand evidence",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "BENQI / Routescan",
+    "title": "Verified StakedAvax implementation",
+    "date": null,
+    "url": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0xb791c7a42fd0d10f90deaa906a8735f79719fa53",
+    "claim": "Caller-bound requests; cancellation returns original shares; historic-rate redemption and operator powers.",
+    "confidence": "high: verified source and implementation slot/code hash pinned at95044397",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "LFJ",
+    "title": "Avalanche deployment addresses",
+    "date": null,
+    "url": "https://developers.lfj.gg/deployment-addresses/avalanche",
+    "claim": "Published v2.2 quoter address.",
+    "confidence": "high: primary deployment list and code/ABI corroboration",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "LFJ / Routescan",
+    "title": "LBQuoter verified ABI",
+    "date": null,
+    "url": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0x9A550a522BBaDFB69019b0432800Ed17855A51C3",
+    "claim": "findBestPathFromAmountIn returns routes,pairs,amounts,fees; used in successful pinned reads.",
+    "confidence": "high: actual verified ABI and observed outputs",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Yield Yak",
+    "title": "YakRouter README and source",
+    "date": null,
+    "url": "https://github.com/yieldyak/yak-aggregator/tree/50d8be725730b83f231b0a69ff4da62136a49692",
+    "claim": "Published Avalanche router and read-only best-path queries; no-split routing limits.",
+    "confidence": "high: pinned repository; actual deployed ABI also inspected",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Yield Yak / Routescan",
+    "title": "YakRouter verified ABI",
+    "date": null,
+    "url": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0xC4729E56b831d74bBc18797e0e17A295fA77488c",
+    "claim": "Six positive size quotes through actual deployed router at max2hops.",
+    "confidence": "high: pinned executable eth_call; no funded swap",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "EXIT independent research",
+    "title": "Public Avalanche quote snapshot",
+    "date": "2026-09-11",
+    "url": "probes/avalanche-snapshot.json",
+    "claim": "Same-block normalized LFJ/Yak outputs, integer units, no funded EXIT bid.",
+    "confidence": "high: reproducible public read artifacts; one market snapshot",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Hypha",
+    "title": "Official homepage redirect",
+    "date": null,
+    "url": "https://hypha.sh/",
+    "claim": "Redirects to eol.gogopool.com with End of Life title.",
+    "confidence": "high: observed redirect/title; pagebody403 or empty extraction",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Hypha",
+    "title": "Sunset announcement",
+    "date": null,
+    "url": "https://www.linkedin.com/posts/hypha-sh_avalanche-avax-liquidstaking-activity-7493794593038073856-tFip",
+    "claim": "Publisher states operations end Aug15 2026, recovery UI remains through Dec31 2026.",
+    "confidence": "medium-high: firsthand publisher announcement; exact publication date not established",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Hypha / Routescan",
+    "title": "Current stAVAX implementation",
+    "date": null,
+    "url": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0xa14505f315143e16b999b3aca083d306b85b803e",
+    "claim": "Deployed source removes queue-only restrictions from redemption functions; differs from repo manifest.",
+    "confidence": "high: EIP1967 slot and verified source inspected",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Multisig Labs / Hypha",
+    "title": "WithdrawQueue source",
+    "date": null,
+    "url": "https://github.com/multisig-labs/gogopool/blob/58126a48d068282d1185382c625ae560dd998594/contracts/contract/WithdrawQueue.sol",
+    "claim": "Requester-bound queue, cancellation and expiry behavior.",
+    "confidence": "high: pinned repo source; queue implementation address independently matched",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Multisig Labs / Hypha",
+    "title": "Avalanche deployment manifest",
+    "date": null,
+    "url": "https://github.com/multisig-labs/gogopool/blob/58126a48d068282d1185382c625ae560dd998594/deployed/43114-addresses.json",
+    "claim": "Token and queue addresses; token implementation entry stale relative to pinned chain.",
+    "confidence": "high: primary manifest used as hypothesis, not unquestioned current state",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Yield Yak",
+    "title": "Suzaku restaking guide",
+    "date": null,
+    "url": "https://docs.yieldyak.com/milk-vaults/suzaku-restaking-lrts",
+    "claim": "Five-minute manual withdrawal and expected automated completion; sAVAX output semantics.",
+    "confidence": "high: primary description; actual delay confirmed by getter",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Yield Yak",
+    "title": "rsAVAX deployment",
+    "date": null,
+    "url": "https://github.com/yieldyak/boring-vault/blob/957b38cfe9f2339468d8fe00ef2a23b0eb651f32/deployments/AvalancheSAvaxDeployment.json",
+    "claim": "rsAVAX vault and delayed withdrawer addresses/configuration.",
+    "confidence": "high: pinned primary repo; getters independently checked",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Yield Yak",
+    "title": "USD Milk AI deployment",
+    "date": null,
+    "url": "https://github.com/yieldyak/boring-vault/blob/957b38cfe9f2339468d8fe00ef2a23b0eb651f32/deployments/AvalancheUSDMilkAIDeployment.json",
+    "claim": "Identifiable aiUSD vault and USDC withdrawer; configured8h was stale versus observed1h.",
+    "confidence": "high: pinned primary repo used as hypothesis",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Yield Yak / Routescan",
+    "title": "rsAVAX DelayedWithdraw source",
+    "date": null,
+    "url": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0xfF464A521077bd233C4e429BeD76d1442015Eb62",
+    "claim": "Account+asset-bound requests, min-rate completion, cancellation returns shares, authenticated administrative actions.",
+    "confidence": "high: actual verified source inspected",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Yield Yak / Routescan",
+    "title": "aiUSD DelayedWithdraw source",
+    "date": null,
+    "url": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0xa131e4ddA78Ed81aE5F467D2EA3Ef8b223c2aAFB",
+    "claim": "Same bound request semantics; one-hour observed config and no outstanding shares atpin.",
+    "confidence": "high: verified ABI/source and live pinned getter",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Yield Yak",
+    "title": "Withdrawal mechanism comparison",
+    "date": null,
+    "url": "https://github.com/yieldyak/boring-vault/blob/957b38cfe9f2339468d8fe00ef2a23b0eb651f32/spec/Withdrawals.md",
+    "claim": "AtomicQueue/solver is adjacent mechanism in repository; deployment for sampled vaults unverified.",
+    "confidence": "high: primary design document only",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Avalanche",
+    "title": "Helicon upgrade guide",
+    "date": null,
+    "url": "https://academy.avax.network/docs/primary-network/helicon-upgrade",
+    "claim": "Scheduled Sep22 validator minimum48h; delegators unchanged; does not alter measured BENQI config automatically.",
+    "confidence": "high: current official technical guide",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "Avalanche",
+    "title": "Helicon announcement",
+    "date": "2026-09-08",
+    "url": "https://docs.avax.network/blog/helicon-upgrade",
+    "claim": "Upcoming network economics changes; technical guide used to clarify validator/delegator distinction.",
+    "confidence": "high: dated official announcement",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "EXIT independent research",
+    "title": "Authority and cancellation eth_call observations",
+    "date": "2026-09-11",
+    "url": "probes/avalanche-authority.json",
+    "claim": "Three sampled code-free requesters cancellation simulations succeeded; no state mutation.",
+    "confidence": "high: read-only executable observation, no balance-delta trace",
+    "accessed": "2026-09-11"
+  },
+  {
+    "publisher": "EXIT independent research",
+    "title": "Alternative source getter observations",
+    "date": "2026-09-11",
+    "url": "probes/avalanche-alternatives.json",
+    "claim": "Hypha liquidity/queue; rsAVAX and aiUSD current withdrawal configuration; ABI output field names retained.",
+    "confidence": "high: same-block public getter observations, not end-to-end source admission",
+    "accessed": "2026-09-11"
+  }
+]

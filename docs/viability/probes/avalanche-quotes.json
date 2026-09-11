@@ -1,0 +1,750 @@
+{
+  "observedAt": "2026-09-11T20:25:35.736Z",
+  "chainId": 43114,
+  "blockNumber": "95044397",
+  "blockHash": "0xad9e1b5b70140e6fdda33a4ace507b7933ab89ea816b3c13c36bf1f6d1e2912f",
+  "blockTimestamp": "1789158328",
+  "rpc": "https://api.avax.network/ext/bc/C/rpc",
+  "source": {
+    "proxy": "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+    "implementation": "0xb791c7a42fd0d10f90deaa906a8735f79719fa53",
+    "implementationCodeHash": "0x94d7a09bfd88713ac90a6c961e4423bb96eaf9ec89bdd78e48eaa101e530a2b8",
+    "explorer": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0xb791c7a42fd0d10f90deaa906a8735f79719fa53",
+    "sourceBundleKeccak": "0x3367f5dea87b459f49d21d78e92b67d767e6f35ce5a6f93256b4f237ed066cef"
+  },
+  "quoter": {
+    "address": "0x9A550a522BBaDFB69019b0432800Ed17855A51C3",
+    "codeHash": "0x569158d9db523d102e09fed348c020db9932f9b2771dffea1bd9a68bff18f162",
+    "officialAddressSource": "https://developers.lfj.gg/deployment-addresses/avalanche",
+    "explorer": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api?module=contract&action=getsourcecode&address=0x9A550a522BBaDFB69019b0432800Ed17855A51C3"
+  },
+  "values": {
+    "totalPooledAvax": {
+      "status": "observed",
+      "value": "23165580605933324997670859"
+    },
+    "totalSupply": {
+      "status": "observed",
+      "value": "18041846187914689082394434"
+    },
+    "totalShares": {
+      "status": "observed",
+      "value": "18041846187914689082394434"
+    },
+    "cooldownPeriod": {
+      "status": "observed",
+      "value": "1296000"
+    },
+    "redeemPeriod": {
+      "status": "observed",
+      "value": "172800"
+    },
+    "paused": {
+      "status": "observed",
+      "value": false
+    },
+    "mintingPaused": {
+      "status": "observed",
+      "value": false
+    },
+    "protocolRewardShare": {
+      "status": "observed",
+      "value": "100000000000000000"
+    },
+    "stakerCount": {
+      "status": "observed",
+      "value": "64728"
+    },
+    "oneShareAvaxWei": "1283991691573712883",
+    "custodiedSharesWei": "320007639828613008250239",
+    "contractNativeBalanceWei": "21679341003872135461358"
+  },
+  "quotes": [
+    {
+      "shares": "1",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "1.283991691573712883",
+      "outputAvax": "1.283816799826404937",
+      "discountToCurrentNavBps": 1.3620940731601738,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x883eA72c2A46F7AcB3820855344C43666c6cc5c0"
+        ],
+        "binSteps": [
+          "5"
+        ],
+        "versions": [
+          3
+        ],
+        "amounts": [
+          "1000000000000000000",
+          "1283816799826404937"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "1000000000000000000",
+          "1283816799826404937"
+        ],
+        "fees": [
+          "100000000000000"
+        ]
+      },
+      "amountInWei": "1000000000000000000",
+      "amountOutWei": "1283816799826404937",
+      "currentNavWei": "1283991691573712883"
+    },
+    {
+      "shares": "1",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "1.283991691573712883",
+      "outputAvax": "0.031905918891216907",
+      "discountToCurrentNavBps": 9751.50992720123,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x2EE9555962d3757c3083924381D6e227638Bc843",
+          "0x864d4e5Ee7318e97483DB7EB0912E09F161516EA"
+        ],
+        "binSteps": [
+          "0",
+          "10"
+        ],
+        "versions": [
+          0,
+          3
+        ],
+        "amounts": [
+          "1000000000000000000",
+          "238644",
+          "31905918891216907"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "1000000000000000000",
+          "9629805",
+          "1289199172779985520"
+        ],
+        "fees": [
+          "3000000000000000",
+          "511221736142538"
+        ]
+      },
+      "amountInWei": "1000000000000000000",
+      "amountOutWei": "31905918891216907",
+      "currentNavWei": "1283991691573712883"
+    },
+    {
+      "shares": "10",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "12.839916915737128834",
+      "outputAvax": "12.838167998264049378",
+      "discountToCurrentNavBps": 1.3620940731601705,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x883eA72c2A46F7AcB3820855344C43666c6cc5c0"
+        ],
+        "binSteps": [
+          "5"
+        ],
+        "versions": [
+          3
+        ],
+        "amounts": [
+          "10000000000000000000",
+          "12838167998264049378"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "10000000000000000000",
+          "12838167998264049378"
+        ],
+        "fees": [
+          "100000000000000"
+        ]
+      },
+      "amountInWei": "10000000000000000000",
+      "amountOutWei": "12838167998264049378",
+      "currentNavWei": "12839916915737128834"
+    },
+    {
+      "shares": "10",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "12.839916915737128834",
+      "outputAvax": "0.032633619395368703",
+      "discountToCurrentNavBps": 9974.584244111913,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x2EE9555962d3757c3083924381D6e227638Bc843",
+          "0x864d4e5Ee7318e97483DB7EB0912E09F161516EA"
+        ],
+        "binSteps": [
+          "0",
+          "10"
+        ],
+        "versions": [
+          0,
+          3
+        ],
+        "amounts": [
+          "10000000000000000000",
+          "244088",
+          "32633619395368703"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "10000000000000000000",
+          "96298057",
+          "12892139260952130682"
+        ],
+        "fees": [
+          "3000000000000000",
+          "512110386418013"
+        ]
+      },
+      "amountInWei": "10000000000000000000",
+      "amountOutWei": "32633619395368703",
+      "currentNavWei": "12839916915737128834"
+    },
+    {
+      "shares": "100",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "128.399169157371288343",
+      "outputAvax": "128.381679982640493787",
+      "discountToCurrentNavBps": 1.3620940731601703,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x883eA72c2A46F7AcB3820855344C43666c6cc5c0"
+        ],
+        "binSteps": [
+          "5"
+        ],
+        "versions": [
+          3
+        ],
+        "amounts": [
+          "100000000000000000000",
+          "128381679982640493787"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "100000000000000000000",
+          "128381679982640493787"
+        ],
+        "fees": [
+          "100000000000000"
+        ]
+      },
+      "amountInWei": "100000000000000000000",
+      "amountOutWei": "128381679982640493787",
+      "currentNavWei": "128399169157371288343"
+    },
+    {
+      "shares": "100",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "128.399169157371288343",
+      "outputAvax": "0.032708248485851464",
+      "discountToCurrentNavBps": 9997.45261213912,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x2EE9555962d3757c3083924381D6e227638Bc843",
+          "0x864d4e5Ee7318e97483DB7EB0912E09F161516EA"
+        ],
+        "binSteps": [
+          "0",
+          "10"
+        ],
+        "versions": [
+          0,
+          3
+        ],
+        "amounts": [
+          "100000000000000000000",
+          "244646",
+          "32708248485851464"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "100000000000000000000",
+          "962980574",
+          "128921543757369690681"
+        ],
+        "fees": [
+          "3000000000000000",
+          "510942341178682"
+        ]
+      },
+      "amountInWei": "100000000000000000000",
+      "amountOutWei": "32708248485851464",
+      "currentNavWei": "128399169157371288343"
+    },
+    {
+      "shares": "1000",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "1283.991691573712883438",
+      "outputAvax": "1283.267435283304572676",
+      "discountToCurrentNavBps": 5.640661813945482,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x883eA72c2A46F7AcB3820855344C43666c6cc5c0"
+        ],
+        "binSteps": [
+          "5"
+        ],
+        "versions": [
+          3
+        ],
+        "amounts": [
+          "1000000000000000000000",
+          "1283267435283304572676"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "1000000000000000000000",
+          "1283813521334156969395"
+        ],
+        "fees": [
+          "102553451862592"
+        ]
+      },
+      "amountInWei": "1000000000000000000000",
+      "amountOutWei": "1283267435283304572676",
+      "currentNavWei": "1283991691573712883438"
+    },
+    {
+      "shares": "1000",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "1283.991691573712883438",
+      "outputAvax": "0.032715604399787937",
+      "discountToCurrentNavBps": 9999.745203924493,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x2EE9555962d3757c3083924381D6e227638Bc843",
+          "0x864d4e5Ee7318e97483DB7EB0912E09F161516EA"
+        ],
+        "binSteps": [
+          "0",
+          "10"
+        ],
+        "versions": [
+          0,
+          3
+        ],
+        "amounts": [
+          "1000000000000000000000",
+          "244702",
+          "32715604399787937"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "1000000000000000000000",
+          "9629805746",
+          "1289215588855422924317"
+        ],
+        "fees": [
+          "3000000000000000",
+          "514912015431014"
+        ]
+      },
+      "amountInWei": "1000000000000000000000",
+      "amountOutWei": "32715604399787937",
+      "currentNavWei": "1283991691573712883438"
+    },
+    {
+      "shares": "10000",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "12839.916915737128834388",
+      "outputAvax": "6511.125441152686500566",
+      "discountToCurrentNavBps": 4928.997217129665,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x4b946c91C2B1a7d7C40FB3C130CdfBaf8389094d"
+        ],
+        "binSteps": [
+          "0"
+        ],
+        "versions": [
+          0
+        ],
+        "amounts": [
+          "10000000000000000000000",
+          "6511125441152686500566"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "10000000000000000000000",
+          "12766355272309566607474"
+        ],
+        "fees": [
+          "3000000000000000"
+        ]
+      },
+      "amountInWei": "10000000000000000000000",
+      "amountOutWei": "6511125441152686500566",
+      "currentNavWei": "12839916915737128834388"
+    },
+    {
+      "shares": "10000",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "12839.916915737128834388",
+      "outputAvax": "0.032716406863126461",
+      "discountToCurrentNavBps": 9999.974519767475,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x2EE9555962d3757c3083924381D6e227638Bc843",
+          "0x864d4e5Ee7318e97483DB7EB0912E09F161516EA"
+        ],
+        "binSteps": [
+          "0",
+          "10"
+        ],
+        "versions": [
+          0,
+          3
+        ],
+        "amounts": [
+          "10000000000000000000000",
+          "244708",
+          "32716406863126461"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "10000000000000000000000",
+          "96298057464",
+          "12892156040906976329825"
+        ],
+        "fees": [
+          "3000000000000000",
+          "514899390293737"
+        ]
+      },
+      "amountInWei": "10000000000000000000000",
+      "amountOutWei": "32716406863126461",
+      "currentNavWei": "12839916915737128834388"
+    },
+    {
+      "shares": "100000",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "128399.16915737128834388",
+      "outputAvax": "12035.797834458362579716",
+      "discountToCurrentNavBps": 9062.626501912424,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x4b946c91C2B1a7d7C40FB3C130CdfBaf8389094d"
+        ],
+        "binSteps": [
+          "0"
+        ],
+        "versions": [
+          0
+        ],
+        "amounts": [
+          "100000000000000000000000",
+          "12035797834458362579716"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "100000000000000000000000",
+          "127663552723095666074743"
+        ],
+        "fees": [
+          "3000000000000000"
+        ]
+      },
+      "amountInWei": "100000000000000000000000",
+      "amountOutWei": "12035797834458362579716",
+      "currentNavWei": "128399169157371288343880"
+    },
+    {
+      "shares": "100000",
+      "route": [
+        "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+        "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+      ],
+      "status": "quoted",
+      "navAvax": "128399.16915737128834388",
+      "outputAvax": "0.032716406863126461",
+      "discountToCurrentNavBps": 9999.997451976746,
+      "quote": {
+        "route": [
+          "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+          "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+          "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+        ],
+        "pairs": [
+          "0x2EE9555962d3757c3083924381D6e227638Bc843",
+          "0x864d4e5Ee7318e97483DB7EB0912E09F161516EA"
+        ],
+        "binSteps": [
+          "0",
+          "10"
+        ],
+        "versions": [
+          0,
+          3
+        ],
+        "amounts": [
+          "100000000000000000000000",
+          "244708",
+          "32716406863126461"
+        ],
+        "virtualAmountsWithoutSlippage": [
+          "100000000000000000000000",
+          "962980574649",
+          "128921560562091898553127"
+        ],
+        "fees": [
+          "3000000000000000",
+          "514899390293737"
+        ]
+      },
+      "amountInWei": "100000000000000000000000",
+      "amountOutWei": "32716406863126461",
+      "currentNavWei": "128399169157371288343880"
+    }
+  ],
+  "queueSample": {
+    "fromBlock": "95034398",
+    "toBlock": "95044397",
+    "fromTimestamp": "1789147684",
+    "logScanComplete": true,
+    "requestEventCount": 5,
+    "uniqueRecentRequesters": 4,
+    "usersExamined": 4,
+    "sampledRequests": [
+      {
+        "user": "0xe23bd6fe3a2bccac3ad85517f142cb934329715a",
+        "count": {
+          "status": "observed",
+          "value": "0"
+        }
+      },
+      {
+        "user": "0xdad8d70b55aed34d23661ba9f66b2fb7d0020444",
+        "count": {
+          "status": "observed",
+          "value": "2"
+        },
+        "requests": {
+          "status": "observed",
+          "value": [
+            [
+              {
+                "startedAt": "1789152215",
+                "shareAmount": "500000000000000000"
+              },
+              {
+                "startedAt": "1789152528",
+                "shareAmount": "1190090358488515402"
+              }
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ]
+        }
+      },
+      {
+        "user": "0xf83fc1d4762f9b7f6fbefb609edc91d6fad81da3",
+        "count": {
+          "status": "observed",
+          "value": "1"
+        },
+        "requests": {
+          "status": "observed",
+          "value": [
+            [
+              {
+                "startedAt": "1789155148",
+                "shareAmount": "51807880001941628787"
+              }
+            ],
+            [
+              "0"
+            ]
+          ]
+        }
+      },
+      {
+        "user": "0xb74805310550023a0a88cd7f56425cfb3d068917",
+        "count": {
+          "status": "observed",
+          "value": "14"
+        },
+        "requests": {
+          "status": "observed",
+          "value": [
+            [
+              {
+                "startedAt": "1789048914",
+                "shareAmount": "2000000000000000000000"
+              },
+              {
+                "startedAt": "1789048949",
+                "shareAmount": "145000000000000000000"
+              },
+              {
+                "startedAt": "1789133810",
+                "shareAmount": "460000000000000000000"
+              },
+              {
+                "startedAt": "1788072402",
+                "shareAmount": "465000000000000000000"
+              },
+              {
+                "startedAt": "1788363375",
+                "shareAmount": "475000000000000000000"
+              },
+              {
+                "startedAt": "1788452096",
+                "shareAmount": "3000000000000000000000"
+              },
+              {
+                "startedAt": "1788452112",
+                "shareAmount": "2000000000000000000000"
+              },
+              {
+                "startedAt": "1788452133",
+                "shareAmount": "1000000000000000000000"
+              },
+              {
+                "startedAt": "1788452165",
+                "shareAmount": "683000000000000000000"
+              },
+              {
+                "startedAt": "1788547559",
+                "shareAmount": "1000000000000000000000"
+              },
+              {
+                "startedAt": "1788547577",
+                "shareAmount": "866000000000000000000"
+              },
+              {
+                "startedAt": "1789133751",
+                "shareAmount": "2000000000000000000000"
+              },
+              {
+                "startedAt": "1789133787",
+                "shareAmount": "1000000000000000000000"
+              },
+              {
+                "startedAt": "1789157628",
+                "shareAmount": "1147000000000000000000"
+              }
+            ],
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Read-only eth_call output, not an executed sale, guaranteed fill, or transaction simulation with a funded seller.",
+    "LFJ direct and USDC-routed paths only; no claim of best market-wide routing or split liquidity.",
+    "Current conversion NAV is not guaranteed future redemption value.",
+    "Custodied shares include pending, redeemable and overdue requests; bounded event sample is not full active queue.",
+    "Gas, future rate changes, front-running, and stablecoin conversion are excluded."
+  ]
+}

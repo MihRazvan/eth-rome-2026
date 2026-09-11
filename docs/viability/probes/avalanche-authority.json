@@ -1,0 +1,32 @@
+{
+  "blockNumber": "95044397",
+  "blockHash": "0xad9e1b5b70140e6fdda33a4ace507b7933ab89ea816b3c13c36bf1f6d1e2912f",
+  "observations": [
+    {
+      "requester": "0xdad8d70b55aed34d23661ba9f66b2fb7d0020444",
+      "codePresent": false,
+      "cancellation": "eth_call succeeded",
+      "requestCountAtSameBlock": "2",
+      "snapshotCount": "2"
+    },
+    {
+      "requester": "0xf83fc1d4762f9b7f6fbefb609edc91d6fad81da3",
+      "codePresent": false,
+      "cancellation": "eth_call succeeded",
+      "requestCountAtSameBlock": "1",
+      "snapshotCount": "1"
+    },
+    {
+      "requester": "0xb74805310550023a0a88cd7f56425cfb3d068917",
+      "codePresent": false,
+      "cancellation": "eth_call succeeded",
+      "requestCountAtSameBlock": "14",
+      "snapshotCount": "14"
+    }
+  ],
+  "limits": [
+    "eth_call simulates cancellation in ephemeral state only; no request was actually cancelled and returned token deltas were not independently traced.",
+    "No code at a sampled address does not establish an independent user or exclude delegated smart-wallet authorization.",
+    "Source indexes requests by msg.sender; old request ownership cannot be imported with a token approval."
+  ]
+}
