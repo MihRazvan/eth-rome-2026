@@ -50,12 +50,14 @@ export interface ClaimObservation {
   blockTimestamp: string;
   observedAt: string;
   owner: Address | null;
-  status: "pending" | "claimable" | "claimed" | "closed" | "invalid";
+  status: "pending" | "finalized" | "claimed" | "closed" | "invalid";
   requestedWei: string;
-  /** Actual claimable value only when finalized. Pending face is not a payout quote. */
+  /** Source amount getter at the observed block; payout execution is not simulated. */
   claimableWei: string | null;
   requestTimestamp: string | null;
-  sourceFeeWei: string | null;
+  /** Historical field; reviewed ether.fi implementation does not charge it. */
+  legacyStoredFeeWei: string | null;
+  collectionExecution: "not-simulated";
   currency: "ETH";
   decimals: 18;
 }
@@ -116,6 +118,7 @@ export async function inspectClaim(
     blockNumber: blockNumber.toString(),
     blockTimestamp: new Date(Number(block.timestamp) * 1000).toISOString(),
     observedAt: new Date().toISOString(),
+    collectionExecution: "not-simulated" as const,
     currency: "ETH" as const,
     decimals: 18 as const,
   };
@@ -166,14 +169,14 @@ export async function inspectClaim(
       status: request.isClaimed
         ? "claimed"
         : request.isFinalized
-          ? "claimable"
+          ? "finalized"
           : "pending",
       requestedWei: request.amountOfStETH.toString(),
       claimableWei,
       requestTimestamp: new Date(
         Number(request.timestamp) * 1000,
       ).toISOString(),
-      sourceFeeWei: null,
+      legacyStoredFeeWei: null,
     };
   }
   const next = await client.readContract({
@@ -200,7 +203,7 @@ export async function inspectClaim(
       requestedWei: "0",
       claimableWei: null,
       requestTimestamp: null,
-      sourceFeeWei: null,
+      legacyStoredFeeWei: null,
     };
   }
   const owner = await client.readContract({
@@ -230,10 +233,10 @@ export async function inspectClaim(
   return {
     ...common,
     owner,
-    status: !request.isValid ? "invalid" : finalized ? "claimable" : "pending",
+    status: !request.isValid ? "invalid" : finalized ? "finalized" : "pending",
     requestedWei: request.amountOfEEth.toString(),
     claimableWei: claimable === null ? null : claimable.toString(),
     requestTimestamp: null,
-    sourceFeeWei: (BigInt(request.feeGwei) * 1_000_000_000n).toString(),
+    legacyStoredFeeWei: (BigInt(request.feeGwei) * 1_000_000_000n).toString(),
   };
 }

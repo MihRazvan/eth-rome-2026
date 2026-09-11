@@ -75,7 +75,7 @@ describe("read-only native withdrawal inspection", () => {
     )[0].isFinalized = true;
     const r = await inspectClaim("lido", "1", p.client);
     expect(r).toMatchObject({
-      status: "claimable",
+      status: "finalized",
       requestedWei: "1000",
       claimableWei: "950",
     });
@@ -97,11 +97,20 @@ describe("read-only native withdrawal inspection", () => {
       status: "pending",
       claimableWei: null,
       requestTimestamp: null,
-      sourceFeeWei: "2000000000",
+      legacyStoredFeeWei: "2000000000",
     });
     expect(p.calls.some((c) => c.functionName === "getClaimableAmount")).toBe(
       false,
     );
+  });
+  it("reports finalization without certifying an executable ether.fi collection", async () => {
+    const p = provider("etherfi", { isFinalized: true });
+    expect(await inspectClaim("etherfi", "1", p.client)).toMatchObject({
+      status: "finalized", claimableWei: "940", collectionExecution: "not-simulated",
+      legacyStoredFeeWei: "2000000000",
+    });
+    // The read interface cannot establish blacklist, escrow or recipient callback eligibility.
+    expect(p.calls.some((c) => c.functionName === "claimWithdraw")).toBe(false);
   });
   it("keeps invalid and deleted requests out of collectible claims", async () => {
     const p = provider("etherfi", { isFinalized: true });
