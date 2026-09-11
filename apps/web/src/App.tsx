@@ -2,6 +2,7 @@ import { compareAmounts } from "../../../packages/shared/amount";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { readRoute, routeUrl, type AppPage, type AppRoute } from "./navigation";
 import { DEMO_MAKER_CAPITAL } from "../../../packages/shared/capital";
+import { buyerOutcome, parseUsdc, saleDifference } from "./economics";
 import type {
   AppActions,
   AppData,
@@ -90,6 +91,84 @@ function Amount({ value, small = false }: { value?: string; small?: boolean }) {
       {money(value)}
       <span className="unit">USDC</span>
     </span>
+  );
+}
+function SaleDifference({ expected, net }: { expected: string; net?: string }) {
+  const comparison = net === undefined ? null : saleDifference(expected, net);
+  if (!comparison) return null;
+  return (
+    <div className="sale-difference">
+      <strong>Sell now vs. wait</strong>
+      <p>
+        {comparison.kind === "equal" ? (
+          "Your net payment matches current expected remaining proceeds."
+        ) : (
+          <>
+            Receive {money(comparison.difference)} test USDC{" "}
+            {comparison.kind === "discount" ? "less" : "more"}
+            {comparison.percentage
+              ? ` (${comparison.percentage} ${comparison.kind})`
+              : ` (${comparison.kind})`}{" "}
+            than current expected remaining proceeds.
+          </>
+        )}
+      </p>
+      <small>
+        Expected proceeds include cash held in the claim and are not guaranteed.
+        Gas is separate.
+      </small>
+    </div>
+  );
+}
+
+function PayoutScenario({ net, expected }: { net: string; expected: string }) {
+  // This assumption is confined to the mounted dialog, never offer terms or navigation.
+  const [assumedProceeds, setAssumedProceeds] = useState(expected);
+  const outcome = buyerOutcome({ net, fee: "0" }, assumedProceeds);
+  return (
+    <details className="payout-scenario">
+      <summary>Check a payout scenario</summary>
+      <label className="bid-input">
+        Assumed total proceeds to you
+        <input
+          type="text"
+          inputMode="decimal"
+          value={assumedProceeds}
+          onChange={(event) => setAssumedProceeds(event.target.value)}
+          aria-describedby="scenario-assumption"
+        />
+        <span>test USDC · includes cash held and future recoveries</span>
+      </label>
+      {outcome ? (
+        <dl className="scenario-results">
+          <div>
+            <dt>Purchase cost, including fee</dt>
+            <dd>{money(outcome.cost)} test USDC</dd>
+          </div>
+          <div>
+            <dt>Break-even proceeds</dt>
+            <dd>{money(outcome.breakEven)} test USDC</dd>
+          </div>
+          <div className={`scenario-result ${outcome.kind}`}>
+            <dt>Scenario {outcome.kind}</dt>
+            <dd>
+              {outcome.kind === "gain" ? "+" : ""}
+              {money(outcome.result)} test USDC
+            </dd>
+          </div>
+        </dl>
+      ) : (
+        <p>
+          Enter a payment and assumed proceeds with up to six decimal places to
+          compare.
+        </p>
+      )}
+      <p id="scenario-assumption">
+        An assumption, not a guaranteed payout. Result and break-even exclude
+        gas and other costs. This local scenario does not change your signed
+        offer.
+      </p>
+    </details>
   );
 }
 function Receipt({
@@ -1052,6 +1131,7 @@ export default function App({
                     <span>Expected {money(claim.expected)} test USDC</span>
                     <span>Includes supported later recoveries</span>
                   </div>
+                  <SaleDifference expected={claim.expected} net={offer?.net} />
                   <div className="decision-context">
                     {networkLabel} · Test source
                     <br />
@@ -1592,8 +1672,9 @@ export default function App({
               value={bid}
               onChange={(e) => setBid(e.target.value)}
             />
-            <span>test USDC · fee displayed by settlement</span>
+            <span>test USDC · protocol fee: 0.00 · buyer pays this amount</span>
           </label>
+          <PayoutScenario net={bid} expected={claim.expected} />
           <p>
             If needed, authorize a {money(DEMO_MAKER_CAPITAL, 0)} test USDC
             spending limit. This public limit is separate from your private
@@ -1612,12 +1693,7 @@ export default function App({
           </label>
           <button
             className="button primary full"
-            disabled={
-              !riskAccepted ||
-              !!busy ||
-              !/^\d+(\.\d{1,6})?$/.test(bid) ||
-              Number(bid) <= 0
-            }
+            disabled={!riskAccepted || !!busy || (parseUsdc(bid) ?? 0n) <= 0n}
             onClick={() =>
               run("Sign purchase offer", () =>
                 actions.makeOffer(claim.id, bid, bidMode),
@@ -1727,6 +1803,7 @@ function SaleReview({
           <dd>{claim.source}</dd>
         </div>
       </dl>
+      <SaleDifference expected={claim.expected} net={offer.net} />
       <p className="fine-print">
         Gas is separate. Settlement rechecks maker funds, ownership, depleted
         value, deadline and signature.{" "}

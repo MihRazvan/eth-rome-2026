@@ -2548,6 +2548,72 @@ dd {
   color: var(--muted);
   margin: 0 0 22px;
 }
+.sale-difference {
+  border-top: 1px solid var(--line);
+  padding: 16px 0;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.sale-difference strong {
+  font-size: 12px;
+}
+.sale-difference p {
+  margin: 6px 0;
+  color: var(--ink);
+}
+.sale-difference small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+.payout-scenario {
+  margin: 18px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper, #f8f9f6);
+}
+.payout-scenario summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+  min-height: 24px;
+  line-height: 24px;
+}
+.payout-scenario .bid-input {
+  margin: 14px 0;
+}
+.payout-scenario p {
+  font-size: 11px;
+  line-height: 1.55;
+  margin-bottom: 0;
+}
+.scenario-results {
+  font-size: 12px;
+  margin: 0;
+}
+.scenario-results > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 5px 12px;
+  padding: 8px 0;
+}
+.scenario-results dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.scenario-result {
+  border-top: 1px solid var(--line);
+  font-weight: 650;
+}
+.scenario-result.gain dd {
+  color: #246347;
+}
+.scenario-result.loss dd {
+  color: #9b412b;
+}
 .state-freshness time {
   color: var(--ink);
   font-variant-numeric: tabular-nums;
