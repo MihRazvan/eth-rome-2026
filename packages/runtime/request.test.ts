@@ -42,6 +42,7 @@ async function serve(
   run: (port: number) => Promise<void>,
   options: {
     onHeaders?: () => void;
+    onAborted?: () => void;
     onParsed?: (body: any) => void;
     action?: (body: any) => Promise<void>;
     waitTimeoutMs?: number;
@@ -53,6 +54,7 @@ async function serve(
   });
   const server = createServer(async (req, res) => {
     options.onHeaders?.();
+    if (options.onAborted) req.once("aborted", options.onAborted);
     const disconnected = new AbortController();
     res.once("close", () => {
       if (!res.writableEnded) disconnected.abort();
@@ -115,6 +117,35 @@ describe("runtime request boundaries — actual isolated HTTP", () => {
         expect((await send(port, '{"id":"after"}')).status).toBe(200);
       },
       { onHeaders: headers.resolve },
+    );
+  });
+
+  it("survives a real client disconnect during an unfinished body", async () => {
+    const headers = deferred(),
+      aborted = deferred();
+    await serve(
+      async (port) => {
+        const client = request({
+          host: "127.0.0.1",
+          port,
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Content-Length": 30 },
+        });
+        client.on("error", () => {}); // Intentional client-side socket destruction.
+        client.write("{");
+        await headers.promise;
+        const closed = new Promise<void>((resolve) =>
+          client.once("close", resolve),
+        );
+        client.destroy();
+        await closed;
+        await aborted.promise;
+        expect(await send(port, '{"id":"after-disconnect"}')).toEqual({
+          status: 200,
+          body: '{"id":"after-disconnect"}',
+        });
+      },
+      { onHeaders: headers.resolve, onAborted: aborted.resolve },
     );
   });
 

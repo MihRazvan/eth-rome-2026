@@ -10,7 +10,7 @@
   "checks": [
     {
       "command": "node node_modules/vitest/vitest.mjs run packages/runtime/request.test.ts",
-      "passed": 7,
+      "passed": 8,
       "failed": 0,
       "skipped": 0,
       "network": "ephemeral 127.0.0.1 HTTP listeners only"
@@ -44,5 +44,10 @@
     "Active signer transaction execution still follows existing RPC receipt timeouts; it is not cancelled by client disconnect.",
     "Process-local publication budgets remain resettable and anonymously consumable; this patch fixes body/queue availability, not all hosted abuse.",
     "No shared local chain, public RPC, signer or sponsor storage was called."
-  ]
+  ],
+  "disconnectFollowup": {
+    "nodeVersion": "v25.2.1",
+    "result": "Real client destroys unfinished POST; server IncomingMessage aborted event observed; following complete POST returns200; no unhandled server error observed. Suspected aborted/error listener crash did not reproduce.",
+    "productionCodeChanged": false
+  }
 }
