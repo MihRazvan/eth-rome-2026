@@ -251,10 +251,12 @@ export default function App({
     action: () => Promise<TransactionResult | void>,
   ) {
     if (busy) return;
+    const identityAtStart = interactionIdentity;
     setBusy(label);
     setNotice(undefined);
     try {
       const result = await action();
+      if (previousIdentity.current !== identityAtStart) return;
       setNotice({
         message: result?.message || `${label} complete.`,
         url: result?.explorerUrl,
@@ -264,6 +266,7 @@ export default function App({
         setMakeBid(false);
       }
     } catch (error) {
+      if (previousIdentity.current !== identityAtStart) return;
       setNotice({
         error: true,
         message:
