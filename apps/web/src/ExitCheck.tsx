@@ -201,7 +201,7 @@ function BuyerCeiling({ observation }: { observation: ClaimObservation }) {
                 </dd>
               </div>
               <div>
-                <dt>Total buyer capital required</dt>
+                <dt>Purchase and upfront costs · excludes reserve</dt>
                 <dd>
                   {eth(result.buyerCapitalRequired)} {currency}
                 </dd>
