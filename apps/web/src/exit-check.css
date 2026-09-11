@@ -1,0 +1,623 @@
+body:has(.exit-check) {
+  margin: 0;
+}
+.exit-check {
+  --ec-ink: #172934;
+  --ec-muted: #566774;
+  --ec-line: #d7e0e6;
+  --ec-blue: #2456eb;
+  color: var(--ec-ink);
+  background: #f3f6f8;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+.exit-check * {
+  box-sizing: border-box;
+}
+.exit-check a {
+  color: var(--ec-blue);
+  text-underline-offset: 4px;
+}
+.exit-check :is(button, input, select) {
+  font: inherit;
+}
+.exit-check :is(button, a, input, select, summary):focus-visible {
+  outline: 3px solid var(--ec-blue);
+  outline-offset: 4px;
+}
+.exit-check :is(h1, h2, h3, p) {
+  margin: 0;
+}
+.exit-check p {
+  line-height: 1.6;
+}
+.exit-check .ec-skip {
+  position: absolute;
+  top: -80px;
+  background: white;
+  padding: 15px;
+  z-index: 10;
+}
+.exit-check .ec-skip:focus {
+  top: 10px;
+  left: 10px;
+}
+.exit-check .ec-header {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 0 max(5%, calc((100% - 1200px) / 2));
+  background: white;
+  border-bottom: 1px solid var(--ec-line);
+}
+.exit-check .ec-logo {
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -3px;
+  text-decoration: none;
+}
+.exit-check .ec-logo span {
+  padding-left: 7px;
+  font-weight: 400;
+}
+.exit-check .ec-header-label {
+  font-size: 12px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-readonly {
+  margin-left: auto;
+  font-size: 12px;
+}
+.exit-check .ec-readonly i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #496e85;
+  margin-right: 8px;
+}
+.exit-check main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 46px 0 70px;
+}
+.exit-check .ec-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 80px;
+  align-items: end;
+  margin-bottom: 40px;
+}
+.exit-check .ec-eyebrow,
+.exit-check .ec-step {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ec-muted);
+}
+.exit-check .ec-intro .ec-eyebrow {
+  grid-column: 1/-1;
+}
+.exit-check h1 {
+  font-size: 54px;
+  letter-spacing: -2.5px;
+  line-height: 1.03;
+}
+.exit-check .ec-intro > p {
+  max-width: 440px;
+  color: var(--ec-muted);
+  font-size: 16px;
+  padding-bottom: 4px;
+}
+.exit-check .ec-layout {
+  display: grid;
+  grid-template-columns: 350px minmax(0, 1fr);
+  gap: 38px;
+  align-items: start;
+}
+.exit-check .ec-inspector {
+  padding: 26px;
+  background: white;
+  border: 1px solid var(--ec-line);
+  border-radius: 12px;
+}
+.exit-check .ec-step {
+  display: block;
+  margin-bottom: 25px;
+}
+.exit-check .ec-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.exit-check .ec-field :is(input, select) {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--ec-line);
+  border-radius: 6px;
+  background: white;
+  color: var(--ec-ink);
+}
+.exit-check .ec-field input {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.exit-check .ec-field small {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--ec-muted);
+}
+.exit-check .ec-caption {
+  font-size: 11px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border: 1px solid var(--ec-line);
+  border-radius: 7px;
+  padding: 13px 17px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ec-ink);
+  background: white;
+  min-height: 46px;
+  cursor: pointer;
+}
+.exit-check .ec-primary {
+  background: var(--ec-blue);
+  color: white;
+  border-color: var(--ec-blue);
+  width: 100%;
+  margin-top: 23px;
+}
+.exit-check .ec-primary:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.exit-check .ec-read-note {
+  font-size: 11px;
+  color: var(--ec-muted);
+  margin: 13px 0 27px;
+}
+.exit-check .ec-example {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 10px;
+  background: none;
+  color: var(--ec-blue);
+  border: 0;
+  padding: 17px 0 10px;
+  border-top: 1px solid var(--ec-line);
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  min-height: 44px;
+}
+.exit-check .ec-results {
+  min-width: 0;
+}
+.exit-check .ec-empty,
+.exit-check .ec-loading,
+.exit-check .ec-error-panel {
+  background: #eaf0f4;
+  border: 1px solid var(--ec-line);
+  padding: 30px;
+  border-radius: 12px;
+}
+.exit-check .ec-empty-symbol {
+  display: flex;
+  width: 55px;
+  height: 55px;
+  background: var(--ec-blue);
+  color: white;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 30px 0 22px;
+  border-radius: 7px;
+}
+.exit-check .ec-empty h2 {
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+.exit-check .ec-empty ul {
+  list-style: none;
+  padding: 0;
+  margin: 25px 0;
+}
+.exit-check .ec-empty li {
+  display: flex;
+  gap: 18px;
+  border-bottom: 1px solid #d1dce5;
+  padding: 13px 0;
+}
+.exit-check .ec-empty li span {
+  font-size: 10px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-empty > p,
+.exit-check .ec-loading p {
+  font-size: 12px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-result-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.exit-check .ec-result-top h2 {
+  font-size: 26px;
+  letter-spacing: -0.7px;
+  margin-top: 7px;
+  overflow-wrap: anywhere;
+}
+.exit-check .ec-state {
+  padding: 8px 10px;
+  font-size: 11px;
+  background: #e1e9f1;
+  border-radius: 5px;
+}
+.exit-check .ec-state.finalized {
+  background: #dcf0e4;
+  color: #285b40;
+}
+.exit-check .ec-state.invalid {
+  background: #fae9df;
+  color: #873e26;
+}
+.exit-check .ec-receipt {
+  background: white;
+  border: 1px solid var(--ec-line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.exit-check .ec-value {
+  padding: 28px 28px 22px;
+}
+.exit-check .ec-value > span {
+  font-size: 12px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-value strong {
+  display: block;
+  font-size: 38px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.exit-check .ec-value strong small {
+  font-size: 16px;
+  letter-spacing: 0;
+  color: var(--ec-muted);
+}
+.exit-check .ec-value p {
+  font-size: 11px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-facts {
+  margin: 0;
+  padding: 0 28px 24px;
+  font-size: 12px;
+}
+.exit-check .ec-facts > div,
+.exit-check .ec-ceiling dl > div {
+  display: grid;
+  grid-template-columns: 42% minmax(0, 1fr);
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px solid #edf0f2;
+}
+.exit-check dt {
+  color: var(--ec-muted);
+}
+.exit-check dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+.exit-check .ec-perforation {
+  border-top: 1px dashed #b6c7d7;
+  height: 1px;
+  position: relative;
+}
+.exit-check .ec-perforation:before,
+.exit-check .ec-perforation:after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--ec-line);
+  border-radius: 50%;
+  background: #f3f6f8;
+  position: absolute;
+  top: -8px;
+}
+.exit-check .ec-perforation:before {
+  left: -8px;
+}
+.exit-check .ec-perforation:after {
+  right: -8px;
+}
+.exit-check .ec-stamp {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px 20px;
+  padding: 20px 28px;
+  background: #f9fbfc;
+  font-size: 11px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-stamp time,
+.exit-check .ec-stamp small {
+  flex-basis: 100%;
+  font-size: 10px;
+}
+.exit-check .ec-next {
+  margin: 24px 0;
+  padding-left: 16px;
+  border-left: 3px solid var(--ec-blue);
+}
+.exit-check h3 {
+  font-size: 15px;
+  letter-spacing: -0.2px;
+}
+.exit-check .ec-next p {
+  margin-top: 9px;
+  color: var(--ec-muted);
+  font-size: 12px;
+}
+.exit-check .ec-next .ec-button {
+  margin-top: 16px;
+}
+.exit-check .ec-calculator {
+  background: white;
+  border: 1px solid var(--ec-line);
+  border-radius: 9px;
+  margin: 25px 0;
+}
+.exit-check summary {
+  cursor: pointer;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.exit-check .ec-calculator > summary {
+  padding: 18px 22px;
+}
+.exit-check .ec-calculator summary small {
+  display: block;
+  padding-left: 18px;
+  font-size: 10px;
+  font-weight: 400;
+  margin-top: 6px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-calculator-body {
+  border-top: 1px solid var(--ec-line);
+  padding: 22px;
+}
+.exit-check .ec-calculator-body > p {
+  font-size: 12px;
+  margin-bottom: 20px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-currency {
+  max-width: 160px;
+  margin-top: 20px;
+}
+.exit-check .ec-input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+.exit-check .ec-ceiling {
+  border-top: 2px solid var(--ec-blue);
+  background: #f3f6fd;
+  padding: 20px;
+  margin: 10px 0 20px;
+}
+.exit-check .ec-ceiling > span {
+  font-size: 12px;
+}
+.exit-check .ec-ceiling > strong {
+  display: block;
+  font-size: 25px;
+  overflow-wrap: anywhere;
+  margin: 12px 0 20px;
+  font-variant-numeric: tabular-nums;
+}
+.exit-check .ec-ceiling > strong small {
+  font-size: 13px;
+}
+.exit-check .ec-ceiling dl {
+  margin: 0;
+  font-size: 11px;
+}
+.exit-check .ec-ceiling p {
+  font-size: 11px;
+  margin-top: 15px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-local-note {
+  font-size: 10px !important;
+  margin-bottom: 0 !important;
+}
+.exit-check .ec-source-details {
+  font-size: 11px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-source-details summary {
+  font-size: 11px;
+  min-height: 34px;
+}
+.exit-check .ec-source-details .ec-facts {
+  padding: 0 0 15px;
+  font-size: 11px;
+}
+.exit-check .ec-error-panel {
+  background: #fff5f0;
+  border-color: #e2c6b9;
+}
+.exit-check .ec-error-panel h2 {
+  font-size: 20px;
+}
+.exit-check .ec-error-panel p {
+  margin: 15px 0;
+  font-size: 13px;
+}
+.exit-check .ec-alert {
+  padding: 18px;
+  background: #fff0e7;
+  border: 1px solid #e3c7b7;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.exit-check .ec-alert p {
+  margin-top: 7px;
+  font-size: 12px;
+}
+.exit-check .ec-error {
+  color: #913f28 !important;
+}
+.exit-check .ec-example-notice {
+  font-size: 11px;
+  background: #e5ecff;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+.exit-check .ec-footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 25px 0;
+  border-top: 1px solid var(--ec-line);
+  font-size: 11px;
+  color: var(--ec-muted);
+}
+.exit-check .ec-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.exit-check .ec-footer small {
+  flex-basis: 100%;
+  font-size: 10px;
+}
+@media (max-width: 1300px) {
+  .exit-check main,
+  .exit-check .ec-footer {
+    margin: 0 5%;
+  }
+}
+@media (max-width: 850px) {
+  .exit-check .ec-layout {
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 22px;
+  }
+  .exit-check .ec-intro {
+    gap: 12px 35px;
+  }
+  .exit-check h1 {
+    font-size: 44px;
+  }
+  .exit-check .ec-input-grid {
+    grid-template-columns: 1fr;
+  }
+  .exit-check .ec-facts > div,
+  .exit-check .ec-ceiling dl > div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .exit-check .ec-value strong {
+    font-size: 30px;
+  }
+}
+@media (max-width: 620px) {
+  .exit-check .ec-header {
+    height: 72px;
+    gap: 15px;
+  }
+  .exit-check .ec-header-label {
+    display: none;
+  }
+  .exit-check .ec-logo {
+    font-size: 32px;
+  }
+  .exit-check .ec-readonly {
+    font-size: 10px;
+  }
+  .exit-check main {
+    padding-top: 30px;
+  }
+  .exit-check .ec-intro {
+    display: block;
+    margin-bottom: 26px;
+  }
+  .exit-check h1 {
+    font-size: 42px;
+    margin: 13px 0 17px;
+  }
+  .exit-check .ec-intro > p {
+    font-size: 14px;
+  }
+  .exit-check .ec-layout {
+    grid-template-columns: 1fr;
+  }
+  .exit-check .ec-inspector {
+    padding: 22px;
+  }
+  .exit-check .ec-empty {
+    padding: 25px;
+  }
+  .exit-check .ec-empty-symbol {
+    margin-top: 22px;
+  }
+  .exit-check .ec-empty h2 {
+    font-size: 28px;
+  }
+  .exit-check .ec-value {
+    padding: 24px;
+  }
+  .exit-check .ec-facts {
+    padding: 0 24px 20px;
+  }
+  .exit-check .ec-stamp {
+    padding: 19px 24px;
+  }
+  .exit-check .ec-value strong {
+    font-size: 32px;
+  }
+  .exit-check .ec-ceiling {
+    padding: 16px;
+  }
+  .exit-check .ec-ceiling > strong {
+    font-size: 23px;
+  }
+  .exit-check .ec-result-top h2 {
+    font-size: 24px;
+  }
+}
