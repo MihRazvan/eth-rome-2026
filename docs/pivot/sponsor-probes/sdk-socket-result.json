@@ -1,0 +1,12 @@
+{
+  "observedAt": "2026-09-11T21:13:13.669Z",
+  "transportType": "webSocket",
+  "fromBlockOmitted": true,
+  "pollingOverrideOmitted": true,
+  "events": 10,
+  "eventTypes": [
+    "EntityCreated",
+    "EntityDeleted"
+  ],
+  "errors": 0
+}

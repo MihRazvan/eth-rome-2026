@@ -1,0 +1,100 @@
+{
+  "observedAt": "2026-09-11T21:12:17.792Z",
+  "scope": "read-only; no accounts, signatures, writes, login or publications",
+  "ensSourceCommit": "97a57293f3b4279d94b571e678edb53ce62638f4",
+  "ens": {
+    "status": "read-verified",
+    "chainId": 11155111,
+    "blockNumber": "11684468",
+    "blockHash": "0x7f451385c2098ab97d68d5cd055be32a90fdf388829a50f8b3da692b7d7a4d42",
+    "blockTimestamp": "1789161132",
+    "code": [
+      {
+        "name": "RootRegistry",
+        "address": "0x8115186e8f2e0b0281e86ab91f0f48ba90364354",
+        "codeBytes": 14730,
+        "codeHash": "0x99a6ba74173ac220fd9d7a2000a8142cf52d98c7a17ac6abc6d74fa17d8f086c"
+      },
+      {
+        "name": "ETHRegistry",
+        "address": "0xbdc85dd5b15d7ecb354cd7cb6f2c50b4f2c4f0e2",
+        "codeBytes": 14730,
+        "codeHash": "0x99a6ba74173ac220fd9d7a2000a8142cf52d98c7a17ac6abc6d74fa17d8f086c"
+      },
+      {
+        "name": "ETHRegistrar",
+        "address": "0xa88553f454b77203b0d036a05c894d555eaaa2cc",
+        "codeBytes": 7497,
+        "codeHash": "0x7ac653f817e6bef6543d25ce97235b232430b1771ab5bcb27b936798fe38af1f"
+      },
+      {
+        "name": "MockUSDC",
+        "address": "0x768f42455a2d082e23ceef7d51e5787c82d67a39",
+        "codeBytes": 4309,
+        "codeHash": "0xee640ba5927c02c9f6eddf75ef6634e08a354c4a9fd852927fbac510bec75a68"
+      },
+      {
+        "name": "UserRegistryImpl",
+        "address": "0x624a25d67b59d587752ebec8dded8827dae52050",
+        "codeBytes": 17159,
+        "codeHash": "0xd679dfbaf84c259c5421131dddc2bf674ac008c0494d776500284e37e96f1d2b"
+      },
+      {
+        "name": "PermissionedResolverImpl",
+        "address": "0x9eae5c2730a7dd16bdd1dee6421a1b91e3b0365e",
+        "codeBytes": 17597,
+        "codeHash": "0x7a5bbb7f5a8e46232a4437e8eea6cc6e935266ade1b8b027e4e04fb9ca8efd47"
+      },
+      {
+        "name": "VerifiableFactory",
+        "address": "0x10dc6333cdfe1fcef624c6e0a8221b91804cd7ef",
+        "codeBytes": 1411,
+        "codeHash": "0x810afc44bd6c35ac974ab80a8cf983cc6e514364b7a214b3a25df2d4e1e7ba60"
+      },
+      {
+        "name": "ManagedUniversalResolverProxy",
+        "address": "0x6d80F2172CFdEc5730fE683860C33d26fC42e6F1",
+        "codeBytes": 2612,
+        "codeHash": "0xba6ae56546e53515a294152a398155a1094ef337abdb76bc541f2d78744b4b12"
+      },
+      {
+        "name": "UniversalResolverV2",
+        "address": "0x4a1817d13e9cf196f471725176355c1234b63c70",
+        "codeBytes": 18495,
+        "codeHash": "0x7b2c7040adacb3932de62c3a8d05f4e5c9361d6a3fae7dc3bdee815df44a3ca4"
+      }
+    ],
+    "reads": {
+      "rootEthSubregistry": "0xBDC85dD5b15D7ecb354cd7cb6f2c50b4f2c4F0E2",
+      "integrationTestsState": {
+        "status": 1,
+        "expiry": "2090037228",
+        "latestOwner": "0x0000000000000000000000000000000000000000",
+        "tokenId": "85781815920289921176990571224418940624251199202868718820982227592069896994816",
+        "resource": "85781815920289921176990571224418940624251199202868718820982227592069896994816"
+      },
+      "registrarRegistry": "0xBDC85dD5b15D7ecb354cd7cb6f2c50b4f2c4F0E2",
+      "minCommitmentAge": "60",
+      "minRegisterDuration": "2419200",
+      "paymentDecimals": 6,
+      "managedResolverImplementation": "0x4A1817d13E9cF196f471725176355C1234b63C70",
+      "resolverRoot": "0x8115186E8f2E0B0281e86ab91f0f48Ba90364354"
+    }
+  },
+  "arkivHttp": {
+    "status": 200,
+    "chainId": 7738577
+  },
+  "arkivWebsocket": {
+    "endpoint": "wss://rpc.tiramisu.db-chain.testnet.arkiv.network",
+    "opened": true,
+    "chainId": 7738577,
+    "subscriptionAccepted": true,
+    "notifications": 15,
+    "entityLogNotifications": 15
+  },
+  "fuji": {
+    "chainId": 43113,
+    "blockNumber": "58324457"
+  }
+}
