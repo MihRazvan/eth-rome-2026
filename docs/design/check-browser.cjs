@@ -1,52 +1,136 @@
-const { chromium } = require('playwright');
-const assert = require('node:assert/strict');
-const path = require('node:path');
+const { chromium } = require("playwright");
+const assert = require("node:assert/strict");
+const path = require("node:path");
 (async () => {
- const browser = await chromium.launch();
- const page = await browser.newPage({viewport:{width:1440,height:900}});
- const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('http://127.0.0.1:5174/?preview=1');
- await page.getByRole('heading',{name:'Time is an asset. Trade yours.'}).waitFor();
- await page.screenshot({path:path.join(__dirname,'evidence/receipt-markets-desktop.png'),fullPage:true});
- await page.getByRole('button',{name:'Residual rights',exact:true}).click();
- assert.equal(await page.locator('tbody tr').count(),1);
- await page.getByRole('button',{name:'View claim 1041'}).click();
- await page.getByRole('heading',{name:'The ownership trail'}).waitFor();
- assert.match(await page.locator('.receipt-split').innerText(),/4,000.00/);
- await page.screenshot({path:path.join(__dirname,'evidence/receipt-residual-detail.png'),fullPage:true});
- await page.getByRole('button',{name:'View buyer offers'}).click();
- assert.match(await page.locator('.offer-row.invalid').innerText(),/stale/);
- await page.getByRole('button',{name:'Private Offers',exact:true}).click();
- await page.getByText('No offer key is available on this browser.',{exact:false}).waitFor();
- await page.screenshot({path:path.join(__dirname,'evidence/receipt-private-key-missing.png'),fullPage:true});
- await page.goto('http://127.0.0.1:5174/?preview=1&role=seller');
- await page.getByRole('button',{name:'Compare offers',exact:true}).click();
- await page.getByRole('button',{name:'Review sale',exact:false}).click();
- assert.equal(await page.getByRole('button',{name:'Sell for 9,960.00 USDC'}).isEnabled(),false);
- await page.getByRole('checkbox').check();
- assert.equal(await page.getByRole('button',{name:'Sell for 9,960.00 USDC'}).isEnabled(),true);
- await page.screenshot({path:path.join(__dirname,'evidence/receipt-sale-review.png'),fullPage:true});
- await page.getByRole('button',{name:'Sell for 9,960.00 USDC'}).click();
- await page.getByRole('button',{name:'Close dialog'}).click();
- assert.match(await page.getByRole('alert').innerText(),/design preview/);
- await page.getByRole('button',{name:'Portfolio',exact:true}).click();
- await page.getByText('Unrecovered cost',{exact:true}).waitFor();
- await page.screenshot({path:path.join(__dirname,'evidence/receipt-portfolio-desktop.png'),fullPage:true});
- for(const width of [1024,390]){
-  await page.setViewportSize({width,height:900});
-  await page.getByRole('button',{name:'Markets',exact:true}).click();
-  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),`No horizontal body overflow at ${width}`);
-  await page.screenshot({path:path.join(__dirname,`evidence/receipt-markets-${width}.png`),fullPage:true});
-  await page.getByRole('button',{name:'Compare offers',exact:true}).click();
-  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),`No trade body overflow at ${width}`);
-  await page.screenshot({path:path.join(__dirname,`evidence/receipt-trade-${width}.png`),fullPage:true});
- }
- await page.goto('http://127.0.0.1:5174/');
- assert.equal(await page.locator('tbody tr').count(),0);
- assert.match(await page.getByRole('alert').innerText(),/no connected data adapter/);
- await page.keyboard.press('Tab');
- assert.equal(await page.evaluate(()=>document.activeElement.textContent),'Skip to content');
- assert.deepEqual(errors,[]);
- console.log(JSON.stringify({result:'PASS',checks:['browse without wallet','claim filtering','partial cash detail','stale quote label','missing private key state','exact review with explicit acceptance','preview rejects settlement','portfolio accounting labels','1024 and 390 body overflow','unavailable adapter never falls back to fixtures','keyboard skip link','no page errors'],environment:'explicit fixture preview only'}));
- await browser.close();
-})().catch(e=>{console.error(e);process.exit(1)});
+  const browser = await chromium.launch();
+  const page = await browser.newPage({
+    viewport: { width: 1440, height: 900 },
+  });
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("http://127.0.0.1:5174/?preview=1");
+  await page
+    .getByRole("heading", { name: "Time is an asset. Trade yours." })
+    .waitFor();
+  await page.screenshot({
+    path: path.join(__dirname, "evidence/receipt-markets-desktop.png"),
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Residual rights", exact: true })
+    .click();
+  assert.equal(await page.locator("tbody tr").count(), 1);
+  await page.getByRole("button", { name: "View claim 1041" }).click();
+  await page.getByRole("heading", { name: "The ownership trail" }).waitFor();
+  assert.match(await page.locator(".receipt-split").innerText(), /4,000.00/);
+  await page.screenshot({
+    path: path.join(__dirname, "evidence/receipt-residual-detail.png"),
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "View buyer offers" }).click();
+  assert.match(await page.locator(".offer-row.invalid").innerText(), /stale/);
+  await page
+    .getByRole("button", { name: "Private Offers", exact: true })
+    .click();
+  await page
+    .getByText("No offer key is available on this browser.", { exact: false })
+    .waitFor();
+  await page.screenshot({
+    path: path.join(__dirname, "evidence/receipt-private-key-missing.png"),
+    fullPage: true,
+  });
+  await page.goto("http://127.0.0.1:5174/?preview=1&role=seller");
+  await page
+    .getByRole("button", { name: "Compare offers", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Review sale", exact: false }).click();
+  assert.equal(
+    await page
+      .getByRole("button", { name: "Sell for 9,960.00 USDC" })
+      .isEnabled(),
+    false,
+  );
+  await page.getByRole("checkbox").check();
+  assert.equal(
+    await page
+      .getByRole("button", { name: "Sell for 9,960.00 USDC" })
+      .isEnabled(),
+    true,
+  );
+  await page.screenshot({
+    path: path.join(__dirname, "evidence/receipt-sale-review.png"),
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Sell for 9,960.00 USDC" }).click();
+  await page.getByRole("button", { name: "Close dialog" }).click();
+  assert.match(await page.getByRole("alert").innerText(), /design preview/);
+  await page.getByRole("button", { name: "Portfolio", exact: true }).click();
+  await page.getByText("Unrecovered cost", { exact: true }).waitFor();
+  await page.screenshot({
+    path: path.join(__dirname, "evidence/receipt-portfolio-desktop.png"),
+    fullPage: true,
+  });
+  for (const width of [1024, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.getByRole("button", { name: "Markets", exact: true }).click();
+    assert.ok(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+      `No horizontal body overflow at ${width}`,
+    );
+    await page.screenshot({
+      path: path.join(__dirname, `evidence/receipt-markets-${width}.png`),
+      fullPage: true,
+    });
+    await page
+      .getByRole("button", { name: "Compare offers", exact: true })
+      .click();
+    assert.ok(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+      `No trade body overflow at ${width}`,
+    );
+    await page.screenshot({
+      path: path.join(__dirname, `evidence/receipt-trade-${width}.png`),
+      fullPage: true,
+    });
+  }
+  await page.goto("http://127.0.0.1:5174/");
+  assert.equal(await page.locator("tbody tr").count(), 0);
+  assert.match(
+    await page.getByRole("alert").innerText(),
+    /no connected data adapter/,
+  );
+  await page.keyboard.press("Tab");
+  assert.equal(
+    await page.evaluate(() => document.activeElement.textContent),
+    "Skip to content",
+  );
+  assert.deepEqual(errors, []);
+  console.log(
+    JSON.stringify({
+      result: "PASS",
+      checks: [
+        "browse without wallet",
+        "claim filtering",
+        "partial cash detail",
+        "stale quote label",
+        "missing private key state",
+        "exact review with explicit acceptance",
+        "preview rejects settlement",
+        "portfolio accounting labels",
+        "1024 and 390 body overflow",
+        "unavailable adapter never falls back to fixtures",
+        "keyboard skip link",
+        "no page errors",
+      ],
+      environment: "explicit fixture preview only",
+    }),
+  );
+  await browser.close();
+})().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
