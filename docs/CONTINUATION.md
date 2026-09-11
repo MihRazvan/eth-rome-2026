@@ -12,9 +12,9 @@ Settlement/test-source/key-registry contracts; independent review; P-256 HPKE pr
 
 ## Runtime and release
 
-`npm ci && npm run start:local` starts isolated Anvil 8547, API 8787, frontend 5173. Public Anvil identities are available only for this local chain. Generated local state is reset at fresh start; do not apply this process to a live chain. PID manifest `.runtime/pids.json`, logs `.runtime/*.log`. Root services are running during final release checks. A final follow-up records clean restart, pushed commit, CI and hosted-preview status.
+`npm ci && npm run start:local` starts isolated Anvil 8547, API 8787, frontend 5173. Public Anvil identities are available only for this local chain. Generated local state is reset at fresh start; do not apply this process to a live chain. PID manifest `.runtime/pids.json`, logs `.runtime/*.log`. Clean startup was independently exercised by the browser runner (four tests passed in14.5s), then the stack was restarted and left running at http://127.0.0.1:5173 with two freshly seeded claims. Source code is committed and pushed through `d7ed34c`; the following evidence-only commit records release results. GitHub Actions run34627028500 succeeded on that exact implementation commit: clean npm install, type/tests/build, ABI consistency and all four Chromium scenarios. The pinned-source job is deliberately dispatch-only and was skipped by this push; its three local fork checks are the source evidence. CI metadata is saved in `docs/evidence/ci-integrated.json`.
 
-Vercel project `exit-ethrome-2026` is being published as a static, explicitly labelled `?preview=1` visual preview. It has no hosted trading backend. Default app fails visibly without `/api/config`; no fixture fallback.
+Vercel project `exit-ethrome-2026` is READY at https://exit-ethrome-2026.vercel.app/?preview=1 as a static, explicitly labelled visual preview. The live page returned HTTP200 with no browser page errors; default unavailable state was verified. Release metadata is in `docs/evidence/hosting.json`. It has no hosted trading backend. Default app fails visibly without `/api/config`; no fixture fallback.
 
 ## Concrete outstanding requirements
 

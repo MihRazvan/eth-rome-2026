@@ -4,6 +4,8 @@
 
 EXIT exchanges payment now for the entire remaining withdrawal claim: pending proceeds, claimable proceeds, recognized cash, and supported later recoveries. Makers sign independently funded purchase offers. The seller accepts exact terms onchain. Buyers collect, withdraw, and resell residual rights.
 
+[Open the labelled visual preview](https://exit-ethrome-2026.vercel.app/?preview=1). The actual trading demo runs locally using the commands below; the static preview has no hosted settlement backend.
+
 ## Run the real local product
 
 Requires Node **24.12+**, npm, Foundry **1.5.1** (Forge/Anvil), and Chromium for browser tests.

@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-09-11T17:21:07.814845+00:00",
+  "provider": "Vercel",
+  "project": "exit-ethrome-2026",
+  "sourceImplementationCommit": "d7ed34cc662fa1ddb48a5f197992b39a362a62f2",
+  "deploymentId": "dpl_F7731cVjeRwfG6D5JvHetFotuQbi",
+  "readyState": "READY",
+  "url": "https://exit-ethrome-2026.vercel.app/?preview=1",
+  "scope": "Explicit static visual fixture preview; no hosted chain trading API",
+  "browserVerified": {
+    "status": 200,
+    "previewLabel": true,
+    "pageErrors": [],
+    "defaultUnavailableWithoutFixtureFallback": true
+  },
+  "livePublicTrading": "blocked: funded Fuji accounts and Arkiv/Swarm write resources missing"
+}
