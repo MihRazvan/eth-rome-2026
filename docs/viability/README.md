@@ -57,6 +57,8 @@ For an already queued, noncancellable NFT, the liquid-token DEX quote is not an 
 
 Working capital and platform revenue are different. In a hypothetical steady state buying 1 million units of face per day at 99.8% and holding for five days, about 4.99 million units are deployed. At 30 million units of monthly face and a retained 5-basis-point fee, gross platform revenue is only 15,000 units before infrastructure, personnel, legal, partner and incentive costs. Tail waits and idle liquidity require more capital. A modest fee cannot fund an unlimited integration/support burden, and the buyer's spread is not automatically EXIT's revenue. [Operating calculation](economic-scenarios.json)
 
+Use the prepared [holder/maker worksheet](PILOT.md) to capture actual alternatives, prices and refusals without inventing customer interest.
+
 ## Pilot gates
 
 The thresholds below are minimum gates for the first experiment, not results already achieved. The [demand report](demand.md) proposes a larger 20-user/30-collected-position evaluation before scaling; a single accepted trade would not discharge those later operating gates.
