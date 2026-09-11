@@ -23,6 +23,7 @@ export interface Claim {
   title: string;
   source: string;
   sourceAddress?: string;
+  offersUnavailable?: boolean;
   owner: string;
   isOwner: boolean;
   expected: Amount;
@@ -50,6 +51,7 @@ export interface AppData {
   wallet?: string;
   wrongNetwork: boolean;
   balance?: Amount;
+  makerAllowance?: Amount;
   claims: Claim[];
   offers: Offer[];
   loading: boolean;
