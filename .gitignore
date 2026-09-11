@@ -1,0 +1,14 @@
+node_modules/
+dist/
+out/
+cache/
+broadcast/
+.env
+.env.*
+!.env.example
+.DS_Store
+.worktrees/
+.runtime/
+.playwright-cli/
+test-results/
+playwright-report/
