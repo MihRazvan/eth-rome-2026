@@ -24,7 +24,9 @@
     "test:browser": "playwright test",
     "scenario": "tsx scripts/scenario.ts",
     "verify:record": "tsx scripts/verify-record.ts",
-    "preflight": "node --env-file-if-exists=.env --import tsx scripts/preflight.ts"
+    "preflight": "node --env-file-if-exists=.env --import tsx scripts/preflight.ts",
+    "inspect:claim": "tsx scripts/inspect-claim.ts",
+    "research:economics": "tsx scripts/viability-scenarios.ts"
   },
   "dependencies": {
     "@arkiv-network/sdk": "0.8.1",
