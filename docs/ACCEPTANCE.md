@@ -21,9 +21,23 @@ Last integrated local verification: 2026-09-11. A passing local result does not 
 | DEMO     | Fresh visitor backed origination and funded makers                         | integrator                        | verified local; public Fuji blocked                                              | `npm run start:local`, visible funding/create/request paths; timed blocks and a real one-minute browser wait verify idle payout maturity; standalone public funding/hosting requires missing network access                                                                                                             |
 | RELEASE  | CI, runnable commands, licenses, evidence and submissions                  | integrator                        | local gates and implementation CI passed; preview refreshed; human steps pending | Integrated c8ce819 passed 55 JS, 39 reported Solidity and 10 Chromium tests; research-integration.json. Exact pushed CI and hosting status in CONTINUATION.md. Human forms/conversation/attendance/camera not done                                                                                                      |
 
+## Viability reassessment — September 11
+
+The latest user instruction authorizes a commercial direction change, recorded in [decision 002](decisions/002-viability-pivot.md). The first candidate is an embedded service for existing Lido/standard ether.fi NFTs on Ethereum. This does not discharge Avalanche/sponsor requirements or admit these sources into the test-vault market.
+
+| Outcome | State | Evidence |
+| --- | --- | --- |
+| Existing-claim mechanics | Sampled fork eligibility verified | Four Ethereum tests at25956536, no storage caching, pending transfer/resale and already-finalized full collection to current owner; no operator/time/balance overrides |
+| Native Exit Check | Read-only implemented and browser verified | Actual mainnet owner/state reads; one-block observations; implementation drift and unavailable reads explicit; finalized amount does not certify payout execution |
+| Pricing instrument | Arithmetic verified; inputs unvalidated | Eight new economic tests, eight inspector tests, independent 2,211 fee / 48 budget cases; no fabricated bid, buyer capital or seller floor |
+| Commercial viability | Unverified, conditional pilot | Cheap observed BENQI routes weaken original premise; pending ETH claim stock is not customer demand; no independent holder acceptance, funded maker commitment or distribution agreement |
+| Integrated release | Local checks passed | 71 JS tests, 39 reported Solidity, 7 source forks and 15 Chromium scenarios; five checker scenarios use explicit RPC mocks, separate browser observations use actual public RPC |
+
+See [viability assessment](viability/README.md), [pilot worksheet](viability/PILOT.md), [independent review](viability/economics-review.md) and [release evidence](evidence/viability-integration.json). Source NFTs collect/burn whole; partial residual behavior belongs to the disclosed test vault. Current code/CI/hosting revisions are in [restart handoff](CONTINUATION.md).
+
 ## Evidence interpretation
 
-Solidity integrated report 39 includes 16 inherited reviewer-harness repetitions; meaningful newly authored reviewer cases 5. Two invariant campaigns each 128×64 successful calls, zero reverts. JS tests 55 including exact amount ranking, 16 economics cases, 15 controller/session cases, 9 privacy cases, 8 HTTP/queue cases and 6 preflight cases. Browser tests assert visible behavior and independent ownership/balance state; production screenshots are reviewed separately from fixture concept images. Latest command results and exact commit status belong in CONTINUATION.md.
+Solidity integrated report 39 includes 16 inherited reviewer-harness repetitions; meaningful newly authored reviewer cases 5. Two invariant campaigns each 128×64 successful calls, zero reverts. The earlier research baseline had 55 JS tests including exact amount ranking, 16 economics cases, 15 controller/session cases, 9 privacy cases, 8 HTTP/queue cases and 6 preflight cases. Browser tests assert visible behavior and independent ownership/balance state; production screenshots are reviewed separately from fixture concept images. Latest command results and exact commit status belong in CONTINUATION.md.
 
 Missing requirements are retained, not downgraded: Fuji deployment/public lifecycle, Arkiv publication/native expiry, live Swarm upload/independent round-trip, and human bounty steps. No fixture fallback is used for any failed live service.
 

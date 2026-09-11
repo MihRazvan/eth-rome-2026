@@ -1,0 +1,10 @@
+{
+  "observedAt": "2026-09-11T20:57:46.232Z",
+  "previewHttp": 200,
+  "explicitPreviewLabel": true,
+  "defaultHttp": 200,
+  "defaultUnavailableLink": true,
+  "defaultClaimCount": 0,
+  "pageErrors": [],
+  "probeNote": "The first exact-text selector timed out because the banner also contains a link. A corrected containing-text selector passed; no application change was needed."
+}

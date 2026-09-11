@@ -1,0 +1,23 @@
+
+> exit-withdrawal-market@0.1.0 test:source
+> forge test --root packages/source -vv --no-storage-caching
+
+Compiling 1 files with Solc 0.8.30
+Solc 0.8.30 finished in 144.14ms
+Compiler run successful!
+2026-09-11T20:49:37.894044Z  WARN evm::traces::external: etherscan config not found
+
+Ran 4 tests for test/NativeClaimAdmission.t.sol:NativeClaimAdmissionTest
+[PASS] testAlreadyFinalizedEtherfiServicingPaysBuyerAndBurnsWholeNFT() (gas: 217310)
+[PASS] testAlreadyFinalizedLidoCollectsActualETHToBuyerAndBurnsWholeNFT() (gas: 182872)
+[PASS] testCurrentPendingEtherfiTransfersPreservingOriginalRequestAndRejectingOldOwner() (gas: 105344)
+[PASS] testCurrentPendingLidoTransfersPreservingOriginalRequestAndRejectingOldOwner() (gas: 176669)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 3.35s (7.17s CPU time)
+
+Ran 3 tests for test/BenqiFork.t.sol:BenqiForkTest
+[PASS] testMissedWindowRecoveryFollowsNewOwner() (gas: 148987)
+[PASS] testOriginationTransferCancellationAndReturnedShares() (gas: 150044)
+[PASS] testWholeRequestRedemptionWithSimulatedOperatorRateUpdate() (gas: 757280)
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 6.09s (5.12s CPU time)
+
+Ran 2 test suites in 6.09s (9.44s CPU time): 7 tests passed, 0 failed, 0 skipped (7 total tests)

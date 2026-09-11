@@ -57,6 +57,7 @@ The integrated Solidity suite reports 39 tests: 16 base cases, two invariant cam
 
 - **Local onchain product:** purchase, partial collection, stale quote rejection, resale, final collection, adverse outcome and continuing recovery verified.
 - **Privacy:** real HPKE, purpose-bound separate keys, registry rotation/revocation, custom client ciphertext, reload, outsider separation and public settlement verified locally.
+- **Native ETH claims:** live read-only inspection plus four pinned Ethereum fork tests prove sampled pending-NFT transfer/resale and already-finalized collection to the new owner. This is not a native-NFT sale integration or production admission. See [source evidence](docs/viability/claim-sources.md).
 - **BENQI:** three pinned-mainnet-fork tests validate caller-owned account origination, ownership, cancellation, whole-request collection and overdue-share recovery. The account is an admission prototype, not an enabled market source. See [source evidence](docs/evidence/benqi-source.md).
 - **Arkiv:** SDK 0.8.1 live Tiramisu compound discovery reads verified. Publication/native expiry require a funded Arkiv signer and remain unverified.
 - **Swarm:** gateway reachability verified; actual upload/independent live retrieval require an upload endpoint and funded postage and remain unverified.
