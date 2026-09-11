@@ -1,4 +1,5 @@
-import { createServer, type IncomingMessage } from "node:http";
+import { createServer } from "node:http";
+import { MutationQueue, readJsonBody, RequestError } from "./request";
 import { mkdir, writeFile, readFile } from "node:fs/promises";
 import {
   keccak256,
@@ -24,7 +25,6 @@ import {
   type RequestContext,
   type OfferRecord,
 } from "../transport";
-class RequestError extends Error {}
 const d = await loadDeployment(),
   client = publicFor(d),
   services = await createServices(d);
@@ -68,19 +68,17 @@ const verifyBinding = async (data: any, signature: Hex, signer: Address) =>
     signature,
     blockTag: "latest",
   });
-async function jsonBody(req: IncomingMessage) {
-  let raw = "";
-  for await (const chunk of req) {
-    raw += chunk;
-    if (raw.length > 100_000) throw new RequestError("Request too large");
-  }
-  return JSON.parse(raw || "{}");
-}
 
 let windowStart = Date.now(),
   budget = 0;
 const lastRequest = new Map<string, number>();
-let mutationTail = Promise.resolve();
+const mutationQueue = new MutationQueue();
+const mutationRoutes = new Set([
+  "/api/request-offers",
+  "/api/binding",
+  "/api/publish-envelope",
+  "/api/publish-offer",
+]);
 const server = createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
   res.setHeader("Cache-Control", "no-store");
@@ -100,15 +98,24 @@ const server = createServer(async (req, res) => {
     return;
   }
   let release: (() => void) | undefined;
-  if (req.method === "POST") {
-    const previous = mutationTail;
-    mutationTail = new Promise<void>((resolve) => {
-      release = resolve;
-    });
-    await previous;
-  }
+  const disconnected = new AbortController();
+  const onClose = () => {
+    if (!res.writableEnded) disconnected.abort();
+  };
+  res.once("close", onClose);
   try {
     const u = new URL(req.url ?? "/", "http://127.0.0.1");
+    let body: Record<string, any> | undefined;
+    if (req.method === "POST") {
+      if (!mutationRoutes.has(u.pathname)) {
+        res.setHeader("Connection", "close");
+        send(404, { error: "Route not found" });
+        return;
+      }
+      // Incomplete bodies never hold signer locks. Parsing errors precede queue admission.
+      body = await readJsonBody(req);
+      release = await mutationQueue.acquire(disconnected.signal);
+    }
     if (req.method === "GET" && u.pathname === "/api/config") {
       send(200, {
         ...d,
@@ -162,7 +169,7 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (req.method === "POST" && u.pathname === "/api/request-offers") {
-      const b = await jsonBody(req);
+      const b = body!;
       const rateKey = `${b.claimId}:${b.mode}`;
       if (d.environment === "fuji") {
         if (Date.now() - windowStart > 3600000) {
@@ -308,7 +315,7 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (req.method === "POST" && u.pathname === "/api/binding") {
-      const b = await jsonBody(req),
+      const b = body!,
         { context } = await contextFor(BigInt(b.claimId));
       await validateBinding(b.cert, context, verifyBinding, bindingStatus);
       await writeFile(
@@ -329,7 +336,7 @@ const server = createServer(async (req, res) => {
             "Demo publication budget exhausted for this hour",
           );
       }
-      const b = await jsonBody(req),
+      const b = body!,
         { context } = await contextFor(BigInt(b.claimId));
       await validateBinding(b.cert, context, verifyBinding, bindingStatus);
       const e = b.envelope;
@@ -380,7 +387,7 @@ const server = createServer(async (req, res) => {
             "Demo publication budget exhausted for this hour",
           );
       }
-      const b = await jsonBody(req),
+      const b = body!,
         signed = parseSignedQuote(JSON.stringify(b.signed)),
         { context } = await contextFor(signed.quote.claimId);
       const codec = purchaseQuoteCodec(
@@ -399,13 +406,19 @@ const server = createServer(async (req, res) => {
     }
     send(404, { error: "Route not found" });
   } catch (e) {
-    send(400, {
+    if (res.destroyed) return;
+    if (e instanceof RequestError && e.closeConnection)
+      res.setHeader("Connection", "close");
+    if (e instanceof RequestError && e.status === 503)
+      res.setHeader("Retry-After", "1");
+    send(e instanceof RequestError ? e.status : 400, {
       error:
         e instanceof RequestError
           ? e.message
           : "Chain, signing or storage service unavailable. Check configuration and retry; no plaintext fallback is used.",
     });
   } finally {
+    res.off("close", onClose);
     release?.();
   }
 });

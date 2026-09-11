@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-11",
+  "base": "b36fbf15e3f367caf225a1f8badc96c1449ea35b",
+  "researchCommit": "3a7fd94b04beb216ad1f436d7af98196e8998196",
+  "scope": [
+    "packages/runtime/server.ts",
+    "packages/runtime/request.ts",
+    "packages/runtime/request.test.ts"
+  ],
+  "checks": [
+    {
+      "command": "node node_modules/vitest/vitest.mjs run packages/runtime/request.test.ts",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "network": "ephemeral 127.0.0.1 HTTP listeners only"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0
+    }
+  ],
+  "bodyLimits": {
+    "bytes": 100000,
+    "absoluteTimeoutMs": 10000,
+    "mediaType": "application/json",
+    "encoding": "strict UTF-8",
+    "shape": "JSON object"
+  },
+  "queueLimits": {
+    "activeSignerMutations": 1,
+    "maxQueued": 16,
+    "waitTimeoutMs": 15000,
+    "disconnectRemovesQueuedRequest": true
+  },
+  "statuses": {
+    "malformedJson": 400,
+    "bodyTimeout": 408,
+    "oversizedBody": 413,
+    "wrongMediaType": 415,
+    "queueOverloadOrTimeout": 503
+  },
+  "limitations": [
+    "Active signer transaction execution still follows existing RPC receipt timeouts; it is not cancelled by client disconnect.",
+    "Process-local publication budgets remain resettable and anonymously consumable; this patch fixes body/queue availability, not all hosted abuse.",
+    "No shared local chain, public RPC, signer or sponsor storage was called."
+  ]
+}
