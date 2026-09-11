@@ -1,5 +1,13 @@
 import { test, expect, type Page } from "@playwright/test";
-import { createPublicClient, createTestClient, http, parseUnits } from "viem";
+import {
+  createPublicClient,
+  createTestClient,
+  createWalletClient,
+  decodeFunctionData,
+  http,
+  parseUnits,
+} from "viem";
+import { mnemonicToAccount } from "viem/accounts";
 import { ExitMarketAbi } from "../../packages/shared/ExitMarket";
 import { OfferKeyRegistryAbi } from "../../packages/shared/OfferKeyRegistry";
 import { TestWithdrawalVaultAbi } from "../../packages/shared/TestWithdrawalVault";
@@ -66,6 +74,30 @@ test("an idle claim matures through normal local blocks without a servicing tran
   const after = await chain.getBlock();
   expect(after.number).toBeGreaterThan(before.number);
   expect(after.timestamp - before.timestamp).toBeGreaterThanOrEqual(55n);
+  // Discovery outage must not remove independently verified collection rights.
+  await page.route("**/api/offers?*", (route) =>
+    route.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: JSON.stringify({ error: "Discovery temporarily unavailable" }),
+    }),
+  );
+  await page.getByRole("button", { name: "Markets", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Refresh", exact: false })
+    .first()
+    .click();
+  await expect(
+    page.getByText(
+      "Some offers could not be loaded. Onchain positions and collection remain available.",
+    ),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: `View claim ${id}`, exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Collect 4,000.00 USDC", exact: true }),
+  ).toBeEnabled();
 });
 
 test("public sale reconciles exact payment and acquired rights onchain", async ({
@@ -238,6 +270,27 @@ test("custom private price survives reload and stays encrypted for outsider", as
   await expect(page.locator(".offer-row").first()).not.toContainText(
     "Encrypted",
   );
+  const d = await (await request.get("/api/config")).json();
+  expect(d.environment).toBe("local");
+  expect(d.chainId).toBe(31337);
+  const chain = createPublicClient({ transport: http(d.rpcUrl) });
+  // Independently remove the maker's standing test allowance so the UI must authorize capital.
+  const maker = createWalletClient({
+    account: mnemonicToAccount(
+      "test test test test test test test test test test test junk",
+      { addressIndex: 1 },
+    ),
+    transport: http(d.rpcUrl),
+  });
+  const cleared = await maker.writeContract({
+    chain: null,
+    address: d.token,
+    abi: TestUSDCAbi,
+    functionName: "approve",
+    args: [d.market, 0n],
+  });
+  await chain.waitForTransactionReceipt({ hash: cleared });
+  const offerStartBlock = await chain.getBlockNumber({ cacheTime: 0 });
   const bodies: string[] = [];
   page.on("request", (r) => {
     if (r.url().includes("publish-envelope")) bodies.push(r.postData() ?? "");
@@ -264,6 +317,25 @@ test("custom private price survives reload and stays encrypted for outsider", as
   expect(bodies[0]).not.toContain("9987.123456");
   expect(bodies[0]).not.toContain("9987123456");
   expect(bodies[0]).not.toContain("netPayment");
+  const approvals = await chain.getContractEvents({
+    address: d.token,
+    abi: TestUSDCAbi,
+    eventName: "Approval",
+    args: { owner: addresses[1], spender: d.market },
+    fromBlock: offerStartBlock + 1n,
+  });
+  expect(approvals).toHaveLength(1);
+  expect(approvals[0].args.value).toBe(parseUnits("100000", 6));
+  const approvalTx = await chain.getTransaction({
+    hash: approvals[0].transactionHash,
+  });
+  const approvalCall = decodeFunctionData({
+    abi: TestUSDCAbi,
+    data: approvalTx.input,
+  });
+  expect(approvalCall.functionName).toBe("approve");
+  expect(approvalCall.args?.[1]).toBe(parseUnits("100000", 6));
+  expect(approvalCall.args?.[1]).not.toBe(parseUnits("9987.123456", 6));
   await role(page, 3);
   await page
     .getByRole("button", { name: "Sell a withdrawal", exact: true })
@@ -322,8 +394,6 @@ test("custom private price survives reload and stays encrypted for outsider", as
     fullPage: true,
   });
   await outsider.close();
-  const d = await (await request.get("/api/config")).json();
-  const chain = createPublicClient({ transport: http(d.rpcUrl) });
   const before = await chain.readContract({
     address: d.token,
     abi: TestUSDCAbi,

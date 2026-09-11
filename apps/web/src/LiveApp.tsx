@@ -17,7 +17,10 @@ export default function LiveApp() {
     const timer = setInterval(() => {
       if (!controller.data.loading) void controller.refresh().catch(() => {});
     }, 10000);
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      controller.dispose();
+    };
   }, [controller]);
   const invoke = async (fn: () => Promise<unknown>) => {
     setError("");

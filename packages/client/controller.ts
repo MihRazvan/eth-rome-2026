@@ -1,3 +1,4 @@
+import { DEMO_MAKER_CAPITAL } from "../shared/capital";
 import { compareAmounts } from "../shared/amount";
 import {
   createPublicClient,
@@ -7,7 +8,7 @@ import {
   http,
   formatUnits,
   parseUnits,
-  maxUint256,
+  isAddress,
   zeroAddress,
   zeroHash,
   keccak256,
@@ -31,7 +32,9 @@ import {
   BrowserKeyStore,
   generateRecipientKey,
   encryptOffer,
+  validateBinding,
   registryStatusReader,
+  offerRequestId,
   keyStorageId,
   keyBindingTypedData,
   verifyStoredOffer,
@@ -64,7 +67,8 @@ interface Config {
 declare global {
   interface Window {
     ethereum?: EIP1193Provider & {
-      on?: (event: string, fn: () => void) => void;
+      on?: (event: string, fn: (...args: any[]) => void) => void;
+      removeListener?: (event: string, fn: (...args: any[]) => void) => void;
     };
   }
 }
@@ -88,6 +92,93 @@ export class ExitController {
   quotes = new Map<string, SignedQuote>();
   records = new Map<string, OfferRecord>();
   keys = new BrowserKeyStore();
+  private session = 0;
+  private refreshGeneration = 0;
+  private disposed = false;
+  private detachProvider?: () => void;
+  private changeWallet(address?: Address, wallet?: any) {
+    this.session++;
+    this.refreshGeneration++;
+    this.address = address;
+    this.wallet = wallet;
+    this.quotes = new Map();
+    this.records = new Map();
+    this.authoredOrders = [];
+    this.set({
+      wallet: address,
+      balance: undefined,
+      makerAllowance: undefined,
+      offers: [],
+      privateKeyStatus: "missing",
+      loading: true,
+      error: undefined,
+      claims: this.data.claims.map((c) => ({
+        ...c,
+        isOwner: false,
+        cost: undefined,
+        realized: undefined,
+        residualCost: undefined,
+        walletWithdrawn: undefined,
+      })),
+    });
+  }
+  private assertSession(session: number, address: Address, wallet: any) {
+    if (
+      this.disposed ||
+      this.session !== session ||
+      this.wallet !== wallet ||
+      this.address?.toLowerCase() !== address.toLowerCase()
+    )
+      throw new Error(
+        "Wallet session changed. Review the action again before signing.",
+      );
+  }
+  private watchProvider() {
+    this.detachProvider?.();
+    const provider =
+      typeof window !== "undefined" ? window.ethereum : undefined;
+    if (!provider?.on) return;
+    const refresh = () => {
+      void this.refresh().catch(() => {});
+    };
+    const accountsChanged = (accounts: unknown) => {
+      if (this.config?.environment !== "fuji") return;
+      const first = Array.isArray(accounts) ? accounts[0] : undefined;
+      const address =
+        typeof first === "string" && isAddress(first)
+          ? (first as Address)
+          : undefined;
+      this.changeWallet(address, address ? this.wallet : undefined);
+      refresh();
+    };
+    const chainChanged = () => {
+      if (this.config?.environment !== "fuji") return;
+      this.changeWallet(this.address, this.wallet);
+      refresh();
+    };
+    const disconnect = () => {
+      if (this.config?.environment !== "fuji") return;
+      this.changeWallet();
+      refresh();
+    };
+    provider.on("accountsChanged", accountsChanged);
+    provider.on("chainChanged", chainChanged);
+    provider.on("disconnect", disconnect);
+    this.detachProvider = () => {
+      provider.removeListener?.("accountsChanged", accountsChanged);
+      provider.removeListener?.("chainChanged", chainChanged);
+      provider.removeListener?.("disconnect", disconnect);
+    };
+  }
+  dispose() {
+    this.disposed = true;
+    this.session++;
+    this.refreshGeneration++;
+    this.detachProvider?.();
+    this.detachProvider = undefined;
+    this.quotes.clear();
+    this.records.clear();
+  }
   constructor(private update: (data: AppData) => void) {}
   private set(patch: Partial<AppData>) {
     this.data = { ...this.data, ...patch };
@@ -148,10 +239,16 @@ export class ExitController {
     };
   }
   async start() {
+    this.disposed = false;
+    const session = ++this.session;
+    this.watchProvider();
     try {
-      this.config = await this.api("config");
+      const config = await this.api("config");
+      if (session !== this.session || this.disposed) return;
+      this.config = config;
       await this.refresh();
     } catch (e) {
+      if (session !== this.session || this.disposed) return;
       this.set({
         ...unavailable,
         loading: false,
@@ -187,11 +284,20 @@ export class ExitController {
     }
     if (!window.ethereum)
       throw new Error("Install or open an EVM wallet to connect to Fuji");
-    this.wallet = createWalletClient({
+    const session = this.session;
+    const wallet = createWalletClient({
       chain: this.chain,
       transport: custom(window.ethereum),
     });
-    [this.address] = await this.wallet.requestAddresses();
+    const [address] = await wallet.requestAddresses();
+    if (
+      this.disposed ||
+      (session !== this.session &&
+        this.address?.toLowerCase() !== address?.toLowerCase())
+    )
+      throw new Error("Wallet session changed; reconnect.");
+    this.changeWallet(address, wallet);
+    this.watchProvider();
     await this.refresh();
   }
   async selectLocalWallet(index: number) {
@@ -203,15 +309,12 @@ export class ExitController {
       "test test test test test test test test test test test junk",
       { addressIndex: index },
     );
-    this.wallet = createWalletClient({
+    const wallet = createWalletClient({
       account,
       chain: this.chain,
       transport: http(this.config.rpcUrl),
     });
-    this.address = account.address;
-    this.authoredOrders = [];
-    this.quotes.clear();
-    this.set({ wallet: this.address, offers: [], privateKeyStatus: "missing" });
+    this.changeWallet(account.address, wallet);
     sessionStorage.setItem("exit-local-role", String(index));
     await this.refresh();
   }
@@ -239,16 +342,22 @@ export class ExitController {
     args: readonly unknown[] = [],
   ): Promise<TransactionResult> {
     const account = await this.ready();
-    const sim = await this.client.simulateContract({
+    const session = this.session,
+      wallet = this.wallet,
+      client = this.client;
+    const sim = await client.simulateContract({
       address,
       abi,
       functionName,
       args,
       account,
     });
-    const hash = await this.wallet.writeContract({
+    this.assertSession(session, account, wallet);
+    await this.ready();
+    this.assertSession(session, account, wallet);
+    const hash = await wallet.writeContract({
       ...sim.request,
-      account: this.wallet.account ?? account,
+      account: wallet.account ?? account,
     });
     let replaced = false,
       cancelled = false;
@@ -300,44 +409,63 @@ export class ExitController {
   async refresh() {
     if (!this.config) return;
     const d = this.config,
-      c = this.client;
+      c = this.client,
+      address = this.address,
+      wallet = this.wallet;
+    const generation = ++this.refreshGeneration,
+      session = this.session;
+    const current = () =>
+      !this.disposed &&
+      this.refreshGeneration === generation &&
+      this.session === session &&
+      this.config === d &&
+      this.address === address &&
+      this.wallet === wallet;
+    const quotes = new Map<string, SignedQuote>(),
+      records = new Map<string, OfferRecord>();
+    const authoredOrders: typeof this.authoredOrders = [];
     this.set({ loading: true, error: undefined });
     try {
       if ((await c.getChainId()) !== d.chainId)
         throw new Error("Configured RPC reports a different chain");
-      const chainNow = (await c.getBlock()).timestamp;
+      const block = await c.getBlock();
+      const chainNow = block.timestamp,
+        blockNumber = block.number;
       const next = await c.readContract({
+        blockNumber,
         address: d.market,
         abi: ExitMarketAbi,
         functionName: "nextClaimId",
       });
       const claims: Claim[] = [],
         offers: Offer[] = [];
-      this.quotes.clear();
-      this.records.clear();
       const logs = await c.getContractEvents({
         address: d.market,
         abi: ExitMarketAbi,
         fromBlock: BigInt(d.blockNumber),
-        toBlock: "latest",
+        toBlock: blockNumber,
       });
       let privateAvailable = false,
         discoveryChecked = false,
-        storedVerified = false;
+        storedVerified = false,
+        discoveryFailed = false;
       for (let id = 1n; id < next; id++) {
         const p = await c.readContract({
+          blockNumber,
           address: d.market,
           abi: ExitMarketAbi,
           functionName: "positions",
           args: [id],
         });
         const r = await c.readContract({
+          blockNumber,
           address: d.source,
           abi: TestWithdrawalVaultAbi,
           functionName: "requests",
           args: [p[1]],
         });
         const [pending, claimable, cash] = await c.readContract({
+          blockNumber,
           address: d.market,
           abi: ExitMarketAbi,
           functionName: "remaining",
@@ -347,7 +475,7 @@ export class ExitController {
         let walletCost = 0n,
           walletCash = 0n,
           walletSales = 0n;
-        const owned = p[0].toLowerCase() === this.address?.toLowerCase();
+        const owned = p[0].toLowerCase() === address?.toLowerCase();
         for (const log of logs) {
           const a = log.args as any;
           if (a.claimId !== id) continue;
@@ -358,9 +486,9 @@ export class ExitController {
               amount: units(a.netPayment),
               txUrl: this.explorer(log.transactionHash),
             });
-            if (a.buyer.toLowerCase() === this.address?.toLowerCase())
+            if (a.buyer.toLowerCase() === address?.toLowerCase())
               walletCost += a.netPayment + a.feeAmount;
-            if (a.seller.toLowerCase() === this.address?.toLowerCase())
+            if (a.seller.toLowerCase() === address?.toLowerCase())
               walletSales += a.netPayment;
           }
           if (log.eventName === "Withdrawn") {
@@ -370,7 +498,7 @@ export class ExitController {
               amount: units(a.amount),
               txUrl: this.explorer(log.transactionHash),
             });
-            if (a.owner.toLowerCase() === this.address?.toLowerCase())
+            if (a.owner.toLowerCase() === address?.toLowerCase())
               walletCash += a.amount;
           }
           if (log.eventName === "Originated")
@@ -432,19 +560,48 @@ export class ExitController {
             : "Test tokens have no monetary value. Fixed test installments; future source recoveries are not guaranteed.",
           history,
         });
-        const result = (await this.api(`offers?claimId=${id}`)) as {
+        const context: RequestContext = {
+          chainId: d.chainId,
+          market: d.market,
+          seller: p[0],
+          requestId: offerRequestId(d.chainId, d.market, id, p[2]),
+        };
+        let result: {
           records: OfferRecord[];
           context: RequestContext;
           certs: SignedKeyBinding[];
         };
-        discoveryChecked = true;
+        try {
+          result = (await this.api(`offers?claimId=${id}`)) as {
+            records: OfferRecord[];
+            context: RequestContext;
+            certs: SignedKeyBinding[];
+          };
+          if (
+            !Array.isArray(result.records) ||
+            !Array.isArray(result.certs) ||
+            result.context.chainId !== context.chainId ||
+            result.context.market.toLowerCase() !==
+              context.market.toLowerCase() ||
+            result.context.seller.toLowerCase() !==
+              context.seller.toLowerCase() ||
+            result.context.requestId !== context.requestId
+          )
+            throw new Error("Discovery context changed");
+          discoveryChecked = true;
+        } catch {
+          claims[claims.length - 1].offersUnavailable = true;
+          discoveryFailed = true;
+          continue;
+        }
+        if (!current()) return;
         const codec = purchaseQuoteCodec(
           { claimId: id, source: d.source, sourceVersion: 1n },
           c,
         );
         for (const record of result.records) {
           const rid = record.reference;
-          this.records.set(rid, record);
+          records.set(rid, record);
           const cert = result.certs.find(
             (x) => x.binding.version === record.keyVersion,
           );
@@ -473,13 +630,13 @@ export class ExitController {
           try {
             const signed = await verifyStoredOffer(
               record,
-              result.context,
+              context,
               codec,
               this.storage,
               key && cert ? { key, cert } : undefined,
             );
             storedVerified = true;
-            this.quotes.set(rid, signed);
+            quotes.set(rid, signed);
             const q = signed.quote;
             let status: Offer["status"] = "valid",
               reason: string | undefined;
@@ -491,6 +648,7 @@ export class ExitController {
               reason = "Remaining rights changed; request a new price";
             } else if (
               await c.readContract({
+                blockNumber,
                 address: d.market,
                 abi: ExitMarketAbi,
                 functionName: "unavailable",
@@ -501,12 +659,14 @@ export class ExitController {
               reason = "Cancelled or already consumed onchain";
             } else {
               const bal = await c.readContract({
+                  blockNumber,
                   address: d.token,
                   abi: TestUSDCAbi,
                   functionName: "balanceOf",
                   args: [q.maker],
                 }),
                 allow = await c.readContract({
+                  blockNumber,
                   address: d.token,
                   abi: TestUSDCAbi,
                   functionName: "allowance",
@@ -557,36 +717,55 @@ export class ExitController {
         }
       }
       offers.sort((a, b) => compareAmounts(b.net, a.net));
-      const balance = this.address
+      const balance = address
         ? units(
             await c.readContract({
+              blockNumber,
               address: d.token,
               abi: TestUSDCAbi,
               functionName: "balanceOf",
-              args: [this.address],
+              args: [address],
             }),
           )
         : undefined;
-      this.authoredOrders = [];
-      if (this.address) {
+      if (address) {
         try {
           const entries = JSON.parse(
-            localStorage.getItem(this.authoredStorageKey) ?? "[]",
+            localStorage.getItem(this.orderStorageKey(address)) ?? "[]",
           );
           for (const order of entries) {
             if (!/^0x[0-9a-f]{64}$/i.test(order.nonce)) continue;
             order.closed = await c.readContract({
+              blockNumber,
               address: d.market,
               abi: ExitMarketAbi,
               functionName: "unavailable",
-              args: [this.address, order.nonce],
+              args: [address, order.nonce],
             });
-            this.authoredOrders.push(order);
+            authoredOrders.push(order);
           }
         } catch {
           /* Local maker history is optional; settlement records remain authoritative. */
         }
       }
+      const wrongNetwork = wallet
+        ? (await wallet.getChainId()) !== d.chainId
+        : false;
+      const makerAllowance = address
+        ? units(
+            await c.readContract({
+              address: d.token,
+              abi: TestUSDCAbi,
+              functionName: "allowance",
+              args: [address, d.market],
+              blockNumber,
+            }),
+          )
+        : undefined;
+      if (!current()) return;
+      this.quotes = quotes;
+      this.records = records;
+      this.authoredOrders = authoredOrders;
       this.set({
         environment: d.environment,
         chainName:
@@ -594,10 +773,12 @@ export class ExitController {
             ? "Local chain · real test transactions"
             : "Avalanche Fuji",
         chainId: d.chainId,
-        wallet: this.address,
-        wrongNetwork: this.wallet
-          ? (await this.wallet.getChainId()) !== d.chainId
-          : false,
+        wallet: address,
+        wrongNetwork,
+        makerAllowance,
+        error: discoveryFailed
+          ? "Some offers could not be loaded. Onchain positions and collection remain available."
+          : undefined,
         balance,
         claims,
         offers,
@@ -617,7 +798,7 @@ export class ExitController {
           {
             name: "Arkiv",
             status:
-              d.index === "arkiv" && discoveryChecked
+              d.index === "arkiv" && discoveryChecked && !discoveryFailed
                 ? "connected"
                 : "unavailable",
             detail:
@@ -639,7 +820,11 @@ export class ExitController {
         ],
       });
     } catch (e) {
+      if (!current()) return;
+      this.quotes = new Map();
+      this.records = new Map();
       this.set({
+        offers: [],
         loading: false,
         error: e instanceof Error ? e.message : "Chain refresh failed",
       });
@@ -650,10 +835,14 @@ export class ExitController {
     return this.transaction(this.config!.token, TestUSDCAbi, "faucet");
   }
   async originate() {
+    const address = await this.ready(),
+      session = this.session,
+      wallet = this.wallet;
     await this.transaction(this.config!.token, TestUSDCAbi, "approve", [
       this.config!.market,
       parseUnits("10000", 6),
     ]);
+    this.assertSession(session, address, wallet);
     return this.transaction(this.config!.market, ExitMarketAbi, "originate", [
       parseUnits("10000", 6),
       false,
@@ -709,8 +898,11 @@ export class ExitController {
     deadline: number;
     closed: boolean;
   }[] = [];
+  private orderStorageKey(address: Address) {
+    return `exit-authored:${this.config!.chainId}:${this.config!.market}:${address}`;
+  }
   private get authoredStorageKey() {
-    return `exit-authored:${this.config!.chainId}:${this.config!.market}:${this.address}`;
+    return this.orderStorageKey(this.address!);
   }
   private rememberOrder(q: SignedQuote["quote"]) {
     const entries = JSON.parse(
@@ -731,11 +923,29 @@ export class ExitController {
     ]);
   }
   private async ensureKey(id: string): Promise<SignedKeyBinding> {
-    const { context } = (await this.api(`offers?claimId=${id}`)) as {
-      context: RequestContext;
+    const address = this.address!,
+      session = this.session,
+      wallet = this.wallet;
+    const p = await this.client.readContract({
+      address: this.config!.market,
+      abi: ExitMarketAbi,
+      functionName: "positions",
+      args: [BigInt(id)],
+    });
+    const context: RequestContext = {
+      chainId: this.config!.chainId,
+      market: this.config!.market,
+      seller: p[0],
+      requestId: offerRequestId(
+        this.config!.chainId,
+        this.config!.market,
+        BigInt(id),
+        p[2],
+      ),
     };
     if (context.seller.toLowerCase() !== this.address?.toLowerCase())
       throw new Error("Only the current owner can request private offers");
+    this.assertSession(session, address, wallet);
     const stored = localStorage.getItem(`exit-cert:${context.requestId}`);
     if (stored) {
       const cert = JSON.parse(stored) as SignedKeyBinding;
@@ -750,8 +960,12 @@ export class ExitController {
         active[0] === keccak256(cert.binding.publicKey) &&
         active[1] === BigInt(cert.binding.version) &&
         (await this.keys.load(keyStorageId(cert.binding)))
-      )
+      ) {
+        // The local key can outlive a failed publication or the server's certificate cache.
+        this.assertSession(session, address, wallet);
+        await this.api("binding", { claimId: id, cert });
         return cert;
+      }
     }
     const key = await generateRecipientKey();
     const active = await this.client.readContract({
@@ -767,10 +981,12 @@ export class ExitController {
       validFrom: now() - 5,
       validUntil: now() + 86400,
     };
-    const signature = await this.wallet.signTypedData({
+    this.assertSession(session, address, wallet);
+    const signature = await wallet.signTypedData({
       ...keyBindingTypedData(binding),
-      account: this.wallet.account ?? this.address,
+      account: wallet.account ?? address,
     });
+    this.assertSession(session, address, wallet);
     const cert = { binding, signature };
     await this.keys.save(keyStorageId(binding), key);
     await this.transaction(
@@ -784,6 +1000,7 @@ export class ExitController {
         BigInt(binding.validUntil),
       ],
     );
+    this.assertSession(session, address, wallet);
     localStorage.setItem(
       `exit-cert:${context.requestId}`,
       JSON.stringify(cert),
@@ -808,7 +1025,9 @@ export class ExitController {
     mode: "public" | "private" = "public",
   ) {
     const address = await this.ready(),
-      d = this.config!;
+      d = this.config!,
+      session = this.session,
+      wallet = this.wallet;
     const p = await this.client.readContract({
       address: d.market,
       abi: ExitMarketAbi,
@@ -817,7 +1036,60 @@ export class ExitController {
     });
     const amount = parseUnits(net, 6);
     if (amount <= 0n) throw new Error("Offer must be positive");
-    await this.transaction(d.token, TestUSDCAbi, "approve", [d.market, amount]);
+    this.assertSession(session, address, wallet);
+    let recipient:
+      { context: RequestContext; cert: SignedKeyBinding } | undefined;
+    if (mode === "private") {
+      const result = (await this.api(`offers?claimId=${id}`)) as {
+        certs: SignedKeyBinding[];
+      };
+      const context = {
+        chainId: d.chainId,
+        market: d.market,
+        seller: p[0],
+        requestId: offerRequestId(d.chainId, d.market, BigInt(id), p[2]),
+      };
+      const cert = result.certs.sort(
+        (a, b) => b.binding.version - a.binding.version,
+      )[0];
+      if (!cert)
+        throw new Error(
+          "Seller has not registered an encryption key for this request",
+        );
+      await validateBinding(
+        cert,
+        context,
+        (data, signature, signer) =>
+          this.client.verifyTypedData({
+            ...data,
+            address: signer,
+            signature,
+            blockTag: "latest",
+          }),
+        registryStatusReader(this.client, d.keyRegistry),
+      );
+      this.assertSession(session, address, wallet);
+      recipient = { context, cert };
+    }
+    const allowance = await this.client.readContract({
+      address: d.token,
+      abi: TestUSDCAbi,
+      functionName: "allowance",
+      args: [address, d.market],
+    });
+    this.assertSession(session, address, wallet);
+    if (allowance < amount) {
+      const capital = parseUnits(DEMO_MAKER_CAPITAL, 6);
+      if (amount > capital)
+        throw new Error(
+          "Offer exceeds the disclosed test-capital spending limit. Authorize independent capital before placing this offer.",
+        );
+      await this.transaction(d.token, TestUSDCAbi, "approve", [
+        d.market,
+        capital,
+      ]);
+      this.assertSession(session, address, wallet);
+    }
     const quote = {
       maker: address,
       seller: p[0],
@@ -835,27 +1107,19 @@ export class ExitController {
       nonce: keccak256(crypto.getRandomValues(new Uint8Array(32))),
       underwritingHash: zeroHash,
     };
-    const signature = await this.wallet.signTypedData({
+    this.assertSession(session, address, wallet);
+    const signature = await wallet.signTypedData({
       ...quoteTypedData(quote, d.chainId, d.market),
-      account: this.wallet.account ?? address,
+      account: wallet.account ?? address,
     });
+    this.assertSession(session, address, wallet);
     this.rememberOrder(quote);
-    if (mode === "private") {
-      const result = (await this.api(`offers?claimId=${id}`)) as {
-        context: RequestContext;
-        certs: SignedKeyBinding[];
-      };
-      const cert = result.certs.sort(
-        (a, b) => b.binding.version - a.binding.version,
-      )[0];
-      if (!cert)
-        throw new Error(
-          "Seller has not registered an encryption key for this request",
-        );
+    if (recipient) {
+      const { cert, context } = recipient;
       const envelope = await encryptOffer(
         { quote, signature },
         cert,
-        result.context,
+        context,
         purchaseQuoteCodec(
           { claimId: BigInt(id), source: d.source, sourceVersion: 1n },
           this.client,
@@ -869,6 +1133,7 @@ export class ExitController {
           }),
         registryStatusReader(this.client, d.keyRegistry),
       );
+      this.assertSession(session, address, wallet);
       await this.api("publish-envelope", { claimId: id, cert, envelope });
     } else
       await this.api("publish-offer", {
