@@ -1,0 +1,79 @@
+{
+  "observed_at": "2026-09-11T21:14:09.863208+00:00",
+  "scope": "Publication metadata only; papers and application behavior not reproduced",
+  "results": [
+    {
+      "url": "https://arxiv.org/abs/2608.15888",
+      "status": 200,
+      "citation_title": "Bounded Agents: Delegation Security for Multi-Agent AI Systems",
+      "citation_date": "2026/08/16",
+      "submission_banner": "16 Aug 2026]"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.23858",
+      "status": 200,
+      "citation_title": "Beyond the Mandate: A Systematic Security Analysis of the Agent Payments Protocol (AP2)",
+      "citation_date": "2026/08/24",
+      "submission_banner": "24 Aug 2026]"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.21230",
+      "status": 200,
+      "citation_title": "Utility Under Attack: Agent Memory Poisoning and the Limits of Content Screening and Provenance Ranking",
+      "citation_date": "2026/08/21",
+      "submission_banner": "21 Aug 2026]"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.30091",
+      "status": 200,
+      "citation_title": "VERA: Authority-Preserving Edge Revocation for Federated AI-Agent Workflows",
+      "citation_date": "2026/08/30",
+      "submission_banner": "30 Aug 2026]"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.10509",
+      "status": 200,
+      "citation_title": "MAP-Graph: Provenance-Aware Shared Memory for Multi-Agent Workflows",
+      "citation_date": "2026/08/11",
+      "submission_banner": "11 Aug 2026]"
+    },
+    {
+      "url": "https://arxiv.org/abs/2607.29167",
+      "status": 200,
+      "citation_title": "Memory Provenance Laundering in LLM Agents: A Non-Amplification Firewall for Persistent Memory",
+      "citation_date": "2026/07/31",
+      "submission_banner": "31 Jul 2026]"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.19937",
+      "status": 200,
+      "citation_title": "ShadowPath: Lookup-Private Credential Status Verification over Authenticated State",
+      "citation_date": "2026/08/20",
+      "submission_banner": "20 Aug 2026]"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.30177",
+      "status": 200,
+      "citation_title": "Understanding Stage-Wise Utility-Risk Trade-offs in LLM Agent Memory",
+      "citation_date": "2026/08/31",
+      "submission_banner": "31 Aug 2026]"
+    },
+    {
+      "url": "https://api.github.com/repos/openclaw/openclaw/pulls/119389",
+      "status": 200,
+      "html_url": "https://github.com/openclaw/openclaw/pull/119389",
+      "title": "fix(system-agent): apply approved proposal exactly once",
+      "created_at": "2026-08-05T00:57:20Z",
+      "merged_at": "2026-08-05T03:48:19Z",
+      "merge_commit_sha": "f0a74970ecd84cb49fd7be36b3a90d0634650fee"
+    },
+    {
+      "url": "https://api.github.com/repos/TencentCloud/TencentDB-Agent-Memory/releases/tags/v2.0.0",
+      "status": 200,
+      "html_url": "https://github.com/TencentCloud/TencentDB-Agent-Memory/releases/tag/v2.0.0",
+      "name": "v2.0.0",
+      "created_at": "2026-08-03T11:38:59Z",
+      "published_at": "2026-08-03T12:49:19Z"
+    }
+  ]
+}
