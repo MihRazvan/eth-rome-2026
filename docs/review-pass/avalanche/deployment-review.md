@@ -49,3 +49,20 @@ Setup files are public proving artifacts, not private credentials, but distribut
 - Actual `go run . validate-public --issuer-public ... --snapshot ...` accepted the existing public test issuer and snapshot, returning depth 16 and one revoked index. Only public files were read; this was not an issuer-signing or deployment operation.
 
 The initial attempt to write the Go files used the wrong workdir-relative paths and wrote nothing; its passing Go run was therefore only the old baseline. Corrected writes were followed by a fresh full Go run and the actual validator command above. No failed or unrun public check is represented as passed.
+
+## Closure check on the revised deployment path
+
+The reviewer rechecked root source after the integrator's remaining corrections. Capture at root HEAD `04ac2599f540fb97b6d4140604eef98e6d9b0149` (working-tree hashes remain the precise scope):
+
+| File | SHA-256 |
+|---|---|
+| pilot/deploy-fuji.mjs | `4bfa5e92dfb5250665f935511f704347f3f7912b8dfb69da265c87fc8d65034b` |
+| pilot/start.mjs | `35b54167d0fb9663c8ee149a2c048307f8f5852c65de3f51758d1b4a003548de` |
+
+**D3 is closed in source:** deployment invokes the implemented `--issuer-public` flag and checks the validator's explicit success status. **D4 is closed in source and its byte check was exercised:** constructor issuer coordinates and root now come only from validator stdout; the reread snapshot's SHA-256 must equal the validator's hash before retrieval or signing. An executable extraction of the exact hash guard accepted identical bytes and rejected an altered root document. The former independently read issuer JSON is absent.
+
+The server now enforces Fuji/public-environment/Swarm-ID consistency and local-chain/local-environment consistency. Exact extracted configuration guards accepted the two intended configurations and rejected four mismatches, including a wrong network. Fuji token identity remains independently restricted. The source additionally supports an explicitly configured HTTPS reverse-proxy origin while retaining a loopback listener; this is hosting capability, not evidence of a hosted deployment. Earlier statements about an exclusively local application URL describe the earlier capture only.
+
+`node --check` passed again for both files. The reviewer read the integrator-produced preparation intent and independently recomputed all four setup file hashes; they matched the recorded values. The integrator reports its actual `--prepare` and integrated Go suite passed. This reviewer did not rerun preparation or broadcast and does not infer public deployment from those artifacts.
+
+Residual operational limits remain explicit. A nonzero finalized AVAX balance does not establish enough gas for all three deployments, so the sequence can stop after partially spending test funds. Gas estimation or an upfront budget would improve this experience but cannot guarantee future fee conditions. The existing journal and exclusive lock intentionally prevent blind automatic replay; partial or interrupted deployment requires manual receipt/nonce inspection. Journal updates are not a crash-consistent recovery protocol. Public Swarm write access, setup distribution to reviewers and an actual funded Fuji lifecycle still require their own evidence.
