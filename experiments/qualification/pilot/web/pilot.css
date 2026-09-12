@@ -125,6 +125,7 @@ header p {
   font: inherit;
 }
 
-#transactions {
+#transactions,
+#discovery-change {
   overflow-wrap: anywhere;
 }

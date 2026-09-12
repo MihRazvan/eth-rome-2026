@@ -633,11 +633,16 @@ async function action(name: string, id: string) {
         });
         const result = await driver.publish(listing, leaseBlocks);
         $("#discovery-change").textContent =
-          `Listing published: ${result.entityKey}; expires at Arkiv block ${result.expiresAt}. Reconnect your settlement wallet to continue.`;
-        await window.ethereum!.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: `0x${config.chainId.toString(16)}` }],
-        });
+          `Listing published: ${result.entityKey}; transaction ${result.txHash}; expires at Arkiv block ${result.expiresAt}. Reconnect your settlement wallet to continue.`;
+        try {
+          await window.ethereum!.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: `0x${config.chainId.toString(16)}` }],
+          });
+        } catch {
+          $("#discovery-change").textContent +=
+            " The return network switch was not completed. Your listing is published; switch back to the settlement network manually.";
+        }
       } catch (error) {
         $("#discovery-change").textContent =
           `Publication was not confirmed: ${error instanceof Error ? error.message.slice(0, 160) : "wallet or network failure"}. Check your Arkiv wallet activity before retrying, then reconnect the settlement wallet.`;
