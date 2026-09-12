@@ -20,7 +20,7 @@ The name and visuals express the privacy boundary: keep the qualification; cut o
 
 ## How it works
 
-1. **An issuer qualifies a reviewer.** The reviewer holds a signed credential and their own private holder secret. Today this is one experimental test issuer, not an accredited professional network. Initial enrollment is operator-assisted; there is no live collective/roster administration screen.
+1. **An issuer qualifies a reviewer.** The reviewer holds a signed credential and their own private holder secret. Today this is one experimental test issuer, not an accredited professional network. The reviewer can now create a private pass and enrollment request in the app. Approval and signed-credential delivery remain operator-assisted; there is no live collective/roster administration screen.
 2. **A client funds a task.** Its public scope and test-USDC reward are committed on Avalanche Fuji. Swarm stores the scope; Arkiv provides discoverable, expiring listings.
 3. **The reviewer proves eligibility.** Their browser generates a task- and wallet-bound zero-knowledge proof that the credential is valid and not revoked. The contract verifies it before assigning the work. Private credential files remain local.
 4. **The reviewer delivers privately.** The browser encrypts the report for the client and reviewer before uploading it to Swarm. An onchain reference and digest bind the delivered bytes to the assignment.
@@ -69,7 +69,7 @@ This is the required rehearsal procedure, **not a claim it has already passed pu
 - In each browser, open **Your workspace**, connect the payment wallet, **Enable private reports**, and confirm **Document storage** says **Included · no storage account needed**. There is no Swarm sign-in or drive setup.
 - Prepare a current class-7 test credential and matching holder file on the reviewer’s own machine. Use the [enrollment guide](review-pass/QUALIFICATION-PROVISIONING.md); the issuer receives the commitment, not the holder secret. Do not demonstrate enrollment or expose file contents onstage.
 - Keep each role on the same hostname/browser profile throughout. Existing operator keys were registered on `review-pass-ethrome-2026.vercel.app`, which also displays Cutout. Opening the new Cutout hostname does not transfer those browser keys.
-- Confirm the public snapshot is current and the opportunity board is live. Use generous task deadlines. The default 30-block discovery lease is deliberately short; choose a longer lease for the main rehearsal and use a separate short lease for the expiry demonstration.
+- Confirm the public snapshot is current and the opportunity board is live. Use generous task deadlines. The default discovery lease is 900 blocks (about 30 minutes); use a separate short lease for the expiry demonstration. Acceptance deadlines remain independent.
 
 ### Execute and check
 

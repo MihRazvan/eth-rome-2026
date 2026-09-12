@@ -2,7 +2,19 @@
 
 Review Pass currently uses an **experimental test issuer and class7**. The proof establishes that this issuer signed a matching, unexpired credential and that its slot is not revoked under the current root. It does not establish review quality, professional accreditation, a named expert's reputation or an external issuer partnership. The issuer decides whom to qualify; demonstrating the mathematics is separate from validating that decision.
 
-Browser proving now accepts two local files and generates the proof in a Web Worker. **First-time holder creation and credential issuance still use the operator/holder CLI workflow below.** The app has no browser enrollment service. A judge with only a wallet cannot manufacture an issuer credential through the UI.
+Browser proving accepts two local files and generates the proof in a Web Worker. **First-time holders can now prepare enrollment directly in Cutout:** Reviewer → Wallet & storage readiness → Set up qualification (also available in Your workspace → Get qualified). Click **Prepare my enrollment**, save **cutout-private-holder.json** on the holder's device, then share only **cutout-enrollment-request.json** privately with the Cutout team. No secret or application is automatically uploaded. Reloading or changing wallets clears the tab copy; keep the downloaded backup.
+
+The Cutout team is the experimental demo issuer. It approves test participation and returns a one-day signed credential privately. There is no automated expertise assessment, external accreditation or public issuance API. A wallet or a prepared request alone is not qualification.
+
+For an approved **public Fuji demo request**, the operator can use this checked helper against the existing deployed issuer:
+
+```sh
+node --import tsx experiments/qualification/pilot/issue-enrollment.mjs \
+  --request .runtime/review-pass-enrollment/received-request.json \
+  --out .runtime/review-pass-enrollment/delivery/credential.json
+```
+
+The helper rejects private holder backups, extra fields, stale requests and the wrong destination. It checks the registry's public signing key and authority against finalized Fuji state, then allocates a fresh slot in the existing registry and writes a new private credential file. No holder secret, root update or chain transaction is required for issuance. Do not retry a failed issuance without inspecting the private output and registry; allocation may already have occurred. Return the signed file only to its intended holder. The CLI alternatives below remain useful for local rehearsals.
 
 ## Roles and artifacts
 

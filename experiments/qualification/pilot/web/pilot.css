@@ -1599,3 +1599,16 @@ body[data-view="demo"] #environment {
   min-height: 48px;
   position: relative;
 }
+
+.enrollment-steps li {
+  margin-bottom: 16px;
+}
+.enrollment-card {
+  border: 1px dashed var(--line);
+  border-left: 4px solid var(--orange);
+  padding: 20px;
+  margin: 24px 0;
+}
+.enrollment-card h4 {
+  margin-top: 0;
+}

@@ -1,6 +1,7 @@
 import "../../../qualification/runtime/style.css";
 import "./pilot.css";
 import { revealInWorkspace } from "./shell";
+import { mountEnrollment } from "./enrollment";
 import {
   createPublicClient,
   createWalletClient,
@@ -93,6 +94,7 @@ let role: Role =
     : "client";
 let readiness: Readiness = { key: false, gas: null, balance: null };
 let chainNow = 0;
+let enrollmentMessage = "Issuer enrollment needed before accepting work";
 function currentReadiness() {
   return readiness.owner === account
     ? readiness
@@ -226,20 +228,17 @@ function renderGuide() {
               : `${formatUnits(r.balance, 6)} ${tokenSymbol} available`,
           ],
         ]
-      : [
-          [
-            false,
-            "Qualification",
-            "An issuer credential and fresh task proof are required",
-          ],
-        ]),
+      : [[false, "Qualification", enrollmentMessage]]),
   ];
   $("#readiness").innerHTML = checks
     .map(
       ([done, title, detail], i) =>
-        `<li data-complete="${done}"><span class="check">${done ? "✓" : i + 1}</span><span>${esc(title)}<small>${esc(detail)}</small></span></li>`,
+        `<li data-complete="${done}"><span class="check">${done ? "✓" : i + 1}</span><span>${esc(title)}<small>${esc(detail)}</small>${title === "Qualification" ? '<button id="qualification-help" data-ui type="button" class="quiet">Set up qualification</button>' : ""}</span></li>`,
     )
     .join("");
+  document
+    .getElementById("qualification-help")
+    ?.addEventListener("click", () => reveal("reviewer-help"));
   $("#network-help").textContent =
     config.chainId === 43113
       ? `This app uses Fuji (43113). Reward token: ${config.token}. Test tokens have no monetary value.`
@@ -1662,8 +1661,14 @@ for (const event of ["accountsChanged", "chainChanged", "disconnect"])
       "Private document views cleared after wallet change.";
     render();
   });
+if (config.browserProver)
+  mountEnrollment(config, (message) => {
+    enrollmentMessage = message;
+    renderGuide();
+  });
+else $("#prepare-enrollment").hidden = true;
 await refresh();
 
 if (config.browserProver)
   $("#prover-help").textContent =
-    "Bring the credential issued for you and your private holder file. Select them on an open task to generate a proof inside this browser. No private file is uploaded or stored by the app. First-time reviewers still need enrollment by the configured test issuer.";
+    "After issuer approval, select your issued credential and saved private holder backup on an open task. Your browser generates a task-specific proof; the contract checks it before acceptance. The private files are never uploaded.";
