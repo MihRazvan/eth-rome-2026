@@ -1,0 +1,35 @@
+{
+  "retrievedAt": "2026-09-12T09:05:43.827Z",
+  "document": {
+    "id": "guides/ethrome-current",
+    "uri": "arkiv://knowledge/guides/ethrome-current",
+    "title": "ETHRome current missions, criteria and submission preparation",
+    "kind": "example",
+    "source": {
+      "url": "https://stage.hub.arkiv.network/ethrome",
+      "version": "maintained-2026-09-10",
+      "bodyOrigin": "repository_maintained",
+      "path": "content/guides/ethrome-current.md",
+      "urlRole": "public_reference_not_body_origin",
+      "verifiedAt": "2026-09-10T16:26:08.658Z",
+      "digest": "f05b25ae9324ead3434746c0ad14d2abd9cc926fb4f5075551c68f880caa3b3b",
+      "bodyVerifiedAt": "2026-09-11T20:43:38.102Z"
+    },
+    "sdk": [
+      "0.8.0"
+    ],
+    "network": "Tiramisu",
+    "compatible": true,
+    "authorship": "mcp_maintained_guidance",
+    "guidance": [],
+    "verificationScope": "Dated public sources and maintained implementation guidance; read the evidence and unverified limits inside each guide.",
+    "compatibilityScope": "declared_sdk_target_not_application_certification",
+    "sourceState": "verified",
+    "state": "verified",
+    "compatibilityNote": null,
+    "compatibilityVerification": null,
+    "canonicalUrl": null
+  },
+  "bodyStored": false,
+  "referenceOnly": true
+}

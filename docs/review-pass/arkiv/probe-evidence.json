@@ -1,0 +1,181 @@
+{
+  "observedAt": "2026-09-12T09:04:08.361Z",
+  "readOnly": true,
+  "writes": 0,
+  "chainId": 7738577,
+  "timing": {
+    "currentBlock": "347747",
+    "currentBlockTime": 1789203848,
+    "blockDuration": 2
+  },
+  "queryPredicates": [
+    "application = str('review-pass')",
+    "kind = str('assignment')",
+    "taskClass = str('technical-review')",
+    "qualificationClass = str('7')",
+    "settlementChain = i32(43113)",
+    "acceptBefore > u64(1789200000)"
+  ],
+  "queryPages": 1,
+  "queryCount": 0,
+  "durations": [
+    {
+      "seconds": 5,
+      "status": "rejected",
+      "error": "InvalidExpiryError"
+    },
+    {
+      "seconds": 6,
+      "blocks": "3",
+      "status": "accepted"
+    },
+    {
+      "seconds": 30,
+      "blocks": "15",
+      "status": "accepted"
+    },
+    {
+      "seconds": 60,
+      "blocks": "30",
+      "status": "accepted"
+    }
+  ],
+  "webSocket": {
+    "transport": "webSocket",
+    "fromBlock": false,
+    "forcedSocketClose": true,
+    "before": {
+      "events": 6,
+      "heads": 4,
+      "subscriptions": 2
+    },
+    "after": {
+      "events": 7,
+      "heads": 4,
+      "subscriptions": 2
+    },
+    "errors": 5,
+    "log": [
+      {
+        "kind": "head",
+        "phase": "before-drop",
+        "block": "347748"
+      },
+      {
+        "kind": "entity",
+        "phase": "before-drop",
+        "type": "EntityCreated",
+        "block": "347748"
+      },
+      {
+        "kind": "entity",
+        "phase": "before-drop",
+        "type": "EntityCreated",
+        "block": "347748"
+      },
+      {
+        "kind": "head",
+        "phase": "before-drop",
+        "block": "347749"
+      },
+      {
+        "kind": "entity",
+        "phase": "before-drop",
+        "type": "EntityDeleted",
+        "block": "347749"
+      },
+      {
+        "kind": "head",
+        "phase": "before-drop",
+        "block": "347750"
+      },
+      {
+        "kind": "entity",
+        "phase": "before-drop",
+        "type": "EntityCreated",
+        "block": "347750"
+      },
+      {
+        "kind": "head",
+        "phase": "before-drop",
+        "block": "347751"
+      },
+      {
+        "kind": "entity",
+        "phase": "before-drop",
+        "type": "EntityCreated",
+        "block": "347751"
+      },
+      {
+        "kind": "entity",
+        "phase": "before-drop",
+        "type": "EntityCreated",
+        "block": "347751"
+      },
+      {
+        "kind": "head",
+        "phase": "after-drop",
+        "block": "347752"
+      },
+      {
+        "kind": "entity",
+        "phase": "after-drop",
+        "type": "EntityDeleted",
+        "block": "347752"
+      },
+      {
+        "kind": "entity",
+        "phase": "after-drop",
+        "type": "EntityCreated",
+        "block": "347752"
+      },
+      {
+        "kind": "head",
+        "phase": "after-drop",
+        "block": "347753"
+      },
+      {
+        "kind": "entity",
+        "phase": "after-drop",
+        "type": "EntityCreated",
+        "block": "347753"
+      },
+      {
+        "kind": "entity",
+        "phase": "after-drop",
+        "type": "EntityCreated",
+        "block": "347753"
+      },
+      {
+        "kind": "head",
+        "phase": "after-drop",
+        "block": "347754"
+      },
+      {
+        "kind": "entity",
+        "phase": "after-drop",
+        "type": "EntityDeleted",
+        "block": "347754"
+      },
+      {
+        "kind": "entity",
+        "phase": "after-drop",
+        "type": "EntityCreated",
+        "block": "347755"
+      },
+      {
+        "kind": "entity",
+        "phase": "after-drop",
+        "type": "EntityCreated",
+        "block": "347755"
+      },
+      {
+        "kind": "head",
+        "phase": "after-drop",
+        "block": "347755"
+      }
+    ]
+  },
+  "nativeExpiry": "not tested; no entity written",
+  "twoWalletDemo": "not tested"
+}

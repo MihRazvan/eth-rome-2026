@@ -1,0 +1,126 @@
+{
+  "observedAt": "2026-09-12T09:08:57.519Z",
+  "base": "4f0cc87b405b8522f59e4c14d87ea546e77a4858",
+  "sources": [
+    {
+      "id": "attachment",
+      "title": "User-provided sponsor brief",
+      "url": null,
+      "publishedAt": "2026-09-12",
+      "accessNote": "/Users/razvan/.codex/attachments/47e5fc73-3ebc-4411-8e4a-84f66cc8f21e/pasted-text.txt",
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "hub",
+      "title": "Arkiv ETHRome",
+      "url": "https://hub.arkiv.network/ethrome",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "form",
+      "title": "Arkiv submission form",
+      "url": "https://tally.so/r/vGZ98v",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "network",
+      "title": "Tiramisu network",
+      "url": "https://docs.arkiv.network/networks/tiramisu/",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "npm",
+      "title": "SDK package registry",
+      "url": "https://registry.npmjs.org/@arkiv-network%2fsdk",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "sdk",
+      "title": "Official TypeScript SDK",
+      "url": "https://github.com/Arkiv-Network/arkiv-sdk-js",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "events",
+      "title": "Live Events",
+      "url": "https://docs.arkiv.network/typescript-sdk/live-events/",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "query",
+      "title": "Querying Data",
+      "url": "https://docs.arkiv.network/typescript-sdk/querying-data/",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "fundamentals",
+      "title": "Fundamentals",
+      "url": "https://docs.arkiv.network/start-here/fundamentals/",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "skills",
+      "title": "Official skills",
+      "url": "https://github.com/Arkiv-Network/skills/tree/afce96c133276d4195f659b98a1b4d0ba2f0a86a",
+      "publishedAt": "2026-09-09",
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "mcp",
+      "title": "ETHRome MCP",
+      "url": "https://arkiv-mcp-gateway.vercel.app/ethrome",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "puna",
+      "title": "Prior sponsor hackathon results",
+      "url": "https://github.com/Arkiv-Network/arkiv-puna-tech-hackathon",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "susurro",
+      "title": "Susurro source README",
+      "url": "https://github.com/artugrande/susurro",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "licita",
+      "title": "LicitaVerify source README",
+      "url": "https://github.com/hallzyx/licita-verify",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    },
+    {
+      "id": "viem",
+      "title": "Viem watchEvent docs and installed2.56.3source",
+      "url": "https://viem.sh/docs/actions/public/watchEvent",
+      "publishedAt": null,
+      "accessNote": null,
+      "observedDate": "2026-09-12"
+    }
+  ]
+}

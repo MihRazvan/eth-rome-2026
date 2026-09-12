@@ -1,0 +1,35 @@
+{
+  "retrievedAt": "2026-09-12T09:05:43.829Z",
+  "document": {
+    "id": "guides/official-docs",
+    "uri": "arkiv://knowledge/guides/official-docs",
+    "title": "Use official Arkiv documentation with its reviewed context",
+    "kind": "doc",
+    "source": {
+      "url": "https://docs.arkiv.network/",
+      "verifiedAt": "2026-09-11T12:49:26.821Z",
+      "version": "dated_maintained_review",
+      "digest": "fbed897ab9ab6af503f59c5ebf4993c831ed1b2334f52f05e1e6b4bf054b0370",
+      "bodyOrigin": "repository_maintained",
+      "path": "content/guides/official-docs.md",
+      "urlRole": "primary_official_evidence_not_body_origin",
+      "catalogDigest": "ebc556ae7547c649243cc4c5bf13d7c56d605f6d6db34a3dd142d94aaf8e8eb5"
+    },
+    "sdk": [
+      "0.8.0"
+    ],
+    "network": "Tiramisu",
+    "compatible": true,
+    "authorship": "mcp_maintained_guidance",
+    "guidance": [],
+    "verificationScope": "Dated public-source integrity and scoped semantic/SDK review; not all-method execution, node support or deployment certification.",
+    "compatibilityScope": "declared_sdk_target_not_application_certification",
+    "sourceState": "verified",
+    "state": "verified",
+    "compatibilityNote": "Maintained routing and corrections, separate from verbatim official source bodies. Read per-document review depth and caveats.",
+    "compatibilityVerification": null,
+    "canonicalUrl": null
+  },
+  "bodyStored": false,
+  "referenceOnly": true
+}

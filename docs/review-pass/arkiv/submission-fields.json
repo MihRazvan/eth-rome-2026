@@ -1,0 +1,149 @@
+{
+  "observedAt": "2026-09-12T09:08:57.521Z",
+  "url": "https://tally.so/r/vGZ98v",
+  "readOnly": true,
+  "submitted": false,
+  "publicBlocksSHA256": "84f9002d85003e21f7fecec370a4c1f5a4106dd83dec13ad211eecbfc371a6a3",
+  "fields": [
+    {
+      "title": "Your name",
+      "required": true,
+      "type": "INPUT_TEXT"
+    },
+    {
+      "title": "Email",
+      "required": true,
+      "type": "INPUT_EMAIL"
+    },
+    {
+      "title": "Telegram handle",
+      "required": true,
+      "type": "INPUT_TEXT"
+    },
+    {
+      "title": "Country of residence",
+      "required": true,
+      "type": "INPUT_TEXT"
+    },
+    {
+      "title": "Team name (optional)",
+      "required": false,
+      "type": "INPUT_TEXT"
+    },
+    {
+      "title": "Team members (optional)",
+      "required": false,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "Project name",
+      "required": true,
+      "type": "INPUT_TEXT"
+    },
+    {
+      "title": "What did you build?",
+      "required": true,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "Public GitHub repository",
+      "required": true,
+      "type": "INPUT_LINK"
+    },
+    {
+      "title": "Deployed dapp",
+      "required": true,
+      "type": "INPUT_LINK"
+    },
+    {
+      "title": "Demo video URL (optional)",
+      "required": false,
+      "type": "INPUT_LINK"
+    },
+    {
+      "title": "Missions completed",
+      "required": true,
+      "type": "CHECKBOX"
+    },
+    {
+      "title": "Why Arkiv / Web3 database?",
+      "required": true,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "Who will use this, and how will you reach your first 100 users?",
+      "required": true,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "Wallet address(es) used to create Arkiv entities",
+      "required": true,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "On-chain creation evidence",
+      "required": true,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "How can judges reproduce your selected mission(s)?",
+      "required": true,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "Direct GitHub link to feedback.md",
+      "required": true,
+      "type": "INPUT_LINK"
+    },
+    {
+      "title": "Which Arkiv surfaces did you use?",
+      "required": true,
+      "type": "CHECKBOX"
+    },
+    {
+      "title": "What is the most important thing we should improve? (optional)",
+      "required": false,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "Are you planning to continue building this after ETHRome? (optional)",
+      "required": false,
+      "type": "MULTIPLE_CHOICE_OPTION"
+    },
+    {
+      "title": "Anything else judges should know? (optional)",
+      "required": false,
+      "type": "TEXTAREA"
+    },
+    {
+      "title": "Which LLMs did you use?",
+      "required": true,
+      "type": "CHECKBOX"
+    },
+    {
+      "title": "Did you use the Arkiv MCP?",
+      "required": true,
+      "type": "MULTIPLE_CHOICE_OPTION"
+    },
+    {
+      "title": "Did you use Arkiv Skills?",
+      "required": true,
+      "type": "MULTIPLE_CHOICE_OPTION"
+    },
+    {
+      "title": "Did you use Arkiv Tools (The ones in the hub)?",
+      "required": true,
+      "type": "MULTIPLE_CHOICE_OPTION"
+    },
+    {
+      "title": "Devcon: attending or interested?",
+      "required": true,
+      "type": "MULTIPLE_CHOICE_OPTION"
+    },
+    {
+      "title": "Submission confirmation",
+      "required": true,
+      "type": "CHECKBOX"
+    }
+  ]
+}
