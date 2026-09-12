@@ -1,3 +1,11 @@
+# Reviewer wallet role recovery — deployed
+
+12 September2026: source5530ce8, production `dpl_9KwmtoqwTKQxUWNevCFThysqxuu8`. Reviewer view no longer replaces proof setup with client publication when the wallet returns the funding account. It displays an explicit mismatch and lets the user request account selection, or reconnect after selecting manually. Same-account selection remains a mismatch; only Client view offers publication. Account permissions do not request signing/spending or revoke existing access.
+
+26wallet-network tests, TS/build pass. Six actual production Chromium checks against public funded task3 pass using a synthetic wallet: wrong account, preserved client functionality, cancellation, unchanged account, different account/events/reconnect and native file picker. Zero page errors and no transactions/signatures. [Evidence](design/cutout/evidence/wallet-role/README.md). This does not verify the teammate's actual extension account selection or complete public payment.
+
+---
+
 # Presenter explanation and current-state reconciliation
 
 12 September2026: rewrote the teammate cue sheet and added [full presenter guide](CUTOUT-PRESENTER-GUIDE.md), covering each action, file provenance, issuer trust, private/public data, solo demo and sponsor-specific Q&A/source pointers. Independent read-only source review found no material inaccuracies; approval-button wording was clarified. All new local documentation links resolve. No app/deployment or financial action in this documentation pass.

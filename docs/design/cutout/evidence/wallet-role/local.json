@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-12T18:40:27.968Z",
+  "origin": "local Vite",
+  "taskId": "3",
+  "client": "0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d",
+  "reviewer": "0x7292C1652e831031175947daEcC7F85bF86381A1",
+  "checks": [
+    "Connecting funding wallet in Reviewer view gives explicit account mismatch, never relisting",
+    "Client view retains listing action; role toggle alone does not change wallet",
+    "Canceled account selection keeps mismatch and task context",
+    "Selecting the same account never enables reviewer proof controls",
+    "Explicit reviewer selection handles accountsChanged, reconnects and retains the selected task",
+    "Native proof file chooser opens after account change"
+  ],
+  "errors": [],
+  "transactionsOrSignatures": 0,
+  "scope": "Actual Chromium/public funded task and RPC reads. Synthetic EIP1193 account authorization/change/cancellation; no wallet signature, permission revocation or chain writes."
+}

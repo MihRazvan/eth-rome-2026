@@ -1,3 +1,11 @@
+# Latest — reviewer/client wallet loop fixed
+
+Deployed source5530ce8, Vercel `dpl_9KwmtoqwTKQxUWNevCFThysqxuu8`, https://cutout-ethrome-2026.vercel.app. Connecting a wallet can return the task funding account even in Reviewer view. That previously replaced the proof form with List this review. Reviewer view now shows a full-address client-wallet mismatch and Choose reviewer account / Reconnect selected account. Client publication stays in Client view. Explicit account selection uses only wallet_requestPermissions eth_accounts; no signing, spending, revocation or automatic retries. Standard connection then rechecks account/chain and preserves the selected task. Wallets without that method get manual account/site-permission instructions.
+
+26wallet-network tests, TS/build pass; real Chromium/public task3 with synthetic wallet passed six account-selection/role/file-picker cases. Evidence: `docs/design/cutout/evidence/wallet-role`. No transaction or real teammate wallet manipulation in this pass. Do not tell the user to republish/fund as a repair for account selection. Task deadlines still apply and task3 was close to acceptance expiry at18:40UTC; reconcile state before next rehearsal. Teammate already has an issued private credential; keep it and its holder backup private and distinct from report keys.
+
+---
+
 # Latest communication task — presenter explanation
 
 The user says the teammate does not understand the product and must present alone to judges and sponsors. `docs/CUTOUT-TEAM-BRIEF.md` is now a plain-English cue sheet; `docs/CUTOUT-PRESENTER-GUIDE.md` explains each action, three distinct files, trust/privacy boundaries, sponsor Q&A, code pointers and solo presentation preparation. Both supersede the older technical presentation narrative. Source-only independent review completed; no app/deployment change in this documentation pass.
