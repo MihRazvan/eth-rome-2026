@@ -1111,6 +1111,19 @@ async function action(name: string, id: string) {
           walletTransport: custom(window.ethereum!),
         });
         const result = await driver.publish(listing, leaseBlocks);
+        const receipt = document.createElement("li");
+        receipt.append(
+          document.createTextNode(
+            `Task ${id} listed on Arkiv. Entity ${result.entityKey}; expires at Arkiv block ${result.expiresAt}. `,
+          ),
+        );
+        const receiptLink = document.createElement("a");
+        receiptLink.href = `https://tiramisu.explorer.arkiv.network/tx/${result.txHash}`;
+        receiptLink.target = "_blank";
+        receiptLink.rel = "noopener noreferrer";
+        receiptLink.textContent = "View listing transaction";
+        receipt.append(receiptLink);
+        $("#transactions").prepend(receipt);
         $("#discovery-change").textContent =
           `Listing published: ${result.entityKey}; transaction ${result.txHash}; expires at Arkiv block ${result.expiresAt}. Reconnect your settlement wallet to continue.`;
         try {
@@ -1123,11 +1136,19 @@ async function action(name: string, id: string) {
             " The return network switch was not completed. Your listing is published; switch back to the settlement network manually.";
         }
       } catch (error) {
-        $("#discovery-change").textContent =
-          `Publication was not confirmed: ${error instanceof Error ? error.message.slice(0, 160) : "wallet or network failure"}. Check your Arkiv wallet activity before retrying, then reconnect the settlement wallet.`;
-        return "preserve";
+        const message = `Publication was not confirmed: ${error instanceof Error ? error.message.slice(0, 160) : "wallet or network failure"}. Check your Arkiv wallet activity before retrying, then reconnect the settlement wallet.`;
+        $("#discovery-change").textContent = message;
+        // Network switches invalidate the wallet generation. Keep the outcome
+        // visible even when run() correctly refuses to restore that session.
+        $("#notice").className = "error";
+        $("#notice").textContent = message;
+        throw new Error(message);
       }
-      return "preserve";
+      const message =
+        "Review listed. The publication receipt is in Activity. Reconnect your Fuji wallet to continue.";
+      $("#notice").className = "";
+      $("#notice").textContent = message;
+      return { preserve: true, message };
     }
     case "prepare": {
       const ctx = await read("contextFor", [BigInt(id)]);
