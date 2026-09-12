@@ -1,0 +1,17 @@
+{
+  "date": "2026-09-12T17:32:45.987Z",
+  "url": "https://cutout-ethrome-2026.vercel.app",
+  "scope": "Actual Chromium enrollment and file downloads, public RPC reads; no wallet signature, issuer issuance, uploads or chain writes in this browser run",
+  "checks": [
+    "Reviewer readiness opens enrollment",
+    "Fresh private pass generated with actual deployed WASM",
+    "Backup and public request downloads match",
+    "Request contains no holder secret",
+    "No secret in outgoing request bodies",
+    "No proving setup loaded during enrollment",
+    "Not-issued status explicit",
+    "Desktop and 390px mobile fit",
+    "Clear removes downloads"
+  ],
+  "errors": []
+}

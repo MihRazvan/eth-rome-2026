@@ -1,0 +1,93 @@
+{
+  "status": "ACTUAL_CHROMIUM_WASM_PROOF_VERIFIED_LOCALLY",
+  "date": "2026-09-12T17:22:11.673Z",
+  "browser": "153.0.8010.12",
+  "environment": "Loopback asset server; public deterministic test fixtures; fresh single-process test setup; no wallet or public chain transaction",
+  "build": {
+    "status": "BROWSER_PROVER_PROBE_ONLY",
+    "go": "go version go1.25.7 darwin/arm64",
+    "sourceHashes": {
+      "go.mod": "5c356f6f39b897f5e9f68b3130b07d6196a916c1d6f1dc4df652360c929b5630",
+      "go.sum": "3bf6fc0d6933d070b88d1671b4a48c086ee31bc25dbf3cfe25d6d3ffebbcc9d0",
+      "circuit.go": "5a60e9ef2508da1238115698e03d1c236aace25123bd3e748d197a565e7eb3ab",
+      "credential.go": "7f6b18a272e80a6594337279224b5b1be563862f72a1f5f4df397738be26cc7f",
+      "main.go": "d9f78ccdcd7e532ecc3ba127b3dfafee93a92157927d5123e86de2675db7c8fd",
+      "bridge.go.txt": "78429f553f8a4b1000cc7feaa4b7b0dac4dc4d94905960335e8043504adc5827",
+      "worker.js": "fbe51f08567684f902eb7a2a109c708ec6a6977e345d9c7cbda0a4f09d49796a"
+    },
+    "wasmBytes": 14538268,
+    "wasmSha256": "06fc2a7688ce35487f664f22d617b61275cdcbe4d2e3f443fcbdd5534475a1d3",
+    "buildMs": 1019
+  },
+  "setupSha256": {
+    "circuit.r1cs": "053bd5c4993b7d49350ef90ea3bffb8f437f5fe6ef4a554e63cf540432b771e9",
+    "proving.key": "cc979cfc8cdb254035c50f5456d802684e19f81f529245f7593960f47cac48b3",
+    "verifying.key": "1f6d599f3618bd8e0b1e9227cdd5d5156b027b1bd8cb6c816315034403e36749"
+  },
+  "load": {
+    "constraints": 26089,
+    "loadMs": 12943.699,
+    "ready": true,
+    "totalLoadMs": 13033.799999952316,
+    "setupBytes": [
+      1961557,
+      4416879,
+      620
+    ]
+  },
+  "proof": {
+    "proofBytes": 256,
+    "constraints": 26089,
+    "proveMs": 4251.699,
+    "verifyMs": 8.899,
+    "goHeapAllocBytes": 40862056,
+    "goSysBytes": 52428800
+  },
+  "checks": [
+    "Unchanged public inputs match native fixture",
+    "Second context changes nullifier",
+    "Wrong class rejected",
+    "Tampered snapshot rejected",
+    "Unknown private input field rejected",
+    "Only public static GET requests",
+    "No page exceptions"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/worker.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/circuit.r1cs",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/proving.key",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/verifying.key",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/wasm_exec.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover.wasm",
+      "hasBody": false
+    }
+  ],
+  "consoleErrors": []
+}

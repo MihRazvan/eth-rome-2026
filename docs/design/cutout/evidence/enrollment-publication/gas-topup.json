@@ -1,0 +1,11 @@
+{
+  "recordedAt": "2026-09-12T17:09:28.848Z",
+  "chainId": 7738577,
+  "from": "0x7259c94d93d83E539B57ba7A360cB06Bd9b53a60",
+  "to": "0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d",
+  "testGLM": "0.01",
+  "transactionHash": "0x8bb3a26b5eea1e6c9157204346557ec8e6477e80117d68dc6667f195c38bc720",
+  "status": "success",
+  "balanceAfter": "0.01",
+  "scope": "Test gas only for the existing funded task client. No task funds or listing rights changed."
+}

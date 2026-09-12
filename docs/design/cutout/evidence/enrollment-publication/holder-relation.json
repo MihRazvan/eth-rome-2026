@@ -1,0 +1,99 @@
+{
+  "status": "ACTUAL_CHROMIUM_HOLDER_AND_NATIVE_ISSUER_RELATION_VERIFIED",
+  "date": "2026-09-12T17:21:57.410Z",
+  "browser": "153.0.8010.12",
+  "environment": "Loopback, fresh random browser holders, disposable native issuer and setup; no wallets, existing private keys, public uploads or chain writes",
+  "enrollment": {
+    "ms": 206,
+    "distinct": true,
+    "enrollmentRequests": 8
+  },
+  "proof": {
+    "valid": true,
+    "proofBytes": 256,
+    "proveMs": 4249.299,
+    "mismatchedSecretRejected": true
+  },
+  "checks": [
+    "Two independently random bounded holders",
+    "Holder generation fetches no proving setup",
+    "Native CLI issues credential using public commitment only",
+    "Browser holder produces locally verified Groth16 proof",
+    "Changed holder secret rejected by unchanged relation",
+    "Generate then initialize preserves worker boot and proving",
+    "All network requests public static GET only"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/holder.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/worker.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/wasm_exec.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/prover.wasm",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/worker.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/wasm_exec.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/prover.wasm",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/worker.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/wasm_exec.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/prover.wasm",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/circuit.r1cs",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/proving.key",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover/verifying.key",
+      "hasBody": false
+    }
+  ],
+  "errors": []
+}

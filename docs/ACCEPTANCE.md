@@ -1,3 +1,11 @@
+# Wallet/publication recovery and browser enrollment — deployed
+
+12 September2026, source `55bef1b`, production `dpl_D58ymL6WPhnUvc3otDUeAvbkmpba`. Connected-wallet header repaired; Arkiv unknown-network handling and actionable error reporting added; default discovery lease900blocks. Actual task#1 was funded by the user but had no Arkiv listing and zero creator gas at17:08UTC. A0.01testGLM top-up is confirmed; creator publication signature remains required.
+
+Real browser holder creation/downloads and public enrollment request now work in the hosted app. A fresh operator test request was signed by the existing deployed issuer; the resulting actual hosted browser proof passed Fuji verifier eth_call and rejected an altered recipient. No external reviewer assessment, automatic issuance, escrow acceptance or payment is implied.45targeted tests and TypeScript/build pass; actual production desktop/mobile enrollment and guided walkthrough pass. [Evidence and precise boundaries](design/cutout/evidence/enrollment-publication/README.md).
+
+---
+
 # Account-free document storage — deployed
 
 12 September 2026: Cutout now uses gateway-funded public Swarm uploads by default, with no end-user storage account or drive. Source `6e923a6`, Vercel `dpl_BaPyTpRQXJupsZy7wTrKXTQbadv4`. Actual isolated-browser encrypted upload/retrieval, both recipients, reload and outsider rejection passed; production desktop/mobile checks passed. [Evidence and exact scope](design/cutout/evidence/account-free-storage/README.md).

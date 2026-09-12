@@ -1,0 +1,19 @@
+# Wallet, publication recovery and reviewer enrollment
+
+12 September 2026. Source55bef1b; deployment and immutable URL in `deployment.json`. Current Cutout and original Review Pass origins remain in the same Vercel project. Root-generated WASM includes the holder entrypoint; circuit, proving setup and issuer public key are unchanged.
+
+## Actual observations
+
+- Actual user-funded Fuji task#1:1testUSDC, client0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d, still open/no matching active Arkiv listing at17:08UTC. The creator had zero Tiramisu gas. `gas-topup.json` records the successful0.01testGLM transfer from the authorized operator test client. No task funds or rights changed.
+- `network-recovery.json`: real funded task/scope and public RPC reads in isolated Chromium, with synthetic4902/add-chain/switch/4001 wallet responses. The SDK reached its transaction request; cancellation gave actionable guidance. No signature or listing was submitted. This reproduces an app handling defect, not the original teammate's exact discarded provider error.
+- `holder-relation.json`: actual Chromium generates two random private holders without fetching proving keys. A disposable native issuer signs using only the commitment. Browser proof verifies and a changed secret fails;7existing browser proving regression checks also pass (`proving-regression.json`). This uses disposable local issuer/setup, not a public transaction.
+- `local-ui.json` / `production-ui.json`: actual rebuilt WASM from Cutout's UI, matching backup/public-request downloads, no holder secret in outgoing requests, no proving-setup fetch for enrollment, explicit not-issued status, clear behavior and390px fit. Screenshots show the deployed enrollment page. The first harness attempt tried clicking inside the closed readiness disclosure; corrected to open it before clicking.
+- A fresh operator-owned UI-generated request was actually signed with the existing deployed test issuer using `issue-enrollment.mjs`. Output is a one-day class7credential, expiry1789320633. Private holder, request and credential stay ignored under `.runtime/cutout-enrollment/`. Issuance preserves allocator history and does not change the revocation root. This was approved test participation, not assessment of an external professional.
+- `fuji-proof.json` / `public-proof.json`: that newly issued credential produced a4.26sec proof in the actual production worker. Deployed Fuji verifier accepted it via finalized read-only call and rejected an altered recipient. Production artifacts matched the build hashes; no private HTTP matches, request failures, console errors or page errors. Synthetic unfunded assignment/recipient; no acceptance/payment transaction.
+-45targeted Node tests pass (25wallet-network,16listings,3request-schema,1holder-worker validation/cancellation). Explicit pilot TypeScript and public-only build pass. Production guided walkthrough regression:4checks, no errors or writes.
+
+## User flow and remaining boundary
+
+The reviewer opens **Wallet & storage readiness → Set up qualification** or **Your workspace → Get qualified**, prepares enrollment, saves their private holder backup, and privately sends only the enrollment request. The Cutout team approves demo participation and returns the signed credential. The reviewer selects both local files on a funded task and cuts a proof. Preparing a pass does not issue a qualification. There is no automated expertise assessment, external accreditation or public signing service.
+
+Client task#1 still requires its creator's publication signature while eligible; do not fund a duplicate. Default discovery lease is900blocks (~30minutes). Full public accept/deliver/open/pay and actual native Arkiv expiry remain separate uncompleted acceptance gates. Unknown-chain handling and a gas top-up do not count as successful publication.

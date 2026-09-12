@@ -1,0 +1,446 @@
+{
+  "status": "PUBLIC_HOSTED_BROWSER_PROOF_ACCEPTED_BY_DEPLOYED_FUJI_VERIFIER",
+  "date": "2026-09-12T17:33:04.501Z",
+  "origin": "https://cutout-ethrome-2026.vercel.app",
+  "sourceBase": "55bef1b",
+  "hostedBuildRevision": "55bef1b95aee3f32848ad50770d8b25578576c1b",
+  "scope": "Fresh Chromium at actual production HTTPS origin, production worker/runtime/WASM/setup/snapshot. Synthetic unfunded assignment and synthetic recipient; no escrow acceptance or wallet transaction.",
+  "browser": "153.0.8010.12",
+  "chainId": 43113,
+  "rpcUrl": "https://api.avax-test.network/ext/bc/C/rpc",
+  "verifier": "0x9c1293e7e499d56fdc52186e7624dcfa04dfcbd1",
+  "escrow": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+  "verifierRuntimeCodeHash": "0x0869a21c9b77e97378db524e6a617230d7a72965e49e47fc0dc41ba0d2574128",
+  "block": {
+    "number": "58335557",
+    "hash": "0x99afc79242e9cbdec0dbc2dba2896c3754dba1198941c966848791b17710235d",
+    "timestamp": "1789234363",
+    "tag": "finalized"
+  },
+  "syntheticJobId": "2000002",
+  "snapshot": {
+    "reference": "19ad2c00d93447d69c66d153bbe804c686303cd8d83fd448dc58b26eb49efaf7",
+    "bytes": 170,
+    "sha256": "0xb6f119bc297631f7b7af8f5ae39fb9bbf569efb9b15ab14751ec77995e52d156",
+    "root": "4192859339826665750369528433721474123040425665956367961767766058523807596338",
+    "apiBytes": 152,
+    "apiSha256": "0xf9b09f5959cf204b2f1ec82d4ac0c823338d6f1dc7e78963f284d5ac27986b1e",
+    "independentGatewayContentMatchedAPI": true
+  },
+  "artifacts": [
+    {
+      "name": "circuit.r1cs",
+      "bytes": 1961557,
+      "sha256": "0x053bd5c4993b7d49350ef90ea3bffb8f437f5fe6ef4a554e63cf540432b771e9"
+    },
+    {
+      "name": "proving.key",
+      "bytes": 4416879,
+      "sha256": "0x6345df1dd836c5b70667456093d51beb31ea4cd7b7f64d8c135fd5d8a6db49a3"
+    },
+    {
+      "name": "verifying.key",
+      "bytes": 620,
+      "sha256": "0xc924236aaf25dad8d3519f66d477dbaf22b51c4a21c763ad0255a8bbb09c3840"
+    },
+    {
+      "name": "worker.js",
+      "bytes": 1924,
+      "sha256": "0xfbe51f08567684f902eb7a2a109c708ec6a6977e345d9c7cbda0a4f09d49796a"
+    },
+    {
+      "name": "wasm_exec.js",
+      "bytes": 16992,
+      "sha256": "0x0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14"
+    },
+    {
+      "name": "prover.wasm",
+      "bytes": 14538390,
+      "sha256": "0xe88d195ae6b86aaf595bb46a5134af0081f21d9cb355ad9972a751dfbe071f8c"
+    }
+  ],
+  "documentCSP": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+  "assetHeaders": {
+    "/prover/circuit.r1cs": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/octet-stream"
+    },
+    "/prover/proving.key": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/vnd.apple.keynote"
+    },
+    "/prover/verifying.key": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/vnd.apple.keynote"
+    },
+    "/prover/worker.js": {
+      "status": 200,
+      "csp": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'",
+      "contentType": "application/javascript"
+    },
+    "/prover/wasm_exec.js": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/javascript"
+    },
+    "/prover/prover.wasm": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/wasm"
+    }
+  },
+  "load": {
+    "constraints": 26089,
+    "loadMs": 12915,
+    "ready": true,
+    "workerInitializationMs": 13498.700000047684
+  },
+  "proof": {
+    "constraints": 26089,
+    "proofBytes": 256,
+    "proveMs": 4257.7,
+    "localVerifyMs": 9.2,
+    "goHeapAllocBytes": 40861576,
+    "goSysBytes": 48234496
+  },
+  "deployedVerifierAccepted": true,
+  "alteredRecipientRejected": true,
+  "transactionsSent": 0,
+  "privacy": {
+    "privateInputsOnlyViaLocalBrowserControlChannel": true,
+    "privateHTTPMatches": 0,
+    "issuerOrWalletKeysRead": false
+  },
+  "network": [
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/index-CcvOCra7.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/preload-helper-BZ1Pz5am.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/swarm-id-B4ah2SwA.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/swarm-id-CX8ZzT5R.css",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/archivo-variable-DuIT1y7V.ttf",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/ibm-plex-mono-regular-C5_jWxVG.ttf",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/api/config",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/api/config",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/main-CP94vudH.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/rolldown-runtime-CbXtAM7H.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/localBatchGatewayRequest-BwtmkjIQ.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/utils-Bpv4vmSW.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/secp256k1-tA7uuJCk.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/circuit.r1cs",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/api/config",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://api.gateway.ethswarm.org",
+      "path": "/gateway",
+      "hasBody": false
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://api.avax-test.network",
+      "path": "/ext/bc/C/rpc",
+      "hasBody": true
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/assets/native-BKj27wfc.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/proving.key",
+      "hasBody": false
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/verifying.key",
+      "hasBody": false
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/worker.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/wasm_exec.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/prover.wasm",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/api/snapshot",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://api.gateway.ethswarm.org",
+      "path": "/bytes/19ad2c00d93447d69c66d153bbe804c686303cd8d83fd448dc58b26eb49efaf7",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/worker.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/wasm_exec.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://cutout-ethrome-2026.vercel.app",
+      "path": "/prover/prover.wasm",
+      "hasBody": false
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    }
+  ],
+  "failures": [],
+  "consoleErrors": [],
+  "pageErrors": []
+}
