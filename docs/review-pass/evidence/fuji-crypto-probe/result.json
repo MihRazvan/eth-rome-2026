@@ -1,0 +1,111 @@
+{
+  "status": "BROWSER_GENERATED_PROOF_ACCEPTED_BY_DEPLOYED_FUJI_VERIFIER_READ_ONLY",
+  "date": "2026-09-12T14:04:55.606Z",
+  "sourceCommit": "a9d0181640148523b2b9ecbb160fbab76f2455a0",
+  "scope": "Cryptographic verifier probe with an explicitly synthetic unfunded job context and synthetic recipient. Not funded escrow acceptance, issuer enrollment UX, a transaction, or an end-to-end product claim.",
+  "chainId": 43113,
+  "rpcUrl": "https://api.avax-test.network/ext/bc/C/rpc",
+  "block": {
+    "number": "58333672",
+    "hash": "0xfdcb7ab343f1d0bf805dca8718a857a993445be09e583943266e69d604403208",
+    "timestamp": "1789221859",
+    "tag": "finalized"
+  },
+  "verifier": "0x9c1293e7e499d56fdc52186e7624dcfa04dfcbd1",
+  "escrow": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+  "verifierRuntimeCodeHash": "0x0869a21c9b77e97378db524e6a617230d7a72965e49e47fc0dc41ba0d2574128",
+  "syntheticJobId": "1000000",
+  "fundedJobCountAtProbe": "0",
+  "browser": "153.0.8010.12",
+  "build": {
+    "status": "BROWSER_PROVER_PROBE_ONLY",
+    "go": "go version go1.25.7 darwin/arm64",
+    "sourceHashes": {
+      "go.mod": "5c356f6f39b897f5e9f68b3130b07d6196a916c1d6f1dc4df652360c929b5630",
+      "go.sum": "3bf6fc0d6933d070b88d1671b4a48c086ee31bc25dbf3cfe25d6d3ffebbcc9d0",
+      "circuit.go": "5a60e9ef2508da1238115698e03d1c236aace25123bd3e748d197a565e7eb3ab",
+      "credential.go": "7f6b18a272e80a6594337279224b5b1be563862f72a1f5f4df397738be26cc7f",
+      "main.go": "d9f78ccdcd7e532ecc3ba127b3dfafee93a92157927d5123e86de2675db7c8fd",
+      "bridge.go.txt": "0433f96c794cca12f3befbf301859b08d70d96e42ebdc7c13b0013ee8c3a047d",
+      "worker.js": "fb2ae37c634c6e730328c94cbc0fcea532bd4145ae79cf0aeb8dcb2b1a8bf19a"
+    },
+    "wasmBytes": 14532836,
+    "wasmSha256": "dea3a50af8ab6a09248270c0ba403f12fba06d9eaf4d55e566d710ea2864d299",
+    "buildMs": 366
+  },
+  "setupHashes": {
+    "circuit.r1cs": "053bd5c4993b7d49350ef90ea3bffb8f437f5fe6ef4a554e63cf540432b771e9",
+    "proving.key": "6345df1dd836c5b70667456093d51beb31ea4cd7b7f64d8c135fd5d8a6db49a3",
+    "verifying.key": "c924236aaf25dad8d3519f66d477dbaf22b51c4a21c763ad0255a8bbb09c3840"
+  },
+  "load": {
+    "constraints": 26089,
+    "loadMs": 13115.6,
+    "ready": true,
+    "totalLoadMs": 13191,
+    "setupBytes": [
+      1961557,
+      4416879,
+      620
+    ]
+  },
+  "proof": {
+    "proofBytes": 256,
+    "constraints": 26089,
+    "proveMs": 4402.2,
+    "localVerifyMs": 9.7,
+    "goHeapAllocBytes": 40861576,
+    "goSysBytes": 48234496
+  },
+  "deployedVerifier": {
+    "accepted": true,
+    "operation": "eth_call via viem readContract at pinned finalized block",
+    "elapsedMs": 146.48408299999937,
+    "alteredRecipientRejected": true
+  },
+  "privacy": {
+    "serverRequests": [
+      {
+        "method": "GET",
+        "path": "/",
+        "hasBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/worker.js",
+        "hasBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/circuit.r1cs",
+        "hasBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/proving.key",
+        "hasBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/verifying.key",
+        "hasBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/wasm_exec.js",
+        "hasBody": false
+      },
+      {
+        "method": "GET",
+        "path": "/prover.wasm",
+        "hasBody": false
+      }
+    ],
+    "privateInputsServed": false,
+    "privateInputsWrittenToEvidence": false,
+    "issuerPrivateKeyRead": false,
+    "walletKeyRead": false
+  },
+  "pageErrors": [],
+  "transactionsSent": 0
+}
