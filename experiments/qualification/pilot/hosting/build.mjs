@@ -177,7 +177,8 @@ else {
   }
   config.browserProver = { version: 1, verifier: config.verifier, files };
   // Check actual current snapshot availability using the same serverless handler before building.
-  const { createPublicReadAPI } = await import("./read-api.ts");
+  const { tsImport } = await import("tsx/esm/api");
+  const { createPublicReadAPI } = await tsImport("./read-api.ts", { parentURL: import.meta.url, tsconfig: false });
   const result = await createPublicReadAPI(config)("/api/snapshot");
   if (result.status !== 200)
     throw Error(
