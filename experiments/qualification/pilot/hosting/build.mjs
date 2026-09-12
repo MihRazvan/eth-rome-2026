@@ -51,9 +51,29 @@ const config = {
   arkiv,
 };
 const publicArtifacts = [];
+const publicationFiles = [];
+if (pending) {
+  const publicationDir = resolve(root, "experiments/qualification/pilot/hosting/publication");
+  const snapshotPath = resolve(publicationDir, "snapshot.json");
+  const issuerPath = resolve(publicationDir, "issuer-public.json");
+  const { stdout } = await exec("go", ["run", ".", "validate-public", "--issuer-public", issuerPath, "--snapshot", snapshotPath], {
+    cwd: resolve(root, "experiments/qualification/prover"), maxBuffer: 65536,
+  });
+  const validated = JSON.parse(stdout);
+  if (validated.status !== "VALID_PUBLIC_METADATA") throw Error("Invalid publication metadata");
+  const snapshot = await readFile(snapshotPath), issuer = await readFile(issuerPath);
+  if (snapshot.length > 1024 * 1024 || issuer.length > 16384 || sha(snapshot) !== validated.snapshotSha256)
+    throw Error("Publication file changed or exceeds bounds");
+  config.publication = {
+    snapshotPath: "/publication/snapshot.json", snapshotSha256: `0x${sha(snapshot)}`,
+    snapshotBytes: snapshot.length, root: validated.root,
+    issuerPath: "/publication/issuer-public.json", issuerSha256: `0x${sha(issuer)}`,
+  };
+  publicationFiles.push({ name: "snapshot.json", bytes: snapshot }, { name: "issuer-public.json", bytes: issuer });
+}
 if (pending)
   config.reason =
-    "Fuji wallets are funded. Public contracts and the issuer snapshot are awaiting storage activation and publication.";
+    "Public financial actions remain disabled until the deployed contracts and whole issuer snapshot are verified.";
 else {
   const source = JSON.parse(await readFile(resolve(root, args[1]), "utf8"));
   if (
@@ -182,6 +202,10 @@ await build({
   },
   logLevel: "warn",
 });
+if (publicationFiles.length) {
+  await mkdir(resolve(output, "static/publication"), { recursive: true });
+  for (const { name, bytes } of publicationFiles) await writeFile(resolve(output, "static/publication", name), bytes);
+}
 if (!pending) {
   const wasmDir = resolve(stage, "public-wasm-build");
   await exec(

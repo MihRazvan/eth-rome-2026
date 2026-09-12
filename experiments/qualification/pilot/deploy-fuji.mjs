@@ -28,13 +28,14 @@ import { createSwarmStorage } from "./swarm-id.ts";
 const exec = promisify(execFile);
 const root = process.cwd(),
   dir = resolve(root, ".runtime/review-pass-fuji");
-const broadcast = process.argv.includes("--broadcast");
+const contractsOnly = process.argv.includes("--broadcast-contracts");
+const broadcast = process.argv.includes("--broadcast") || contractsOnly;
 if (
   process.argv.slice(2).length !== 1 ||
-  !["--prepare", "--broadcast"].includes(process.argv[2])
+  !["--prepare", "--broadcast", "--broadcast-contracts"].includes(process.argv[2])
 )
   throw Error(
-    "Choose --prepare (local artifacts only) or --broadcast (authorized Fuji writes)",
+    "Choose --prepare, --broadcast (verified public snapshot), or --broadcast-contracts (workspace stays disabled until snapshot publication)",
   );
 const readJSON = async (path) => JSON.parse(await readFile(path, "utf8"));
 const hashFile = async (path) =>
@@ -98,6 +99,8 @@ process.once("exit", () => {
     unlinkSync(lockPath);
   } catch {}
 });
+if (broadcast && ((await exists(resolve(dir, "deployment.json"))) || (await exists(resolve(dir, "broadcast-started.json")))))
+  throw Error("Existing or partial deployment recorded; inspect journal before any preparation or evidence rewrite");
 const setupNames = [
   "proving.key",
   "verifying.key",
@@ -229,11 +232,12 @@ const intent = {
       keccak256(a.bytecode.object),
     ]),
   ),
+  deploymentMode: contractsOnly ? "contracts-before-publication" : "verified-public-snapshot",
   requiredForBroadcast: [
     "FUJI_PRIVATE_KEY",
     "QUALIFICATION_ISSUER_PUBLIC",
     "QUALIFICATION_SNAPSHOT_FILE",
-    "QUALIFICATION_SNAPSHOT_REFERENCE",
+    ...(contractsOnly ? [] : ["QUALIFICATION_SNAPSHOT_REFERENCE"]),
     "QUALIFICATION_ARBITRATOR",
   ],
 };
@@ -292,7 +296,9 @@ const snapshotRef = {
 };
 const gatewayUrl =
   process.env.SWARM_RETRIEVAL_URL ?? "https://api.gateway.ethswarm.org";
-await createSwarmStorage({ gatewayUrl }).download(snapshotRef);
+if (!contractsOnly) await createSwarmStorage({ gatewayUrl }).download(snapshotRef);
+else if (snapshotRef.reference)
+  throw Error("For --broadcast-contracts omit the snapshot reference; use --broadcast to verify a published snapshot");
 if (!/^0x[0-9a-f]{64}$/i.test(process.env.FUJI_PRIVATE_KEY))
   throw Error("Configured Fuji signer key has invalid encoding");
 let account;
@@ -390,6 +396,7 @@ const manifest = {
   issuer: account.address,
   arbitrator,
   snapshot: snapshotRef,
+  snapshotPublication: contractsOnly ? "pending" : "verified",
   storageMode: "swarm-id",
   setupDir: setup,
   swarm: { retrievalUrl: gatewayUrl },
@@ -402,7 +409,7 @@ const manifest = {
 await writeFile(resolve(dir, "deployment.json"), json(manifest));
 console.log(
   json({
-    status: "DEPLOYED_ON_FUJI",
+    status: contractsOnly ? "DEPLOYED_ON_FUJI_AWAITING_SNAPSHOT" : "DEPLOYED_ON_FUJI",
     escrow,
     verifier,
     keyRegistry,

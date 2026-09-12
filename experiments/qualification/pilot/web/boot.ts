@@ -1,8 +1,9 @@
 import "../../../qualification/runtime/style.css";
 import "./pilot.css";
 import { createSwarmStorage } from "../swarm-id";
+import { mountSnapshotPublisher, type SnapshotPublication } from "./publish-snapshot";
 
-async function setupPage(reason: string) {
+async function setupPage(reason: string, publication?: SnapshotPublication) {
   document.body.dataset.role = "client";
   document.getElementById("environment")!.textContent =
     "REVIEW PASS · PUBLIC TESTNET SETUP IN PROGRESS";
@@ -37,9 +38,11 @@ async function setupPage(reason: string) {
   const upload = document.getElementById("setup-upload") as HTMLButtonElement;
   const status = document.getElementById("setup-storage")!;
   let working = false;
+  let publisher: ReturnType<typeof mountSnapshotPublisher> | undefined;
   const storage = createSwarmStorage({
     gatewayUrl: "https://api.gateway.ethswarm.org",
     onState(state) {
+      publisher?.refresh();
       upload.disabled = working || !state.canUpload;
       status.textContent = state.canUpload
         ? "Storage connected and uploads available."
@@ -48,7 +51,7 @@ async function setupPage(reason: string) {
           : "Sign in to check your storage credit. Your recovery phrase stays in Swarm ID.";
     },
   });
-  window.addEventListener("pagehide", () => storage.destroy());
+  window.addEventListener("pagehide", () => { publisher?.destroy(); storage.destroy(); });
   try {
     await storage.initialize();
     connect.disabled = false;
@@ -66,6 +69,7 @@ async function setupPage(reason: string) {
       connect.disabled = false;
     }
   };
+  if (publication) publisher = mountSnapshotPublisher(main, storage, publication);
   upload.onclick = async () => {
     working = true;
     upload.disabled = true;
@@ -93,6 +97,7 @@ async function setupPage(reason: string) {
     }
   };
 }
+let activeDeployment = false;
 try {
   const response = await fetch("/api/config", { cache: "no-store" });
   if (!response.ok) throw Error("Unavailable configuration");
@@ -101,11 +106,25 @@ try {
     await setupPage(
       config.reason ||
         "The public contracts and issuer snapshot are being prepared.",
+      config.publication,
     );
-  else if (config.abi) await import("./main");
+  else if (config.abi) {
+    activeDeployment = true;
+    await import("./main");
+  }
   else throw Error("Invalid configuration");
 } catch {
-  await setupPage(
+  if (activeDeployment) {
+    document.getElementById("environment")!.textContent = "REVIEW PASS · CONNECTION UNAVAILABLE";
+    document.getElementById("connect")!.hidden = true;
+    const message = document.createElement("p");
+    message.setAttribute("role", "alert");
+    message.textContent = "The deployed workspace could not finish loading. Reload to retry its network connections. Existing onchain reviews remain unchanged.";
+    const retry = document.createElement("button");
+    retry.textContent = "Reload workspace";
+    retry.onclick = () => window.location.reload();
+    document.querySelector("main")!.replaceChildren(message, retry);
+  } else await setupPage(
     "The public deployment configuration is unavailable. Funded reviews remain disabled until it is restored.",
   );
 }

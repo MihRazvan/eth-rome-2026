@@ -50,3 +50,19 @@ The current active-manifest promotion path cannot be declared live until the Fuj
 - https://vercel.com/docs/functions/limitations
 
 Vercel CLI59.11.7 and Node24.12.0 were available locally. No framework/dependency change was needed.
+
+## Reviewed snapshot publication before activation
+
+The pending build validates `hosting/publication/issuer-public.json` and `snapshot.json` through the Go public-metadata validator and serves only those two explicit public files. It exposes an exact byte hash/length/root manifest and an explicit browser publication button. No private registry or credential is copied. A connected participant spends their Swarm postage to upload the whole reviewed snapshot; independent retrieval is required and its public reference can be shared with the operator.
+
+Contracts may be deployed first with `deploy-fuji.mjs --broadcast-contracts` using a validated local public snapshot and no reference. This writes `snapshotPublication: pending`; contracts are publicly callable but the funded workspace remains disabled. The normal `--broadcast` still requires verified prior Swarm publication. After a participant publishes, run:
+
+```sh
+node experiments/qualification/pilot/publish-snapshot.mjs <64-hex-public-reference>
+node experiments/qualification/pilot/hosting/build.mjs --config .runtime/review-pass-fuji/deployment.json
+vercel deploy --prebuilt --prod --cwd .runtime/review-pass-vercel --scope mihrazvans-projects
+```
+
+Publication finalization checks the exact original byte digest, public issuer key and current finalized onchain root before recording the reference. Active hosting again checks public retrieval, code hashes and authorities. It never promotes an unpublished snapshot implicitly.
+
+This pilot uses the project deployer as both issuer root authority and explicitly trusted arbitrator, with separate client and reviewer wallets. This is a team-administered experiment, not independent arbitration or external professional accreditation.

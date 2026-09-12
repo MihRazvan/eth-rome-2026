@@ -35,6 +35,7 @@ const publicKeys = [
   "status",
   "reason",
   "browserProver",
+  "publication",
   "environment",
   "testOnly",
   "chainId",
