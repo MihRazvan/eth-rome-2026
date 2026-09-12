@@ -26,7 +26,7 @@ function fixture() {
     status: "active",
     chainId: 43113,
     rpcUrl: "https://api.avax-test.network/ext/bc/C/rpc",
-    gatewayUrl: "https://gateway.ethswarm.org",
+    gatewayUrl: "https://api.gateway.ethswarm.org",
     storageMode: "swarm-id",
     token,
     escrow,

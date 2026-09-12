@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-09-12T13:46:41.188Z",
+  "site": "https://review-pass-ethrome-2026.vercel.app",
+  "reference": "7da258b6f55a74b9dffa25bafa99f435b8833b85ecad14d25f8d33a37acb5f03",
+  "expectedSha256": "0xd98c0d67934860864524b299d645f77a3fd7b9fe4bccb9d5a217139ac02dc60f",
+  "adapterDefaultRetrievalVerified": true,
+  "browserUnauthenticatedRetrieval": {
+    "status": 200,
+    "byteLength": 142,
+    "sha256": "0xd98c0d67934860864524b299d645f77a3fd7b9fe4bccb9d5a217139ac02dc60f"
+  },
+  "productionCspAllowsApi": true,
+  "productionConfigGateway": "https://api.gateway.ethswarm.org",
+  "uploadSource": "User browser through hosted Review Pass Swarm ID; reference supplied by user",
+  "agentStorageWrites": 0,
+  "scope": "Public generated connection note only; encrypted report lifecycle remains pending"
+}

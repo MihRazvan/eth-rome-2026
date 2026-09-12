@@ -36,7 +36,7 @@ export function createSwarmStorage(
   options: { onState?: (state: StorageState) => void; gatewayUrl?: string } = {},
   dependencies: StorageDependencies = {},
 ) {
-  const gateway = new URL(options.gatewayUrl ?? 'https://gateway.ethswarm.org');
+  const gateway = new URL(options.gatewayUrl ?? 'https://api.gateway.ethswarm.org');
   if (gateway.protocol !== 'https:' || gateway.username || gateway.password || gateway.search || gateway.hash) {
     throw new Error('Storage retrieval requires an HTTPS gateway without credentials or query parameters');
   }

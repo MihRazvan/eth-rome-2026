@@ -50,3 +50,8 @@ Solidity integrated report 39 includes 16 inherited reviewer-harness repetitions
 Missing requirements are retained, not downgraded: Fuji deployment/public lifecycle, Arkiv publication/native expiry, live Swarm upload/independent round-trip, and human bounty steps. No fixture fallback is used for any failed live service.
 
 The research pass reproduced approval side-channel and cross-wallet plaintext defects in the earlier baseline. Those historical checks remain preserved with explicit scope corrections; current evidence includes their fixes and independent reproductions. See [research](research/README.md), [integrated results](evidence/research-integration.json) and [human test guide](USER-TEST.md).
+
+
+## Review Pass public Swarm connection — September 12
+
+User uploaded a generated non-sensitive connection note through Review Pass on Vercel using sponsor-funded Swarm ID. The first independent read failed because the configured gateway website returned HTML200. Corrected the retrieval API origin and CSP, preserving SHA-256 verification. The application adapter and fresh Chromium at the production origin now retrieve the actual142bytes with the exact expected digest. This verifies public storage connectivity only; encrypted reports, issuer snapshot publication and the Fuji lifecycle remain pending.19storage/read-API tests passed,1optional live test skipped; TypeScript, public build and hosted setup browser checks passed. [Durable evidence](review-pass/evidence/swarm-public/README.md).

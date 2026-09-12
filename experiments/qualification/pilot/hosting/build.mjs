@@ -30,7 +30,7 @@ if (
   );
 const pending = args[0] === "--pending";
 const rpcUrl = "https://api.avax-test.network/ext/bc/C/rpc",
-  gatewayUrl = "https://gateway.ethswarm.org";
+  gatewayUrl = "https://api.gateway.ethswarm.org";
 const token = "0x5425890298aed601595a70AB815c96711a31Bc65";
 const arkiv = {
   rpcUrl: "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
@@ -238,7 +238,7 @@ await writeFile(
     maxDuration: 60,
   }),
 );
-const csp = `default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ${new URL(rpcUrl).origin} ${new URL(arkiv.rpcUrl).origin} ${new URL(arkiv.wsUrl).origin} https://gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'`;
+const csp = `default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ${new URL(rpcUrl).origin} ${new URL(arkiv.rpcUrl).origin} ${new URL(arkiv.wsUrl).origin} https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'`;
 await writeFile(
   resolve(output, "config.json"),
   json({

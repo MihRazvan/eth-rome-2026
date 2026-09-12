@@ -186,7 +186,7 @@ const server = http.createServer(async (req, res) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ${new URL(config.rpcUrl).origin} ${new URL(config.arkiv?.rpcUrl ?? "https://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} ${new URL(config.arkiv?.wsUrl ?? "wss://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} https://gateway.ethswarm.org https://swarm-id.snaha.net ${new URL(retrievalUrl).origin}; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'`,
+    `default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ${new URL(config.rpcUrl).origin} ${new URL(config.arkiv?.rpcUrl ?? "https://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} ${new URL(config.arkiv?.wsUrl ?? "wss://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} https://api.gateway.ethswarm.org https://swarm-id.snaha.net ${new URL(retrievalUrl).origin}; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'`,
   );
   const send = (status, data) => {
     res.writeHead(status, { "Content-Type": "application/json" });

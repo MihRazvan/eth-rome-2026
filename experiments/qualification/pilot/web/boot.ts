@@ -38,7 +38,7 @@ async function setupPage(reason: string) {
   const status = document.getElementById("setup-storage")!;
   let working = false;
   const storage = createSwarmStorage({
-    gatewayUrl: "https://gateway.ethswarm.org",
+    gatewayUrl: "https://api.gateway.ethswarm.org",
     onState(state) {
       upload.disabled = working || !state.canUpload;
       status.textContent = state.canUpload

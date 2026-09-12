@@ -291,7 +291,7 @@ const snapshotRef = {
   sha256: `0x${createHash("sha256").update(snapshotBytes).digest("hex")}`,
 };
 const gatewayUrl =
-  process.env.SWARM_RETRIEVAL_URL ?? "https://gateway.ethswarm.org";
+  process.env.SWARM_RETRIEVAL_URL ?? "https://api.gateway.ethswarm.org";
 await createSwarmStorage({ gatewayUrl }).download(snapshotRef);
 if (!/^0x[0-9a-f]{64}$/i.test(process.env.FUJI_PRIVATE_KEY))
   throw Error("Configured Fuji signer key has invalid encoding");
