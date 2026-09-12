@@ -10,6 +10,37 @@ import { eq, gte } from "@arkiv-network/sdk/query";
 import { ExpirationTime } from "@arkiv-network/sdk/utils";
 import { http, webSocket, type Account, type Hex, type Transport } from "viem";
 
+/** Cap the requested lifetime to the acceptance window using live Arkiv timing.
+ * Keep one minute for wallet approval; board eligibility still checks Fuji state.
+ */
+export function fitDiscoveryLease(
+  requested: number,
+  now: number,
+  blockSeconds: number,
+  deadline: number,
+) {
+  if (
+    !Number.isSafeInteger(requested) ||
+    requested < 3 ||
+    requested > 43200 ||
+    !Number.isSafeInteger(now) ||
+    now < 0 ||
+    !Number.isFinite(blockSeconds) ||
+    blockSeconds <= 0 ||
+    !Number.isSafeInteger(deadline)
+  )
+    throw Error("Invalid discovery lease timing");
+  const blocks = Math.min(
+    requested,
+    Math.floor((deadline - now - 60) / blockSeconds),
+  );
+  if (blocks < 3)
+    throw Error(
+      "Task acceptance deadline is too close for a discovery listing",
+    );
+  return blocks;
+}
+
 export type Listing = {
   schema: 2;
   taskClass: "technical-review";
@@ -638,11 +669,12 @@ export function createArkivListingDriver(config: {
         throw Error("Browser publication requires its wallet transport");
       await check();
       const timing = await read.getBlockTiming();
-      if (
-        timing.currentBlockTime + leaseBlocks * timing.blockDuration >=
-        listing.acceptBefore
-      )
-        throw Error("Discovery lease must end before acceptance deadline");
+      const fittedLease = fitDiscoveryLease(
+        leaseBlocks,
+        timing.currentBlockTime,
+        timing.blockDuration,
+        listing.acceptBefore,
+      );
       const wallet = createWalletClient({
         chain: tiramisu,
         account: config.account,
@@ -661,7 +693,7 @@ export function createArkivListingDriver(config: {
         payload: enc.encode(JSON.stringify(listing)),
         contentType: "application/json",
         attributes: listingAttributes(config.namespace, listing),
-        expires: ExpirationTime.fromBlocks(leaseBlocks),
+        expires: ExpirationTime.fromBlocks(fittedLease),
         flags: { readonly: true, permissionlessExtension: false },
       });
     },

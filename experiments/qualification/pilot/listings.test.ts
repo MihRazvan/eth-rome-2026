@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { render } from "@arkiv-network/sdk/query";
 import {
   createListingBoard,
+  fitDiscoveryLease,
   watchListingStream,
   projectListing,
   listingAttributes,
@@ -15,6 +16,16 @@ import {
   type BoardState,
 } from "./listings";
 const a = (n: number) => `0x${n.toString(16).padStart(40, "0")}` as const;
+test("listing lifetime fits remaining acceptance time and rejects closed windows", () => {
+  assert.equal(fitDiscoveryLease(900, 1000, 2, 5000), 900);
+  assert.equal(fitDiscoveryLease(900, 1000, 2, 1600), 270);
+  assert.equal(fitDiscoveryLease(30, 1000, 2, 1600), 30);
+  assert.equal(fitDiscoveryLease(900, 1000, 2, 1066), 3);
+  for (const deadline of [1065, 1000, 999])
+    assert.throws(() => fitDiscoveryLease(900, 1000, 2, deadline), /deadline/);
+  for (const timing of [0, -1, NaN, Infinity])
+    assert.throws(() => fitDiscoveryLease(900, 1000, timing, 1600), /timing/);
+});
 const k = (n: number) => `0x${n.toString(16).padStart(64, "0")}` as const;
 const listing: Listing = {
   schema: 2,

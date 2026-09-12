@@ -58,6 +58,14 @@ export function walletErrorMessage(
   if (
     errorParts(error).some(
       ({ message }) =>
+        message ===
+        "Task acceptance deadline is too close for a discovery listing",
+    )
+  )
+    return "This task's acceptance deadline is too close to publish a listing. Check its deadline and refund availability in Activity.";
+  if (
+    errorParts(error).some(
+      ({ message }) =>
         typeof message === "string" && /insufficient funds/i.test(message),
     )
   )
