@@ -1,0 +1,453 @@
+{
+  "status": "HOSTED_PROVER_PROBE_FAILED",
+  "date": "2026-09-12T14:17:23.906Z",
+  "origin": "https://review-pass-ethrome-2026.vercel.app",
+  "stage": "download-production-prover-and-snapshot",
+  "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '0xf9b09f5959cf204b2f1ec82d4ac0c823338d6f1dc7e78963f284d5ac27986b1e'\n- '0xb6f119bc297631f7b7af8f5ae39fb9bbf569efb9b15ab14751ec77995e52d156'\n",
+  "failures": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "assetHeaders": {
+    "/prover/circuit.r1cs": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/octet-stream"
+    },
+    "/prover/proving.key": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/vnd.apple.keynote"
+    },
+    "/prover/verifying.key": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/vnd.apple.keynote"
+    },
+    "/prover/worker.js": {
+      "status": 200,
+      "csp": "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'",
+      "contentType": "application/javascript"
+    },
+    "/prover/wasm_exec.js": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/javascript"
+    },
+    "/prover/prover.wasm": {
+      "status": 200,
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.avax-test.network https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://api.gateway.ethswarm.org https://swarm-id.snaha.net; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "contentType": "application/wasm"
+    }
+  },
+  "network": [
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/index-B0-oyBTa.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/preload-helper-BZ1Pz5am.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/swarm-id-CWAz9B1b.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/swarm-id-Cj1l3rFr.css",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/api/config",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/api/config",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/main-CvjaNbVV.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/rolldown-runtime-CbXtAM7H.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/localBatchGatewayRequest-BwtmkjIQ.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/utils-Bpv4vmSW.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/secp256k1-tA7uuJCk.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/prover/circuit.r1cs",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/api/config",
+      "hasBody": false
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/client-Ci-GsbN-.js",
+      "hasBody": false
+    },
+    {
+      "method": "POST",
+      "origin": "https://api.avax-test.network",
+      "path": "/ext/bc/C/rpc",
+      "hasBody": true
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/assets/native-BKj27wfc.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/proxy",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/prover/proving.key",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/entry/start.mf3jgHin.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/CmXppdZO.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/DmGcAGuo.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/BS59zWFL.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/BcbqOMTN.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/9GDZqJUz.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/entry/app.CzfeA19G.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/PPVm8Dsz.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/CXs5rqPD.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/DPf3ivis.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/B7uI69H3.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/BKtwW8cw.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/C8REuTfF.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/C1V1EXGK.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/env.js",
+      "hasBody": false
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/nodes/0.COX5YcK9.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/cQaZQNqd.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/Bqx4aAtn.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/DSyly2-l.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/DEt6tCGx.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/fHrT1u84.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/BBkvIc1i.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/KNvUGODO.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/D98xtGbp.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/BHzFbQ2Q.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/1vceU8xT.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/BNbnP3Et.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/H7k9jVwZ.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/Cu8902R_.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/4Om7SnjG.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/assets/0.DN4wvnZl.css",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/nodes/1.rNFLl7A0.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/B4CUyoM1.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/BDTket6j.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/chunks/CsZFPBvc.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/nodes/14.CCmwDfYW.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/_app/immutable/assets/14.BU8Zwuhp.css",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://swarm-id.snaha.net",
+      "path": "/fonts/iAWriterQuattroV.ttf",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/prover/verifying.key",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/prover/worker.js",
+      "hasBody": false
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "POST",
+      "origin": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+      "path": "/",
+      "hasBody": true
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/prover/wasm_exec.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/prover/prover.wasm",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "origin": "https://review-pass-ethrome-2026.vercel.app",
+      "path": "/api/snapshot",
+      "hasBody": false
+    }
+  ],
+  "transactionsSent": 0
+}
