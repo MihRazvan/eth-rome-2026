@@ -66,3 +66,15 @@ vercel deploy --prebuilt --prod --cwd .runtime/review-pass-vercel --scope mihraz
 Publication finalization checks the exact original byte digest, public issuer key and current finalized onchain root before recording the reference. Active hosting again checks public retrieval, code hashes and authorities. It never promotes an unpublished snapshot implicitly.
 
 This pilot uses the project deployer as both issuer root authority and explicitly trusted arbitrator, with separate client and reviewer wallets. This is a team-administered experiment, not independent arbitration or external professional accreditation.
+
+## Cutout production alias
+
+Cutout is the current product name. Keep the existing Vercel project and original URL to preserve previously enrolled browser origins. The Cutout hostname is registered as a verified production domain on the existing project. Production deployments should assign it automatically. The following command can repair the alias after checking the project domain is registered:
+
+```sh
+vercel alias set <immutable-deployment-url> cutout-ethrome-2026.vercel.app --cwd .runtime/review-pass-vercel --scope mihrazvans-projects
+```
+
+Verify the actual alias with `node docs/design/cutout/verify-browser.mjs https://cutout-ethrome-2026.vercel.app <evidence-directory>`. The walkthrough is a declared simulation and does not perform funded transactions or storage uploads. Device keys are origin-bound browser state; do not silently redirect old enrolled profiles to a new hostname.
+
+A bare `vercel alias set` initially returned Vercel SSO for fresh visitors. Registering `cutout-ethrome-2026.vercel.app` through the project domains API fixed this without changing `ssoProtection: all_except_custom_domains`. Always verify with a fresh browser, not an authenticated Vercel bypass. [Domain assignment behavior](https://vercel.com/docs/cli/alias).

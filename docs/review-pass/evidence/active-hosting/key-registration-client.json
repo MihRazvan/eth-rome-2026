@@ -1,0 +1,20 @@
+{
+  "role": "client",
+  "account": "0x7259c94d93d83E539B57ba7A360cB06Bd9b53a60",
+  "registry": "0x181db4e48a0e76fdc50101085ac3b831464792c1",
+  "chainId": 43113,
+  "transactions": [
+    {
+      "hash": "0xc0e79e396584f924ebe2e097abc4f48293bdbc684b840d9b03ad6a6e95a23bb5",
+      "blockNumber": "58333809",
+      "status": "success"
+    }
+  ],
+  "attemptedAt": "2026-09-12T14:19:05.402Z",
+  "recovery": "Prior transaction finalized successfully; resume browser persistence verification without resending",
+  "verified": true,
+  "version": "1",
+  "expiresAt": "1791814743",
+  "reloadPersistenceVerified": true,
+  "scope": "Actual hosted UI with restricted operator-wallet EIP-1193 bridge; private device key retained only in local persistent browser profile"
+}

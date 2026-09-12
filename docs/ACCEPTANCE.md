@@ -8,7 +8,7 @@
 - Guided demo is deliberately labelled a simulation: real browser AES-GCM, simulated qualification/funding/payment. It does not count toward live sponsor requirements.
 - Public snapshot and hosted proving are verified; funded Fuji lifecycle and Arkiv creation/native expiry are still pending. Funded wallets are available; isolated Swarm login sessions were pending when the user changed focus to design.
 
-Final hosted visual evidence and deployment receipt are recorded with the Cutout design evidence. Earlier ledger entries retain their original scope/date.
+Production Cutout is deployed at https://cutout-ethrome-2026.vercel.app from sourcec90eae1 (role/visibility/CSP follow-ups to9b8db9e). Actual production Chromium verifies desktop/mobile navigation, walkthrough encryption/decryption, keyboard and offline fallback; zero exceptions and storage writes. [Hosted evidence](design/cutout/evidence/hosted/browser.json), [build/deployment](design/cutout/evidence/deployment.json), and [21-check local lifecycle](design/cutout/evidence/local-lifecycle/browser.json). Earlier ledger entries retain their original scope/date.
 
 ---
 

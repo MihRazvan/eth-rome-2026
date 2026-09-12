@@ -1,4 +1,8 @@
-# Current handoff — Cutout design integration (12 September 2026)
+# Current handoff — Cutout deployed (12 September 2026)
+
+**Public Cutout:** https://cutout-ethrome-2026.vercel.app (guided demo: `?view=demo`). Actual Vercel deployment `dpl_3H87QxS9qeRxZCdjFZAm6iLjfm3r`, clean application source `c90eae1922a94b4ac870646264a3b2830b74aad0`. Both the original Review Pass URL and new Cutout alias serve this deployment; do not redirect the original origin because existing rehearsal browser keys/sessions belong to it. The Cutout hostname is now a verified project production domain, so future production deploys should assign it automatically. A bare manual alias initially inherited Vercel SSO; registering the actual project domain fixed public access without disabling preview protection. Verify the hostname unauthenticated after every promotion. Do not relink Git integration or deploy root EXIT config.
+
+Actual production Chromium verification passed desktop/mobile role navigation, full guided AES-GCM walkthrough, drag/keyboard exact decryption and offline-configuration fallback with zero page exceptions/storage writes. Evidence: `docs/design/cutout/evidence/hosted` and `cutout-domain`; build hashes and local lifecycle evidence alongside. Both original funded browser profiles retain their old-origin registered keys. The account sessions were not accessed or copied in this design pass.
 
 The user renamed Review Pass to **Cutout** and explicitly prioritized customer-facing design using six supplied HTML references. Read `docs/design/cutout/DIRECTION.md`; references are preserved alongside it. Root branch remains `review-pass/product`, historical requirements and provenance preserved. Never rename protocol domains or browser key namespaces merely for branding.
 

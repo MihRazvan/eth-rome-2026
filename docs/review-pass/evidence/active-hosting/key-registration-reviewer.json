@@ -1,0 +1,19 @@
+{
+  "role": "reviewer",
+  "account": "0x7292C1652e831031175947daEcC7F85bF86381A1",
+  "registry": "0x181db4e48a0e76fdc50101085ac3b831464792c1",
+  "chainId": 43113,
+  "transactions": [
+    {
+      "hash": "0x44f2622e15501d371271b73a413812df55deb5d50be498dc9ef7c6657bb1298d",
+      "blockNumber": "58333824",
+      "status": "success"
+    }
+  ],
+  "attemptedAt": "2026-09-12T14:21:00.573Z",
+  "verified": true,
+  "version": "1",
+  "expiresAt": "1791814857",
+  "reloadPersistenceVerified": true,
+  "scope": "Actual hosted UI with restricted operator-wallet EIP-1193 bridge; private device key retained only in local persistent browser profile"
+}

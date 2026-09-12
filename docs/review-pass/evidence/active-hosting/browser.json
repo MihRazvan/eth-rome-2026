@@ -1,0 +1,22 @@
+{
+  "observedAt": "2026-09-12T14:16:50.496Z",
+  "site": "https://review-pass-ethrome-2026.vercel.app",
+  "deployment": "dpl_8SgQiRkYHDQkqEA3sF5M6axtaWGb",
+  "status": "active",
+  "checks": [
+    "Full Fuji workspace boot, both roles",
+    "10 test USDC default; creation gated without wallet",
+    "Actual live empty Arkiv board over WSS",
+    "Current whole public snapshot API200",
+    "Unfunded job API404, POST405, private paths404",
+    "390px no overflow",
+    "No page exceptions"
+  ],
+  "sockets": [
+    "wss://rpc.tiramisu.db-chain.testnet.arkiv.network/"
+  ],
+  "pageErrors": [],
+  "transactions": 0,
+  "uploads": 0,
+  "scope": "Unauthenticated production workspace checks; funded lifecycle remains unrun"
+}
