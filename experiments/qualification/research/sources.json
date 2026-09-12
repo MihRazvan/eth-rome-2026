@@ -233,7 +233,7 @@
       "accessed": "2026-09-12",
       "source_type": "paper-linked research artifact",
       "supports": "Artifact location stated by Open Science section of USENIX paper.",
-      "limitations": "Artifact not installed or benchmarks run by this worker; availability probing reported separately."
+      "limitations": "Web reader rejected opening the Zenodo URL. Location is verified only from the paper. Artifact not downloaded, installed or benchmarked by this worker."
     }
   ]
 }
