@@ -1,0 +1,114 @@
+{
+  "observedAtUTC": "2026-09-12T07:44:46Z",
+  "scope": "Local Go JSON decode + existing MiMC buildState reconstruction only; not browser, fetch, proving, or onchain performance. Three sequential samples per count; GC before each. Allocations are cumulative Go allocations during reconstruction, not peak RSS.",
+  "sourceCommit": "5fabede97c79910ad2f9494afd06ed853003d353",
+  "credentialSourceSHA256": "7f6b18a272e80a6594337279224b5b1be563862f72a1f5f4df397738be26cc7f",
+  "goVersion": "go1.25.7",
+  "os": "darwin",
+  "architecture": "arm64",
+  "depth": 16,
+  "publicTestHolderIndex": 42,
+  "revocationDistribution": "Distinct, dispersed uint16 indices from (i*40503+17) mod 65536, excluding holder index 42. Odd multiplier permutes all slots. No full snapshots committed.",
+  "results": [
+    {
+      "revokedCount": 0,
+      "snapshotBytesIndentedIncludingNewline": 170,
+      "root": "4192859339826665750369528433721474123040425665956367961767766058523807596338",
+      "samples": [
+        {
+          "reconstructMs": 0.348,
+          "jsonDecodeMs": 0.014,
+          "goTotalAllocDeltaBytes": 24568,
+          "goHeapAllocAfterBytes": 381560
+        },
+        {
+          "reconstructMs": 0.324,
+          "jsonDecodeMs": 0.004,
+          "goTotalAllocDeltaBytes": 17888,
+          "goHeapAllocAfterBytes": 385216
+        },
+        {
+          "reconstructMs": 0.36,
+          "jsonDecodeMs": 0.004,
+          "goTotalAllocDeltaBytes": 17888,
+          "goHeapAllocAfterBytes": 382608
+        }
+      ]
+    },
+    {
+      "revokedCount": 100,
+      "snapshotBytesIndentedIncludingNewline": 1253,
+      "root": "15066308292772886843778756430126023750953007526751298160148407044643953440428",
+      "samples": [
+        {
+          "reconstructMs": 19.899,
+          "jsonDecodeMs": 0.023,
+          "goTotalAllocDeltaBytes": 850352,
+          "goHeapAllocAfterBytes": 1223104
+        },
+        {
+          "reconstructMs": 20.002,
+          "jsonDecodeMs": 0.047,
+          "goTotalAllocDeltaBytes": 850328,
+          "goHeapAllocAfterBytes": 1221928
+        },
+        {
+          "reconstructMs": 19.586,
+          "jsonDecodeMs": 0.019,
+          "goTotalAllocDeltaBytes": 850352,
+          "goHeapAllocAfterBytes": 1227328
+        }
+      ]
+    },
+    {
+      "revokedCount": 1000,
+      "snapshotBytesIndentedIncludingNewline": 10996,
+      "root": "14972463720415093910306572263783460786512641238369486387255634125400347014477",
+      "samples": [
+        {
+          "reconstructMs": 124.132,
+          "jsonDecodeMs": 0.087,
+          "goTotalAllocDeltaBytes": 5424592,
+          "goHeapAllocAfterBytes": 2569680
+        },
+        {
+          "reconstructMs": 146.723,
+          "jsonDecodeMs": 0.091,
+          "goTotalAllocDeltaBytes": 5429840,
+          "goHeapAllocAfterBytes": 2571528
+        },
+        {
+          "reconstructMs": 126.15,
+          "jsonDecodeMs": 0.087,
+          "goTotalAllocDeltaBytes": 5424592,
+          "goHeapAllocAfterBytes": 2575056
+        }
+      ]
+    },
+    {
+      "revokedCount": 10000,
+      "snapshotBytesIndentedIncludingNewline": 108468,
+      "root": "7073067295141345346809470021217124425131777851412795389159055089085951358957",
+      "samples": [
+        {
+          "reconstructMs": 868.398,
+          "jsonDecodeMs": 0.737,
+          "goTotalAllocDeltaBytes": 34415656,
+          "goHeapAllocAfterBytes": 2404456
+        },
+        {
+          "reconstructMs": 794.67,
+          "jsonDecodeMs": 0.742,
+          "goTotalAllocDeltaBytes": 34389144,
+          "goHeapAllocAfterBytes": 2723632
+        },
+        {
+          "reconstructMs": 786.282,
+          "jsonDecodeMs": 0.708,
+          "goTotalAllocDeltaBytes": 34431472,
+          "goHeapAllocAfterBytes": 2560472
+        }
+      ]
+    }
+  ]
+}

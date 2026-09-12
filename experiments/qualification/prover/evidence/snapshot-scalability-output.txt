@@ -1,0 +1,24 @@
+=== RUN   TestSnapshotScalability
+=== RUN   TestSnapshotScalability/revoked_0
+    scalability_test.go:111: count=0 sample=1 bytes=170 reconstructMs=0.348 decodeMs=0.014 allocatedBytes=24568
+    scalability_test.go:111: count=0 sample=2 bytes=170 reconstructMs=0.324 decodeMs=0.004 allocatedBytes=17888
+    scalability_test.go:111: count=0 sample=3 bytes=170 reconstructMs=0.360 decodeMs=0.004 allocatedBytes=17888
+=== RUN   TestSnapshotScalability/revoked_100
+    scalability_test.go:111: count=100 sample=1 bytes=1253 reconstructMs=19.899 decodeMs=0.023 allocatedBytes=850352
+    scalability_test.go:111: count=100 sample=2 bytes=1253 reconstructMs=20.002 decodeMs=0.047 allocatedBytes=850328
+    scalability_test.go:111: count=100 sample=3 bytes=1253 reconstructMs=19.586 decodeMs=0.019 allocatedBytes=850352
+=== RUN   TestSnapshotScalability/revoked_1000
+    scalability_test.go:111: count=1000 sample=1 bytes=10996 reconstructMs=124.132 decodeMs=0.087 allocatedBytes=5424592
+    scalability_test.go:111: count=1000 sample=2 bytes=10996 reconstructMs=146.723 decodeMs=0.091 allocatedBytes=5429840
+    scalability_test.go:111: count=1000 sample=3 bytes=10996 reconstructMs=126.150 decodeMs=0.087 allocatedBytes=5424592
+=== RUN   TestSnapshotScalability/revoked_10000
+    scalability_test.go:111: count=10000 sample=1 bytes=108468 reconstructMs=868.398 decodeMs=0.737 allocatedBytes=34415656
+    scalability_test.go:111: count=10000 sample=2 bytes=108468 reconstructMs=794.670 decodeMs=0.742 allocatedBytes=34389144
+    scalability_test.go:111: count=10000 sample=3 bytes=108468 reconstructMs=786.282 decodeMs=0.708 allocatedBytes=34431472
+--- PASS: TestSnapshotScalability (2.92s)
+    --- PASS: TestSnapshotScalability/revoked_0 (0.00s)
+    --- PASS: TestSnapshotScalability/revoked_100 (0.06s)
+    --- PASS: TestSnapshotScalability/revoked_1000 (0.40s)
+    --- PASS: TestSnapshotScalability/revoked_10000 (2.45s)
+PASS
+ok  	qualification-prover	3.375s
