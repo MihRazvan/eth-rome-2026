@@ -185,3 +185,21 @@ test('gateway endpoints reject credentials and insecure or query-bearing configu
   for (const gatewayUrl of ['http://example.com', 'https://u:p@example.com', 'https://example.com/?key=x', 'https://example.com/#x'])
     assert.throws(() => createGatewayStorage({ gatewayUrl }), /HTTPS/);
 });
+
+test('gateway JSON responses have declared and streaming byte limits', async () => {
+  for (const declared of [undefined, '1', '999999']) {
+    for (const failHealth of [true, false]) {
+      let cancelled = false;
+      const storage = createGatewayStorage({}, { fetch: async (url) => {
+        if (!failHealth && String(url).endsWith('/gateway')) return health();
+        return new Response(new ReadableStream<Uint8Array>({
+          start(controller) { controller.enqueue(new Uint8Array(16 * 1024 + 1)); },
+          cancel() { cancelled = true; },
+        }), { headers: declared === undefined ? {} : { 'content-length': declared } });
+      } });
+      if (failHealth) await assert.rejects(storage.initialize(), /byte size/);
+      else { await storage.initialize(); await assert.rejects(storage.upload(bytes), /byte size/); }
+      assert.equal(cancelled, true); storage.destroy();
+    }
+  }
+});

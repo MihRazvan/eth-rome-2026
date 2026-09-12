@@ -4,6 +4,32 @@
  */
 import { createSwarmStorage, MAX_STORAGE_BYTES, type StorageRef, type StorageState } from './swarm-id.js';
 
+async function boundedJSON(response: Response): Promise<unknown> {
+  const limit = 16 * 1024;
+  const declared = response.headers.get('content-length');
+  if (!response.body) throw new Error('Storage gateway returned an empty response');
+  if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > limit)) {
+    await response.body.cancel();
+    throw new Error('Storage gateway response exceeds the allowed byte size');
+  }
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let length = 0;
+  try {
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      length += chunk.value.byteLength;
+      if (length > limit) throw new Error('Storage gateway response exceeds the allowed byte size');
+      chunks.push(chunk.value);
+    }
+  } finally { await reader.cancel(); reader.releaseLock(); }
+  const bytes = new Uint8Array(length);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
 export class GatewayUploadVerificationError extends Error {
   constructor(readonly storageRef: StorageRef, options?: ErrorOptions) {
     super(`Document uploaded but independent retrieval is not verified. Keep reference ${storageRef.reference} and SHA-256 ${storageRef.sha256}; retry retrieval before uploading again.`, options);
@@ -55,8 +81,9 @@ export function createGatewayStorage(
     initializing = request(async signal => {
       const response = await fetchBytes(`${base}/gateway`, { ...anonymous, signal });
       if (!response.ok) throw new Error(`Document storage is unavailable (HTTP ${response.status}); retry`);
-      const status = await response.json();
-      if (status?.gateway !== true) throw new Error('Document storage gateway is unavailable; retry');
+      const status = await boundedJSON(response);
+      if (!status || typeof status !== 'object' || !('gateway' in status) || status.gateway !== true)
+        throw new Error('Document storage gateway is unavailable; retry');
     }).then(() => {
       alive(expected);
       publish({ connected: true, canUpload: true, mode: 'subsidised' });
@@ -101,8 +128,9 @@ export function createGatewayStorage(
           headers: { 'Content-Type': 'application/octet-stream', 'Swarm-Postage-Batch-Id': '0'.repeat(64) },
         });
         if (!response.ok) throw new Error(`Document upload failed (HTTP ${response.status}); retry when storage is available`);
-        const result = await response.json();
-        if (typeof result?.reference !== 'string' || !/^[a-f0-9]{64}$/i.test(result.reference))
+        const result = await boundedJSON(response);
+        if (!result || typeof result !== 'object' || !('reference' in result) ||
+            typeof result.reference !== 'string' || !/^[a-f0-9]{64}$/i.test(result.reference))
           throw new Error('Expected a normal 32-byte Swarm reference');
         return result.reference.toLowerCase() as string;
       });
