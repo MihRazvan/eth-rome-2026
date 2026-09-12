@@ -57,3 +57,30 @@ Server configuration still intentionally binds only loopback ports18888/18889 an
 5. Record funding, scope publication, upload and submission as separate states so a failed later step does not erase knowledge of earlier external effects.
 
 No critical or high-severity unauthorized-funds trace was found in this bounded pass. The medium findings affect recipient-key freshness and configuration reliability. Fixes belong to the integrator; this report does not mark them closed merely because they were communicated.
+
+## Fix verification
+
+The integrator's subsequent source was rechecked without editing it or restarting a runtime. The following digests identify the files used by the executable regression; the earlier findings above describe their original snapshots and remain preserved as history.
+
+| Rechecked source | SHA-256 |
+|---|---|
+| `experiments/qualification/pilot/start.mjs` | `254144d70927d15064c2f0536a02b997044e68625a347ad79a2fa9fbc5b94461` |
+| `experiments/qualification/pilot/web/main.ts` | `b8a83c5032f9739a907a534a98b80818e0c0d7e2cfdd1d0c36171da75c0e9a0b` |
+
+**RP-SWARM-01 is closed at the application-check boundary.** The submit action now captures the worker and re-reads both bindings before upload and again before requesting submission. It compares public keys, versions, expiry values and current chain time, and rechecks wallet generation/account. An executable regression extracted that exact TypeScript control flow, transpiled it with esbuild, and supplied deterministic crypto, chain and storage stubs. It produced the following results:
+
+| Scenario | Binding reads | External uploads | Submission calls | Result |
+|---|---:|---:|---:|---|
+| Bindings unchanged | 6 | 1 | 1 | Allowed |
+| Rotation while encrypting | 4 | 0 | 0 | Rejected before upload |
+| Rotation while uploading | 6 | 1 | 0 | Rejected before submission |
+| Expiry while uploading | 6 | 1 | 0 | Rejected before submission |
+| Wallet change while uploading | 4 | 1 | 0 | Rejected before submission |
+
+These are control-flow regression results, not additional cryptographic benchmarks or live-chain transactions. The already performed upload cannot be recalled; rejecting submission means the application does not commit that stale result. Rotation occurring after the final read, while a wallet confirmation or transaction is pending, remains outside this fix. The contract does not atomically enforce recipient-key versions, so the residual transaction-time race must remain disclosed.
+
+**RP-SWARM-02 is closed.** The create action now validates both captured wallet generation and owner before choosing either upload branch. The same extraction harness simulated a wallet switch during the first awaited key read. It received “Wallet changed before scope upload,” with zero upload calls and zero transaction calls.
+
+**RP-SWARM-03 is closed.** Source assertions verified one normalized `retrievalUrl` variable is used for the public store, the local store's download field, `/api/config`'s `gatewayUrl`, and the CSP gateway origin. The previous reversed public-config precedence is absent. If both legacy fields are supplied, the explicit precedence is now consistently `retrievalUrl` first.
+
+All three reviewed defects are therefore corrected at their stated application/configuration scope. This does not claim that the freshly rebuilt application, a signed Swarm ID session, or public upload/payment was exercised by this reviewer. Those integrated acceptance results remain the integrator's separate evidence.
