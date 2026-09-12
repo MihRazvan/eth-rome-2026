@@ -1,0 +1,85 @@
+.device {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 24px 0;
+  margin-bottom: 30px;
+}
+.device .eyebrow {
+  margin-bottom: 10px;
+}
+.device p:last-child {
+  font: 11px/1.5 monospace;
+  max-width: 600px;
+}
+.device .actions {
+  align-content: center;
+  justify-content: flex-end;
+}
+aside button {
+  margin: 6px 0;
+  width: 100%;
+}
+.actions details,
+.actions label {
+  display: block;
+  width: 100%;
+}
+.actions input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  font: 12px Arial;
+}
+.actions select {
+  display: block;
+  max-width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  background: #fffefa;
+}
+pre {
+  padding: 10px;
+  background: #f0f2e7;
+}
+pre:empty {
+  display: none;
+}
+.ticket .fine {
+  overflow-wrap: anywhere;
+}
+.actions > details {
+  margin: 0 0 12px;
+}
+#notice {
+  overflow-wrap: anywhere;
+}
+#connect {
+  margin-left: auto;
+}
+header p {
+  max-width: 340px;
+}
+.doc {
+  font: 14px/1.5 Arial;
+}
+@media (max-width: 760px) {
+  .device {
+    flex-direction: column;
+  }
+  .device .actions {
+    justify-content: flex-start;
+  }
+  .device button {
+    font-size: 12px;
+  }
+  header {
+    gap: 12px;
+  }
+  #connect {
+    font-size: 12px;
+  }
+}

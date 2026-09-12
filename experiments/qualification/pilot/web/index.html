@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Review Pass — wallet pilot</title>
+    <script type="module" src="/main.ts"></script>
+  </head>
+  <body>
+    <div class="experiment" id="environment">
+      CONNECTING TO CONFIGURED NETWORK
+    </div>
+    <header>
+      <a class="brand" href="/">REVIEW<span>PASS↗</span></a>
+      <p>Your qualification. Your wallet. Your work.</p>
+      <button id="connect">Connect wallet</button>
+    </header>
+    <main>
+      <section class="intro">
+        <p class="eyebrow">PRIVATE QUALIFICATION / WALLET PILOT</p>
+        <h1>A qualified review.<br /><em>A payment you control.</em></h1>
+        <p>
+          Clients fund assignments. Reviewers prove current qualification
+          locally.<br />Your wallet approves every transaction; documents are
+          encrypted for their recipients.
+        </p>
+      </section>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <section class="device">
+        <div>
+          <p class="eyebrow">THIS WALLET / THIS DEVICE</p>
+          <h2 id="wallet">Connect to begin</h2>
+          <p id="key-status">
+            No wallet is connected. No private key is held by the server.
+          </p>
+        </div>
+        <div class="actions">
+          <button id="register" disabled>Register device key</button
+          ><button id="rotate" disabled class="quiet">Rotate device key</button
+          ><button id="revoke-key" disabled class="quiet">
+            Revoke encryption key
+          </button>
+        </div>
+      </section>
+      <div class="workspace">
+        <section>
+          <div class="section-top">
+            <h2>Assignments</h2>
+            <button id="refresh" class="quiet">Refresh chain state</button>
+          </div>
+          <div id="jobs"></div>
+        </section>
+        <aside>
+          <section class="disclosure">
+            <p class="eyebrow">COMMISSION A REVIEW</p>
+            <h2>Fund a clear obligation.</h2>
+            <p class="fine">
+              Class 7 · 250 qUSD · one hour to accept, two to submit, three for
+              client review. qUSD is a freely minted test token with no value.
+            </p>
+            <button id="mint" disabled class="quiet">Get 1,000 test qUSD</button
+            ><button id="create" disabled>Fund 250 qUSD assignment</button>
+            <p class="fine">
+              The client approves completed work or disputes it before the
+              review deadline. A timely submission can claim payment after that
+              deadline unless disputed. The configured arbitrator resolves
+              disputes.
+            </p>
+          </section>
+          <section class="issuer-card">
+            <p class="eyebrow">WHAT GETS DISCLOSED</p>
+            <p class="fine">
+              Issuer, qualification class, deadline, payment address and
+              assignment are public. Credential identifier and holder secret
+              remain inside your local prover. Reusing a wallet links
+              assignments.
+            </p>
+            <p class="fine">
+              Device-key bindings and encrypted recipient metadata are public.
+              Revoking a key stops new encryption to it; it cannot recall old
+              documents.
+            </p>
+          </section>
+        </aside>
+      </div>
+      <section class="boundary">
+        <h2>A pilot with explicit boundaries.</h2>
+        <p>
+          No issuer or client adoption is claimed. The proof uses a local test
+          Groth16 setup. This page never accepts a credential or holder
+          secret—only an exported public presentation.
+        </p>
+        <p>
+          Private document keys persist in this browser profile. Other devices
+          need their own registered key; losing all copies of an old private key
+          can lose access to older documents. Public sponsor writes remain
+          separately gated.
+        </p>
+      </section>
+    </main>
+    <footer>REVIEW PASS / WALLET PILOT <span id="contracts"></span></footer>
+  </body>
+</html>
