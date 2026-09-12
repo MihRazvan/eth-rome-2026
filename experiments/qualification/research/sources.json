@@ -1,0 +1,239 @@
+{
+  "researched_at": "2026-09-12",
+  "interface_base": "fbb76f2d2f1f6a92ed37007a63b26fc4d15e3f28",
+  "scope": "Product viability and interface privacy reasoning. Research worker did not benchmark proof code, install frameworks, contact prospects, issue production credentials, or transact.",
+  "local_sources": [
+    {
+      "path": "experiments/qualification/INTERFACE.md",
+      "at_commit": "fbb76f2d2f1f6a92ed37007a63b26fc4d15e3f28",
+      "supports": "Nine public inputs, private witness relation, nullifier domains, configured issuer/root checks. Requirements only, not implementation verification."
+    },
+    {
+      "path": "experiments/qualification/README.md",
+      "at_commit": "fbb76f2d2f1f6a92ed37007a63b26fc4d15e3f28",
+      "supports": "Experiment scope and explicit independent BN254 design; prior ShadowPath artifact access blocker."
+    }
+  ],
+  "sources": [
+    {
+      "id": "anoncreds",
+      "title": "AnonCreds Specification",
+      "url": "https://anoncreds.github.io/anoncreds-spec/",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official specification",
+      "supports": "Link secrets, blinded issuance, predicates, selective disclosure and non-revocation.",
+      "limitations": "Selected relevant sections inspected; v1 features not conflated with v2 experimental repository; no benchmark or interoperability test run."
+    },
+    {
+      "id": "bc-adoption",
+      "title": "Add support into Hyperledger AnonCreds for W3C VC Data Model",
+      "url": "https://marketplace.digital.gov.bc.ca/opportunities/code-with-us/d81f1bb4-4abb-4a4c-8b19-92904e0bd6a6",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "government procurement/implementation statement",
+      "supports": "BC government reports using Aries/AnonCreds and BC Wallet in actual credential use cases.",
+      "limitations": "Evidence of ecosystem usage, not this task's commercial demand or compatibility with our custom circuit."
+    },
+    {
+      "id": "privado-onchain",
+      "title": "On-chain verification",
+      "url": "https://docs.privado.id/docs/verifier/on-chain-verification/overview/",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official developer documentation",
+      "supports": "EmbeddedZKPVerifier and UniversalVerifier; issuer/user state validity and business logic in same transaction.",
+      "limitations": "Current SDK or Fuji deployment not executed in this workstream."
+    },
+    {
+      "id": "privado-issuer",
+      "title": "Issuer Node UI Guide",
+      "url": "https://docs.privado.id/docs/issuer-node/issuer-node-guide/",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official developer documentation",
+      "supports": "Issuance, schema, holder relationship and publishing issuer-state revocation changes.",
+      "limitations": "No integration or adoption by the proposed product implied."
+    },
+    {
+      "id": "privado-hsbc",
+      "title": "Why HSBC is Building a Decentralized Identity Solution With Privado ID",
+      "url": "https://www.privado.id/blog/why-hsbc-is-building-a-decentralized-identity-solution-with-polygon-id",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official vendor case study",
+      "supports": "Explicit DID prototype and internal account-opening exploration.",
+      "limitations": "Not treated as a production bank deployment or independent customer verification."
+    },
+    {
+      "id": "privado-telefonica",
+      "title": "Telef\u00f3nica Tech Partners with Privado ID to Drive Adoption of Private, Compliant Digital Identities Across the EU",
+      "url": "https://www.privado.id/blog/telefonica-tech-partners-with-privado-id-to-drive-adoption-of-private-compliant-digital-identities",
+      "publication_or_update_date": "2024-09-10",
+      "accessed": "2026-09-12",
+      "source_type": "official partnership announcement",
+      "supports": "Systems-integrator route and planned certification/age verification proofs of concept.",
+      "limitations": "Announced integration direction, not evidence that these qualification formats can be imported into this circuit."
+    },
+    {
+      "id": "privado-marketplace",
+      "title": "Privado ID Credential Marketplace",
+      "url": "https://marketplace.privado.id/",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official service page",
+      "supports": "Potential issuer inventory search boundary.",
+      "limitations": "Web reader returned Something went wrong / Network Error and JavaScript-required content. Does not prove universal outage; no usable qualifying issuer inventory verified."
+    },
+    {
+      "id": "semaphore",
+      "title": "Semaphore overview",
+      "url": "https://pse.dev/projects/semaphore",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official PSE project documentation",
+      "supports": "Group membership, holder identities, nullifiers, Solidity and JS libraries.",
+      "limitations": "No claim that arbitrary prior-root acceptance or revocation settings meet this application without review."
+    },
+    {
+      "id": "semaphore-build",
+      "title": "Semaphore building tools",
+      "url": "https://semaphore.pse.dev/build",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official tooling documentation",
+      "supports": "V4 CLI, boilerplate and packages as existing integration option.",
+      "limitations": "Not installed or run by research worker."
+    },
+    {
+      "id": "semaphore-spec",
+      "title": "Semaphore V4 specification",
+      "url": "https://github.com/privacy-ethereum/zkspecs/blob/main/specs/3/README.md",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official specification",
+      "supports": "Identity/group/nullifier interoperability and timing privacy background.",
+      "limitations": "No Semaphore proof produced in this workstream."
+    },
+    {
+      "id": "shadowpath",
+      "title": "ShadowPath: Lookup-Private Credential Status Verification over Authenticated State",
+      "url": "https://arxiv.org/html/2608.19937v1",
+      "publication_or_update_date": "2026-08-20",
+      "accessed": "2026-09-12",
+      "source_type": "primary research preprint",
+      "supports": "Full sections on threat model, composition, artifact boundaries, holder-local shared-state lookup, BW6-761 and excluded collusion/synchronization guarantees.",
+      "limitations": "Preprint; placeholder NDSS 2027 header not treated as acceptance. Custom BN254 experiment is independent. Earlier artifact host 403 recorded by integrator; no artifact reproduced by this worker."
+    },
+    {
+      "id": "usenix-prc",
+      "title": "Do You Need a Receipt? Anonymous Credential Revocation at Continental Scale via Private Record Certification",
+      "url": "https://www.usenix.org/conference/usenixsecurity26/presentation/edalatnejad",
+      "publication_or_update_date": "2026-08",
+      "accessed": "2026-09-12",
+      "source_type": "primary peer-reviewed venue publication",
+      "supports": "PIR/MPC-based PRC, decentralized authorities and reported scale/performance; Distinguished Artifact Award label.",
+      "limitations": "Venue abstract inspected. Reported performance belongs to authors, not our test. Direct urllib request to venue returned403; web reader worked. No full artifact benchmark or EVM integration attempted."
+    },
+    {
+      "id": "code4rena",
+      "title": "SR Wardens",
+      "url": "https://docs.code4rena.com/roles/sr-wardens",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official operator documentation",
+      "supports": "Certified SR criteria include performance, accepted tax information, contributor terms and staff manual review.",
+      "limitations": "Prospect workflow analogue, not commitment to issue external credentials or a partnership."
+    },
+    {
+      "id": "code4rena-signal",
+      "title": "Signal metrics",
+      "url": "https://docs.code4rena.com/roles/signal",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official operator documentation",
+      "supports": "Existing reputation/performance-based qualification; potential commercial value of persistent reputation.",
+      "limitations": "No integration or adoption by the proposed product implied."
+    },
+    {
+      "id": "fable-testers",
+      "title": "Meet the Fable Community",
+      "url": "https://makeitfable.com/testers/",
+      "publication_or_update_date": "2025-12-18 page metadata",
+      "accessed": "2026-09-12",
+      "source_type": "official operator product page",
+      "supports": "Assessed/trained/compensated accessibility panel and matched testing.",
+      "limitations": "Vendor claims, not independent validation; no requirement or desire for anonymous credentials established."
+    },
+    {
+      "id": "fable-privacy",
+      "title": "Fable Privacy Policy",
+      "url": "https://makeitfable.com/privacy-policy/",
+      "publication_or_update_date": "2025-06-27",
+      "accessed": "2026-09-12",
+      "source_type": "official operator policy",
+      "supports": "Identity, device, recording/test-request data and participant consent to client disclosure.",
+      "limitations": "Used to identify disclosure surfaces, not allege misconduct or give compliance advice."
+    },
+    {
+      "id": "fable-community",
+      "title": "Join the Fable Community",
+      "url": "https://makeitfable.com/community/",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official recruitment page",
+      "supports": "Paid tester participation as adjacent actual workflow.",
+      "limitations": "No integration or adoption by the proposed product implied."
+    },
+    {
+      "id": "researchhub",
+      "title": "Earn ResearchCoin through peer review",
+      "url": "https://www.researchhub.com/peer-review",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official operator product page",
+      "supports": "Alternative screened: paid peer review with quality approval.",
+      "limitations": "Not selected as primary because expert identity/conflict handling and integration remain unproven."
+    },
+    {
+      "id": "researchhub-guidelines",
+      "title": "Peer Review Guidelines",
+      "url": "https://docs.researchhub.com/researchhub-foundation/programs-and-initiatives/peer-review-program/peer-review-program-guidelines",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "official operator guidelines",
+      "supports": "Compensation depends on approved high-quality review, not just qualification.",
+      "limitations": "No integration or adoption by the proposed product implied."
+    },
+    {
+      "id": "billions-redchain",
+      "title": "Case Study: Spanish Red Cross runs privacy-first aid platform with Billions ZK technology",
+      "url": "https://billions.network/blog/case-study-spanish-red-cross-runs-privacy-first-aid-platform-with-billions-zk-technology",
+      "publication_or_update_date": "2026-02-06",
+      "accessed": "2026-09-12",
+      "source_type": "official technology vendor case study",
+      "supports": "Reported deployed iden3 eligibility workflow for financial aid with Spanish Red Cross and BLOOCK.",
+      "limitations": "Not independently audited or customer-confirmed here; reported transaction counts are not credential-holder counts. No partnership or integration by us."
+    },
+    {
+      "id": "usenix-prc-full",
+      "title": "Do You Need a Receipt? full USENIX paper",
+      "url": "https://www.usenix.org/system/files/usenixsecurity26-edalatnejad.pdf",
+      "publication_or_update_date": "2026-08",
+      "accessed": "2026-09-12",
+      "source_type": "primary peer-reviewed paper",
+      "supports": "Sections4.2 and Open Science: distinct privacy/unforgeability adversary models, active-RA limitation, artifact scope and separate credential-presentation composition.",
+      "limitations": "Selected relevant PDF text inspected with web reader; no implementation audit, benchmark reproduction or full formal-proof validation."
+    },
+    {
+      "id": "prc-artifact",
+      "title": "Private Record Certification artifact",
+      "url": "https://zenodo.org/records/20433788",
+      "publication_or_update_date": null,
+      "accessed": "2026-09-12",
+      "source_type": "paper-linked research artifact",
+      "supports": "Artifact location stated by Open Science section of USENIX paper.",
+      "limitations": "Artifact not installed or benchmarks run by this worker; availability probing reported separately."
+    }
+  ]
+}
