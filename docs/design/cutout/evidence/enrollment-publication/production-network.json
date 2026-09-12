@@ -1,0 +1,27 @@
+{
+  "recordedAt": "2026-09-12T17:38:18.842Z",
+  "taskId": "1",
+  "owner": "0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d",
+  "events": [
+    {
+      "event": "unknown-chain-4902"
+    },
+    {
+      "event": "added-chain",
+      "chainId": "0x7614d1",
+      "symbol": "GLM"
+    },
+    {
+      "event": "switched",
+      "chainId": 7738577
+    },
+    {
+      "event": "transaction-request-rejected",
+      "chainId": 7738577,
+      "to": "0x4400000000000000000000000000000000000044"
+    }
+  ],
+  "message": "Publication was not confirmed: The wallet request was canceled. Approve it in your wallet to continue. Your funded task remains in Activity. Check Arkiv wallet activity before retrying; do not fund the task again.",
+  "errors": [],
+  "scope": "Actual hosted funded task/scope and public RPC reads at actual production HTTPS origin in isolated Chromium. Synthetic unknown-network/add/switch/rejected-wallet prompts; no transaction or publication sent."
+}
