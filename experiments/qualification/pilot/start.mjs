@@ -14,8 +14,15 @@ import {
 } from "viem";
 import { beeBytes } from "../transport/bytes.ts";
 import { uploadMessage } from "./upload-message.ts";
+import { encodeTerms, matchTerms, termsUploadMessage } from "./terms.ts";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-const local = resolve(root, ".runtime/qualification-pilot");
+const local = resolve(
+  root,
+  process.env.QUALIFICATION_PILOT_DIR ?? ".runtime/qualification-pilot",
+);
+const port = Number(process.env.QUALIFICATION_PILOT_PORT ?? 18888);
+if (![18888, 18889].includes(port))
+  throw Error("Use an assigned local pilot port");
 await mkdir(local, { recursive: true });
 const configPath =
   process.env.QUALIFICATION_PILOT_CONFIG ?? resolve(local, "config.json");
@@ -60,7 +67,8 @@ await build({
 const uploads = new Map();
 const locks = new Set();
 const uploadCounts = new Map();
-const origin = "http://127.0.0.1:18888";
+const origin = `http://127.0.0.1:${port}`;
+const termsQuota = new Map();
 const stringify = (v) =>
   JSON.stringify(v, (_, x) => (typeof x === "bigint" ? String(x) : x));
 const readJob = (id) =>
@@ -81,7 +89,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(status, { "Content-Type": "application/json" });
     res.end(stringify(data));
   };
-  if (req.headers.host !== "127.0.0.1:18888")
+  if (req.headers.host !== `127.0.0.1:${port}`)
     return send(403, { error: "Use the exact local pilot URL" });
   try {
     const url = new URL(req.url, origin);
@@ -99,12 +107,105 @@ const server = http.createServer(async (req, res) => {
         issuer: config.issuer,
         arbitrator: config.arbitrator,
         snapshot: config.snapshot,
+        storageMode: config.storageMode ?? "local-bee",
+        gatewayUrl: config.swarm.downloadUrl ?? config.swarm.retrievalUrl,
+        arkiv: config.arkiv ?? null,
         abi,
       });
     if (req.method === "GET" && url.pathname === "/api/snapshot") {
       const bytes = await store.download(config.snapshot);
       res.writeHead(200, { "Content-Type": "application/json" });
       return res.end(bytes);
+    }
+    if (req.method === "GET" && url.pathname === "/api/terms") {
+      const id = url.searchParams.get("job");
+      if (!/^[1-9][0-9]{0,18}$/.test(id ?? ""))
+        throw Error("Invalid assignment");
+      const job = await readJob(id);
+      const reference = await chain.readContract({
+        address: config.escrow,
+        abi: abi.QualificationEscrow,
+        functionName: "termsReferences",
+        args: [BigInt(id)],
+      });
+      if (reference === `0x${"0".repeat(64)}`)
+        return send(404, {
+          error: "Legacy assignment has no public scope document",
+        });
+      const bytes = await store.download({
+        reference: reference.slice(2),
+        sha256: job[8],
+      });
+      const encoded = encodeTerms(JSON.parse(new TextDecoder().decode(bytes)));
+      if (
+        encoded.digest !== job[8] ||
+        !matchTerms(
+          encoded.terms,
+          config.chainId,
+          config.escrow,
+          config.token,
+          job,
+        )
+      )
+        throw Error("Scope does not match funded terms");
+      return send(200, { terms: encoded.terms, reference, digest: job[8] });
+    }
+    if (req.method === "POST" && url.pathname === "/api/terms") {
+      if (config.environment !== "local-pilot")
+        throw Error("Public uploads use your browser's Swarm ID capability");
+      if (
+        req.headers.origin !== origin ||
+        req.headers["content-type"] !== "application/json"
+      )
+        return send(403, { error: "Same-origin JSON required" });
+      req.setTimeout(5000, () => req.destroy());
+      const chunks = [];
+      let length = 0;
+      for await (const chunk of req) {
+        length += chunk.length;
+        if (length > 20000)
+          return send(413, { error: "Public scope too large" });
+        chunks.push(chunk);
+      }
+      const body = Buffer.concat(chunks).toString("utf8");
+      const input = JSON.parse(body),
+        encoded = encodeTerms(input.terms),
+        t = encoded.terms;
+      const now = Number((await chain.getBlock()).timestamp);
+      if (
+        t.chainId !== config.chainId ||
+        t.escrow !== config.escrow.toLowerCase() ||
+        t.token !== config.token.toLowerCase() ||
+        t.acceptBefore <= now ||
+        !Number.isSafeInteger(input.expiresAt) ||
+        input.expiresAt < now ||
+        input.expiresAt > now + 300
+      )
+        throw Error("Expired or misrouted scope upload");
+      if (
+        !(await verifyMessage({
+          address: t.client,
+          message: termsUploadMessage(t, encoded.digest, input.expiresAt),
+          signature: input.signature,
+        }))
+      )
+        throw Error("Client scope upload signature required");
+      const cache = `terms:${t.client}:${encoded.digest}`;
+      if (uploads.has(cache)) return send(200, uploads.get(cache));
+      if (locks.has(cache))
+        return send(409, { error: "This scope upload is in progress" });
+      if ((termsQuota.get(t.client) ?? 0) >= 10)
+        throw Error("Local scope upload quota reached");
+      // Reserve quota before awaiting storage: parallel requests cannot bypass this limit.
+      termsQuota.set(t.client, (termsQuota.get(t.client) ?? 0) + 1);
+      locks.add(cache);
+      try {
+        const ref = await store.upload(encoded.bytes);
+        uploads.set(cache, ref);
+        return send(200, ref);
+      } finally {
+        locks.delete(cache);
+      }
     }
     if (req.method === "GET" && url.pathname === "/api/document") {
       const id = url.searchParams.get("job");
@@ -136,12 +237,15 @@ const server = http.createServer(async (req, res) => {
       )
         return send(403, { error: "Same-origin JSON required" });
       req.setTimeout(5000, () => req.destroy());
-      let body = "";
+      const chunks = [];
+      let length = 0;
       for await (const chunk of req) {
-        body += chunk;
-        if (body.length > 512000)
+        length += chunk.length;
+        if (length > 512000)
           return send(413, { error: "Review envelope too large" });
+        chunks.push(chunk);
       }
+      const body = Buffer.concat(chunks).toString("utf8");
       const input = JSON.parse(body);
       if (
         !/^[1-9][0-9]{0,18}$/.test(input.jobId) ||
@@ -258,10 +362,10 @@ const server = http.createServer(async (req, res) => {
     send(400, { error: (error.shortMessage ?? error.message).slice(0, 200) });
   }
 });
-server.listen(18888, "127.0.0.1", () =>
+server.listen(port, "127.0.0.1", () =>
   console.log(`Wallet-separated pilot: ${origin}`),
 );
 await writeFile(
   resolve(local, "pids.json"),
-  JSON.stringify({ server: process.pid, port: 18888 }),
+  JSON.stringify({ server: process.pid, port }),
 );

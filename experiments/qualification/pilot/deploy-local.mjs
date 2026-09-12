@@ -12,7 +12,7 @@ import {
 import { mnemonicToAccount } from "viem/accounts";
 import { beeBytes } from "../transport/bytes.ts";
 const exec = promisify(execFile);
-const dir = ".runtime/qualification-pilot";
+const dir = process.env.QUALIFICATION_PILOT_DIR ?? ".runtime/qualification-pilot";
 await mkdir(dir, { recursive: true });
 const source = JSON.parse(
   await readFile(".runtime/qualification/deployment.json", "utf8"),

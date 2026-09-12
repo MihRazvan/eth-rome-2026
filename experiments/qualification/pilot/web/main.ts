@@ -10,6 +10,8 @@ import {
   stringToHex,
   sha256,
   bytesToHex,
+  parseUnits,
+  formatUnits,
   type Hex,
   type Address,
 } from "viem";
@@ -23,6 +25,8 @@ import {
   loadDeviceKey,
 } from "../keys";
 import { uploadMessage } from "../upload-message";
+import { encodeTerms, matchTerms, termsUploadMessage } from "../terms";
+import { waitForSettlement } from "../settlement";
 declare global {
   interface Window {
     ethereum?: {
@@ -60,6 +64,7 @@ let account: Address | undefined,
   generation = 0;
 let jobs: any[] = [];
 const proofs = new Map<string, any>();
+const tokenSymbol = config.chainId === 43113 ? "test USDC" : "qUSD";
 const namespace = () =>
   `review-pass:${config.chainId}:${config.keyRegistry}:${account?.toLowerCase()}`;
 const context = (jobId: string) => ({
@@ -116,7 +121,12 @@ async function tx(
     account,
     chain: network,
   });
-  const receipt = await client.waitForTransactionReceipt({ hash });
+  $("#notice").textContent =
+    "Transaction sent. Waiting for confirmed settlement…";
+  const receipt = await waitForSettlement(client, {
+    hash,
+    chainId: config.chainId,
+  });
   if (receipt.status !== "success") throw Error("Transaction reverted");
   return hash;
 }
@@ -128,6 +138,32 @@ async function refresh() {
   const nextJobs: any[] = [];
   for (let i = 1; i <= count; i++) {
     const j: any = await read("jobs", [BigInt(i)]);
+    let scope: any;
+    let scopeError = "";
+    const termsReference: any = await read("termsReferences", [BigInt(i)]);
+    if (termsReference !== `0x${"0".repeat(64)}`) {
+      try {
+        const response = await fetch(`/api/terms?job=${i}`);
+        if (!response.ok) throw Error("Public scope is unavailable");
+        const body = await response.json(),
+          encoded = encodeTerms(body.terms);
+        if (
+          encoded.digest !== j[8] ||
+          body.reference !== termsReference ||
+          !matchTerms(
+            encoded.terms,
+            config.chainId,
+            config.escrow,
+            config.token,
+            j,
+          )
+        )
+          throw Error("Public scope does not match the funded commitment");
+        scope = encoded.terms;
+      } catch (e) {
+        scopeError = e instanceof Error ? e.message : "Scope unavailable";
+      }
+    }
     if (session !== generation) return;
     nextJobs.push({
       id: String(i),
@@ -148,6 +184,10 @@ async function refresh() {
         "Resolved",
       ][j[7]],
       reference: j[9],
+      termsDigest: j[8],
+      termsReference,
+      scope,
+      scopeError,
     });
   }
   let keyStatus: string | undefined;
@@ -180,7 +220,7 @@ function render() {
           const isClient = account?.toLowerCase() === j.client.toLowerCase(),
             isWorker = account?.toLowerCase() === j.worker.toLowerCase();
           let actions = "";
-          if (j.status === "Open")
+          if (j.status === "Open" && !j.scopeError)
             actions = `<details><summary>Generate your qualification proof locally</summary><p class="fine">Download the whole issuer snapshot. Reconstruct its root and path with your local credential; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}</details><label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label>${proofs.has(j.id) ? button("accept", j.id, "Verify proof & accept") : ""}`;
           if (j.status === "Accepted" && isWorker)
             actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Encrypt for client & submit")}`;
@@ -205,7 +245,7 @@ function render() {
             account?.toLowerCase() === config.arbitrator.toLowerCase()
           )
             actions += button("resolve", j.id, "Arbitrate 50 / 50 split");
-          return `<article class="ticket"><div class="ticket-head"><span>ASSIGNMENT ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body"><h3>Confidential technical review.</h3><p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${Number(j.amount) / 1e6} <small>qUSD</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : "FUNDED"}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleTimeString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleTimeString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleTimeString()}</p><div class="actions">${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
+          return `<article class="ticket"><div class="ticket-head"><span>ASSIGNMENT ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body"><h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : "FUNDED"}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p><div class="actions">${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
         })
         .join("")
     : '<article class="ticket"><div class="ticket-body"><h3>No assignments yet.</h3><p class="terms">Connect a client wallet, register its document key and fund the first review.</p></div></article>';
@@ -311,6 +351,8 @@ async function action(name: string, id: string) {
       return "preserve";
     }
     case "accept": {
+      if (j.scopeError)
+        throw Error("Verify the funded public scope before accepting");
       const p = proofs.get(id);
       if (!p || BigInt(p.publicInputs[6]) !== BigInt(account!))
         throw Error("Proof recipient must be your connected wallet");
@@ -460,6 +502,8 @@ $("#mint").onclick = () =>
   });
 $("#create").onclick = () =>
   run(async () => {
+    const session = generation,
+      owner = account!;
     const binding = await keyBinding(account!);
     if (
       binding.publicKey === "0x" ||
@@ -467,18 +511,68 @@ $("#create").onclick = () =>
     )
       throw Error("Register a current client document key first");
     const now = (await client.getBlock()).timestamp;
-    await tx("approve", [config.escrow, 250_000_000n], "DemoUSD", config.token);
-    await tx("createJob", [
-      250_000_000n,
+    const value = (id: string) => ($(`#${id}`) as HTMLInputElement).value;
+    if (!/^\d{1,9}(\.\d{1,6})?$/.test(value("task-reward")))
+      throw Error("Enter a positive reward with at most6decimal places");
+    const amount = parseUnits(value("task-reward"), 6);
+    const minutes = ["accept-minutes", "submit-minutes", "review-minutes"].map(
+      (id) => Number(value(id)),
+    );
+    if (minutes.some((v) => !Number.isInteger(v) || v < 2 || v > 10080))
+      throw Error("Each stage must last between2minutes and7days");
+    const acceptBefore = Number(now) + minutes[0] * 60,
+      submitBefore = acceptBefore + minutes[1] * 60,
+      reviewBefore = submitBefore + minutes[2] * 60;
+    if (!($(`#scope-public`) as HTMLInputElement).checked)
+      throw Error("Confirm this scope is safe to publish");
+    const encoded = encodeTerms({
+      format: "review-pass-public-terms",
+      version: 1,
+      chainId: config.chainId,
+      escrow: config.escrow,
+      client: owner,
+      token: config.token,
+      qualificationClass: "7",
+      amount: String(amount),
+      acceptBefore,
+      submitBefore,
+      reviewBefore,
+      title: value("task-title"),
+      scope: value("task-scope"),
+      policy: "approval-timeout-arbitration-v1",
+    });
+    const expiresAt = Number(now) + 240;
+    const signature = await wallet.signMessage({
+      account: owner,
+      message: termsUploadMessage(encoded.terms, encoded.digest, expiresAt),
+    });
+    if (generation !== session || account !== owner)
+      throw Error("Wallet changed; task was not funded");
+    const response = await fetch("/api/terms", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ terms: encoded.terms, signature, expiresAt }),
+    });
+    const content = await response.json();
+    if (!response.ok) throw Error(content.error || "Scope upload failed");
+    if (
+      !/^[0-9a-f]{64}$/i.test(content.reference) ||
+      content.sha256 !== encoded.digest
+    )
+      throw Error("Invalid scope storage receipt");
+    if (generation !== session)
+      throw Error("Wallet changed; scope uploaded but task not funded");
+    await tx("approve", [config.escrow, amount], "DemoUSD", config.token);
+    if (generation !== session)
+      throw Error("Wallet changed; allowance approved but task not funded");
+    await tx("createJobWithDocument", [
+      amount,
       7n,
-      now + 3600n,
-      now + 7200n,
-      now + 10800n,
-      keccak256(
-        stringToHex(
-          "Review Pass pilot: confidential review; 250 qUSD; explicit client approval or review timeout; trusted arbitrator",
-        ),
-      ),
+      BigInt(acceptBefore),
+      BigInt(submitBefore),
+      BigInt(reviewBefore),
+      encoded.digest,
+      `0x${content.reference}`,
     ]);
   });
 document.addEventListener("click", (e) => {

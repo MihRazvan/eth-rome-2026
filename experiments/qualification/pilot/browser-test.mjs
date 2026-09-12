@@ -12,8 +12,11 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import assert from "node:assert/strict";
+import { request as httpRequest } from "node:http";
+import { termsUploadMessage } from "./terms.ts";
 const exec = promisify(execFile),
-  dir = ".runtime/qualification-pilot";
+  dir = process.env.QUALIFICATION_PILOT_DIR ?? ".runtime/qualification-pilot";
+const port = Number(process.env.QUALIFICATION_PILOT_PORT ?? 18888);
 const config = JSON.parse(await readFile(`${dir}/config.json`, "utf8"));
 assert.equal(config.chainId, 31338);
 assert.equal(new URL(config.rpcUrl).hostname, "127.0.0.1");
@@ -89,7 +92,7 @@ async function profile(index) {
   page.on("request", (req) => {
     if (req.url().includes("/api/upload")) requests.push(req.postData() ?? "");
   });
-  await page.goto("http://127.0.0.1:18888");
+  await page.goto(`http://127.0.0.1:${port}`);
   await page.locator("#connect").click();
   await page.waitForFunction(
     () => document.querySelector("#wallet").textContent !== "Connect to begin",
@@ -120,6 +123,10 @@ try {
   for (const actor of [customer, worker, outsider, customerB])
     await click(actor.page, "#register");
   await click(customer.page, "#mint");
+  await customer.page
+    .locator("#task-title")
+    .fill("Audit allowance boundaries ✅");
+  await customer.page.locator("#scope-public").check();
   await click(customer.page, "#create");
   const id = String(await contract("nextJob"));
   assert.equal(
@@ -128,6 +135,66 @@ try {
   );
   checks.push(
     "Client wallet owns funding; device bindings registered by distinct wallets",
+  );
+  const termsResponse = await customer.page.request.get(
+    `http://127.0.0.1:${port}/api/terms?job=${id}`,
+  );
+  assert.equal(termsResponse.status(), 200);
+  const committedTerms = await termsResponse.json();
+  assert.equal(committedTerms.terms.title, "Audit allowance boundaries ✅");
+  assert.equal(
+    committedTerms.digest,
+    (await contract("jobs", [BigInt(id)]))[8],
+  );
+  checks.push(
+    "Client-defined Unicode scope stored on Bee and verified against immutable funded terms",
+  );
+  const expiresAt = Number((await read.getBlock()).timestamp) + 240;
+  const termsSignature = await customer.wallet.signMessage({
+    message: termsUploadMessage(
+      committedTerms.terms,
+      committedTerms.digest,
+      expiresAt,
+    ),
+  });
+  const requestBytes = Buffer.from(
+    JSON.stringify({
+      terms: committedTerms.terms,
+      signature: termsSignature,
+      expiresAt,
+    }),
+  );
+  const splitAt = requestBytes.indexOf(Buffer.from("✅")) + 1;
+  assert.ok(splitAt > 1);
+  const chunked = await new Promise((resolve, reject) => {
+    const req = httpRequest(
+      `http://127.0.0.1:${port}/api/terms`,
+      {
+        method: "POST",
+        headers: {
+          origin: `http://127.0.0.1:${port}`,
+          "content-type": "application/json",
+        },
+      },
+      (response) => {
+        const chunks = [];
+        response.on("data", (chunk) => chunks.push(chunk));
+        response.on("end", () =>
+          resolve({
+            status: response.statusCode,
+            body: JSON.parse(Buffer.concat(chunks).toString()),
+          }),
+        );
+      },
+    );
+    req.on("error", reject);
+    req.write(requestBytes.subarray(0, splitAt));
+    setTimeout(() => req.end(requestBytes.subarray(splitAt)), 25);
+  });
+  assert.equal(chunked.status, 200);
+  assert.equal(chunked.body.sha256, committedTerms.digest);
+  checks.push(
+    "Real HTTP request preserves signed scope when a Unicode character crosses chunk boundaries",
   );
   await click(worker.page, "#refresh");
   await worker.page
@@ -138,7 +205,7 @@ try {
   await click(worker.page, `[data-action="prepare"][data-id="${id}"]`);
   const job = await contract("jobs", [BigInt(id)]),
     context = await contract("contextFor", [BigInt(id)]);
-  const prover = process.cwd() + "/.runtime/qualification-pilot/prover";
+  const prover = process.cwd() + `/${dir}/prover`;
   const holderFiles = JSON.parse(
     await readFile(`${dir}/holder/latest.json`, "utf8"),
   );
@@ -260,41 +327,92 @@ try {
     "Provider disconnect removes decrypted content and invalidates wallet session",
   );
   await click(customerB.page, "#mint");
+  await customerB.page
+    .locator("#task-title")
+    .fill("Review a second withdrawal implementation");
+  await customerB.page.locator("#task-reward").fill("175.5");
+  await customerB.page.locator("#scope-public").check();
   await click(customerB.page, "#create");
   const secondId = String(await contract("nextJob"));
   assert.notEqual(secondId, id);
   const secondJob = await contract("jobs", [BigInt(secondId)]);
-  assert.equal(secondJob[0].toLowerCase(), customerB.account.address.toLowerCase());
+  assert.equal(secondJob[2], 175_500_000n);
+  assert.equal(
+    secondJob[0].toLowerCase(),
+    customerB.account.address.toLowerCase(),
+  );
   await exec(prover, [
-    "prove", "--setup", ".runtime/qualification/setup",
-    "--credential", holderFiles.credential, "--holder", holderFiles.holder,
-    "--state", `${dir}/holder-private-state.json`,
-    "--context", String(await contract("contextFor", [BigInt(secondId)])),
-    "--recipient", worker.account.address, "--deadline", String(secondJob[4] - 1n),
-    "--class", "7", "--out", `${dir}/presentation-second.json`,
+    "prove",
+    "--setup",
+    ".runtime/qualification/setup",
+    "--credential",
+    holderFiles.credential,
+    "--holder",
+    holderFiles.holder,
+    "--state",
+    `${dir}/holder-private-state.json`,
+    "--context",
+    String(await contract("contextFor", [BigInt(secondId)])),
+    "--recipient",
+    worker.account.address,
+    "--deadline",
+    String(secondJob[4] - 1n),
+    "--class",
+    "7",
+    "--out",
+    `${dir}/presentation-second.json`,
   ]);
-  const firstProof = JSON.parse(await readFile(`${dir}/presentation.json`, "utf8"));
-  const secondProof = JSON.parse(await readFile(`${dir}/presentation-second.json`, "utf8"));
+  const firstProof = JSON.parse(
+    await readFile(`${dir}/presentation.json`, "utf8"),
+  );
+  const secondProof = JSON.parse(
+    await readFile(`${dir}/presentation-second.json`, "utf8"),
+  );
   assert.notEqual(firstProof.publicInputs[7], secondProof.publicInputs[7]);
   await click(worker.page, "#refresh");
-  await worker.page.locator(`[data-action="prepare"][data-id="${secondId}"]`)
-    .locator("..").locator("summary").click();
-  await worker.page.locator(`[data-proof="${secondId}"]`)
+  await worker.page
+    .locator(`[data-action="prepare"][data-id="${secondId}"]`)
+    .locator("..")
+    .locator("summary")
+    .click();
+  await worker.page
+    .locator(`[data-proof="${secondId}"]`)
     .setInputFiles(`${dir}/presentation-second.json`);
   await click(worker.page, `[data-action="accept"][data-id="${secondId}"]`);
-  const secondPlaintext = "SECOND CLIENT ONLY: review of the distinct withdrawal authorization.";
+  const secondPlaintext =
+    "SECOND CLIENT ONLY: review of the distinct withdrawal authorization.";
   await worker.page.locator(`#review-${secondId}`).fill(secondPlaintext);
   await click(worker.page, `[data-action="submit"][data-id="${secondId}"]`);
   await click(customerB.page, "#refresh");
-  await click(customerB.page, `[data-action="retrieve"][data-id="${secondId}"]`);
-  assert.equal(await customerB.page.locator(`#document-${secondId}`).textContent(), secondPlaintext);
+  await click(
+    customerB.page,
+    `[data-action="retrieve"][data-id="${secondId}"]`,
+  );
+  assert.equal(
+    await customerB.page.locator(`#document-${secondId}`).textContent(),
+    secondPlaintext,
+  );
   await click(customer.page, "#connect");
-  await failClick(customer.page, `[data-action="retrieve"][data-id="${secondId}"]`);
-  assert.equal(await customer.page.locator(`#document-${secondId}`).textContent(), "");
+  await failClick(
+    customer.page,
+    `[data-action="retrieve"][data-id="${secondId}"]`,
+  );
+  assert.equal(
+    await customer.page.locator(`#document-${secondId}`).textContent(),
+    "",
+  );
   assert.equal(requests.length, 2);
-  assert.ok(requests.every((body) => !body.includes(plaintext) && !body.includes(secondPlaintext)));
-  checks.push("Same holder credential accepts a second client's job with a different job-scoped nullifier");
-  checks.push("Second client decrypts its review; first client's wallet and retained device keys cannot decrypt it");
+  assert.ok(
+    requests.every(
+      (body) => !body.includes(plaintext) && !body.includes(secondPlaintext),
+    ),
+  );
+  checks.push(
+    "Same holder credential accepts a second client's job with a different job-scoped nullifier",
+  );
+  checks.push(
+    "Second client decrypts its review; first client's wallet and retained device keys cannot decrypt it",
+  );
   const credential = JSON.parse(await readFile(holderFiles.credential, "utf8"));
   await exec(prover, [
     "registry",

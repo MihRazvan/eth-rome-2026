@@ -58,6 +58,20 @@ contract QualificationEscrowTest {
         vm.expectRevert(); vm.prank(CLIENT); escrow.approveAndPay(id);
         vm.expectRevert(); vm.prank(CLIENT); escrow.refund(id);
     }
+    function testPublicScopeCommittedByFundingClient() public {
+        bytes32 digest = sha256("public scope");
+        bytes32 locator = keccak256("swarm locator");
+        vm.prank(CLIENT);
+        uint256 id = escrow.createJobWithDocument(100, 7, 1100, 1200, 1300, digest, locator);
+        (address client,,,,,,,,bytes32 terms,) = escrow.jobs(id);
+        require(client == CLIENT && terms == digest && escrow.termsReferences(id) == locator);
+        require(token.balanceOf(CLIENT) == 900 && token.balanceOf(address(escrow)) == 100);
+        vm.expectRevert(); vm.prank(ATTACKER);
+        escrow.createJobWithDocument(100, 7, 1100, 1200, 1300, digest, locator);
+        require(escrow.nextJob() == id && escrow.termsReferences(id) == locator);
+        vm.expectRevert(); vm.prank(CLIENT);
+        escrow.createJobWithDocument(100, 7, 1100, 1200, 1300, digest, bytes32(0));
+    }
     function testStaleRootRejectedBeforeAcceptance() public {
         uint256 id = create(); uint256[9] memory inputs = statement(id);
         escrow.setRoot(44);

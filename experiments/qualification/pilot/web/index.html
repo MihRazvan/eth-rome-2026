@@ -53,13 +53,58 @@
         <aside>
           <section class="disclosure">
             <p class="eyebrow">COMMISSION A REVIEW</p>
-            <h2>Fund a clear obligation.</h2>
+            <h2>Commission a review.</h2>
             <p class="fine">
-              Class 7 · 250 qUSD · one hour to accept, two to submit, three for
-              client review. qUSD is a freely minted test token with no value.
+              Choose the scope and reward before funding. This deployment trusts
+              one test assessment issuer, class 7. Test tokens have no value.
             </p>
+            <label
+              >Task title<input
+                id="task-title"
+                maxlength="100"
+                value="Review withdrawal authorization"
+            /></label>
+            <label
+              >Public scope and acceptance criteria<textarea
+                id="task-scope"
+                maxlength="4000"
+                rows="5"
+              >
+Review the public withdrawal authorization flow. Identify permission bypasses, cite the affected functions, and include a reproducible test for each finding. Do not include secrets or private repository access.</textarea>
+            </label>
+            <label
+              >Reward<input id="task-reward" inputmode="decimal" value="250"
+            /></label>
+            <label
+              >Accept within (minutes)<input
+                id="accept-minutes"
+                type="number"
+                min="2"
+                max="10080"
+                value="60"
+            /></label>
+            <label
+              >Time to deliver after acceptance window (minutes)<input
+                id="submit-minutes"
+                type="number"
+                min="2"
+                max="10080"
+                value="60"
+            /></label>
+            <label
+              >Client review window (minutes)<input
+                id="review-minutes"
+                type="number"
+                min="2"
+                max="10080"
+                value="60"
+            /></label>
+            <label class="fine"
+              ><input id="scope-public" type="checkbox" /> This scope is safe to
+              publish. Only the completed report is encrypted.</label
+            >
             <button id="mint" disabled class="quiet">Get 1,000 test qUSD</button
-            ><button id="create" disabled>Fund 250 qUSD assignment</button>
+            ><button id="create" disabled>Publish scope & fund review</button>
             <p class="fine">
               The client approves completed work or disputes it before the
               review deadline. A timely submission can claim payment after that

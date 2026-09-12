@@ -52,6 +52,7 @@ contract QualificationEscrow is ReentrancyGuard {
     mapping(uint256 => Job) public jobs;
     mapping(uint256 => bool) public consumedNullifiers;
     mapping(uint256 => bytes32) public documentDigests;
+    mapping(uint256 => bytes32) public termsReferences;
 
     error Unauthorized();
     error InvalidTerms();
@@ -62,6 +63,7 @@ contract QualificationEscrow is ReentrancyGuard {
 
     event RootUpdated(uint256 indexed epoch, uint256 root);
     event JobFunded(uint256 indexed job, address indexed client, uint256 amount, uint256 qualificationClass);
+    event TermsCommitted(uint256 indexed job, bytes32 contentRef, bytes32 sha256Digest);
     event Accepted(uint256 indexed job, address indexed worker, uint256 indexed nullifier, uint256 epoch);
     event Submitted(uint256 indexed job, bytes32 deliverable);
     event DocumentCommitted(uint256 indexed job, bytes32 contentRef, bytes32 sha256Digest);
@@ -113,6 +115,24 @@ contract QualificationEscrow is ReentrancyGuard {
         uint64 reviewBefore,
         bytes32 terms
     ) external nonReentrant returns (uint256 id) {
+        return _createJob(amount, qualificationClass, acceptBefore, submitBefore, reviewBefore, terms);
+    }
+
+    /// @notice Fund immutable public scope; its SHA-256 digest is the job's terms commitment.
+    function createJobWithDocument(
+        uint256 amount, uint256 qualificationClass, uint64 acceptBefore,
+        uint64 submitBefore, uint64 reviewBefore, bytes32 terms, bytes32 contentRef
+    ) external nonReentrant returns (uint256 id) {
+        if (contentRef == bytes32(0)) revert InvalidTerms();
+        id = _createJob(amount, qualificationClass, acceptBefore, submitBefore, reviewBefore, terms);
+        termsReferences[id] = contentRef;
+        emit TermsCommitted(id, contentRef, terms);
+    }
+
+    function _createJob(
+        uint256 amount, uint256 qualificationClass, uint64 acceptBefore,
+        uint64 submitBefore, uint64 reviewBefore, bytes32 terms
+    ) internal returns (uint256 id) {
         if (
             amount == 0 || qualificationClass == 0 || qualificationClass > type(uint32).max || terms == bytes32(0)
                 || block.timestamp >= acceptBefore || acceptBefore >= submitBefore || submitBefore >= reviewBefore

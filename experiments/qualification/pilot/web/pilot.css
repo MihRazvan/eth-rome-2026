@@ -83,3 +83,28 @@ header p {
     font-size: 12px;
   }
 }
+.disclosure label {
+  display: block;
+  margin: 14px 0;
+  font-size: 13px;
+}
+.disclosure input:not([type="checkbox"]),
+.disclosure textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px;
+  font: inherit;
+  border: 1px solid #b5c1ac;
+  background: #fffef9;
+  color: #163c33;
+}
+.disclosure textarea {
+  resize: vertical;
+}
+.scope {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
