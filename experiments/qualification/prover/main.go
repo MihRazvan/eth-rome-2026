@@ -216,6 +216,8 @@ func run(args []string) error {
 	f := flag.NewFlagSet(args[0], flag.ContinueOnError)
 	out := f.String("out", "", "output JSON path")
 	switch args[0] {
+	case "validate-public":
+		return validatePublic(args[1:], os.Stdout)
 	case "registry":
 		return issuerRegistry(args[1:])
 	case "setup":
