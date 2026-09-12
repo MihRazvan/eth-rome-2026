@@ -30,7 +30,7 @@ export async function setView(view: string) {
         ? [
             "Your workspace.",
             "Your keys.",
-            "Connect your wallet and report storage. Your private keys stay on your device.",
+            "Connect your wallet and enable private reports. Your private keys stay on your device.",
           ]
         : reviewer
           ? [
