@@ -15,6 +15,7 @@ import {
 import { beeBytes } from "../transport/bytes.ts";
 import { uploadMessage } from "./upload-message.ts";
 import { encodeTerms, matchTerms, termsUploadMessage } from "./terms.ts";
+import { createSwarmStorage } from "./swarm-id.ts";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const local = resolve(
   root,
@@ -49,13 +50,51 @@ for (const address of [
 ])
   if (!(await chain.getCode({ address })))
     throw Error("Configured contract has no code; deploy explicitly");
-const store = beeBytes({
-  ...config.swarm,
-  downloadUrl: config.swarm.downloadUrl ?? config.swarm.retrievalUrl,
-  environment:
-    config.swarm.environment ??
-    (config.environment === "local-pilot" ? "local-bee" : "public-swarm"),
+if (
+  (config.chainId === 43113 &&
+    (config.environment !== "fuji-testnet" ||
+      config.storageMode !== "swarm-id")) ||
+  (config.chainId === 31338 && config.environment !== "local-pilot")
+)
+  throw Error(
+    "Network, environment and storage mode must describe the same deployment",
+  );
+if (![31338, 43113].includes(config.chainId))
+  throw Error("Unsupported settlement network");
+if (
+  config.chainId === 43113 &&
+  config.token.toLowerCase() !== "0x5425890298aed601595a70ab815c96711a31bc65"
+)
+  throw Error("Fuji mode requires canonical Circle test USDC");
+for (const name of ["token", "verifier", "issuer", "arbitrator"]) {
+  const actual = await chain.readContract({
+    address: config.escrow,
+    abi: abi.QualificationEscrow,
+    functionName: name,
+  });
+  if (actual.toLowerCase() !== config[name]?.toLowerCase())
+    throw Error(`Configured ${name} differs from escrow authority`);
+}
+const decimals = await chain.readContract({
+  address: config.token,
+  abi: abi.DemoUSD,
+  functionName: "decimals",
 });
+if (decimals !== 6)
+  throw Error("This payment interface requires six-decimal tokens");
+const retrievalUrl = config.swarm.retrievalUrl ?? config.swarm.downloadUrl;
+const store =
+  config.storageMode === "swarm-id"
+    ? createSwarmStorage({
+        gatewayUrl: retrievalUrl,
+      })
+    : beeBytes({
+        ...config.swarm,
+        downloadUrl: retrievalUrl,
+        environment:
+          config.swarm.environment ??
+          (config.environment === "local-pilot" ? "local-bee" : "public-swarm"),
+      });
 const out = resolve(local, "web");
 await build({
   configFile: false,
@@ -67,7 +106,19 @@ await build({
 const uploads = new Map();
 const locks = new Set();
 const uploadCounts = new Map();
-const origin = `http://127.0.0.1:${port}`;
+const origin =
+  process.env.QUALIFICATION_PUBLIC_ORIGIN ?? `http://127.0.0.1:${port}`;
+const originURL = new URL(origin);
+if (
+  process.env.QUALIFICATION_PUBLIC_ORIGIN &&
+  (originURL.protocol !== "https:" ||
+    originURL.origin !== origin ||
+    config.chainId !== 43113 ||
+    config.storageMode !== "swarm-id")
+)
+  throw Error(
+    "Public reverse-proxy hosting requires an exact HTTPS origin, Fuji and browser Swarm ID uploads",
+  );
 const termsQuota = new Map();
 const stringify = (v) =>
   JSON.stringify(v, (_, x) => (typeof x === "bigint" ? String(x) : x));
@@ -77,20 +128,21 @@ const readJob = (id) =>
     abi: abi.QualificationEscrow,
     functionName: "jobs",
     args: [BigInt(id)],
+    blockTag: config.chainId === 43113 ? "finalized" : "latest",
   });
 const server = http.createServer(async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ${new URL(config.rpcUrl).origin}; img-src 'self'; frame-ancestors 'none'`,
+    `default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ${new URL(config.rpcUrl).origin} ${new URL(config.arkiv?.rpcUrl ?? "https://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} ${new URL(config.arkiv?.wsUrl ?? "wss://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} https://gateway.ethswarm.org https://swarm-id.snaha.net ${new URL(retrievalUrl).origin}; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'`,
   );
   const send = (status, data) => {
     res.writeHead(status, { "Content-Type": "application/json" });
     res.end(stringify(data));
   };
-  if (req.headers.host !== `127.0.0.1:${port}`)
-    return send(403, { error: "Use the exact local pilot URL" });
+  if (req.headers.host !== originURL.host)
+    return send(403, { error: "Use the configured application URL" });
   try {
     const url = new URL(req.url, origin);
     if (req.method === "GET" && url.pathname === "/api/config")
@@ -108,12 +160,24 @@ const server = http.createServer(async (req, res) => {
         arbitrator: config.arbitrator,
         snapshot: config.snapshot,
         storageMode: config.storageMode ?? "local-bee",
-        gatewayUrl: config.swarm.downloadUrl ?? config.swarm.retrievalUrl,
+        gatewayUrl: retrievalUrl,
+        deploymentBlock: config.deploymentBlock,
         arkiv: config.arkiv ?? null,
         abi,
       });
     if (req.method === "GET" && url.pathname === "/api/snapshot") {
       const bytes = await store.download(config.snapshot);
+      const snapshot = JSON.parse(new TextDecoder().decode(bytes));
+      const current = await chain.readContract({
+        address: config.escrow,
+        abi: abi.QualificationEscrow,
+        functionName: "revocationRoot",
+      });
+      if (String(snapshot.root) !== String(current))
+        return send(409, {
+          error:
+            "Issuer snapshot publication is stale. The issuer must publish the current whole snapshot.",
+        });
       res.writeHead(200, { "Content-Type": "application/json" });
       return res.end(bytes);
     }
@@ -231,6 +295,10 @@ const server = http.createServer(async (req, res) => {
       });
     }
     if (req.method === "POST" && url.pathname === "/api/upload") {
+      if (config.storageMode === "swarm-id")
+        throw Error(
+          "Upload encrypted reports through your browser's Swarm ID capability",
+        );
       if (
         req.headers.origin !== origin ||
         req.headers["content-type"] !== "application/json"

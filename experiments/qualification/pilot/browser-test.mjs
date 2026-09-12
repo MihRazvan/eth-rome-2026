@@ -287,6 +287,25 @@ try {
   checks.push(
     "Independent client browser decrypts actual Bee retrieval; private key survives reload",
   );
+  const encryptedDownload = customer.page.waitForEvent("download");
+  await click(customer.page, `[data-action="export"][data-id="${id}"]`);
+  const encryptedFile = await encryptedDownload;
+  const exported = JSON.parse(
+    await readFile(await encryptedFile.path(), "utf8"),
+  );
+  assert.equal(exported.jobId, String(id));
+  assert.equal(exported.escrow.toLowerCase(), config.escrow.toLowerCase());
+  assert.equal(JSON.stringify(exported).includes(plaintext), false);
+  const plaintextDownload = customer.page.waitForEvent("download");
+  await click(customer.page, `[data-action="save"][data-id="${id}"]`);
+  assert.equal(
+    await readFile(await (await plaintextDownload).path(), "utf8"),
+    plaintext,
+  );
+  checks.push(
+    "Client exports authenticated ciphertext and explicitly saves decrypted report; exported ciphertext has no plaintext",
+  );
+
   await click(outsider.page, "#refresh");
   await failClick(outsider.page, `[data-action="retrieve"][data-id="${id}"]`);
   assert.equal(
@@ -437,8 +456,12 @@ try {
     args: [BigInt(revokedSnapshot.root)],
   });
   await read.waitForTransactionReceipt({ hash: rootTx });
+  assert.equal(
+    (await fetch(`http://127.0.0.1:${port}/api/snapshot`)).status,
+    409,
+  );
   checks.push(
-    "Durably allocated credential revoked permanently; issuer wallet advances authoritative root",
+    "Durable revocation advances the root; stale published snapshot is rejected rather than served as current",
   );
   await click(customer.page, "#connect");
   await click(customer.page, `[data-action="pay"][data-id="${id}"]`);

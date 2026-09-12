@@ -56,6 +56,7 @@ export function publicTerms(value: unknown): ReviewTerms {
     typeof v.title !== "string" ||
     !v.title.trim() ||
     v.title.length > 100 ||
+    new TextEncoder().encode(v.title).length > 120 ||
     typeof v.scope !== "string" ||
     !v.scope.trim() ||
     v.scope.length > 4000

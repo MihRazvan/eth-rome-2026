@@ -108,3 +108,23 @@ header p {
   overflow-wrap: anywhere;
   line-height: 1.6;
 }
+.discovery,
+.storage {
+  padding: 24px 0;
+  border-top: 1px solid #b5c1ac;
+}
+.listing {
+  border: 1px solid #b5c1ac;
+  padding: 18px;
+  margin: 14px 0;
+  background: #fffef9;
+}
+.discovery input {
+  max-width: 140px;
+  padding: 8px;
+  font: inherit;
+}
+
+#transactions {
+  overflow-wrap: anywhere;
+}

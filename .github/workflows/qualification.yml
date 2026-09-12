@@ -30,9 +30,11 @@ jobs:
       - run: npx tsc --ignoreConfig --noEmit --target ES2022 --module ESNext --moduleResolution bundler --skipLibCheck --types node experiments/qualification/transport/*.ts
       - run: node experiments/qualification/security/concurrency-probe.mjs --fixed
       - run: npx playwright install --with-deps chromium
-      - run: node --import tsx --test experiments/qualification/pilot/keys.test.ts
+      - run: node --import tsx --test experiments/qualification/pilot/keys.test.ts experiments/qualification/pilot/terms.test.ts experiments/qualification/pilot/settlement.test.ts experiments/qualification/pilot/listings.test.ts experiments/qualification/pilot/swarm-id.test.ts
+      - run: node --check experiments/qualification/pilot/deploy-fuji.mjs
+      - run: node --input-type=module -e 'await import("./experiments/qualification/pilot/settlement.ts"); await import("./experiments/qualification/pilot/swarm-id.ts")'
       - run: node experiments/qualification/pilot/security-probe.mjs
       - run: node experiments/qualification/pilot/preflight.mjs --self-test
-      - run: npx tsc --ignoreConfig --noEmit --target ES2022 --module ESNext --moduleResolution bundler --skipLibCheck --types node,vite/client --lib ES2022,DOM experiments/qualification/pilot/keys.ts experiments/qualification/pilot/upload-message.ts experiments/qualification/pilot/web/main.ts
+      - run: npx tsc --ignoreConfig --noEmit --target ES2022 --module ESNext --moduleResolution bundler --skipLibCheck --types node,vite/client --lib ES2022,DOM experiments/qualification/pilot/*.ts experiments/qualification/pilot/web/main.ts
       - run: |
           node --input-type=module -e 'import {build} from "vite"; await build({configFile:false,root:"experiments/qualification/pilot/web",build:{outDir:"/tmp/review-pass-pilot-build",emptyOutDir:true}})'

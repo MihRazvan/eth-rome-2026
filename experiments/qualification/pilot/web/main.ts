@@ -27,6 +27,13 @@ import {
 import { uploadMessage } from "../upload-message";
 import { encodeTerms, matchTerms, termsUploadMessage } from "../terms";
 import { waitForSettlement } from "../settlement";
+import {
+  createArkivListingDriver,
+  createListingBoard,
+  type BoardState,
+  type ListingEntity,
+} from "../listings";
+import { createSwarmStorage, type StorageRef } from "../swarm-id";
 declare global {
   interface Window {
     ethereum?: {
@@ -65,6 +72,56 @@ let account: Address | undefined,
 let jobs: any[] = [];
 const proofs = new Map<string, any>();
 const tokenSymbol = config.chainId === 43113 ? "test USDC" : "qUSD";
+let boardState: BoardState | undefined;
+const selectedJobs = new Set<string>();
+const arkivConfig = config.arkiv ?? {
+  rpcUrl: "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+  wsUrl: "wss://rpc.tiramisu.db-chain.testnet.arkiv.network",
+};
+const publicStorage =
+  config.storageMode === "swarm-id"
+    ? createSwarmStorage({
+        gatewayUrl: config.gatewayUrl,
+        onState: (state) => {
+          $("#storage-status").textContent = state.canUpload
+            ? `Swarm ID connected · ${state.mode} uploads available`
+            : state.connected
+              ? `Connected; upload unavailable (${state.reason ?? "postage required"})`
+              : "Connect Swarm ID to upload. Storage identity is separate from your payment wallet.";
+        },
+      })
+    : undefined;
+async function fetchDocument(id: string) {
+  const job: any = await read("jobs", [BigInt(id)]);
+  const digest: any = await read("documentDigests", [BigInt(id)]);
+  let envelope: any;
+  if (publicStorage) {
+    const bytes = await publicStorage.download({
+      reference: job[9].slice(2),
+      sha256: digest,
+    });
+    envelope = JSON.parse(new TextDecoder().decode(bytes));
+  } else {
+    const response = await fetch(`/api/document?job=${id}`),
+      result = await response.json();
+    if (!response.ok) throw Error(result.error);
+    envelope = result.envelope;
+  }
+  if (
+    sha256(bytesToHex(new TextEncoder().encode(JSON.stringify(envelope)))) !==
+    digest
+  )
+    throw Error("Envelope differs from worker commitment");
+  return { envelope, digest, reference: job[9] };
+}
+function saveFile(name: string, bytes: BlobPart, type: string) {
+  const url = URL.createObjectURL(new Blob([bytes], { type }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 const namespace = () =>
   `review-pass:${config.chainId}:${config.keyRegistry}:${account?.toLowerCase()}`;
 const context = (jobId: string) => ({
@@ -85,7 +142,97 @@ const read = (
     abi: config.abi[target],
     functionName: name,
     args,
+    blockTag: config.chainId === 43113 ? "finalized" : "latest",
   } as any);
+async function verifyListing(entity: ListingEntity) {
+  const a = entity.listing;
+  if (
+    a.settlementChain !== config.chainId ||
+    a.escrow.toLowerCase() !== config.escrow.toLowerCase() ||
+    a.paymentToken.toLowerCase() !== config.token.toLowerCase()
+  )
+    return false;
+  const block = await client.getBlock({
+    blockTag: config.chainId === 43113 ? "finalized" : "latest",
+  });
+  const job: any = await client.readContract({
+    address: config.escrow,
+    abi: config.abi.QualificationEscrow,
+    functionName: "jobs",
+    args: [BigInt(a.jobId)],
+    blockNumber: block.number,
+  });
+  const ref: any = await client.readContract({
+    address: config.escrow,
+    abi: config.abi.QualificationEscrow,
+    functionName: "termsReferences",
+    args: [BigInt(a.jobId)],
+    blockNumber: block.number,
+  });
+  if (
+    job[7] !== 0 ||
+    job[0].toLowerCase() !== a.client ||
+    entity.owner !== a.client ||
+    entity.creator !== a.client ||
+    String(job[2]) !== a.reward ||
+    String(job[3]) !== a.qualificationClass ||
+    Number(job[4]) !== a.acceptBefore ||
+    block.timestamp >= job[4] ||
+    ref.slice(2).toLowerCase() !== a.publicScope.reference ||
+    job[8].toLowerCase() !== a.publicScope.sha256
+  )
+    return false;
+  const response = await fetch(`/api/terms?job=${a.jobId}`);
+  if (!response.ok) throw Error("Scope verification unavailable");
+  const body = await response.json(),
+    encoded = encodeTerms(body.terms);
+  return (
+    encoded.digest === job[8] &&
+    encoded.terms.title === a.title &&
+    matchTerms(encoded.terms, config.chainId, config.escrow, config.token, job)
+  );
+}
+function renderBoard() {
+  const state = boardState;
+  $("#discovery-status").textContent = state
+    ? `Arkiv ${state.status}${state.head === null ? "" : ` · observed block ${state.head}`}${state.reason ? ` · ${state.reason}` : ""}`
+    : "Connecting to public opportunity listings…";
+  $("#opportunities").innerHTML = state?.listings.length
+    ? state.listings
+        .map(
+          (e) =>
+            `<article class="listing"><h3>${esc(e.listing.title)}</h3><p>${formatUnits(BigInt(e.listing.reward), 6)} ${tokenSymbol} · qualification class ${esc(e.listing.qualificationClass)}</p><p class="fine">Discovery lease ends at Arkiv block ${e.expiresAt}. Funding follows its own deadlines.</p><button data-view-job="${e.listing.jobId}" ${state.status !== "live" ? "disabled" : ""}>View verified scope</button></article>`,
+        )
+        .join("")
+    : `<p class="fine">${state?.status === "live" ? "No matching live listings. A funded review appears here after its client publishes a discovery lease." : "Discovery is not yet available. Existing funded work remains accessible below."}</p>`;
+  if (state?.removed.some((x) => x.reason === "native-expired"))
+    $("#discovery-change").textContent =
+      "A discovery lease is no longer active. Its escrow and accepted work remain on the settlement chain.";
+}
+const board = createListingBoard({
+  driver: createArkivListingDriver({
+    namespace: "review-pass",
+    ...arkivConfig,
+  }),
+  verify: verifyListing,
+  onState: (state) => {
+    boardState = state;
+    renderBoard();
+  },
+});
+async function startBoard() {
+  const raw = ($("#minimum-reward") as HTMLInputElement).value;
+  if (!/^\d{1,9}(\.\d{1,6})?$/.test(raw)) throw Error("Invalid minimum reward");
+  await board.start({
+    namespace: "review-pass",
+    taskClass: "technical-review",
+    qualificationClass: "7",
+    settlementChain: config.chainId,
+    escrow: config.escrow,
+    paymentToken: config.token,
+    minimumReward: String(parseUnits(raw, 6)),
+  });
+}
 const button = (action: string, id: string, label: string) =>
   `<button data-action="${action}" data-id="${id}"${!account || busy ? " disabled" : ""}>${label}</button>`;
 $("#environment").textContent =
@@ -121,6 +268,21 @@ async function tx(
     account,
     chain: network,
   });
+  const row = document.createElement("li");
+  const receiptText = (hash: string, state: string) => {
+    row.replaceChildren();
+    row.append(document.createTextNode(`${name}: ${state} · `));
+    if (config.chainId === 43113) {
+      const link = document.createElement("a");
+      link.href = `https://testnet.snowtrace.io/tx/${hash}`;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = hash;
+      row.append(link);
+    } else row.append(document.createTextNode(hash));
+  };
+  receiptText(hash, "sent, settlement unconfirmed");
+  $("#transactions").prepend(row);
   $("#notice").textContent =
     "Transaction sent. Waiting for confirmed settlement…";
   const receipt = await waitForSettlement(client, {
@@ -128,15 +290,70 @@ async function tx(
     chainId: config.chainId,
   });
   if (receipt.status !== "success") throw Error("Transaction reverted");
-  return hash;
+  receiptText(
+    receipt.transactionHash,
+    config.chainId === 43113
+      ? "finalized on Fuji"
+      : "confirmed on local test chain",
+  );
+  return receipt.transactionHash;
 }
 async function refresh() {
   const session = generation,
     owner = account,
     currentDevice = device;
-  const count = Number(await read("nextJob"));
+  const ids = new Set<string>(selectedJobs);
+  if (config.environment === "local-pilot") {
+    const count = Number(await read("nextJob"));
+    if (count > 1000)
+      throw Error(
+        "Local rehearsal has too many jobs; use a fresh local deployment",
+      );
+    for (let i = 1; i <= count; i++) ids.add(String(i));
+  } else if (owner) {
+    if (!/^[0-9]+$/.test(String(config.deploymentBlock)))
+      throw Error(
+        "Deployment start block missing; cannot recover personal assignments",
+      );
+    const head = await client.getBlock({ blockTag: "finalized" });
+    const start = BigInt(config.deploymentBlock);
+    if (head.number - start > 1_000_000n)
+      throw Error(
+        "Deployment history exceeds this pilot's recovery window; use an indexed account history service",
+      );
+    for (let from = start; from <= head.number; from += 2000n) {
+      const to = from + 1999n > head.number ? head.number : from + 1999n;
+      const results = await Promise.all([
+        client.getContractEvents({
+          address: config.escrow,
+          abi: config.abi.QualificationEscrow,
+          eventName: "JobFunded",
+          args: { client: owner },
+          fromBlock: from,
+          toBlock: to,
+          strict: true,
+        }),
+        client.getContractEvents({
+          address: config.escrow,
+          abi: config.abi.QualificationEscrow,
+          eventName: "Accepted",
+          args: { worker: owner },
+          fromBlock: from,
+          toBlock: to,
+          strict: true,
+        }),
+      ]);
+      if (session !== generation) return;
+      for (const logs of results)
+        for (const log of logs) ids.add(String((log as any).args.job));
+      if (ids.size > 1000)
+        throw Error(
+          "Account history exceeds this pilot's 1000-assignment view limit",
+        );
+    }
+  }
   const nextJobs: any[] = [];
-  for (let i = 1; i <= count; i++) {
+  for (const i of [...ids].sort((a, b) => (BigInt(a) < BigInt(b) ? -1 : 1))) {
     const j: any = await read("jobs", [BigInt(i)]);
     let scope: any;
     let scopeError = "";
@@ -212,14 +429,26 @@ function render() {
     : "Connect to begin";
   for (const id of ["register", "rotate", "revoke-key", "mint", "create"])
     ($("#" + id) as HTMLButtonElement).disabled = !account || busy;
-  ($("#mint") as HTMLButtonElement).hidden = !config.testOnly;
-  $("#jobs").innerHTML = jobs.length
-    ? [...jobs]
+  ($("#mint") as HTMLButtonElement).hidden =
+    !config.testOnly || config.chainId !== 31338;
+  const visibleJobs = jobs.filter(
+    (j) =>
+      config.environment === "local-pilot" ||
+      j.client.toLowerCase() === account?.toLowerCase() ||
+      j.worker.toLowerCase() === account?.toLowerCase() ||
+      selectedJobs.has(j.id),
+  );
+  $("#jobs").innerHTML = visibleJobs.length
+    ? [...visibleJobs]
         .reverse()
         .map((j) => {
           const isClient = account?.toLowerCase() === j.client.toLowerCase(),
             isWorker = account?.toLowerCase() === j.worker.toLowerCase();
           let actions = "";
+          const publish =
+            j.status === "Open" && isClient && j.scope && !j.scopeError
+              ? button("publish", j.id, "Publish discovery lease on Arkiv")
+              : "";
           if (j.status === "Open" && !j.scopeError)
             actions = `<details><summary>Generate your qualification proof locally</summary><p class="fine">Download the whole issuer snapshot. Reconstruct its root and path with your local credential; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}</details><label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label>${proofs.has(j.id) ? button("accept", j.id, "Verify proof & accept") : ""}`;
           if (j.status === "Accepted" && isWorker)
@@ -227,6 +456,10 @@ function render() {
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
             actions =
               button("retrieve", j.id, "Retrieve & decrypt review") +
+              button("export", j.id, "Export encrypted review") +
+              (isClient || isWorker
+                ? button("save", j.id, "Save decrypted report")
+                : "") +
               `<label class="fine">Device key<select data-history="${j.id}"><option value="">Current device key</option></select></label>`;
           if (j.status === "Submitted" && isClient)
             actions +=
@@ -245,7 +478,7 @@ function render() {
             account?.toLowerCase() === config.arbitrator.toLowerCase()
           )
             actions += button("resolve", j.id, "Arbitrate 50 / 50 split");
-          return `<article class="ticket"><div class="ticket-head"><span>ASSIGNMENT ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body"><h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : "FUNDED"}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p><div class="actions">${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
+          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>ASSIGNMENT ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body"><h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
         })
         .join("")
     : '<article class="ticket"><div class="ticket-body"><h3>No assignments yet.</h3><p class="terms">Connect a client wallet, register its document key and fund the first review.</p></div></article>';
@@ -344,6 +577,74 @@ async function register() {
 async function action(name: string, id: string) {
   const j = jobs.find((v) => v.id === id);
   switch (name) {
+    case "publish": {
+      if (!j.scope || j.client.toLowerCase() !== account?.toLowerCase())
+        throw Error("Only the funding client can publish verified scope");
+      const owner = account!;
+      const listing = {
+        schema: 2 as const,
+        taskClass: "technical-review" as const,
+        qualificationClass: String(j.class),
+        settlementChain: config.chainId,
+        escrow: config.escrow,
+        jobId: id,
+        client: owner.toLowerCase() as Hex,
+        paymentToken: config.token,
+        reward: String(j.amount),
+        acceptBefore: Number(j.acceptBefore),
+        title: j.scope.title,
+        publicScope: {
+          reference: j.termsReference.slice(2),
+          sha256: j.termsDigest,
+        },
+      };
+      const leaseBlocks = Number(
+        ($("#lease-blocks") as HTMLInputElement).value,
+      );
+      if (
+        !Number.isInteger(leaseBlocks) ||
+        leaseBlocks < 3 ||
+        leaseBlocks > 43200
+      )
+        throw Error("Choose a discovery lease between3and43200blocks");
+      const entity = {
+        key: `0x${"1".repeat(64)}` as Hex,
+        owner: listing.client,
+        creator: listing.client,
+        expiresAt: 1n,
+        readonly: true,
+        permissionlessExtension: false,
+        listing,
+      };
+      if (!(await verifyListing(entity)))
+        throw Error(
+          "Refresh the assignment: its funding, scope or acceptance state changed",
+        );
+      try {
+        await window.ethereum!.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: `0x${(7738577).toString(16)}` }],
+        });
+        const driver = createArkivListingDriver({
+          namespace: "review-pass",
+          ...arkivConfig,
+          account: { address: owner, type: "json-rpc" },
+          walletTransport: custom(window.ethereum!),
+        });
+        const result = await driver.publish(listing, leaseBlocks);
+        $("#discovery-change").textContent =
+          `Listing published: ${result.entityKey}; expires at Arkiv block ${result.expiresAt}. Reconnect your settlement wallet to continue.`;
+        await window.ethereum!.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: `0x${config.chainId.toString(16)}` }],
+        });
+      } catch (error) {
+        $("#discovery-change").textContent =
+          `Publication was not confirmed: ${error instanceof Error ? error.message.slice(0, 160) : "wallet or network failure"}. Check your Arkiv wallet activity before retrying, then reconnect the settlement wallet.`;
+        return "preserve";
+      }
+      return "preserve";
+    }
     case "prepare": {
       const ctx = await read("contextFor", [BigInt(id)]);
       $(`#command-${id}`).textContent =
@@ -361,8 +662,10 @@ async function action(name: string, id: string) {
       break;
     }
     case "submit": {
+      const session = generation,
+        worker = account!;
       const bindings = await Promise.all([
-        keyBinding(account!),
+        keyBinding(worker),
         keyBinding(j.client),
       ]);
       if (
@@ -379,37 +682,70 @@ async function action(name: string, id: string) {
         bindings,
         { now: Number((await client.getBlock()).timestamp) },
       );
+      const ensureBindings = async () => {
+        const current = await Promise.all([
+          keyBinding(worker),
+          keyBinding(j.client),
+        ]);
+        const now = Number((await client.getBlock()).timestamp);
+        if (generation !== session || account !== worker)
+          throw Error("Wallet changed during delivery");
+        if (
+          current.some(
+            (binding, i) =>
+              binding.publicKey.toLowerCase() !==
+                bindings[i].publicKey.toLowerCase() ||
+              binding.version !== bindings[i].version ||
+              binding.expiresAt !== bindings[i].expiresAt ||
+              binding.expiresAt <= now,
+          )
+        )
+          throw Error(
+            "A recipient key changed or expired. Encrypt the report again with current keys.",
+          );
+      };
       const digest = sha256(
         bytesToHex(new TextEncoder().encode(JSON.stringify(envelope))),
       );
-      const expiresAt = Number((await client.getBlock()).timestamp) + 240;
-      const signature = await wallet.signMessage({
-        account,
-        message: uploadMessage(
-          config.chainId,
-          config.escrow,
-          id,
-          digest,
-          expiresAt,
-        ),
-      });
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobId: id, envelope, expiresAt, signature }),
-      });
-      const ref = await response.json();
-      if (!response.ok) throw Error(ref.error);
+      await ensureBindings();
+      if (generation !== session) throw Error("Wallet changed before upload");
+      let ref: StorageRef;
+      if (publicStorage) {
+        ref = await publicStorage.upload(
+          new TextEncoder().encode(JSON.stringify(envelope)),
+        );
+      } else {
+        const expiresAt = Number((await client.getBlock()).timestamp) + 240;
+        const signature = await wallet.signMessage({
+          account,
+          message: uploadMessage(
+            config.chainId,
+            config.escrow,
+            id,
+            digest,
+            expiresAt,
+          ),
+        });
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ jobId: id, envelope, expiresAt, signature }),
+        });
+        const body = await response.json();
+        if (!response.ok) throw Error(body.error);
+        ref = body;
+      }
+      if (generation !== session)
+        throw Error("Wallet changed; uploaded review was not submitted");
       if (ref.sha256 !== digest)
         throw Error("Storage response digest mismatch");
+      await ensureBindings();
       await tx("submitDocument", [BigInt(id), `0x${ref.reference}`, digest]);
       break;
     }
     case "retrieve": {
       const session = generation;
-      const response = await fetch(`/api/document?job=${id}`);
-      const result = await response.json();
-      if (!response.ok) throw Error(result.error);
+      const result = await fetchDocument(id);
       const digest = await read("documentDigests", [BigInt(id)]);
       if (
         sha256(
@@ -433,6 +769,37 @@ async function action(name: string, id: string) {
       );
       if (session !== generation) throw Error("Wallet session changed");
       $(`#document-${id}`).textContent = new TextDecoder().decode(plaintext);
+      return "preserve";
+    }
+    case "export": {
+      const result = await fetchDocument(id);
+      saveFile(
+        `review-pass-${id}-encrypted.json`,
+        JSON.stringify(
+          {
+            format: "review-pass-export",
+            version: 1,
+            chainId: config.chainId,
+            escrow: config.escrow,
+            jobId: id,
+            ...result,
+          },
+          null,
+          2,
+        ),
+        "application/json",
+      );
+      return "preserve";
+    }
+    case "save": {
+      if (
+        account?.toLowerCase() !== j.client.toLowerCase() &&
+        account?.toLowerCase() !== j.worker.toLowerCase()
+      )
+        throw Error("Only a recipient can save a decrypted report");
+      const text = $(`#document-${id}`).textContent;
+      if (!text) throw Error("Retrieve and decrypt this report first");
+      saveFile(`review-pass-${id}-PRIVATE.txt`, text, "text/plain");
       return "preserve";
     }
     case "pay":
@@ -476,12 +843,50 @@ async function run(fn: () => Promise<any>) {
       .querySelectorAll<HTMLButtonElement>("button")
       .forEach(
         (b) =>
-          (b.disabled = !account && !["connect", "refresh"].includes(b.id)),
+          (b.disabled = b.dataset.viewJob
+            ? boardState?.status !== "live"
+            : !account &&
+              ![
+                "connect",
+                "refresh",
+                "filter-board",
+                "refresh-board",
+                "connect-storage",
+              ].includes(b.id)),
       );
   }
 }
 $("#connect").onclick = () => run(connect);
 $("#refresh").onclick = () => run(refresh);
+$("#filter-board").onclick = () => run(startBoard);
+$("#refresh-board").onclick = () => run(() => board.refresh());
+$("#opportunities").onclick = (e) => {
+  const b = (e.target as Element).closest<HTMLButtonElement>("[data-view-job]");
+  if (b && boardState?.status === "live")
+    run(async () => {
+      selectedJobs.add(b.dataset.viewJob!);
+      await refresh();
+      document
+        .getElementById(`job-${b.dataset.viewJob}`)
+        ?.scrollIntoView({ block: "start" });
+    });
+};
+void startBoard().catch(() => {
+  $("#discovery-status").textContent = "Arkiv discovery unavailable";
+});
+window.addEventListener("pagehide", () => board.stop());
+if (publicStorage) {
+  $("#connect-storage").onclick = () => run(() => publicStorage.connect());
+  void publicStorage.initialize().catch(() => {
+    $("#storage-status").textContent =
+      "Swarm ID initialization failed. Reload to retry; no storage fallback is used.";
+  });
+  window.addEventListener("pagehide", () => publicStorage.destroy());
+} else {
+  $("#connect-storage").hidden = true;
+  $("#storage-status").textContent =
+    "Local rehearsal: real uploads and independent retrieval use the local Bee nodes. Public deployments use Swarm ID.";
+}
 $("#register").onclick = () => run(register);
 $("#rotate").onclick = () =>
   run(async () => {
@@ -497,7 +902,10 @@ $("#revoke-key").onclick = () =>
   });
 $("#mint").onclick = () =>
   run(async () => {
-    if (!config.testOnly) throw Error("Test mint is disabled");
+    if (!config.testOnly || config.chainId !== 31338)
+      throw Error(
+        "Test mint is disabled; obtain canonical Fuji test USDC from Circle's faucet",
+      );
     await tx("mint", [account, 1_000_000_000n], "DemoUSD", config.token);
   });
 $("#create").onclick = () =>
@@ -542,19 +950,27 @@ $("#create").onclick = () =>
       policy: "approval-timeout-arbitration-v1",
     });
     const expiresAt = Number(now) + 240;
-    const signature = await wallet.signMessage({
-      account: owner,
-      message: termsUploadMessage(encoded.terms, encoded.digest, expiresAt),
-    });
+    let content: StorageRef;
     if (generation !== session || account !== owner)
-      throw Error("Wallet changed; task was not funded");
-    const response = await fetch("/api/terms", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ terms: encoded.terms, signature, expiresAt }),
-    });
-    const content = await response.json();
-    if (!response.ok) throw Error(content.error || "Scope upload failed");
+      throw Error("Wallet changed before scope upload");
+    if (publicStorage) {
+      content = await publicStorage.upload(encoded.bytes);
+    } else {
+      const signature = await wallet.signMessage({
+        account: owner,
+        message: termsUploadMessage(encoded.terms, encoded.digest, expiresAt),
+      });
+      if (generation !== session || account !== owner)
+        throw Error("Wallet changed; task was not funded");
+      const response = await fetch("/api/terms", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ terms: encoded.terms, signature, expiresAt }),
+      });
+      const body = await response.json();
+      if (!response.ok) throw Error(body.error || "Scope upload failed");
+      content = body;
+    }
     if (
       !/^[0-9a-f]{64}$/i.test(content.reference) ||
       content.sha256 !== encoded.digest

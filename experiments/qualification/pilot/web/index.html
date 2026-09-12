@@ -21,11 +21,28 @@
         <h1>A qualified review.<br /><em>A payment you control.</em></h1>
         <p>
           Clients fund assignments. Reviewers prove current qualification
-          locally.<br />Your wallet approves every transaction; documents are
+          locally.<br />Your wallet approves every transaction; reports are
           encrypted for their recipients.
         </p>
       </section>
       <div id="notice" role="status" aria-live="polite"></div>
+      <section class="discovery">
+        <div class="section-top">
+          <h2>Opportunity board</h2>
+          <button id="refresh-board" class="quiet">Recheck listings</button>
+        </div>
+        <p id="discovery-status" class="fine" role="status">
+          Connecting to Arkiv…
+        </p>
+        <div class="actions">
+          <label
+            >Minimum reward
+            <input id="minimum-reward" inputmode="decimal" value="0" /></label
+          ><button id="filter-board">Apply filter</button>
+        </div>
+        <p id="discovery-change" class="fine" role="status"></p>
+        <div id="opportunities"></div>
+      </section>
       <section class="device">
         <div>
           <p class="eyebrow">THIS WALLET / THIS DEVICE</p>
@@ -42,10 +59,16 @@
           </button>
         </div>
       </section>
+      <section class="storage">
+        <p id="storage-status" class="fine" role="status">
+          Checking document storage…
+        </p>
+        <button id="connect-storage" class="quiet">Connect Swarm ID</button>
+      </section>
       <div class="workspace">
         <section>
           <div class="section-top">
-            <h2>Assignments</h2>
+            <h2>Funded work</h2>
             <button id="refresh" class="quiet">Refresh chain state</button>
           </div>
           <div id="jobs"></div>
@@ -103,6 +126,19 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
               ><input id="scope-public" type="checkbox" /> This scope is safe to
               publish. Only the completed report is encrypted.</label
             >
+            <label
+              >Discovery lease (Arkiv blocks)<input
+                id="lease-blocks"
+                type="number"
+                min="3"
+                max="43200"
+                value="30"
+            /></label>
+            <p class="fine">
+              After funding, publish a lease from the same client wallet on
+              Arkiv. A 30-block lease lasts about a minute. Expiry removes the
+              listing; it does not cancel the escrow.
+            </p>
             <button id="mint" disabled class="quiet">Get 1,000 test qUSD</button
             ><button id="create" disabled>Publish scope & fund review</button>
             <p class="fine">
@@ -128,6 +164,14 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
           </section>
         </aside>
       </div>
+      <details class="boundary">
+        <summary>Wallet transaction receipts</summary>
+        <ol id="transactions"></ol>
+        <p class="fine">
+          A sent transaction may still settle after a timeout. Check its hash
+          before retrying.
+        </p>
+      </details>
       <section class="boundary">
         <h2>A pilot with explicit boundaries.</h2>
         <p>
