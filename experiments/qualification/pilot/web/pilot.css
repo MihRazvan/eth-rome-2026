@@ -1594,3 +1594,8 @@ body[data-view="demo"] #connect,
 body[data-view="demo"] #environment {
   display: none;
 }
+
+#swarm-connect-widget {
+  min-height: 48px;
+  position: relative;
+}
