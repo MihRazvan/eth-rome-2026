@@ -1,0 +1,40 @@
+{
+  "observedAt": "2026-09-12T07:23:44.733Z",
+  "syntheticTransportProbe": true,
+  "proverCommitmentChecked": false,
+  "fixtureFallback": false,
+  "arkivRead": {
+    "status": "passed",
+    "chainId": 7738577,
+    "block": "344735",
+    "firstPageCount": 0,
+    "morePages": false
+  },
+  "arkivSocket": {
+    "status": "observed",
+    "elapsedMs": 10003,
+    "notifications": 9,
+    "errors": 0,
+    "transport": "webSocket",
+    "fromBlock": false
+  },
+  "fuji": {
+    "chainId": 43113,
+    "block": "58330100",
+    "deployment": "blocked",
+    "reason": "Project funded Fuji signer not configured"
+  },
+  "faucetGate": {
+    "anonymousHttpStatus": 401,
+    "claimAttempted": false
+  },
+  "swarmRoundTrip": {
+    "status": "blocked",
+    "reason": "Explicit write mode plus configured upload/retrieval endpoint and funded postage required; event gift flow needs owner authentication/redemption"
+  },
+  "arkivNativeExpiry": {
+    "status": "blocked",
+    "reason": "Funded Arkiv signer and genuine stored snapshot required; no create/expiry write attempted"
+  },
+  "elapsedMs": 11032
+}

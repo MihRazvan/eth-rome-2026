@@ -1,0 +1,137 @@
+{
+  "observedAt": "2026-09-12T07:29:51.132268+00:00",
+  "environment": "local-bee",
+  "factoryVersion": "1.1.2",
+  "beeHealth": {
+    "status": "ok",
+    "version": "2.8.2-7e703f4-dirty",
+    "apiVersion": "8.1.1"
+  },
+  "publicNetwork": false,
+  "containers": [
+    {
+      "name": "bee-factory-anvil",
+      "image": "ethersphere/bee-factory-blockchain:latest",
+      "imageDigests": [
+        "ethersphere/bee-factory-blockchain@sha256:97c422eed8abf32d82339da5814da418fec609b6abec713cd63d264785c6456d"
+      ],
+      "hostBindings": {
+        "28545/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "28545"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bee-factory-bee-0",
+      "image": "ethersphere/bee-factory-queen:latest",
+      "imageDigests": [
+        "ethersphere/bee-factory-queen@sha256:426f8e97fd55fdc72a1e54465fd371c573a991ed3600eb3c7eece01824646956"
+      ],
+      "hostBindings": {
+        "1633/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1633"
+          }
+        ],
+        "1634/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1634"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bee-factory-bee-1",
+      "image": "ethersphere/bee-factory-worker-1:latest",
+      "imageDigests": [
+        "ethersphere/bee-factory-worker-1@sha256:59920a20c0034d6ae972b789c4db8da1db2f1c79971c55f3e83db99d344ed139"
+      ],
+      "hostBindings": {
+        "1635/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1635"
+          }
+        ],
+        "1636/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1636"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bee-factory-bee-2",
+      "image": "ethersphere/bee-factory-worker-2:latest",
+      "imageDigests": [
+        "ethersphere/bee-factory-worker-2@sha256:968b7147d8f6908b96aef09a3241c12b616175322f2e79b4fc4dbc5750a9585b"
+      ],
+      "hostBindings": {
+        "1637/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1637"
+          }
+        ],
+        "1638/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1638"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bee-factory-bee-3",
+      "image": "ethersphere/bee-factory-worker-3:latest",
+      "imageDigests": [
+        "ethersphere/bee-factory-worker-3@sha256:567bc4d99bb8eeae977ab8f906a86d24c1466f0228d48f1cd643a53cc76b7668"
+      ],
+      "hostBindings": {
+        "1639/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1639"
+          }
+        ],
+        "1640/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1640"
+          }
+        ]
+      }
+    },
+    {
+      "name": "bee-factory-bee-4",
+      "image": "ethersphere/bee-factory-worker-4:latest",
+      "imageDigests": [
+        "ethersphere/bee-factory-worker-4@sha256:1ae1980cd986840f408d87ed4b5f8b223d663c9c55a3059e62f09c95f5088fa5"
+      ],
+      "hostBindings": {
+        "1641/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1641"
+          }
+        ],
+        "1642/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "1642"
+          }
+        ]
+      }
+    }
+  ],
+  "localPostage": {
+    "batchID": "21ee87fd0b7c501e355b62a3919457e00b51a6bf49df8cf02c0ce97d1831795c",
+    "txHash": "0xd1f8fb2eec4920c50c1f452ca09d02e6df9db5c676f72d6ecc453088693786fc"
+  }
+}

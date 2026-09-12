@@ -1,0 +1,53 @@
+{
+  "observedAt": "2026-09-12T07:26:50.143Z",
+  "syntheticTransportProbe": true,
+  "proverCommitmentChecked": false,
+  "fixtureFallback": false,
+  "arkivRead": {
+    "status": "passed",
+    "chainId": 7738577,
+    "block": "344828",
+    "firstPageCount": 0,
+    "morePages": false
+  },
+  "arkivSocket": {
+    "status": "observed",
+    "elapsedMs": 10002,
+    "notifications": 10,
+    "errors": 0,
+    "transport": "webSocket",
+    "fromBlock": false
+  },
+  "fuji": {
+    "chainId": 43113,
+    "block": "58330131",
+    "deployment": "blocked",
+    "reason": "Project funded Fuji signer not configured"
+  },
+  "faucetGate": {
+    "anonymousHttpStatus": 401,
+    "claimAttempted": false
+  },
+  "swarmRoundTrip": {
+    "status": "passed",
+    "environment": "local-bee",
+    "publicSnapshot": {
+      "reference": "5a21a2435873502d61a1cf4e6c53e633853e5e93b915ad9c97f9ba2baecd8480",
+      "sha256": "0x2dcaa796f2f0a47bcd06c1f28e25c38f2e0623f88413db996ba44450c5137d42"
+    },
+    "encryptedJob": {
+      "reference": "cdd55abab4f996dc83c5603192540cd7a79df607dfbedcd8611eeb899504ed9f",
+      "sha256": "0x99aee15e050cb98b437ae23958141cc716776e188ba3580f4b37a417978e757c"
+    },
+    "wholeSnapshotBytes": 138,
+    "ciphertextBytes": 213,
+    "privatePlaintextBytes": 49,
+    "keyUploaded": false,
+    "commitmentVerified": false
+  },
+  "arkivNativeExpiry": {
+    "status": "blocked",
+    "reason": "Funded Arkiv signer and genuine stored snapshot required; no create/expiry write attempted"
+  },
+  "elapsedMs": 10881
+}
