@@ -1,0 +1,65 @@
+=== RUN   TestCircuitAdversaries
+    circuit_test.go:40: constraints=26089
+=== RUN   TestCircuitAdversaries/valid_issuer_signature_holder_class_expiry_and_same-index_path
+=== RUN   TestCircuitAdversaries/forged_signature_from_another_signer_under_trusted_key
+=== RUN   TestCircuitAdversaries/wrong_holder_secret_with_recomputed_public_tags
+=== RUN   TestCircuitAdversaries/wrong_required_class
+=== RUN   TestCircuitAdversaries/expired_credential_relative_to_proof_deadline
+=== RUN   TestCircuitAdversaries/revoked_signed_index
+=== RUN   TestCircuitAdversaries/substitute_valid_path_at_different_index_in_current_revoked_root
+=== RUN   TestCircuitAdversaries/substitute_signed_index_together_with_path
+=== RUN   TestCircuitAdversaries/signed_index_overflow
+=== RUN   TestCircuitAdversaries/recipient_mutation_without_new_witness_tag
+=== RUN   TestCircuitAdversaries/context_mutation_without_new_witness_outputs
+=== RUN   TestCircuitAdversaries/nullifier_mutation
+=== RUN   TestCircuitAdversaries/presentation_tag_mutation
+=== RUN   TestCircuitAdversaries/identity_issuer_public_key
+=== RUN   TestCircuitAdversaries/out_of_range_timestamp
+=== RUN   TestCircuitAdversaries/out_of_range_recipient
+--- PASS: TestCircuitAdversaries (0.10s)
+    --- PASS: TestCircuitAdversaries/valid_issuer_signature_holder_class_expiry_and_same-index_path (0.01s)
+    --- PASS: TestCircuitAdversaries/forged_signature_from_another_signer_under_trusted_key (0.01s)
+    --- PASS: TestCircuitAdversaries/wrong_holder_secret_with_recomputed_public_tags (0.00s)
+    --- PASS: TestCircuitAdversaries/wrong_required_class (0.00s)
+    --- PASS: TestCircuitAdversaries/expired_credential_relative_to_proof_deadline (0.00s)
+    --- PASS: TestCircuitAdversaries/revoked_signed_index (0.01s)
+    --- PASS: TestCircuitAdversaries/substitute_valid_path_at_different_index_in_current_revoked_root (0.01s)
+    --- PASS: TestCircuitAdversaries/substitute_signed_index_together_with_path (0.01s)
+    --- PASS: TestCircuitAdversaries/signed_index_overflow (0.00s)
+    --- PASS: TestCircuitAdversaries/recipient_mutation_without_new_witness_tag (0.00s)
+    --- PASS: TestCircuitAdversaries/context_mutation_without_new_witness_outputs (0.00s)
+    --- PASS: TestCircuitAdversaries/nullifier_mutation (0.00s)
+    --- PASS: TestCircuitAdversaries/presentation_tag_mutation (0.00s)
+    --- PASS: TestCircuitAdversaries/identity_issuer_public_key (0.00s)
+    --- PASS: TestCircuitAdversaries/out_of_range_timestamp (0.00s)
+    --- PASS: TestCircuitAdversaries/out_of_range_recipient (0.00s)
+=== RUN   TestRealGroth16AndEveryPublicInputMutation
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/issuerX
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/issuerY
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/root
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/class
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/deadline
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/context
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/recipient
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/nullifier
+=== RUN   TestRealGroth16AndEveryPublicInputMutation/presentationTag
+=== NAME  TestRealGroth16AndEveryPublicInputMutation
+    circuit_test.go:207: proofBytes=256 proveMs=84.570 verifyMs=0.805 heapAllocBytes=27441896 goSysBytes=79911192
+--- PASS: TestRealGroth16AndEveryPublicInputMutation (1.08s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/issuerX (0.00s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/issuerY (0.00s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/root (0.00s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/class (0.00s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/deadline (0.00s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/context (0.00s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/recipient (0.00s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/nullifier (0.00s)
+    --- PASS: TestRealGroth16AndEveryPublicInputMutation/presentationTag (0.00s)
+=== RUN   TestCredentialSerializationExcludesHolderSecret
+--- PASS: TestCredentialSerializationExcludesHolderSecret (0.00s)
+=== RUN   TestSplitEnrollmentAndPublicSnapshotIntegrity
+--- PASS: TestSplitEnrollmentAndPublicSnapshotIntegrity (0.04s)
+=== RUN   TestFieldParserDoesNotReduceOrInterpretDecimalAsOctal
+--- PASS: TestFieldParserDoesNotReduceOrInterpretDecimalAsOctal (0.00s)
+PASS
+ok  	qualification-prover	1.699s

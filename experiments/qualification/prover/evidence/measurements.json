@@ -1,0 +1,101 @@
+{
+  "goVersion": {
+    "command": [
+      "go",
+      "version"
+    ],
+    "exitCode": 0,
+    "wallMs": 53.217
+  },
+  "tests": {
+    "command": [
+      "go",
+      "test",
+      "-count=1",
+      "-v",
+      "./..."
+    ],
+    "exitCode": 0,
+    "wallMs": 2781.995
+  },
+  "build": {
+    "command": [
+      "go",
+      "build",
+      "-o",
+      "qualification-prover",
+      "."
+    ],
+    "exitCode": 0,
+    "wallMs": 520.599
+  },
+  "proveIncludingSetupLoad": {
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "./qualification-prover",
+      "prove",
+      "--setup",
+      ".local/setup",
+      "--credential",
+      "fixtures/credential.json",
+      "--holder",
+      "fixtures/public-test-holder.json",
+      "--state",
+      "fixtures/private-test-state.json",
+      "--context",
+      "12345",
+      "--recipient",
+      "0x000000000000000000000000000000000000cafe",
+      "--deadline",
+      "1900000000",
+      "--class",
+      "7",
+      "--out",
+      ".local/measured-proof.json"
+    ],
+    "exitCode": 0,
+    "wallMs": 714.164,
+    "peakRSSBytes": 55164928
+  },
+  "proofStatistics": {
+    "version": "qualification-v1-test",
+    "testSetup": true,
+    "publicInputs": [
+      "5618165132055213667231966729029358328636058975278379791529899035129796507943",
+      "14066528166824349278503888415914595824557084937321400879114114061024662173695",
+      "21605521580881190966410120619832076216541370042031334318729896991584440741022",
+      "7",
+      "1900000000",
+      "12345",
+      "51966",
+      "2877408383674266418900092367527403778483864423926871253342859420011966139849",
+      "12402471491554325853632818670532236760690967676839537371736298798088274605068"
+    ],
+    "publicInputNames": [
+      "issuerX",
+      "issuerY",
+      "root",
+      "class",
+      "deadline",
+      "context",
+      "recipient",
+      "nullifier",
+      "presentationTag"
+    ],
+    "proofBytes": 256,
+    "constraints": 26089,
+    "proveMs": 76.493,
+    "verifyMs": 0.792,
+    "goHeapAllocBytes": 36349896,
+    "goSysBytes": 53102856
+  },
+  "fixtureVerifierSHA256": "06fb292be0f36c7da75bae2ffb47225bcc991d66921598d8fd36d99da6c04132",
+  "fixtureProofSHA256": "8266411312be3daba5d48506c097f0f78802d58eac099a5677443a709362c833",
+  "scope": "Actual local Go proof/test run. No browser proving, network integration or Solidity execution measured here. RSS includes setup loading and proof generation; internal proveMs excludes setup loading.",
+  "observedAtUTC": "2026-09-12T07:31:10Z",
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  }
+}

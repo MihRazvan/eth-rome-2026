@@ -216,3 +216,92 @@ func TestCredentialSerializationExcludesHolderSecret(t *testing.T) {
 		t.Fatal("issuer-facing credential leaked holder secret")
 	}
 }
+
+func TestSplitEnrollmentAndPublicSnapshotIntegrity(t *testing.T) {
+	dir := t.TempDir()
+	holderPath := dir + "/holder.json"
+	issuerPath := dir + "/issuer.json"
+	credentialPath := dir + "/credential.json"
+	snapshotPath := dir + "/snapshot.json"
+	statePath := dir + "/private-state.json"
+	if err := run([]string{"holder-new", "--out", holderPath}); err != nil {
+		t.Fatal(err)
+	}
+	if err := run([]string{"issuer-new", "--out", issuerPath}); err != nil {
+		t.Fatal(err)
+	}
+	var holder Holder
+	if err := readJSON(holderPath, &holder); err != nil {
+		t.Fatal(err)
+	}
+	// Issuer command takes no secret, only this commitment.
+	if err := run([]string{"issue", "--issuer-key", issuerPath, "--commitment", holder.Commitment, "--index", "42", "--class", "7", "--expiry", "2000000000", "--out", credentialPath}); err != nil {
+		t.Fatal(err)
+	}
+	var credential Credential
+	if err := readJSON(credentialPath, &credential); err != nil {
+		t.Fatal(err)
+	}
+	if credential.HolderSecret != "" {
+		t.Fatal("issuer output contains holder secret")
+	}
+	if err := run([]string{"snapshot", "--revoke", "1,99,65535", "--out", snapshotPath}); err != nil {
+		t.Fatal(err)
+	}
+	var public map[string]any
+	if err := readJSON(snapshotPath, &public); err != nil {
+		t.Fatal(err)
+	}
+	if len(public) != 4 {
+		t.Fatal("public snapshot unexpected fields")
+	}
+	for _, key := range []string{"version", "depth", "root", "revokedIndices"} {
+		if _, ok := public[key]; !ok {
+			t.Fatal("missing public snapshot field")
+		}
+	}
+	if err := run([]string{"state", "--snapshot", snapshotPath, "--credential", credentialPath, "--out", statePath}); err != nil {
+		t.Fatal(err)
+	}
+	var state State
+	if err := readJSON(statePath, &state); err != nil {
+		t.Fatal(err)
+	}
+	credential.HolderSecret = holder.Secret
+	a, err := assignment(&credential, &state, big.NewInt(12345), big.NewInt(0xCAFE), big.NewInt(1900000000), big.NewInt(7))
+	if err != nil {
+		t.Fatal(err)
+	}
+	cs, err := compile()
+	if err != nil {
+		t.Fatal(err)
+	}
+	w, err := frontend.NewWitness(a, ecc.BN254.ScalarField())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = cs.IsSolved(w); err != nil {
+		t.Fatal("independent holder/issuer enrollment failed combined relation")
+	}
+	public["root"] = "1"
+	if err = writeJSON(snapshotPath, public, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if run([]string{"state", "--snapshot", snapshotPath, "--credential", credentialPath, "--out", statePath}) == nil {
+		t.Fatal("tampered snapshot root accepted")
+	}
+}
+
+func TestFieldParserDoesNotReduceOrInterpretDecimalAsOctal(t *testing.T) {
+	for _, input := range []string{"000123", "123", "0x7b"} {
+		v, e := field(input)
+		if e != nil || v.Cmp(big.NewInt(123)) != 0 {
+			t.Fatal("field parsing changed numeric meaning")
+		}
+	}
+	for _, input := range []string{"-1", ecc.BN254.ScalarField().String(), "not-a-field"} {
+		if _, e := field(input); e == nil {
+			t.Fatal("noncanonical field accepted")
+		}
+	}
+}
