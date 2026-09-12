@@ -11,6 +11,13 @@ const errors = [],
   writes = [];
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 page.on("pageerror", (e) => errors.push(e.message));
+page.on("console", (message) => {
+  if (
+    message.type() === "error" &&
+    /violates.*Content Security Policy/i.test(message.text())
+  )
+    errors.push(message.text());
+});
 page.on("request", (r) => {
   if (
     r.method() === "POST" &&
@@ -25,6 +32,7 @@ const snap = async (name) => {
 async function demo(mobile = false) {
   await page.locator("#try-demo").click();
   await page.locator("#cd-title").fill("Review permission boundaries");
+  assert.equal(await page.locator(".cd-honesty").isVisible(), true);
   await page.locator("#cd-budget").fill("12.50");
   await page.locator("[data-demo-form] button").click();
   await page.locator('[data-demo="fund"]').click();
@@ -104,6 +112,10 @@ try {
   await snap("reviewer-desktop");
   await page.locator('.rail-nav [data-view="activity"]').click();
   assert.equal(await page.locator("#job-section").isVisible(), true);
+  assert.match(
+    await page.locator("#jobs").textContent(),
+    /Your next review|Find a task/,
+  );
   assert.equal(await page.locator("#commission").isVisible(), false);
   await page.locator('.rail-nav [data-view="help"]').click();
   await page.locator(".device-settings > summary").click();

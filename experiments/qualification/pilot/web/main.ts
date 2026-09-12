@@ -245,7 +245,7 @@ function chooseRole(next: Role) {
     .forEach((b) =>
       b.setAttribute("aria-pressed", String(b.dataset.role === role)),
     );
-  renderGuide();
+  render();
   window.dispatchEvent(new Event("cutout:role"));
   reveal("journey");
 }

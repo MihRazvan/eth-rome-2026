@@ -656,7 +656,8 @@
   .cutout-demo .cd-sidebar > h2,
   .cutout-demo .cd-intro,
   .cutout-demo .cd-honesty {
-    display: none;
+    display: block;
+    margin-top: 18px;
   }
   .cutout-demo .cd-steps {
     display: grid;
