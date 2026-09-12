@@ -1,0 +1,18 @@
+[
+  {
+    "inputs": [
+      {
+        "name": "proof",
+        "type": "bytes"
+      },
+      {
+        "name": "input",
+        "type": "uint256[9]"
+      }
+    ],
+    "name": "verifyProof",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

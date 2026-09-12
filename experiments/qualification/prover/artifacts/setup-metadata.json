@@ -1,0 +1,23 @@
+{
+  "constraints": 26089,
+  "gnark": "v0.15.0",
+  "gnarkCrypto": "v0.20.1",
+  "goHeapAllocBytes": 22253960,
+  "goSysBytes": 69355784,
+  "goVersion": "go1.25.7",
+  "publicInputs": [
+    "issuerX",
+    "issuerY",
+    "root",
+    "class",
+    "deadline",
+    "context",
+    "recipient",
+    "nullifier",
+    "presentationTag"
+  ],
+  "setupMs": 1629.519,
+  "setupTrust": "Single-process random Groth16 setup; no ceremony or production trust claim",
+  "testSetup": true,
+  "version": "qualification-v1-test"
+}
