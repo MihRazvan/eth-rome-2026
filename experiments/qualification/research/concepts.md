@@ -2,6 +2,8 @@
 
 Design research, 12 September 2026. These are text concepts, not screenshots of implemented software. Test credentials, test USDC and toy cohorts must be labeled on every route. Both use the proposed relation; neither claims anonymous employment.
 
+Integrator follow-up: both concepts were subsequently rendered in Chromium. [REVIEW PASS](../evidence/reviewer-desktop.png) is the functioning local application; [QUIET PANEL](../evidence/quiet-panel-concept.png) renders the [static alternative](quiet-panel.html), with disabled concept-only actions. The implemented application uses explicitly valueless **qUSD**, not USDC. REVIEW PASS was selected because its work ticket keeps funded amount, qualification gate and submission/payment action together; its disclosure receipt remains adjacent on desktop. QUIET PANEL makes consent separation clearer but introduces recordings, sensitive cohorts and panel-operator adoption beyond the selected problem. The implemented mobile view was inspected and tested at390px without overflow. These are integrator design judgments, not user-study results.
+
 ## Concept A — REVIEW PASS
 
 **“Approved to review. No certificate number required.”**

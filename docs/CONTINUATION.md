@@ -1,8 +1,28 @@
-# Restart handoff — hard-pivot research, EXIT preserved
+# Restart handoff — Review Pass qualification experiment, EXIT preserved
 
 Updated 2026-09-12 Europe/Bucharest. Workspace `/Users/razvan/Repos/real-eth-rome`, origin `MihRazvan/eth-rome-2026`, branch `main`. Nearby `/Users/razvan/Repos/eth-rome-2026` is a different active project; leave it untouched. Preserve supplied handoff files and actual Git provenance.
 
-## Latest user objective and decision
+## Latest user objective — private qualification probes
+
+The user selected the private-qualification direction for sustained implementation/probing, with Arkiv/Swarm/Avalanche prioritized and ENS deprioritized. This supersedes REPRISE as the active experiment. Read [qualification README](../experiments/qualification/README.md), [acceptance](../experiments/qualification/ACCEPTANCE.md), [runbook](../experiments/qualification/RUNBOOK.md) and [product verdict](../experiments/qualification/research/product.md). The implemented concept is **REVIEW PASS**, portable qualification for confidential paid technical reviews. Cryptographic feasibility is positive; commercial demand and public sponsor completion are not established.
+
+Implementation is integrated/pushed through `0f46801`: independently constructed gnark BN254/Groth16 signature+secret+same-index nonrevocation circuit, actual exported Solidity verifier, escrow with approval/timeout/dispute rules, issuer-wide local Bee snapshots, browser AES-GCM artifact storage/retrieval, Arkiv status/assignment adapters and a working local three-role UI. This is **not a reproduction of ShadowPath**, credential-standard interoperability, anonymous employment or an anonymous payment system. Research/source inventory and two rendered concepts are retained. EXIT and REPRISE remain intact below.
+
+Runtime follow-up `bb65172` selects its fresh verifier artifact by compiler provenance, avoiding a basename collision with fixed proof fixtures. Its fresh23-check integration passed and is archived separately as `evidence/runtime-followup*`. The current browser helper was left freshly seeded and ready at the URL below. Final evidence/handoff commits are documentation-only; inspect Git for the exact remote head rather than assuming0f46801 is still HEAD.
+
+Evidence:23 real-proof/Anvil/Bee integration checks;6 browser checks;14 Solidity tests (four actual-proof fixtures and ten explicit state-machine tests,256 dispute fuzz inputs);13 transport tests/typecheck; independent11 crypto boundary probes. Independent review found/corrected class-width mismatch and helper concurrency. Qualification CI [34681651818](https://github.com/MihRazvan/eth-rome-2026/actions/runs/34681651818) and existing EXIT CI [34681651824](https://github.com/MihRazvan/eth-rome-2026/actions/runs/34681651824) both passed at0f46801. Local evidence records runtime source7b69991 and is archived under `experiments/qualification/evidence/` with hashes; later CI/tests do not alter runtime behavior.
+
+Local workbench: **http://127.0.0.1:18787**, dedicated Anvil31338/18547. Inspect `.runtime/qualification/pids.json` for current owned processes. Fresh startup automatically runs its23checks, rolls back only those local test transactions, then seeds a new250qUSD assignment. Browser tests intentionally consume the seeded job; restart the experiment for a fresh manual demo, confirming the PID before TERM. All role keys/files are local TEST data; do not expose this helper as a hosted prover. Only browser ciphertext reaches Bee, but cross-device key delivery/recovery is not implemented and a closed tab loses its key.
+
+Six experiment-owned `bee-factory-*` containers remain on loopback: queen1633, independent retrieval1635, factory Anvil28545. Current local mock postage is recorded in `transport/local-stack.json`; it expires and can be repurchased locally per runbook. Do not stop unrelated Docker/Kurtosis containers or the pre-existing8545Anvil. EXIT5173/8547/8787 remain unrelated.
+
+Public gates freshly observed September12: Arkiv reads/SDK WebSocket notifications and Fuji RPC work; **no funded project Arkiv/Fuji signer or usable public Swarm write capability**. Public publication/native expiry/Fuji deployment remain blocked. Assignment-specific WSS UI reconciliation, public two-client role separation and recipient key delivery remain unfinished; no bounty completion claim. No external outreach, sponsor submission or real funds spent. Candidate pilot needs one willing assessment collective and two real clients; none secured.
+
+Operational issuer limit: CLI signs caller-supplied indices. Production needs atomic unique slot allocation, monotonic tombstones, fresh index on reissue and key/registry rotation. Slot reuse or same-key registry reset can revive unexpired old credentials. The demo Restore action is intentionally reversible test behavior. Depth16 under nonreuse supports65,536 lifetime issuances per issuer key.10,000revocations produced108KB snapshot and~795ms local reconstruction; no browser-scale claim.
+
+Next useful work once access exists: preserve holder-local witness custody, add real wallet-separated roles/key delivery, deploy the verified path to Fuji, publish actual Arkiv task/snapshot records and observe native expiry/WSS, store/retrieve on public Swarm, then record real issuer/client pilot evidence. Do not restart broad ideation or return to EXIT merely because live access is absent. Agents completed bounded work in isolated worktrees; their attributed commits are integrated.
+
+## Earlier hard-pivot recommendation — REPRISE retained as research
 
 The latest user explicitly requested a **hard pivot to maximize hackathon prize prospects**, any product category, informed by July–September research and the team's prior winners ANYWARE (`ETH_Prague_Hackathon`) and AUTARK. This replaces the conditional withdrawal-NFT direction below. Read [pivot recommendation](pivot/README.md), [sponsor rules/probes](pivot/sponsors.md), [frontier screen](pivot/frontier.md) and [prior-winner analysis](pivot/winners.md) first. Existing EXIT requirements/evidence remain historical; do not silently present EXIT as the new product.
 

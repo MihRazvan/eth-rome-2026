@@ -1,0 +1,14 @@
+{
+  "recordedAt": "2026-09-12T07:47:49.173Z",
+  "environment": "Local Anvil and local Bee, test roles in one helper",
+  "checks": [
+    "Browser-generated request obtains real local proof and accepts assignment onchain",
+    "AES-GCM encryption before HTTP; local Bee upload and separate-node retrieval; browser decryption matches original",
+    "Issuer revocation makes both previously generated acceptance and fresh proof attempt fail visibly",
+    "Client approves and pays already-submitted work after revocation",
+    "390px mobile layout has no horizontal overflow",
+    "Separate tab correctly reports unavailable key; no invented key delivery"
+  ],
+  "pageErrors": [],
+  "ciphertextRequests": 1
+}

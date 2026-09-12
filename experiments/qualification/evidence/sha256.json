@@ -1,0 +1,14 @@
+{
+  "acceptance.json": "340baa71d5b9591c4dcb01ade163f379a5177f2f4dac4c8d7c5905764c8cbace",
+  "browser-evidence.json": "a10c4e0943839fd2c6dc2680170d3d2995e4ee5d29763ffdfbb95375d08262a7",
+  "client-decrypted.png": "112f5da7e0178a837058357ba7a3f23306f29a5dbdce120dbe380a08f9d9f009",
+  "integration-proof.json": "3e5af5ae09bba2c8bc22d236b50a11174e1efcc35dfa3787978db2495d66e2a5",
+  "integration-verifier.sol": "dab258850eceb1880febfb94ab906a177620ce10d935e28687f530cefc77aa4f",
+  "paid-desktop.png": "625cd9bd034b3c1e995d22c48781ba8cded182f3898caf358afef458e88fa394",
+  "paid-mobile.png": "4a391d0bd72f262ab5010f7ad001c8a53db0b4913b56091480826a0daef28d63",
+  "quiet-panel-concept.png": "619eadb8063449b9c0a8643f4a560d10163e3bf6679ebe630337ee4ddc377e08",
+  "reviewer-desktop.png": "86061341110e084a1932eec5ef548fcab047966e409bc94e73a60d5a507b132e",
+  "runtime-followup-proof.json": "e75b3fec3ec4983bd0a9e59542ed974f8899c4d5b46f13a6f4b1e16971c64d47",
+  "runtime-followup-verifier.sol": "dfef618ca87d4a350238bfa492bd88669716d66945d76f367a17e243b926caaf",
+  "runtime-followup.json": "184f8eff3581f14ffb795d9ea2d9278d6961bb85f1a96c8e85880ed09b72019d"
+}

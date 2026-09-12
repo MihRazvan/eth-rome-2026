@@ -1,0 +1,114 @@
+{
+  "sourceRevision": "7b699917c7af5acda34507afeb7a9063411dc8dc",
+  "recordedAt": "2026-09-12T07:45:22.641Z",
+  "chain": "Qualification local Anvil",
+  "chainId": 31338,
+  "testOnly": true,
+  "setupTrust": "Local single-process Groth16 setup; no production ceremony",
+  "deployedVerifier": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "deployedVerifierCodeHash": "0xc51a86111d7b8d75aacf3ba392437057211e3a59da527df1927da1726ee8d0bc",
+  "escrow": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+  "results": [
+    {
+      "check": "Actual Groth16 proof verified by exported Solidity verifier on local Anvil",
+      "result": "PASS",
+      "proveMs": 70.048,
+      "totalHelperMs": 320,
+      "bytes": 256,
+      "constraints": 26089
+    },
+    {
+      "check": "Issuer-wide snapshot uploaded to local Bee1633, retrieved through1635, MiMC root reconstructed locally and matched onchain state before proving",
+      "result": "PASS",
+      "reference": "19ad2c00d93447d69c66d153bbe804c686303cd8d83fd448dc58b26eb49efaf7"
+    },
+    {
+      "check": "Solidity verifier rejects modified issuerX",
+      "result": "PASS"
+    },
+    {
+      "check": "Solidity verifier rejects modified issuerY",
+      "result": "PASS"
+    },
+    {
+      "check": "Solidity verifier rejects modified root",
+      "result": "PASS"
+    },
+    {
+      "check": "Solidity verifier rejects modified class",
+      "result": "PASS"
+    },
+    {
+      "check": "Solidity verifier rejects modified deadline",
+      "result": "PASS"
+    },
+    {
+      "check": "Solidity verifier rejects modified context",
+      "result": "PASS"
+    },
+    {
+      "check": "Solidity verifier rejects modified recipient",
+      "result": "PASS"
+    },
+    {
+      "check": "Solidity verifier rejects modified nullifier",
+      "result": "PASS"
+    },
+    {
+      "check": "Solidity verifier rejects modified presentationTag",
+      "result": "PASS"
+    },
+    {
+      "check": "Malformed proof rejected",
+      "result": "PASS"
+    },
+    {
+      "check": "Changing issuer-signed qualification cannot generate proof",
+      "result": "PASS"
+    },
+    {
+      "check": "Wrong required class cannot generate proof",
+      "result": "PASS"
+    },
+    {
+      "check": "Third-party relay assigns proven worker, with real proof",
+      "result": "PASS",
+      "gas": "338016",
+      "transaction": "0x25bc20cd8ab87bf14c2570d1514c2be06abbda094826ecfde13269464d354cf8"
+    },
+    {
+      "check": "Accepted assignment cannot replay",
+      "result": "PASS"
+    },
+    {
+      "check": "Second client funds its own assignment; separate verifier process validates public presentation without credential or issuer key files",
+      "result": "PASS",
+      "client": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc"
+    },
+    {
+      "check": "Different assignment creates a different scoped nullifier",
+      "result": "PASS",
+      "caveat": "Reused payout address still links these test assignments"
+    },
+    {
+      "check": "Proof for first assignment cannot accept second assignment",
+      "result": "PASS"
+    },
+    {
+      "check": "Previously valid proof rejected after issuer root changes",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked credential cannot generate new proof",
+      "result": "PASS"
+    },
+    {
+      "check": "Revocation blocks new assignment but submitted work still receives 250 qUSD",
+      "result": "PASS"
+    },
+    {
+      "check": "Payment cannot be repeated",
+      "result": "PASS"
+    }
+  ]
+}
