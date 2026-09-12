@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { tiramisu } from "@arkiv-network/sdk/chains";
 import {
   ensureWalletChain,
+  requestWalletAccountSelection,
   walletErrorMessage,
   WalletNetworkError,
   type WalletProvider,
@@ -266,4 +267,36 @@ test("plain and nested errors produce actionable fixed messages without provider
   const cyclic: { cause?: unknown } = {};
   cyclic.cause = cyclic;
   assert.match(walletErrorMessage(cyclic), /request failed/);
+});
+
+test("account selection requests account permission only; failures never retry or connect", async () => {
+  const calls: unknown[] = [];
+  await requestWalletAccountSelection({
+    request: async (args) => {
+      calls.push(args);
+      return [];
+    },
+  });
+  assert.deepEqual(calls, [
+    { method: "wallet_requestPermissions", params: [{ eth_accounts: {} }] },
+  ]);
+  for (const [code, pattern] of [
+    [4001, /canceled/],
+    [4100, /canceled/],
+    [-32002, /pending/],
+    [4200, /inside the wallet/],
+    [-32601, /inside the wallet/],
+  ] as const) {
+    let count = 0;
+    await assert.rejects(
+      requestWalletAccountSelection({
+        request: async () => {
+          count++;
+          throw { code, message: "do not echo private provider details" };
+        },
+      }),
+      pattern,
+    );
+    assert.equal(count, 1);
+  }
 });

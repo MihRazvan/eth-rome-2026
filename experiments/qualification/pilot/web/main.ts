@@ -48,6 +48,7 @@ import { createGatewayStorage } from "../swarm-gateway";
 import { tiramisu } from "@arkiv-network/sdk/chains";
 import {
   ensureWalletChain,
+  requestWalletAccountSelection,
   walletErrorMessage,
   WalletNetworkError,
 } from "../wallet-network";
@@ -266,6 +267,7 @@ function syncButtons() {
         : !account &&
           !walletFree.has(b.id) &&
           !b.hasAttribute("data-proof-connect") &&
+          !b.hasAttribute("data-select-reviewer") &&
           b.dataset.action !== "export");
   });
 }
@@ -739,11 +741,18 @@ function render() {
           const progress = `<ol class="workflow" aria-label="Review progress">${["Funded", "Qualified", "Delivered", "Settled"].map((label, i) => `<li data-done="${i <= stageIndex}">${label}</li>`).join("")}</ol>`;
           let actions = "";
           const publish =
-            eligibility.accept && isClient && j.scope && !j.scopeError
+            eligibility.accept &&
+            isClient &&
+            role === "client" &&
+            j.scope &&
+            !j.scopeError
               ? button("publish", j.id, "List this review")
               : "";
           if (eligibility.accept && !j.scopeError && !isClient)
             actions = `${config.browserProver ? `<div class="local-prover"><h4>Cut a proof. Keep your credential.</h4><p class="fine"><strong>Credential JSON:</strong> the signed file returned by the Cutout team after approving your enrollment request. <strong>Private holder JSON:</strong> your saved <code>cutout-private-holder.json</code>.</p><p class="fine">The generated <code>cutout-enrollment-request.json</code> is for the issuer; it cannot cut a proof. These files are read locally and never uploaded.</p><button data-ui data-enrollment-help type="button" class="quiet">Where do I get these files?</button>${!account ? '<p class="error">Connect your reviewer wallet on Fuji to enable file selection.</p><button data-proof-connect type="button">Connect reviewer wallet</button>' : ""}<label class="fine">Credential JSON<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label class="fine">Private holder JSON<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label>${button("generate", j.id, "Cut a qualification proof", false)}${button("cancel-proof", j.id, "Cancel proof", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Accept this task")}` : ""}`;
+          if (role === "reviewer" && isClient && eligibility.accept) {
+            actions = `<div class="local-prover" data-wallet-mismatch="${j.id}"><h4>This is the client's wallet.</h4><p>You connected <code>${esc(account!)}</code>, the account that funded this task. The Reviewer tab changes the view; it does not switch your wallet account.</p><p>To review as a separate participant, select your reviewer account in the wallet. Keep this task open; you do not need to list or fund it again.</p><button data-select-reviewer type="button">Choose reviewer account</button><button data-proof-connect type="button" class="quiet">Reconnect selected account</button><p class="fine">If the wallet keeps choosing this address, open its connected-site settings and connect only the reviewer account to Cutout. A separate reviewer browser profile also works.</p></div>`;
+          }
           if (j.status === "Accepted" && isWorker)
             actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Seal & deliver report", eligibility.submit)}`;
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
@@ -1673,6 +1682,22 @@ $("#create").onclick = () =>
 document.addEventListener("click", (e) => {
   if ((e.target as Element).closest("[data-enrollment-help]")) {
     reveal("reviewer-help");
+    return;
+  }
+  if ((e.target as Element).closest("[data-select-reviewer]")) {
+    void run(async () => {
+      if (!window.ethereum)
+        throw new WalletNetworkError(
+          "Open Cutout in a browser with your reviewer wallet.",
+        );
+      await requestWalletAccountSelection(window.ethereum);
+      await connect();
+      return {
+        preserve: true,
+        message:
+          "Account connected. Check the wallet address on this task before continuing.",
+      };
+    });
     return;
   }
   if ((e.target as Element).closest("[data-proof-connect]")) {

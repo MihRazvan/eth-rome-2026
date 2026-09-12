@@ -12,6 +12,31 @@ export interface WalletProvider {
 /** Only use with application-authored, non-sensitive user guidance. */
 export class WalletNetworkError extends Error {}
 
+/** Explicit user action only; account access, never signing/spending permissions. */
+export async function requestWalletAccountSelection(
+  provider: WalletProvider,
+): Promise<void> {
+  try {
+    await provider.request({
+      method: "wallet_requestPermissions",
+      params: [{ eth_accounts: {} }],
+    });
+  } catch (error) {
+    const codes = errorCodes(error);
+    if (codes.includes(4001) || codes.includes(4100))
+      throw new WalletNetworkError(
+        "Account selection was canceled. Choose your reviewer account in the wallet, then reconnect.",
+      );
+    if (codes.includes(-32002))
+      throw new WalletNetworkError(
+        "A wallet request is already pending. Finish it in your wallet before choosing another account.",
+      );
+    throw new WalletNetworkError(
+      "This wallet could not open account selection. Select your reviewer account inside the wallet, allow it to connect to Cutout, then click Reconnect selected account.",
+    );
+  }
+}
+
 function errorParts(error: unknown): Record<string, unknown>[] {
   const seen = new Set<unknown>();
   const parts: Record<string, unknown>[] = [];
