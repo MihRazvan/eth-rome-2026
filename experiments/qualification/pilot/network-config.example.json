@@ -1,0 +1,20 @@
+{
+  "environment": "public-fuji-pilot",
+  "chainId": 43113,
+  "rpcUrl": "https://api.avax-test.network/ext/bc/C/rpc",
+  "escrow": "",
+  "verifier": "",
+  "keyRegistry": "",
+  "token": "",
+  "arkiv": {
+    "chainId": 7738577,
+    "rpcUrl": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+    "wsUrl": "wss://rpc.tiramisu.db-chain.testnet.arkiv.network"
+  },
+  "swarm": {
+    "uploadUrl": "",
+    "retrievalUrl": "https://api.gateway.ethswarm.org",
+    "postageBatchId": ""
+  },
+  "apiUrl": ""
+}
