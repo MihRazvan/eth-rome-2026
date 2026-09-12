@@ -489,6 +489,8 @@ const server = http.createServer(async (req, res) => {
     });
     res.end(content);
   } catch (error) {
+    if (["ENOENT", "ENOTDIR", "EACCES"].includes(error.code))
+      return send(404, { error: "Not found" });
     send(400, { error: (error.shortMessage ?? error.message).slice(0, 200) });
   }
 });

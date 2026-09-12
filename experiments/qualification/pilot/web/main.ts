@@ -380,7 +380,7 @@ function renderBoard() {
             `<article class="listing"><h3>${esc(e.listing.title)}</h3><p>${formatUnits(BigInt(e.listing.reward), 6)} ${tokenSymbol} · qualification class ${esc(e.listing.qualificationClass)}</p><p class="fine">Discovery lease ends at Arkiv block ${e.expiresAt}. Funding follows its own deadlines.</p><button data-view-job="${e.listing.jobId}" ${state.status !== "live" ? "disabled" : ""}>View verified scope</button></article>`,
         )
         .join("")
-    : `<p class="fine">${state?.status === "live" ? "No matching live listings. A funded review appears here after its client publishes a discovery lease." : "Discovery is not yet available. Existing funded work remains accessible below."}</p>`;
+    : `<p class="fine">${state?.status === "live" ? "No matching live listings. A funded review appears here after its client publishes a discovery lease." : "Discovery is not yet available. Existing funded work remains accessible below."}</p>${config.chainId === 31338 ? '<p class="fine">This public Arkiv board is separate from the local rehearsal. <a href="#jobs">Open local rehearsal tasks below</a>.</p>' : ""}`;
   if (state?.removed.some((x) => x.reason === "native-expired"))
     $("#discovery-change").textContent =
       "A discovery lease is no longer active. Its escrow and accepted work remain on the settlement chain.";
