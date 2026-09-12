@@ -1,0 +1,22 @@
+{
+  "observedAt": "2026-09-12T07:41:46.178Z",
+  "environment": "public-arkiv",
+  "sdk": "0.8.1",
+  "syntheticRoutingAddress": true,
+  "filter": {
+    "taskClass": "document-review",
+    "qualificationClass": "1",
+    "settlementChain": 43113,
+    "escrow": "0x2222222222222222222222222222222222222222"
+  },
+  "query": "application = str('review-pass') AND kind = str('assignment') AND schema = i32(1) AND taskClass = str('document-review') AND qualificationClass = str('1') AND settlementChain = i32(43113) AND escrow = str('0x2222222222222222222222222222222222222222') AND acceptBefore > u64(1789198906)",
+  "writesAttempted": 0,
+  "nativeExpiryObserved": false,
+  "availableAssignmentsVerified": 0,
+  "chainId": 7738577,
+  "block": "345276",
+  "queryStatus": "passed",
+  "pages": 1,
+  "entities": 0,
+  "elapsedMs": 729
+}
