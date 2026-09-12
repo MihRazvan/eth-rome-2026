@@ -45,6 +45,8 @@ The integrated local application supports two independently funded scopes/reward
 
 The UI continues the work-ticket direction selected after [two rendered application concepts](../../experiments/qualification/research/concepts.md). It keeps scope, reward and acceptance/delivery/payment actions together, with a separate discovery board and an explicit disclosure explanation.
 
+Public hosting: **[Review Pass setup](https://review-pass-ethrome-2026.vercel.app)** is online and browser-verified. It supports Swarm ID setup while public contracts/snapshot remain pending; funded reviews are not enabled yet. [Hosting evidence](evidence/vercel/README.md).
+
 Start with the **[shared judge-readiness checklist](JUDGE-READINESS.md)**, [qualification provisioning](QUALIFICATION-PROVISIONING.md), [latest judge-pass evidence](evidence/judge-pass/README.md), [build acceptance ledger](BUILD.md), [product runbook](RUNBOOK.md), [bounty evidence index](../../arkiv/submission.md) and [feedback report](../../feedback.md). The current local demo uses port18889; port18888 remains the earlier pilot. All project credentials and private issuer/holder files stay outside Git and HTTP.
 
 The public deployment preparation builds a separate verifier/setup and checks live Fuji token metadata. Broadcasting requires explicitly configured project funds, valid public issuer metadata and a publicly retrievable whole snapshot. Missing access must stay a concrete gate; failed integrations must never silently become fixtures.

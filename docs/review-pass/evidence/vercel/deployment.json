@@ -1,0 +1,17 @@
+{
+  "provider": "Vercel",
+  "project": "review-pass-ethrome-2026",
+  "projectId": "prj_bLeCGzGtVUGKnVwXMEZOKKmhGgXF",
+  "deploymentId": "dpl_EbMq4HGKTAWwhyEegRiycqzGjiHw",
+  "sourceRevision": "69de06542aa21ebd03331125f485fad42ba15b58",
+  "url": "https://review-pass-ethrome-2026.vercel.app",
+  "immutableDeploymentURL": "https://review-pass-ethrome-2026-pli6troxo-mihrazvans-projects.vercel.app",
+  "readyState": "READY",
+  "applicationStatus": "pending",
+  "publicWithoutVercelLogin": true,
+  "publicContractFlowEnabled": false,
+  "swarmSignInInitializationVerified": true,
+  "authenticatedUploadVerified": false,
+  "gitAutoDeployDisconnected": true,
+  "deploymentInputs": "22 prebuilt files only; no checkout, environment files, private keys or holder/issuer runtime files uploaded"
+}

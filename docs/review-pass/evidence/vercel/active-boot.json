@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-09-12T13:32:35.886Z",
+  "scope": "New static bootstrap paired with existing local Anvil/Bee read API through explicit Playwright route bridge; test CSP permits localhost RPC. Not a public active deployment.",
+  "checks": [
+    "Boot dynamically loads full workspace",
+    "Real open funded local task and verifiedscope render",
+    "Missing-wallet help works",
+    "No page exceptions"
+  ],
+  "chainWrites": 0,
+  "storageWrites": 0
+}

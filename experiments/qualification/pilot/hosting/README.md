@@ -15,8 +15,13 @@ node experiments/qualification/pilot/hosting/build.mjs --config .runtime/review-
 
 # Only the isolated build directory is the Vercel project root.
 vercel link --yes --project review-pass-ethrome-2026 --scope mihrazvans-projects --cwd .runtime/review-pass-vercel
+# First link can auto-connect the repository. Disconnect this NEW project
+# to prevent the root EXIT build from replacing it; confirm the CLI prompt.
+vercel git disconnect --cwd .runtime/review-pass-vercel --scope mihrazvans-projects
 vercel deploy --prebuilt --prod --cwd .runtime/review-pass-vercel --scope mihrazvans-projects
 ```
+
+The existing linked staging directory can be redeployed directly; do not repeat linking on every build.
 
 Do not run the deployment from the repository root: its root vercel.json serves the preserved EXIT project. The separate project leaves that application and teammate projects untouched. Vercel authentication is the existing CLI login; the Fuji deployer key remains local in the Git-ignored .env. No secret is required in Vercel environment variables. The build does not read .env.
 

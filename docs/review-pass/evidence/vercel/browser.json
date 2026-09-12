@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-09-12T13:27:00.454Z",
+  "url": "https://review-pass-ethrome-2026.vercel.app",
+  "checks": [
+    "Explicit pending state; financial actions unavailable",
+    "Both role explanations work",
+    "Real unauthenticated Swarm ID initialization; upload gated",
+    "Read API200 config,503 unpublished snapshot,405 POST",
+    "Private and unknown paths404",
+    "CSP delivered",
+    "390px no overflow",
+    "Zero page exceptions"
+  ],
+  "pageErrors": [],
+  "chainWrites": 0,
+  "storageWrites": 0
+}

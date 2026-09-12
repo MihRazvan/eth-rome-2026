@@ -1,0 +1,19 @@
+{
+  "applicationRevision": "69de06542aa21ebd03331125f485fad42ba15b58",
+  "runs": [
+    {
+      "name": "Verify qualification experiment",
+      "id": 34696465188,
+      "conclusion": "success",
+      "url": "https://github.com/MihRazvan/eth-rome-2026/actions/runs/34696465188"
+    },
+    {
+      "name": "Verify EXIT",
+      "id": 34696465179,
+      "conclusion": "success",
+      "url": "https://github.com/MihRazvan/eth-rome-2026/actions/runs/34696465179",
+      "scope": "pinned-source dispatch-only job skipped"
+    }
+  ],
+  "subsequentChanges": "Documentation and evidence only"
+}

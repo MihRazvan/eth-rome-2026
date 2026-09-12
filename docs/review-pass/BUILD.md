@@ -55,3 +55,5 @@ At `5ad9366`, the full20-check Chromium rehearsal passed on a fresh local escrow
 A fresh read-only preflight found Fuji/Arkiv RPC and Swarm health reachable, but no configured public signer, deployed project manifest, upload authority or HTTPS app URL. Public lifecycle/expiry/storage completion remains blocked on these named project resources. No testnet writes were fabricated or replaced by fixtures.
 
 Final application revision `dea5ba2` passed both qualification and preserved EXIT GitHub CI workflows. [Exact run IDs and skipped-job scope](evidence/judge-pass/ci.json) are retained.
+
+Vercel follow-up: separate public setup site deployed at https://review-pass-ethrome-2026.vercel.app, application revision69de065. Nine read-only API tests plus actual HTTPS browser checks pass. Public config/data routes run in a bundled Node24function; wallet/prover/Swarm uploads remain browser-local. [Hosting evidence and limits](evidence/vercel/README.md). Funded Fuji participant/deployer access and0.1clientArkivGLM are now verified; public issuer/snapshot/storage credit remain the deployment gate.
