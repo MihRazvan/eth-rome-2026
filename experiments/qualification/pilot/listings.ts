@@ -340,13 +340,17 @@ export function createListingBoard(options: {
           )
             dirty = true;
         } catch {
-          if (mine === generation)
+          if (mine === generation) {
+            // A failed read must not strand the board until a matching event happens.
+            // Retry from the next real stream head, with the existing single-flight bound.
+            reconcileOnHead = true;
             emit({
               status: "error",
               reason:
                 "Listing discovery or settlement verification unavailable",
               removed: [],
             });
+          }
         }
       } while (dirty && mine === generation && rounds < 2);
       if (dirty && mine === generation) {
@@ -380,11 +384,15 @@ export function createListingBoard(options: {
             void refresh();
         })
         .catch(() => {
-          if (mine === generation)
+          if (mine === generation) {
+            // Even an unrelated event can fail to hydrate during a short RPC outage.
+            // Reconcile the filtered snapshot once a subsequent WSS head arrives.
+            reconcileOnHead = true;
             emit({
               status: "stale",
               reason: "Live listing hydration unavailable",
             });
+          }
         })
         .finally(() => {
           if (mine === generation) {

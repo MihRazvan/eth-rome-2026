@@ -294,3 +294,68 @@ test("raw attributes and current creator cannot spoof authoritative payload", as
   assert.equal(h.last().listings.length, 0);
   h.board.stop();
 });
+
+test("a transient hydration outage recovers on a real head without a matching event", async () => {
+  const h = harness();
+  await h.board.start(filter);
+  h.stream().onHead(11n);
+  await tick();
+  h.setGetter(async () => {
+    throw Error("temporary RPC outage");
+  });
+  h.stream().onEntity(k(9));
+  await tick();
+  assert.equal(h.last().status, "stale");
+  assert.equal(h.last().listings.length, 1);
+  const before = h.counts().queries;
+  await tick();
+  assert.equal(
+    h.counts().queries,
+    before,
+    "no timer polling disguises the outage",
+  );
+  h.set(page([entity(), entity(2)], 12n));
+  h.stream().onHead(12n);
+  await tick();
+  assert.equal(h.counts().queries, before + 1);
+  assert.equal(h.last().status, "live");
+  assert.equal(h.last().reason, undefined);
+  assert.equal(h.last().listings.length, 2);
+  h.stream().onHead(13n);
+  await tick();
+  assert.equal(
+    h.counts().queries,
+    before + 1,
+    "healthy heads do not poll snapshots",
+  );
+  h.board.stop();
+});
+
+test("a failed reconciliation retries on a subsequent stream head and remains single-flight", async () => {
+  const h = harness();
+  await h.board.start(filter);
+  h.stream().onHead(11n);
+  await tick();
+  h.setQuery(async () => {
+    throw Error("temporary query outage");
+  });
+  await h.board.refresh();
+  assert.equal(h.last().status, "error");
+  let release!: (x: ListingPage) => void;
+  h.setQuery(() => new Promise((r) => (release = r)));
+  const before = h.counts().queries;
+  h.stream().onHead(12n);
+  h.stream().onHead(13n);
+  h.stream().onHead(14n);
+  assert.equal(h.counts().queries, before + 1);
+  assert.equal(
+    h.last().status,
+    "error",
+    "stream health alone cannot authenticate listings",
+  );
+  release(page([entity(), entity(2)], 14n));
+  await tick();
+  assert.equal(h.last().status, "live");
+  assert.equal(h.last().listings.length, 2);
+  h.board.stop();
+});
