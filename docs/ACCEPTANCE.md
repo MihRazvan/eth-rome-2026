@@ -1,3 +1,11 @@
+# Account-free document storage — deployed
+
+12 September 2026: Cutout now uses gateway-funded public Swarm uploads by default, with no end-user storage account or drive. Source `6e923a6`, Vercel `dpl_BaPyTpRQXJupsZy7wTrKXTQbadv4`. Actual isolated-browser encrypted upload/retrieval, both recipients, reload and outsider rejection passed; production desktop/mobile checks passed. [Evidence and exact scope](design/cutout/evidence/account-free-storage/README.md).
+
+Swarm session authentication is **no longer a blocker**. The gateway funds postage; this does not consume the user's gift drive and has no promised retention period. The full paid public lifecycle and native Arkiv expiry remain unrun in this change. The older session-blocked entries below are historical, not current prerequisites.
+
+---
+
 # Technical follow-up before teammate manual review
 
 12 September 2026: deployed Arkiv recovery and client-visible listing receipts, source dfa6054. 16 listing and 26 journey/settlement/storage tests passed; 1 optional external browser test skipped; targeted TypeScript/build pass. Actual isolated Chromium with public WSS recovered deliberate initial failure and established disconnect. No public write/expiry/payment is claimed by those fault-injected tests. Current deployment and production browser observation: [follow-up evidence](design/cutout/evidence/release-followup/README.md). [Teammate's short checklist](CUTOUT-MANUAL-TEST.md).

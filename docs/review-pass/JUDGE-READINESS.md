@@ -4,6 +4,8 @@ Working checklist, 12 September 2026. Owner **Agent** means implementation/verif
 
 ## Current customer-facing pass
 
+Storage update: the deployed app includes direct gateway-funded uploads without a Swarm account or drive. Actual clean-browser encrypted upload/retrieval and outsider rejection are verified in [account-free storage evidence](../design/cutout/evidence/account-free-storage/README.md). The team's gift drive is untouched; the gateway offers temporary trial storage, not guaranteed retention. Earlier session prerequisites are superseded.
+
 Cutout now has the supplied paper/ink/orange identity, Tasks / Activity / workspace navigation, a task preview, and a cut-open report interaction. Judges can enter a clearly labelled no-wallet guided demo that uses real browser encryption and simulated financial/qualification steps. Live Fuji functionality remains separate. Private device namespaces and earlier contract names are retained for compatibility.
 
 Latest actual local lifecycle:21browserchecks, including approval blocked before opening the report. Public snapshot publication and hosted browser proving are verified; the full public funded review and Arkiv expiry still need execution. The rehearsal wallets are funded. Browser Swarm authentication remains account setup; users never paste technical IDs/signers into Cutout.

@@ -1,0 +1,15 @@
+{
+  "recordedAt": "2026-09-12T16:44:58.002Z",
+  "checks": [
+    "Fresh browser has no Swarm ID iframe or account; actual gateway POST and authenticated independent GET succeed",
+    "Actual application AES-GCM/HPKE envelope opens to exact Unicode report for both recipients; uploaded bytes omit plaintext",
+    "Reload preserves local recipient key and reopens independently retrieved public ciphertext",
+    "Separate clean browser retrieves ciphertext but outsider cannot decrypt"
+  ],
+  "errors": [],
+  "reference": "caa6cb244fad51352f67f323a07be85a791da728c2d959b1cdbbbbc1e840d2e6",
+  "sha256": "0x2e1a705f6cfa914555b5d9d45f334b50fe5bd40972535c143d03043ba4784ef2",
+  "bytes": 1625,
+  "uploads": 1,
+  "scope": "Actual public gateway-funded storage and application cryptography in isolated Chromium. Recipient bindings are generated test bindings, not read from chain; no funded job, proof acceptance or payment claimed. No Swarm account, batch signer or recovery phrase used."
+}

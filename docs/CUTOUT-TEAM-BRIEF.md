@@ -66,7 +66,7 @@ This is the required rehearsal procedure, **not a claim it has already passed pu
 ### Prepare before presenting
 
 - Use desktop Chromium with separate client/reviewer wallet contexts. Client needs the chosen reward in canonical **Fuji test USDC**, test AVAX for gas, and Tiramisu test GLM in that same client address for listing publication. Reviewer needs test AVAX. Existing operator rehearsal wallets have already been funded; confirm the wallets actually in use.
-- In each browser, open **Your workspace**, connect the payment wallet, **Enable private reports**, and connect Swarm storage with an active upload-capable drive. No pasted Swarm IDs, batch IDs, signing keys or recovery phrases in Cutout.
+- In each browser, open **Your workspace**, connect the payment wallet, **Enable private reports**, and confirm **Document storage** says **Included · no storage account needed**. There is no Swarm sign-in or drive setup.
 - Prepare a current class-7 test credential and matching holder file on the reviewer’s own machine. Use the [enrollment guide](review-pass/QUALIFICATION-PROVISIONING.md); the issuer receives the commitment, not the holder secret. Do not demonstrate enrollment or expose file contents onstage.
 - Keep each role on the same hostname/browser profile throughout. Existing operator keys were registered on `review-pass-ethrome-2026.vercel.app`, which also displays Cutout. Opening the new Cutout hostname does not transfer those browser keys.
 - Confirm the public snapshot is current and the opportunity board is live. Use generous task deadlines. The default 30-block discovery lease is deliberately short; choose a longer lease for the main rehearsal and use a separate short lease for the expiry demonstration.

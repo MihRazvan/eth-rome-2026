@@ -1,3 +1,5 @@
+> Current active build: gateway-funded Swarm storage (`swarm-gateway`) needs no user identity or postage setup. The historical `--pending` publisher still uses Swarm ID. The active builder accepts existing `swarm-id` deployment manifests and deliberately selects the new adapter; addresses, cryptography and onchain state are unchanged. See [verification and service limits](../../../../docs/design/cutout/evidence/account-free-storage/README.md).
+
 # Review Pass on Vercel
 
 The local long-running server is not uploaded. Build Output API v3 packages the frontend as static files and an independently bundled Node24 read-only function. Browser proving, wallets and Swarm ID uploads stay in the user's browser. This deployment never needs a wallet private key, issuer secret, holder file, recovery phrase or server upload endpoint.
