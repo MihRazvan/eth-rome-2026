@@ -119,4 +119,9 @@ contract QualificationEscrowTest {
         vm.expectRevert(); vm.prank(ATTACKER); escrow.setRoot(4);
         require(escrow.revocationRoot() == 3);
     }
+    function testUnprovableClassCannotLockClientFunds() public {
+        vm.expectRevert(); vm.prank(CLIENT);
+        escrow.createJob(100, uint256(type(uint32).max) + 1, 1100, 1200, 1300, keccak256("terms"));
+        require(token.balanceOf(CLIENT) == 1000);
+    }
 }

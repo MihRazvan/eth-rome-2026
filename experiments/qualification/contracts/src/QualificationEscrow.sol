@@ -112,7 +112,7 @@ contract QualificationEscrow is ReentrancyGuard {
         bytes32 terms
     ) external nonReentrant returns (uint256 id) {
         if (
-            amount == 0 || qualificationClass == 0 || qualificationClass >= FIELD || terms == bytes32(0)
+            amount == 0 || qualificationClass == 0 || qualificationClass > type(uint32).max || terms == bytes32(0)
                 || block.timestamp >= acceptBefore || acceptBefore >= submitBefore || submitBefore >= reviewBefore
         ) revert InvalidTerms();
         id = ++nextJob;
