@@ -1,0 +1,42 @@
+{
+  "observedAt": "2026-09-12T09:05:11.822Z",
+  "readOnly": true,
+  "network": "Avalanche Fuji",
+  "token": "0x5425890298aed601595a70AB815c96711a31Bc65",
+  "checks": {
+    "chainId": 43113,
+    "latest": {
+      "number": "58330905",
+      "hash": "0x316443e58089cf3e43c09fb0ea24a9fb489464df4352fee86172ed84ed95f7bc",
+      "timestamp": "1789203907"
+    },
+    "safe": {
+      "number": "58330903",
+      "hash": "0x46b2e3a73e8d4f1aa1e7663c83cbf27b53a2fe4b08f44602b679a4277bba5e0f",
+      "timestamp": "1789203899"
+    },
+    "finalized": {
+      "number": "58330903",
+      "hash": "0x46b2e3a73e8d4f1aa1e7663c83cbf27b53a2fe4b08f44602b679a4277bba5e0f",
+      "timestamp": "1789203899"
+    },
+    "pending": {
+      "number": "58330905",
+      "hash": null,
+      "timestamp": "1789203907"
+    },
+    "codeBytes": 1852,
+    "codeHash": "0x7140a935aa3bb55d334d6d325fea277e47674770b10823feefa6f8b2c58af5fc",
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "decimals": 6,
+    "totalSupply": "90086374385788024",
+    "paused": false
+  },
+  "pinnedBlock": "58330903",
+  "limitations": [
+    "Read reachability only; no signer, faucet, approvals, transfers or deployments exercised.",
+    "Code hash identifies proxy bytecode, not proof of current implementation equivalence.",
+    "Tag reads occur sequentially and are not an atomic comparison."
+  ]
+}

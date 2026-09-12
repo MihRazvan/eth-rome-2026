@@ -1,0 +1,131 @@
+{
+  "scope": "Team1 Track A and Avalanche implementation research",
+  "sharedBase": "4f0cc87b405b8522f59e4c14d87ea546e77a4858",
+  "sources": [
+    {
+      "id": 1,
+      "publisher": "ETHRome",
+      "title": "Prizes and Bounties",
+      "url": "https://www.ethrome.org/hackermanual/prizes.html",
+      "notes": ". Retrieved by direct HTTPS after research browser extraction failed.",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 2,
+      "publisher": "urbeETH",
+      "title": "Hacker Manual, pinned commit 3ffd55d",
+      "url": "https://github.com/urbeETH/ethrome-2026-hacker-manual/blob/3ffd55daec53c7ecb4ed3901ba034f328ea731c0/HACKER-MANUAL.md",
+      "notes": ". Team1 section. Both user attachments contain consistent Team1 wording.",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 3,
+      "publisher": "Circle",
+      "title": "USDC contract addresses",
+      "url": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+      "notes": ".",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 4,
+      "publisher": "Ava Labs",
+      "title": "Deploy ERC20 Token Home",
+      "url": "https://build.avax.network/academy/avalanche-l1/native-token-bridge/01-erc20-to-native/04-deploy-erc20-token-home",
+      "notes": ".",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 5,
+      "publisher": "Circle",
+      "title": "stablecoin-evm",
+      "url": "https://github.com/circlefin/stablecoin-evm/tree/fc85788bc7c23cefe3df1a757133048bfddadeaa",
+      "notes": ". Apache-2.0; source HEAD pinned at observation.",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 6,
+      "publisher": "Ava Labs",
+      "title": "Helicon upgrade",
+      "url": "https://build.avax.network/docs/primary-network/helicon-upgrade",
+      "notes": ".",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 7,
+      "publisher": "Ava Labs",
+      "title": "AvalancheGo v1.15.0 release",
+      "url": "https://github.com/ava-labs/avalanchego/releases/tag/v1.15.0",
+      "notes": ", September 8, 2026.",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 8,
+      "publisher": "Ava Labs",
+      "title": "Kenya academic credentials",
+      "url": "https://www.avax.network/about/blog/securing-a-nations-credentials-kenya-anchors-academic-records-on-avalanche",
+      "notes": ", August 3, 2026.",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 9,
+      "publisher": "Ethena",
+      "title": "Introducing Ethena Pay",
+      "url": "https://pay.ethena.fi/blog/introducing-ethena-pay",
+      "notes": ", September 3, 2026.",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 10,
+      "publisher": "Avalanche",
+      "title": "NEC MOU",
+      "url": "https://www.avax.network/about/blog/nec-signs-mou-to-explore-biometric-verified-on-chain-services-on-avalanche",
+      "notes": ", July 10, 2026.",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 11,
+      "publisher": "Avalanche",
+      "title": "Payments Collective",
+      "url": "https://www.avax.network/about/blog/avalanche-payments-collective",
+      "notes": ", June 18, 2026.",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 12,
+      "publisher": "OpenZeppelin",
+      "title": "ERC20 API",
+      "url": "https://docs.openzeppelin.com/contracts/5.x/api/token/erc20",
+      "notes": ".",
+      "accessed": "2026-09-12"
+    },
+    {
+      "id": 13,
+      "publisher": "OpenZeppelin",
+      "title": "ERC20Wrapper v5.6.1",
+      "url": "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v5.6.1/contracts/token/ERC20/extensions/ERC20Wrapper.sol",
+      "notes": ", MIT.",
+      "accessed": "2026-09-12"
+    }
+  ],
+  "attachments": [
+    {
+      "title": "A Web3 database you can actually query Three missions at $500 each",
+      "path": "/Users/razvan/.codex/attachments/47e5fc73-3ebc-4411-8e4a-84f66cc8f21e/pasted-text.txt",
+      "role": "Current supplied sponsor brief; Team1 section agrees with official page"
+    },
+    {
+      "title": "Sponsor bounties How bounties work",
+      "path": "/Users/razvan/.codex/attachments/c5f8a59e-4400-47fa-b079-a68206d48314/pasted-text.txt",
+      "role": "Earlier supplied brief; same Team1 requirements"
+    }
+  ],
+  "snapshots": {
+    "prizesHtmlSha256": "0534a99bf7db66efa287da9cb847152e2d5e38f819b473712c9e939cd54d9a5a"
+  },
+  "limitations": [
+    "No Team1 submission form URL verified",
+    "No public writes or faucet claims",
+    "Existing artifact inspection was cached, not a clean compile",
+    "Source announcements do not establish user demand"
+  ]
+}
