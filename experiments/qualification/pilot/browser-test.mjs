@@ -38,7 +38,8 @@ const contract = (functionName, args = []) =>
 const browser = await chromium.launch();
 const checks = [],
   pageErrors = [],
-  requests = [];
+  requests = [],
+  privateRequests = [];
 const mnemonic = "test test test test test test test test test test test junk";
 async function profile(index) {
   const account = mnemonicToAccount(mnemonic, { addressIndex: index }),
@@ -91,6 +92,7 @@ async function profile(index) {
   page.on("pageerror", (e) => pageErrors.push(e.message));
   page.on("request", (req) => {
     if (req.url().includes("/api/upload")) requests.push(req.postData() ?? "");
+    privateRequests.push(req.url() + (req.postData() ?? ""));
   });
   await page.goto(`http://127.0.0.1:${port}`);
   await page.locator(".device-settings > summary").click();
@@ -245,9 +247,85 @@ try {
     "--out",
     `${dir}/presentation.json`,
   ]);
+  async function selectPrivateFiles() {
+    await worker.page
+      .locator(`[data-credential="${id}"]`)
+      .setInputFiles(holderFiles.credential);
+    await worker.page
+      .locator(`[data-holder="${id}"]`)
+      .setInputFiles(holderFiles.holder);
+  }
+  await selectPrivateFiles();
   await worker.page
-    .locator(`[data-proof="${id}"]`)
-    .setInputFiles(`${dir}/presentation.json`);
+    .locator(`[data-action="generate"][data-id="${id}"]`)
+    .click();
+  await worker.page
+    .locator(`[data-action="cancel-proof"][data-id="${id}"]:enabled`)
+    .waitFor();
+  await worker.page
+    .locator(`[data-action="cancel-proof"][data-id="${id}"]`)
+    .click();
+  await worker.page.waitForFunction(
+    () => !document.querySelector("#connect").disabled,
+  );
+  assert.equal(
+    await worker.page
+      .locator(`[data-action="accept"][data-id="${id}"]`)
+      .count(),
+    0,
+  );
+  checks.push(
+    "Browser proof cancellation clears private file selections and sends no acceptance transaction",
+  );
+  await selectPrivateFiles();
+  await worker.page
+    .locator(`[data-action="generate"][data-id="${id}"]`)
+    .click();
+  await worker.page.waitForFunction(
+    () =>
+      document
+        .querySelector("#notice")
+        .textContent.includes("Preparing the local prover"),
+    undefined,
+    { timeout: 60_000 },
+  );
+  await worker.page.evaluate(() =>
+    window.pilotTestEvents("accountsChanged", [
+      "0x0000000000000000000000000000000000000001",
+    ]),
+  );
+  await worker.page.waitForFunction(
+    () => !document.querySelector("#connect").disabled,
+  );
+  assert.equal(
+    await worker.page.locator("#wallet").textContent(),
+    "Connect to begin",
+  );
+  assert.equal(
+    await worker.page
+      .locator(`[data-action="accept"][data-id="${id}"]`)
+      .count(),
+    0,
+  );
+  checks.push(
+    "Account change terminates an initializing browser prover and cannot restore a stale proof",
+  );
+  await click(worker.page, "#connect");
+  await selectPrivateFiles();
+  const provingStarted = Date.now();
+  await worker.page
+    .locator(`[data-action="generate"][data-id="${id}"]`)
+    .click();
+  await worker.page.waitForFunction(
+    () => !document.querySelector("#connect").disabled,
+    undefined,
+    { timeout: 180_000 },
+  );
+  if ((await worker.page.locator("#notice").getAttribute("class")) === "error")
+    throw Error(await worker.page.locator("#notice").textContent());
+  checks.push(
+    `Browser WASM generated and contract-simulated the real proof in ${Date.now() - provingStarted}ms`,
+  );
   await worker.page
     .locator(`[data-action="accept"][data-id="${id}"]`)
     .waitFor();
@@ -257,7 +335,7 @@ try {
     worker.account.address.toLowerCase(),
   );
   checks.push(
-    "Holder-local CLI exports real proof; reviewer wallet accepts exact bound assignment",
+    "Browser-generated proof settles against the deployed Groth16 verifier; reviewer wallet owns the exact bound assignment",
   );
   const plaintext =
     "PRIVATE PILOT REVIEW: allowance cap verified across the supported transfer paths.";
@@ -521,6 +599,14 @@ try {
     fullPage: true,
   });
   checks.push("390px responsive pilot has no horizontal overflow");
+  const privateHolder = JSON.parse(await readFile(holderFiles.holder, "utf8"));
+  assert.ok(privateHolder.holderSecret.length > 20);
+  assert.ok(
+    privateRequests.every((body) => !body.includes(privateHolder.holderSecret)),
+  );
+  checks.push(
+    "All observed browser HTTP request URLs and bodies exclude the holder secret",
+  );
   assert.deepEqual(pageErrors, []);
   await writeFile(
     `${dir}/evidence/browser.json`,

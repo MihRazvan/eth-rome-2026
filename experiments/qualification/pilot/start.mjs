@@ -5,6 +5,8 @@ import { resolve, dirname, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import http from "node:http";
 import { build } from "vite";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import {
   createPublicClient,
   http as rpc,
@@ -95,6 +97,55 @@ const store =
           config.swarm.environment ??
           (config.environment === "local-pilot" ? "local-bee" : "public-swarm"),
       });
+// Only explicit public prover artifacts are served; no holder/issuer directory is exposed.
+let proverManifest;
+const proverRoutes = new Map();
+if (config.setupDir) {
+  const proverDir = resolve(local, "browser-prover");
+  await promisify(execFile)(
+    process.execPath,
+    [resolve(root, "experiments/qualification/browser-probe/build.mjs")],
+    {
+      cwd: root,
+      env: { ...process.env, REVIEW_PASS_BROWSER_PROBE_DIR: proverDir },
+      maxBuffer: 65536,
+    },
+  );
+  const files = [];
+  for (const name of ["circuit.r1cs", "proving.key", "verifying.key"]) {
+    const path = resolve(config.setupDir, name),
+      bytes = await readFile(path);
+    const pinned = config.setupHashes?.[name];
+    if (
+      !pinned ||
+      pinned.replace(/^0x/, "") !== sha256(bytesToHex(bytes)).slice(2)
+    )
+      throw Error(`Public prover setup differs from deployment: ${name}`);
+    files.push({
+      name,
+      bytes: bytes.length,
+      sha256: sha256(bytesToHex(bytes)),
+    });
+    proverRoutes.set(`/prover/${name}`, {
+      path,
+      type: "application/octet-stream",
+    });
+  }
+  proverManifest = { version: 1, verifier: config.verifier, files };
+  proverRoutes.set("/prover/worker.js", {
+    path: resolve(root, "experiments/qualification/browser-probe/worker.js"),
+    type: "application/javascript",
+  });
+  for (const [name, type] of [
+    ["prover.wasm", "application/wasm"],
+    ["wasm_exec.js", "application/javascript"],
+    ["GO-LICENSE", "text/plain"],
+  ])
+    proverRoutes.set(`/prover/${name}`, {
+      path: resolve(proverDir, name),
+      type,
+    });
+}
 const out = resolve(local, "web");
 await build({
   configFile: false,
@@ -135,7 +186,7 @@ const server = http.createServer(async (req, res) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader(
     "Content-Security-Policy",
-    `default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ${new URL(config.rpcUrl).origin} ${new URL(config.arkiv?.rpcUrl ?? "https://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} ${new URL(config.arkiv?.wsUrl ?? "wss://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} https://gateway.ethswarm.org https://swarm-id.snaha.net ${new URL(retrievalUrl).origin}; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'`,
+    `default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' ${new URL(config.rpcUrl).origin} ${new URL(config.arkiv?.rpcUrl ?? "https://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} ${new URL(config.arkiv?.wsUrl ?? "wss://rpc.tiramisu.db-chain.testnet.arkiv.network").origin} https://gateway.ethswarm.org https://swarm-id.snaha.net ${new URL(retrievalUrl).origin}; worker-src 'self'; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'`,
   );
   const send = (status, data) => {
     res.writeHead(status, { "Content-Type": "application/json" });
@@ -148,6 +199,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/api/config")
       return send(200, {
         version: 1,
+        browserProver: proverManifest ?? null,
         environment: config.environment,
         testOnly: config.testOnly,
         chainId: config.chainId,
@@ -165,6 +217,16 @@ const server = http.createServer(async (req, res) => {
         arkiv: config.arkiv ?? null,
         abi,
       });
+    if (req.method === "GET" && proverRoutes.has(url.pathname)) {
+      const route = proverRoutes.get(url.pathname);
+      if (url.pathname === "/prover/worker.js")
+        res.setHeader(
+          "Content-Security-Policy",
+          "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'",
+        );
+      res.writeHead(200, { "Content-Type": route.type });
+      return res.end(await readFile(route.path));
+    }
     if (req.method === "GET" && url.pathname === "/api/snapshot") {
       const bytes = await store.download(config.snapshot);
       const snapshot = JSON.parse(new TextDecoder().decode(bytes));

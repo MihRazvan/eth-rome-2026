@@ -267,8 +267,10 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
         <h2>About this test deployment</h2>
         <p>
           No issuer or client adoption is claimed. The proof uses a local test
-          Groth16 setup. This page never accepts a credential or holder
-          secret—only an exported public presentation.
+          Groth16 setup. Private credential files selected for browser proving
+          stay in a local worker. Only the resulting public proof is submitted
+          to the contract. Keep your original files for recovery; the app does
+          not save them.
         </p>
         <p>
           Private document keys persist in this browser profile. Other devices

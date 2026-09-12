@@ -8,11 +8,14 @@ import {
   createWalletClient,
   http,
   defineChain,
+  sha256,
+  bytesToHex,
 } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
 import { beeBytes } from "../transport/bytes.ts";
 const exec = promisify(execFile);
-const dir = process.env.QUALIFICATION_PILOT_DIR ?? ".runtime/qualification-pilot";
+const dir =
+  process.env.QUALIFICATION_PILOT_DIR ?? ".runtime/qualification-pilot";
 await mkdir(dir, { recursive: true });
 const source = JSON.parse(
   await readFile(".runtime/qualification/deployment.json", "utf8"),
@@ -128,6 +131,17 @@ const stack = JSON.parse(
 );
 const config = {
   version: 1,
+  setupDir: `${process.cwd()}/.runtime/qualification/setup`,
+  setupHashes: Object.fromEntries(
+    await Promise.all(
+      ["circuit.r1cs", "proving.key", "verifying.key"].map(async (name) => [
+        name,
+        sha256(
+          bytesToHex(await readFile(`.runtime/qualification/setup/${name}`)),
+        ),
+      ]),
+    ),
+  ),
   environment: "local-pilot",
   testOnly: true,
   chainId: 31338,

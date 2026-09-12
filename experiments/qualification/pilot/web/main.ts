@@ -30,6 +30,7 @@ import {
   type Role,
   type Readiness,
 } from "../journey";
+import { proveInBrowser } from "../browser-prover";
 import { uploadMessage } from "../upload-message";
 import { encodeTerms, matchTerms, termsUploadMessage } from "../terms";
 import { waitForSettlement } from "../settlement";
@@ -77,6 +78,7 @@ let account: Address | undefined,
   generation = 0;
 let jobs: any[] = [];
 const proofs = new Map<string, any>();
+let proofController: AbortController | undefined;
 let role: Role =
   new URL(location.href).searchParams.get("role") === "reviewer"
     ? "reviewer"
@@ -222,7 +224,7 @@ function syncButtons() {
   ]);
   document.querySelectorAll<HTMLButtonElement>("button").forEach((b) => {
     b.disabled =
-      busy ||
+      (busy && b.dataset.action !== "cancel-proof") ||
       b.dataset.eligible === "false" ||
       (b.dataset.viewJob
         ? boardState?.status !== "live"
@@ -691,7 +693,7 @@ function render() {
               ? button("publish", j.id, "Publish discovery lease on Arkiv")
               : "";
           if (eligibility.accept && !j.scopeError && !isClient)
-            actions = `<details><summary>Generate your qualification proof locally</summary><p class="fine">Download the whole issuer snapshot. Reconstruct its root and path with your local credential; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}</details><label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label>${proofs.has(j.id) ? button("accept", j.id, "Verify proof & accept") : ""}`;
+            actions = `${config.browserProver ? `<div class="local-prover"><h4>Prove qualification in this browser</h4><p class="fine">Select your issued credential and holder file. They are read locally, never uploaded. A fresh proof is bound to this assignment and your connected payment wallet.</p><label class="fine">Credential JSON<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label class="fine">Private holder JSON<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label>${button("generate", j.id, "Generate qualification proof")}${button("cancel-proof", j.id, "Cancel proof", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Verify proof & accept")}` : ""}`;
           if (j.status === "Accepted" && isWorker)
             actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Encrypt for client & submit", eligibility.submit)}`;
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
@@ -851,9 +853,199 @@ async function register() {
     config.keyRegistry,
   );
 }
+async function validatePresentation(id: string, p: any, owner: Address) {
+  if (
+    !/^0x[a-f0-9]{512}$/i.test(p.proof) ||
+    !Array.isArray(p.publicInputs) ||
+    p.publicInputs.length !== 9 ||
+    p.publicInputs.some(
+      (x: unknown) => typeof x !== "string" || !/^[0-9]{1,78}$/.test(x),
+    )
+  )
+    throw Error("This is not a public qualification proof");
+  if (BigInt(p.publicInputs[6]) !== BigInt(owner))
+    throw Error("Proof belongs to another payment wallet");
+  // Contract simulation verifies the actual deployed verifier AND current issuer/root,
+  // scope, class, context, nullifier, deadlines and recipient. No transaction is sent.
+  try {
+    await client.simulateContract({
+      address: config.escrow,
+      abi: config.abi.QualificationEscrow,
+      functionName: "accept",
+      args: [BigInt(id), p.proof, p.publicInputs.map(BigInt)],
+      account: owner,
+    });
+  } catch {
+    throw Error(
+      "Proof is not valid for this open assignment and current issuer state. Refresh and generate a new proof.",
+    );
+  }
+}
+function withCancellation<T>(
+  promise: Promise<T>,
+  signal: AbortSignal,
+): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const cancel = () =>
+      reject(Error("Proof generation cancelled; no transaction was sent"));
+    if (signal.aborted) return cancel();
+    signal.addEventListener("abort", cancel, { once: true });
+    promise
+      .then(resolve, reject)
+      .finally(() => signal.removeEventListener("abort", cancel));
+  });
+}
+async function generatePresentation(id: string) {
+  const j = jobs.find((v) => v.id === id),
+    owner = account!,
+    session = generation;
+  if (
+    !owner ||
+    !j ||
+    !config.browserProver ||
+    config.browserProver.verifier.toLowerCase() !==
+      config.verifier.toLowerCase()
+  )
+    throw Error("Connect your wallet to a configured browser prover");
+  const controller = new AbortController();
+  proofController = controller;
+  const timeout = setTimeout(() => controller.abort(), 180_000);
+  const current = () => {
+    if (
+      controller.signal.aborted ||
+      session !== generation ||
+      account !== owner
+    )
+      throw Error("Proof generation cancelled; no transaction was sent");
+  };
+  const progress = (text: string) => {
+    current();
+    const el = document.getElementById(`proof-progress-${id}`);
+    if (el) el.textContent = text;
+    $("#notice").textContent = text;
+  };
+  const cancel = document.querySelector<HTMLButtonElement>(
+    `[data-action="cancel-proof"][data-id="${id}"]`,
+  )!;
+  cancel.dataset.eligible = "true";
+  syncButtons();
+  const inputs = ["credential", "holder"].map((kind) =>
+    document.querySelector<HTMLInputElement>(`[data-${kind}="${id}"]`)!,
+  );
+  try {
+    const privateFiles = await Promise.all(
+      inputs.map(async (input) => {
+        const file = input.files?.[0];
+        if (!file || file.size > 16_384)
+          throw Error("Select credential and holder JSON files below16KB each");
+        try {
+          return JSON.parse(await file.text());
+        } catch {
+          throw Error("A selected private file is not valid JSON");
+        }
+      }),
+    );
+    inputs.forEach((input) => {
+      input.value = "";
+    });
+    current();
+    progress("Retrieving the whole public issuer snapshot…");
+    const response = await fetch("/api/snapshot", {
+      signal: controller.signal,
+      redirect: "error",
+    });
+    if (!response.ok)
+      throw Error(
+        "The current issuer snapshot is unavailable. Ask the issuer to publish its latest snapshot.",
+      );
+    if (!response.body) throw Error("Issuer snapshot response is empty");
+    const reader = response.body.getReader(),
+      chunks: Uint8Array[] = [];
+    let length = 0;
+    try {
+      for (;;) {
+        const part = await reader.read();
+        if (part.done) break;
+        length += part.value.length;
+        if (length > 1_048_576)
+          throw Error("Issuer snapshot exceeds browser limit");
+        chunks.push(part.value);
+      }
+    } finally {
+      await reader.cancel();
+      reader.releaseLock();
+    }
+    const snapshotBytes = new Uint8Array(length);
+    let offset = 0;
+    for (const part of chunks) {
+      snapshotBytes.set(part, offset);
+      offset += part.length;
+    }
+    let snapshot: unknown;
+    try {
+      snapshot = JSON.parse(new TextDecoder().decode(snapshotBytes));
+    } catch {
+      throw Error("Issuer snapshot is not valid JSON");
+    }
+    const [ctx, block] = await withCancellation(
+      Promise.all([read("contextFor", [BigInt(id)]), client.getBlock()]),
+      controller.signal,
+    );
+    current();
+    const expiry = privateFiles[0]?.expiry;
+    if (!Number.isSafeInteger(expiry) || expiry <= Number(block.timestamp))
+      throw Error(
+        "The selected credential has expired or has an invalid expiry",
+      );
+    const deadline = [
+      j.acceptBefore - 1n,
+      BigInt(expiry),
+      block.timestamp + 600n,
+    ].reduce((a, b) => (a < b ? a : b));
+    if (deadline <= block.timestamp)
+      throw Error("The assignment acceptance deadline has passed");
+    const p = await proveInBrowser(
+      config.browserProver,
+      {
+        credential: privateFiles[0],
+        holder: privateFiles[1],
+        snapshot,
+        context: String(ctx),
+        recipient: owner,
+        deadline: String(deadline),
+        class: String(j.class),
+      },
+      { signal: controller.signal, onProgress: progress },
+    );
+    privateFiles.length = 0;
+    current();
+    progress("Checking the proof against the deployed contract…");
+    await withCancellation(
+      validatePresentation(id, p, owner),
+      controller.signal,
+    );
+    current();
+    proofs.set(id, p);
+    return {
+      message:
+        "Qualification proof verified. Review the scope, then select Verify proof & accept to sign with your wallet.",
+    };
+  } finally {
+    controller.abort();
+    clearTimeout(timeout);
+    inputs.forEach((input) => {
+      input.value = "";
+    });
+    cancel.dataset.eligible = "false";
+    if (proofController === controller) proofController = undefined;
+  }
+}
+
 async function action(name: string, id: string) {
   const j = jobs.find((v) => v.id === id);
   switch (name) {
+    case "generate":
+      return generatePresentation(id);
     case "publish": {
       if (!j.scope || j.client.toLowerCase() !== account?.toLowerCase())
         throw Error("Only the funding client can publish verified scope");
@@ -1169,7 +1361,10 @@ $("#opportunities").onclick = (e) => {
 void startBoard().catch(() => {
   $("#discovery-status").textContent = "Arkiv discovery unavailable";
 });
-window.addEventListener("pagehide", () => board.stop());
+window.addEventListener("pagehide", () => {
+  board.stop();
+  proofController?.abort();
+});
 if (publicStorage) {
   $("#connect-storage").onclick = () => run(() => publicStorage.connect());
   void publicStorage.initialize().catch(() => {
@@ -1290,30 +1485,39 @@ document.addEventListener("click", (e) => {
   const b = (e.target as Element).closest<HTMLButtonElement>(
     "button[data-action]",
   );
+  if (b?.dataset.action === "cancel-proof") {
+    proofController?.abort();
+    return;
+  }
   if (b) run(() => action(b.dataset.action!, b.dataset.id!));
 });
 document.addEventListener("change", (e) => {
   const input = e.target as HTMLInputElement;
   if (!input.dataset.proof) return;
   run(async () => {
+    const session = generation,
+      owner = account!;
     const f = input.files?.[0];
     if (!f || f.size > 10000)
-      throw Error("Choose a public proof JSON below 10KB");
-    const p = JSON.parse(await f.text());
-    if (
-      !/^0x[a-f0-9]{512}$/i.test(p.proof) ||
-      !Array.isArray(p.publicInputs) ||
-      p.publicInputs.length !== 9 ||
-      p.publicInputs.some((x: any) => typeof x !== "string" || !/^\d+$/.test(x))
-    )
-      throw Error("This is not a public qualification proof");
-    if (BigInt(p.publicInputs[6]) !== BigInt(account!))
-      throw Error("Proof belongs to another payment wallet");
-    proofs.set(input.dataset.proof!, p);
+      throw Error("Choose a public proof JSON below10KB");
+    let p: any;
+    try {
+      p = JSON.parse(await f.text());
+    } catch {
+      throw Error("This is not valid public proof JSON");
+    }
+    await validatePresentation(input.dataset.proof!, p, owner);
+    if (session !== generation || owner !== account)
+      throw Error("Wallet session changed");
+    proofs.set(input.dataset.proof!, {
+      proof: p.proof,
+      publicInputs: p.publicInputs,
+    });
   });
 });
 for (const event of ["accountsChanged", "chainChanged", "disconnect"])
   window.ethereum?.on?.(event, () => {
+    proofController?.abort();
     generation++;
     account = undefined;
     device = undefined;
@@ -1327,3 +1531,7 @@ for (const event of ["accountsChanged", "chainChanged", "disconnect"])
     render();
   });
 await refresh();
+
+if (config.browserProver)
+  $("#prover-help").textContent =
+    "Bring the credential issued for you and your private holder file. Select them on an open task to generate a proof inside this browser. No private file is uploaded or stored by the app. First-time reviewers still need enrollment by the configured test issuer.";
