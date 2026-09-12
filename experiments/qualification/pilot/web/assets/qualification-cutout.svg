@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224 150" fill="none">
+<path d="M13 14h133v122H13z" fill="#E8D9B8" stroke="#17150F"/>
+<path d="M5 26V6h20M134 6h20v20M5 122v20h20" stroke="#9A907A"/>
+<circle cx="78" cy="57" r="19" stroke="#645B49" stroke-width="2" stroke-dasharray="4 4"/>
+<path d="M39 116c0-29 18-43 39-43s39 14 39 43Z" stroke="#645B49" stroke-width="2" stroke-dasharray="4 4"/>
+<path d="m151 66 56 9-11 65-56-9z" fill="#F04E23" stroke="#17150F"/>
+<path d="m159 104 10 13 20-21" stroke="#17150F" stroke-width="3"/>
+<path d="M158 53h51M185 31v15" stroke="#17150F" stroke-dasharray="3 5"/>
+</svg>
