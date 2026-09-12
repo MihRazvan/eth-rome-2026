@@ -41,10 +41,10 @@ Official sources: [ETHRome prize rules](https://www.ethrome.org/hackermanual/pri
 
 ## Delivery and next verification
 
-The integrated local application supports two independently funded scopes/rewards, holder-local proof import, encrypted delivery, recipient-specific retrieval, report export and payment. The board connects to actual public Arkiv WSS. These are different evidence scopes: local Anvil/Bee transactions do not establish Fuji or public storage writes.
+The integrated local application supports two independently funded scopes/rewards, browser-local proof generation or advanced public proof import, encrypted delivery, recipient-specific retrieval, report export and payment. The board connects to actual public Arkiv WSS. These are different evidence scopes: local Anvil/Bee transactions do not establish Fuji or public storage writes.
 
 The UI continues the work-ticket direction selected after [two rendered application concepts](../../experiments/qualification/research/concepts.md). It keeps scope, reward and acceptance/delivery/payment actions together, with a separate discovery board and an explicit disclosure explanation.
 
-Start with the [build acceptance ledger](BUILD.md), [product runbook](RUNBOOK.md), [bounty evidence index](../../arkiv/submission.md) and [feedback report](../../feedback.md). The current local demo uses port18889; port18888 remains the earlier pilot. All project credentials and private issuer/holder files stay outside Git and HTTP.
+Start with the **[shared judge-readiness checklist](JUDGE-READINESS.md)**, [qualification provisioning](QUALIFICATION-PROVISIONING.md), [latest judge-pass evidence](evidence/judge-pass/README.md), [build acceptance ledger](BUILD.md), [product runbook](RUNBOOK.md), [bounty evidence index](../../arkiv/submission.md) and [feedback report](../../feedback.md). The current local demo uses port18889; port18888 remains the earlier pilot. All project credentials and private issuer/holder files stay outside Git and HTTP.
 
 The public deployment preparation builds a separate verifier/setup and checks live Fuji token metadata. Broadcasting requires explicitly configured project funds, valid public issuer metadata and a publicly retrievable whole snapshot. Missing access must stay a concrete gate; failed integrations must never silently become fixtures.

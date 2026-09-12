@@ -1,0 +1,16 @@
+{
+  "mode": "local-rehearsal",
+  "status": "REUSED",
+  "writes": 0,
+  "job": "1",
+  "client": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "title": "Review the escrow approval path",
+  "amount": "250000000",
+  "token": "qUSD",
+  "acceptBefore": "1789303347",
+  "scope": {
+    "reference": "0b385e14ecfb2bd894cd72506842fff5ca5927153e78f3f98b8bb7f0493a1850",
+    "sha256": "0x8dad0853fbd08b5f0a7b4c2b9dd535528ccb212ed70998387928b28237351a75"
+  },
+  "arkivListingCreated": false
+}

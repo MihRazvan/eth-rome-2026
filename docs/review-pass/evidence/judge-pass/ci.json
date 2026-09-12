@@ -1,0 +1,19 @@
+{
+  "applicationRevision": "dea5ba2bf6d038260857dc4d3c45b1a7eb7ca2eb",
+  "runs": [
+    {
+      "name": "Verify qualification experiment",
+      "id": 34694603183,
+      "conclusion": "success",
+      "url": "https://github.com/MihRazvan/eth-rome-2026/actions/runs/34694603183"
+    },
+    {
+      "name": "Verify EXIT",
+      "id": 34694603203,
+      "conclusion": "success",
+      "url": "https://github.com/MihRazvan/eth-rome-2026/actions/runs/34694603203",
+      "skippedJob": "pinned-source (dispatch-only; not a new fork verification)"
+    }
+  ],
+  "scope": "Application revision; subsequent final handoff commit changes only docs/evidence. Public sponsor lifecycle is not established by CI."
+}

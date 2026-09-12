@@ -51,7 +51,7 @@ Send that `.commitment.txt` file to the intended issuer through the agreed enrol
 
 The operator must use the **existing registry whose signing public key matches the deployed escrow's immutable `issuerX`/`issuerY`**. Its signing key is different from the EOA authorized to call `setRoot`. Creating a fresh registry does not enroll it into an existing escrow.
 
-For the local rehearsal, the existing registry is normally `.runtime/review-pass/issuer`. Public deployments use their designated private issuer directory; configure that path deliberately. Never reset a registry, recycle revoked indices, or delete its state to repair an error. The registry allocator preserves allocation history across concurrent processes and interrupted issuance.
+For the local rehearsal, the existing registry is normally `.runtime/review-pass-judge/issuer`. Public deployments use their designated private issuer directory; configure that path deliberately. Never reset a registry, recycle revoked indices, or delete its state to repair an error. The registry allocator preserves allocation history across concurrent processes and interrupted issuance.
 
 The operator has its own CLI build. Save the received commitment as `.runtime/review-pass-enrollment/received-commitment.txt`, then run:
 
@@ -60,7 +60,7 @@ umask 077
 mkdir -p .runtime/review-pass-enrollment/delivery
 REVIEW_PASS_PROVER="$PWD/.runtime/review-pass-enrollment/prover"
 go -C experiments/qualification/prover build -o "$REVIEW_PASS_PROVER" .
-REVIEW_PASS_ISSUER_DIR="$PWD/.runtime/review-pass/issuer"
+REVIEW_PASS_ISSUER_DIR="$PWD/.runtime/review-pass-judge/issuer"
 REVIEW_PASS_CREDENTIAL="$PWD/.runtime/review-pass-enrollment/delivery/credential.json"
 REVIEW_PASS_COMMITMENT="$(node -e 'const fs=require("node:fs"); const s=fs.readFileSync(process.argv[1],"utf8").trim(); if(!/^[1-9][0-9]*$/.test(s)) throw Error("Invalid commitment"); process.stdout.write(s)' .runtime/review-pass-enrollment/received-commitment.txt)"
 REVIEW_PASS_EXPIRY="$(node -p 'Math.floor(Date.now()/1000)+86400')"
@@ -119,7 +119,7 @@ Cancellation, a wallet change, stale issuer state, expired credential or a compe
 
 ## Local supervised rehearsal and evidence boundary
 
-The local deployment helper maintains an ignored `.runtime/review-pass/holder/latest.json` file containing paths to its current holder/credential files. A local operator can use those paths to select files on their own machine for the supervised manual test. The file is neither an enrollment API nor a public download. Never serve it, publish its referenced files, or offer the public Anvil identity as an independently qualified professional.
+The local deployment helper maintains an ignored `.runtime/review-pass-judge/holder/latest.json` file containing paths to its current holder/credential files. A local operator can use those paths to select files on their own machine for the supervised manual test. The file is neither an enrollment API nor a public download. Never serve it, publish its referenced files, or offer the public Anvil identity as an independently qualified professional.
 
 The browser suite intentionally revokes its credential and leaves the previously configured snapshot stale. A seeded open task alone does not repair that enrollment. Keep the existing issuer and chain intact; intentionally issue another credential into a fresh slot if appropriate, and ensure the published whole snapshot matches the latest root before another rehearsal.
 

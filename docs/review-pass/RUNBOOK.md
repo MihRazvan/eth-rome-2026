@@ -6,21 +6,32 @@ Node24.12+, Go1.25.7 selected by the module, Foundry1.5.1 and pinned `npm ci` de
 
 ```sh
 npm ci
-QUALIFICATION_PILOT_DIR=.runtime/review-pass node experiments/qualification/pilot/deploy-local.mjs
-QUALIFICATION_PILOT_DIR=.runtime/review-pass QUALIFICATION_PILOT_PORT=18889 node experiments/qualification/pilot/start.mjs
+QUALIFICATION_PILOT_DIR=.runtime/review-pass-judge node experiments/qualification/pilot/deploy-local.mjs
+QUALIFICATION_PILOT_DIR=.runtime/review-pass-judge QUALIFICATION_PILOT_PORT=18889 node experiments/qualification/pilot/start.mjs
 ```
 
-Open `http://127.0.0.1:18889`. The deployer uses only public Anvil development accounts and refuses another chain. It allocates a fresh credential slot rather than undoing revocation. Inspect `.runtime/review-pass/pids.json` and the actual command before stopping only this server. Restarting the server rebuilds its UI and reloads its configuration.
+Open `http://127.0.0.1:18889`. The deployer uses only public Anvil development accounts and refuses another chain. It allocates a fresh credential slot rather than undoing revocation. Inspect `.runtime/review-pass-judge/pids.json` and the actual command before stopping only this server. Restarting the server rebuilds its UI and reloads its configuration.
 
 In another terminal:
 
 ```sh
-QUALIFICATION_PILOT_DIR=.runtime/review-pass QUALIFICATION_PILOT_PORT=18889 node experiments/qualification/pilot/browser-test.mjs
-node --import tsx --test experiments/qualification/pilot/keys.test.ts experiments/qualification/pilot/terms.test.ts experiments/qualification/pilot/listings.test.ts experiments/qualification/pilot/settlement.test.ts experiments/qualification/pilot/swarm-id.test.ts
+QUALIFICATION_PILOT_DIR=.runtime/review-pass-judge QUALIFICATION_PILOT_PORT=18889 node experiments/qualification/pilot/browser-test.mjs
+node --import tsx --test experiments/qualification/pilot/journey.test.ts experiments/qualification/pilot/keys.test.ts experiments/qualification/pilot/terms.test.ts experiments/qualification/pilot/listings.test.ts experiments/qualification/pilot/settlement.test.ts experiments/qualification/pilot/swarm-id.test.ts
 forge test --root experiments/qualification/contracts
 ```
 
 The full browser test uses four isolated real Chromium profiles with explicitly injected Anvil wallets. It leaves two paid jobs and a permanently revoked credential; the configured old snapshot then correctly returns409. For another fresh rehearsal, redeploy locally and restart only18889. Do not reset the issuer or call this independent physical-device/extension-wallet testing.
+
+After the lifecycle test, prepare a **new** local deployment as above and restart the owned server, then leave a real funded task available:
+
+```sh
+QUALIFICATION_PILOT_DIR=.runtime/review-pass-judge node experiments/qualification/pilot/seed-local-task.mjs --seed
+# Repeating this must say REUSED with writes: 0.
+```
+
+This is actual local-chain funding and Bee storage, not an Arkiv listing. See [guarded seeding](local-task-seeding.md). The browser's private report keys must still be registered by each wallet. Do not run the full lifecycle test against a manual session in progress: it deliberately revokes its test credential.
+
+Browser proving is built from the unchanged Go relation at server startup. The deployment must pin `setupDir` and `setupHashes`; mismatches fail startup. About 21 MB of public WASM/parameters are downloaded; the measured desktop Chromium flow took about 18 seconds including initialization. Internet/mobile timings are unverified. Cancellation, wallet changes and page exit terminate the worker; no server-side prover exists.
 
 An opt-in public read-only storage check is `REVIEW_PASS_SWARM_LIVE_PROBE=1 node --import tsx --test experiments/qualification/pilot/swarm-id.test.ts`. Default tests skip its network-dependent case. It initializes the canonical identity iframe without signing in; it does not upload.
 
@@ -64,7 +75,7 @@ Clients need test AVAX, canonical test USDC, wallet-owned document keys and usab
 
 ## Demo evidence sequence
 
-1. Issuer supplies a qualification to a holder-local commitment and publishes the whole public snapshot. Holder generates proof with the printed local command; never upload credential, holder file or private witness.
+1. Issuer supplies a qualification to a holder-local commitment and publishes the whole public snapshot. Holder selects credential and holder JSON on an open task and generates the proof in the browser. The files are read locally, not uploaded; the advanced local CLI remains available. See [qualification provisioning](QUALIFICATION-PROVISIONING.md).
 2. Two clients register keys and fund different public scopes. Save funding receipts and the immutable manifest references/digests.
 3. Publish an opportunity from its funding client's Arkiv wallet with a30block discovery lease and a much later escrow acceptance deadline. Save its entity key, creation tx and actual expiresAt.
 4. Observe the same filtered query before/after native expiry, without a delete. Show that escrow remains funded. Use another listing for the actual acceptance flow. Record two real browser clients, relevant/irrelevant events and a dropped/reconnected socket for Mission03.
@@ -72,12 +83,12 @@ Clients need test AVAX, canonical test USDC, wallet-owned document keys and usab
 6. Revoke the credential and publish the new root/snapshot. A fresh acceptance must fail; already submitted work remains payable. Collect actual canonical-USDC balance changes and finalized receipts.
 7. Export ciphertext and explicitly save a decrypted report. Keep public evidence only. A retained encrypted export still needs an authorized retained private device key; key loss is not solved by storage.
 
-Private input repositories, standards interoperability, browser-local proving, arbitrary cross-device key recovery and real issuer/client adoption remain outside this verified pilot. Recipient bindings are rechecked before upload and submission, but rotation after the final check while a wallet confirmation/transaction is pending is not atomically prevented by the escrow. Swarm postage/availability limits retention; revocation cannot erase old plaintext.
+Private input repositories, standards interoperability, arbitrary cross-device key recovery and real issuer/client adoption remain outside this verified pilot. Recipient bindings are rechecked before upload and submission, but rotation after the final check while a wallet confirmation/transaction is pending is not atomically prevented by the escrow. Swarm postage/availability limits retention; revocation cannot erase old plaintext.
 
 ## Recover ciphertext without the application server
 
 ```sh
-node experiments/qualification/pilot/retrieve-report.mjs --config .runtime/review-pass/config.json --job 1 --out recovered-review.json
+node experiments/qualification/pilot/retrieve-report.mjs --config .runtime/review-pass-judge/config.json --job 1 --out recovered-review.json
 ```
 
 For Fuji, use its public deployment manifest and optionally `--gateway https://another-compatible-gateway`. The command reads the onchain report commitment at a finalized block, retrieves exact bytes directly, verifies the digest and writes the same encrypted export format as the app. It has no wallet or application API dependency and refuses to overwrite an existing output. The actual local probe retrieved from the separate Bee node on1635. This does not decrypt: retained recipient keys or an explicitly saved plaintext copy are still necessary.

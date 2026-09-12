@@ -1,3 +1,5 @@
+> **Current Review Pass judge pass:** [shared release checklist](review-pass/JUDGE-READINESS.md), [20-check browser evidence](review-pass/evidence/judge-pass/README.md), [qualification provisioning](review-pass/QUALIFICATION-PROVISIONING.md). Browser-local proving and the complete local payment flow are verified; public bounty writes and a second-device judge rehearsal remain pending. The EXIT ledger below is historical.
+
 # Current Review Pass acceptance
 
 Current product-branch outcomes and limits are tracked in [Review Pass BUILD.md](review-pass/BUILD.md) and [public evidence](review-pass/evidence/README.md). The EXIT ledger below is preserved historical scope.

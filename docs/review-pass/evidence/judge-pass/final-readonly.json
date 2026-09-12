@@ -1,0 +1,16 @@
+{
+  "recordedAt": "2026-09-12T12:45:22.348Z",
+  "environment": "local Anvil/Bee; read-only browser",
+  "escrow": "0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8",
+  "checks": [
+    "Five absent/private routes return generic404 without absolute file paths",
+    "Current whole issuer snapshot200",
+    "Public prover manifest identifies configured verifier",
+    "Empty public Arkiv board links explicitly to actual local task",
+    "Seeded assignment1 remains OPEN",
+    "390px no overflow",
+    "Zero page exceptions"
+  ],
+  "chainWrites": 0,
+  "storageWrites": 0
+}

@@ -1,0 +1,26 @@
+{
+  "mode": "local-rehearsal",
+  "escrow": "0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8",
+  "client": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "status": "FUNDED",
+  "createdAt": "2026-09-12T12:42:30.019Z",
+  "scope": {
+    "reference": "0b385e14ecfb2bd894cd72506842fff5ca5927153e78f3f98b8bb7f0493a1850",
+    "sha256": "0x8dad0853fbd08b5f0a7b4c2b9dd535528ccb212ed70998387928b28237351a75"
+  },
+  "transactions": [
+    {
+      "action": "approve",
+      "hash": "0xba8db81b267fce39674ca4a825b19644cc2eb0eff23b3d194ba15818346e2691",
+      "status": "success",
+      "blockNumber": "202"
+    },
+    {
+      "action": "createJobWithDocument",
+      "hash": "0x2283c8db788aa6ccce0066cf71e94bca5e2a35d8761a845a09feab7e60883184",
+      "status": "success",
+      "blockNumber": "203"
+    }
+  ],
+  "job": "1"
+}

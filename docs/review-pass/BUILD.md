@@ -31,7 +31,7 @@ Root owns contracts, frontend/server, shared schemas/config/dependency pins, pub
 | RP-04 | Queryable Arkiv opportunity board, authentic publisher/escrow validation, native lease expiry | Adapter/UI integrated,12deterministic tests pass; actual native public expiry awaits funds |
 | RP-05 | True WSS updates and reconnect reconciliation without interval polling | Actual public WSS and forced reconnect observed; public two-client write/UI sequence unrun |
 | RP-06 | Swarm ID capability-gated browser upload, independent retrieval and existing HPKE privacy | Adapter integrated;11tests including actual unauthenticated iframe pass; public upload session/postage unavailable |
-| RP-07 | Full local reviewer/two-client lifecycle, adverse cases, independent review and actual browser inspection |16real Chromium checks,18contract tests,54default pilot tests +1opt-in network test; independent terms/UI/Swarm/deployer reviews |
+| RP-07 | Full local reviewer/two-client lifecycle, adverse cases, independent review and actual browser inspection |20 real Chromium checks with browser WASM proving;18contract tests;57default pilot tests pass/1network skip; Go tests pass; targeted independent reviews |
 | RP-08 | Deployable configuration, sponsor schema/feedback/evidence index, actual public receipts and hosted demo | Runbook, schema, feedback, evidence index and Fuji prepare implemented; hosted demo/public receipts/forms pending |
 
 ## Runtime and capability inventory
@@ -45,3 +45,13 @@ Independent reviewers found and the integrator fixed Unicode request chunk decod
 Browser rehearsal uses real local chain/Bee with injected public test accounts in isolated Chromium profiles. Reports and screenshots are archived in `docs/review-pass/evidence/` after final verification. Default55test suite has54pass/1networkskip; the opt-in11test Swarm suite separately ran with11pass. Do not add overlapping test counts or call these public funded integrations.
 
 Remote qualification and EXIT CI both passed at final application revision `68fdf37`. The EXIT pinned-source fork job is dispatch-only and was skipped, not counted as newly passed. Public evidence hashes, receipts and exact run metadata are in [evidence](evidence/README.md).
+
+## Judge-readiness pass — 12 September
+
+The role-based guide, balances/network/key/storage readiness, deadline-aware actions, collapsed advanced settings, mobile order and report-export feedback are integrated. Browser proving reads credential/holder files locally, uses deployment-pinned public setup, supports cancellation and validates against actual escrow acceptance before offering a signature. No HTTP secret endpoint exists.
+
+At `5ad9366`, the full20-check Chromium rehearsal passed on a fresh local escrow, including real browser proof acceptance, two clients, encrypted delivery, revocation and both payments. The current manual runtime was then redeployed separately and seeded with one real open250qUSD task; its new credential was not revoked. [Judge evidence](evidence/judge-pass/README.md) distinguishes the lifecycle test from the fresh manual environment. [Shared checklist](JUDGE-READINESS.md) assigns remaining agent and team work.
+
+A fresh read-only preflight found Fuji/Arkiv RPC and Swarm health reachable, but no configured public signer, deployed project manifest, upload authority or HTTPS app URL. Public lifecycle/expiry/storage completion remains blocked on these named project resources. No testnet writes were fabricated or replaced by fixtures.
+
+Final application revision `dea5ba2` passed both qualification and preserved EXIT GitHub CI workflows. [Exact run IDs and skipped-job scope](evidence/judge-pass/ci.json) are retained.

@@ -2,7 +2,9 @@
 
 A real Chromium browser generated and locally verified the existing 26,089-constraint Groth16 qualification proof, with all nine public inputs matching the native fixture. This removes the need for a judge to install Go or run a proving CLI. It does **not** remove issuer enrollment, wallet funding, public deployment or Swarm postage requirements.
 
-This is an isolated feasibility probe on base `aefe7a2452c07f5566dda7dcd58f6b206981dc56`, not evidence that the integrated product already provides this flow. No public-chain transaction was sent. The probe used explicitly public deterministic credential/holder fixtures and a fresh single-process test setup; no genuine holder secrets were exposed or used.
+**Integration update:** browser-local proving is now in the product at `5ad9366`. A real20-check Chromium lifecycle generated a proof, simulated acceptance and settled it against the configured local verifier. Cancellation and account changes were exercised. See [integrated evidence](evidence/judge-pass/README.md). The original probe details below remain a separate evidence scope.
+
+The original isolated feasibility probe used base `aefe7a2452c07f5566dda7dcd58f6b206981dc56`, not, by itself, evidence for integrated product behavior. No public-chain transaction was sent. The probe used explicitly public deterministic credential/holder fixtures and a fresh single-process test setup; no genuine holder secrets were exposed or used.
 
 ## Executed results
 
@@ -42,7 +44,7 @@ worker.postMessage({ id, action: 'prove', request: {
 
 The judge flow can therefore be: select a funded assignment → import the provisioned credential and holder files locally → initialize the public prover → generate the proof → inspect wallet-bound acceptance → sign the transaction. Importing these files must never be implemented as a server upload. A production enrollment flow should create the holder secret locally, export a recovery copy and send only its commitment to the authorized issuer. The current probe intentionally does not implement enrollment or browser issuer administration.
 
-## Required integrator work before exposing the button
+## Integration checklist from the original probe
 
 - Serve a narrow allowlist of **public** setup artifacts only. Never serve a setup/issuer/holder directory recursively. The prover key and verifying key are public; issuer private keys and holder files are not.
 - Bind artifact hashes to the deployment manifest and generated verifier. Do not mix the probe's fresh setup with an existing deployed verifier. The integrated UI should independently compare proof public inputs to current chain/job/recipient state before offering a transaction.
