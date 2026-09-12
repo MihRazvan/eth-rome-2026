@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-09-12T09:37:51.572Z",
+  "environment": "Local Anvil and local Bee, public test wallets injected into isolated real Chromium contexts",
+  "escrow": "0xc6e7df5e7b4f2a278906862b61205850344d4e7d",
+  "keyRegistry": "0x3aa5ebb10dc797cac828524e59a333d0a371443c",
+  "jobs": [
+    "1",
+    "2"
+  ],
+  "checks": [
+    "Client wallet owns funding; device bindings registered by distinct wallets",
+    "Client-defined Unicode scope stored on Bee and verified against immutable funded terms",
+    "Real HTTP request preserves signed scope when a Unicode character crosses chunk boundaries",
+    "Holder-local CLI exports real proof; reviewer wallet accepts exact bound assignment",
+    "Worker signs upload authorization and commits ciphertext locator plus digest onchain; HTTP receives no plaintext or private keys",
+    "Independent client browser decrypts actual Bee retrieval; private key survives reload",
+    "Client exports authenticated ciphertext and explicitly saves decrypted report; exported ciphertext has no plaintext",
+    "Third wallet/browser cannot decrypt the public ciphertext",
+    "Rotated key cannot decrypt historical review; explicitly retained previous key can",
+    "Provider disconnect removes decrypted content and invalidates wallet session",
+    "Same holder credential accepts a second client's job with a different job-scoped nullifier",
+    "Second client decrypts its review; first client's wallet and retained device keys cannot decrypt it",
+    "Durable revocation advances the root; stale published snapshot is rejected rather than served as current",
+    "Both client wallets approve payment to assigned worker after review and credential revocation",
+    "Delayed connect cannot restore the prior wallet/device after accountsChanged",
+    "390px responsive pilot has no horizontal overflow"
+  ],
+  "pageErrors": []
+}

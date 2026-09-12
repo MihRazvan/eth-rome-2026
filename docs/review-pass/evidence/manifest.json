@@ -1,0 +1,84 @@
+{
+  "recordedAt": "2026-09-12T09:53:02.866699+00:00",
+  "integratedBaseRevision": "f8e8f1a83ba84e70768b090e8f4fa1d308e7b6c1",
+  "finalCodeRevision": "68fdf3704801cad067d12550259bff669ca2b979",
+  "scope": "Allowlisted public local-test/read-only evidence. No public funded integration, private issuer/holder material or real adoption claim. See checks.json for precise run provenance.",
+  "files": {
+    "README.md": {
+      "bytes": 3241,
+      "sha256": "0cf94aa3d66356565a071a3935186f849eba029baf0fd5fc47c3f882ecd099d3"
+    },
+    "browser.json": {
+      "bytes": 1867,
+      "sha256": "42a9dc077b93a54cd91834b4d22c526336412576debb22410b53c8019e733364"
+    },
+    "chain.json": {
+      "bytes": 9918,
+      "sha256": "472101280eca5675849854a6959a12ddfb936744b3d030887d68580c09bfbca7"
+    },
+    "checks.json": {
+      "bytes": 2131,
+      "sha256": "16f9cecbba290cd610dc9e5e69a3a35511b89ec25372cc286c3d2043890acae3"
+    },
+    "ci-exit.json": {
+      "bytes": 3057,
+      "sha256": "fb3df95f1602dc2781ac1d7181e196ca68103a6ffb2c4797932a7c091c669380"
+    },
+    "ci-final-exit.json": {
+      "bytes": 3057,
+      "sha256": "0ac1050f8e7ca115cd5bff0b0bd4c43ea91987310ce944539e5ef3c0dceb1e43"
+    },
+    "ci-final-qualification.json": {
+      "bytes": 5829,
+      "sha256": "8b475cf71774b08a37a8539c63677d641251496e70db2cf847513d3fd5d94e19"
+    },
+    "ci-qualification.json": {
+      "bytes": 5829,
+      "sha256": "624700df070fb68e79f8d798ec6143632a293110a9d342ea05ffaa1dc494999c"
+    },
+    "client-disconnected.png": {
+      "bytes": 388552,
+      "sha256": "290107229ef356c527db88b73b2c13a4c8e40dc01d676f3b576b1018f01ade57"
+    },
+    "deployment-guards.json": {
+      "bytes": 486,
+      "sha256": "25490dd25c9b2a93363f605be5a6680c1d6bf10aad93ff54bcf84b8ed1fa0f52"
+    },
+    "final-startup.json": {
+      "bytes": 500,
+      "sha256": "bf65b96a5abc6d4f1e7b8d4f338db22c97be5323994e844dd920fb0b0054904c"
+    },
+    "fuji-preparation.json": {
+      "bytes": 1837,
+      "sha256": "f2f5ef39154389692d33fbec6876fcdfcfc71bd7b3469a951305989e5b8dc528"
+    },
+    "public-access.json": {
+      "bytes": 2489,
+      "sha256": "b10539a44ad68a921322d53e667858f1cbb269f7392b64200fbc688e9f4a4434"
+    },
+    "reviewer-desktop.png": {
+      "bytes": 395515,
+      "sha256": "d5e7265274ed18f94bfaa9a596c44f993a0d26e44d7f7b024d757c801cc04d68"
+    },
+    "reviewer-mobile.png": {
+      "bytes": 351597,
+      "sha256": "729a9c4335a3b6e737cb8824f6af612bb59ef2f956beb3a0b9f1eab0682404f9"
+    }
+  },
+  "sourceSha256": {
+    "experiments/qualification/pilot/web/main.ts": "7c71c56567fff255a1a3fba05abe58dd6555cb93e2286a4a81cb69448ed2320b",
+    "experiments/qualification/pilot/web/index.html": "563dd3701b4e1f8e210ebc537548c4f6cd4ee7306f3958fa80b4149f38378fbc",
+    "experiments/qualification/pilot/web/pilot.css": "a16295583fd7b70151bc6e0c89d660d26379db224d93c40e799489a057bb6dbb",
+    "experiments/qualification/pilot/start.mjs": "35b54167d0fb9663c8ee149a2c048307f8f5852c65de3f51758d1b4a003548de",
+    "experiments/qualification/pilot/deploy-fuji.mjs": "fbb36842046f7045adebc7d3b2939c36495e5c45a2873d9c305b4b40fc870f2b",
+    "experiments/qualification/pilot/retrieve-report.mjs": "da559cbf94aa98841ca8344fb957a3b2290bac3186fe508a07f832ea12c91766",
+    "experiments/qualification/pilot/terms.ts": "b36f7c5a3111b853ff5331bb1fc52ebd9a88ce830305db3260c0ee4eff3abdd5",
+    "experiments/qualification/pilot/settlement.ts": "8f31a6cae188e4378a4070abf046edd0566f09e7392762985d34b8d4f05eb69f",
+    "experiments/qualification/pilot/listings.ts": "6c64fdfd3e4acf277975b04c579a41555568bba8831d336f506b7d96fa1dcca6",
+    "experiments/qualification/pilot/swarm-id.ts": "fb80674e1f5ce715b5751822cffd7828691467a73b0ac0314d2f398fdd4b059a",
+    "experiments/qualification/pilot/keys.ts": "e31822994c945eda061a4d1ecd0dcaf697b92c67c4846e4741e42f200970931d",
+    "experiments/qualification/contracts/src/QualificationEscrow.sol": "0fdfbb30f835a49cf22e08291c1ccab93a6120d97a843050458884e52bffba9a",
+    "experiments/qualification/prover/circuit.go": "5a60e9ef2508da1238115698e03d1c236aace25123bd3e748d197a565e7eb3ab",
+    "experiments/qualification/prover/validate_public.go": "823ab5b0c77a8a6d0b0c49e0d54414d5f376e38f3d8b5d420eefd5013b9ea494"
+  }
+}

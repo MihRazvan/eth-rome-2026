@@ -23,17 +23,25 @@ Root owns contracts, frontend/server, shared schemas/config/dependency pins, pub
 
 ## Acceptance ledger
 
-| ID | Outcome | Initial state |
+| ID | Outcome | Verified state (September12) |
 |---|---|---|
-| RP-01 | Current rules, contradictions, source/code versions and required evidence audited | Research underway |
-| RP-02 | Client specifies real task/reward/deadlines; exact public scope committed at funding and verified by reviewer | Pending |
-| RP-03 | Canonical Fuji test USDC policy and finalized transaction/state verification | Pending; public funding unavailable |
-| RP-04 | Queryable Arkiv opportunity board, authentic publisher/escrow validation, native lease expiry | Pending; public writes unavailable |
-| RP-05 | True WSS updates and reconnect reconciliation without interval polling | Pending |
-| RP-06 | Swarm ID capability-gated browser upload, independent retrieval and existing HPKE privacy | Pending; public upload session unavailable |
-| RP-07 | Full local reviewer/two-client lifecycle, adverse cases, independent review and actual browser inspection | Baseline13browser/17contract/10key tests; rerun changed flow |
-| RP-08 | Deployable configuration, sponsor schema/feedback/evidence index, actual public receipts and hosted demo | Preparation pending; no public completion claim |
+| RP-01 | Current rules, contradictions, source/code versions and required evidence audited | Complete: three primary-source reports, versioned probes, form inspection and conflicts |
+| RP-02 | Client specifies real task/reward/deadlines; exact public scope committed at funding and verified by reviewer | Implemented; real two-client local funding and canonical scope verification pass |
+| RP-03 | Canonical Fuji test USDC policy and finalized transaction/state verification | Canonical asset policy + finalized wait tested; public preparation compiles; funded deployment unavailable |
+| RP-04 | Queryable Arkiv opportunity board, authentic publisher/escrow validation, native lease expiry | Adapter/UI integrated,12deterministic tests pass; actual native public expiry awaits funds |
+| RP-05 | True WSS updates and reconnect reconciliation without interval polling | Actual public WSS and forced reconnect observed; public two-client write/UI sequence unrun |
+| RP-06 | Swarm ID capability-gated browser upload, independent retrieval and existing HPKE privacy | Adapter integrated;11tests including actual unauthenticated iframe pass; public upload session/postage unavailable |
+| RP-07 | Full local reviewer/two-client lifecycle, adverse cases, independent review and actual browser inspection |16real Chromium checks,18contract tests,54default pilot tests +1opt-in network test; independent terms/UI/Swarm/deployer reviews |
+| RP-08 | Deployable configuration, sponsor schema/feedback/evidence index, actual public receipts and hosted demo | Runbook, schema, feedback, evidence index and Fuji prepare implemented; hosted demo/public receipts/forms pending |
 
 ## Runtime and capability inventory
 
 macOS local checkout; Node24.12.0, systemGo1.25.6 (module automatically selects1.25.7), Foundry1.5.1, pinned npm dependencies and Go modules available. GitHub project access configured; root is the only branch publisher. Native subagents and isolated worktrees available. Actual Chromium/Playwright, local Bee/Anvil and web/source retrieval are available. Current configured public funds/upload capability remain missing; only named project configuration is inspected, never unrelated wallets or identities. Existing runtime ports5173/8547/8787,18787/18547,18888 and Bee1633/1635 are preserved unless an owned service requires a documented restart.
+
+## Integration review outcomes
+
+Independent reviewers found and the integrator fixed Unicode request chunk decoding, duplicate upload reservation, wrong-network error suppression, escrow/config authority mismatch, stale snapshot serving, recipient-key changes during upload, stale wallet scope uploads and inconsistent gateway selection. Deployment preparation pins setup/circuit/source hashes, uses exclusive operation/journal creation and validates public issuer/snapshot structure before writes. Exact review scopes and residual risks remain in their reports; this was focused independent review, not a full production audit.
+
+Browser rehearsal uses real local chain/Bee with injected public test accounts in isolated Chromium profiles. Reports and screenshots are archived in `docs/review-pass/evidence/` after final verification. Default55test suite has54pass/1networkskip; the opt-in11test Swarm suite separately ran with11pass. Do not add overlapping test counts or call these public funded integrations.
+
+Remote qualification and EXIT CI both passed at final application revision `68fdf37`. The EXIT pinned-source fork job is dispatch-only and was skipped, not counted as newly passed. Public evidence hashes, receipts and exact run metadata are in [evidence](evidence/README.md).

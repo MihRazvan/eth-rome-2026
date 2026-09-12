@@ -1,3 +1,9 @@
+# Review Pass product continuation
+
+The current `review-pass/product` branch adds client-defined funded scope, Arkiv discovery, Swarm ID delivery and Fuji deployment preparation. Start with the [current product runbook](../../../docs/review-pass/RUNBOOK.md), [research](../../../docs/review-pass/README.md) and [acceptance](../../../docs/review-pass/BUILD.md). Its local port is18889;18888 below is the preserved earlier pilot.
+
+---
+
 # Review Pass — wallet-separated pilot
 
 The local pilot works with one issuer, one reviewer and two independently controlled client wallets. Clients fund review assignments; the reviewer imports a locally generated qualification proof, accepts, and encrypts a review for that job's client and the reviewer. Each client retrieves and decrypts its own review before approving payment. Revocation prevents new qualification acceptance without cancelling payment for work already submitted.

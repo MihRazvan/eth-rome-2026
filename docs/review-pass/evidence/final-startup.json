@@ -1,0 +1,14 @@
+{
+  "observedAt": "2026-09-12T09:47:15.081Z",
+  "source": "f8e8f1a",
+  "scope": "Final source startup and read-only actual Chromium; no new funding or credential operations",
+  "checks": [
+    "Matching network/storage configuration starts",
+    "Explicit public config projection responds",
+    "Stale whole snapshot returns409",
+    "Two paid escrow jobs remain readable without a wallet",
+    "Expanded receipts/mobile view has no overflow",
+    "No browser page exceptions"
+  ],
+  "errors": []
+}

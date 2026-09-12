@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "chainId": 43113,
+  "token": "0x5425890298aed601595a70AB815c96711a31Bc65",
+  "tokenDecimals": 6,
+  "testOnly": true,
+  "sourceRevision": "f8e8f1a83ba84e70768b090e8f4fa1d308e7b6c1",
+  "setupTrust": "Single-process experimental Groth16 setup; no production ceremony",
+  "setupHashes": {
+    "proving.key": "6345df1dd836c5b70667456093d51beb31ea4cd7b7f64d8c135fd5d8a6db49a3",
+    "verifying.key": "c924236aaf25dad8d3519f66d477dbaf22b51c4a21c763ad0255a8bbb09c3840",
+    "circuit.r1cs": "053bd5c4993b7d49350ef90ea3bffb8f437f5fe6ef4a554e63cf540432b771e9",
+    "setup.json": "0b81ee1657d6fa8ce064fa89d4d2faf8087d4fe907a4370e3270984ab006bc06"
+  },
+  "circuitHashes": {
+    "circuit.go": "5a60e9ef2508da1238115698e03d1c236aace25123bd3e748d197a565e7eb3ab",
+    "credential.go": "7f6b18a272e80a6594337279224b5b1be563862f72a1f5f4df397738be26cc7f",
+    "go.mod": "5c356f6f39b897f5e9f68b3130b07d6196a916c1d6f1dc4df652360c929b5630",
+    "go.sum": "3bf6fc0d6933d070b88d1671b4a48c086ee31bc25dbf3cfe25d6d3ffebbcc9d0"
+  },
+  "sourceHashes": {
+    "QualificationEscrow": "0fdfbb30f835a49cf22e08291c1ccab93a6120d97a843050458884e52bffba9a",
+    "QualificationKeys": "85535201f1a6bff197d3ec0c5bc7db70ae8d6bb1be6448fd4fc87c2d3db1b088"
+  },
+  "sourceDirty": false,
+  "verifierSourceSha256": "4b7ad212059c3f52fdf028de9746009bf6fb4b62f92edc010bd0a38cab8d9d16",
+  "bytecodeHashes": {
+    "verifier": "0x1249ce1c496b4af3e465b1a17714ad43a1e578f85ba469daaa68d327867e9eae",
+    "keyRegistry": "0x7d7bdcf708b8d76c0188fd7bcda808393ec0594ab002bd62515653e45318b1bc",
+    "escrow": "0x21724a63ed43afc994f5d66adce9563c6ba103107e3c151fcb92b7777b73042e"
+  },
+  "requiredForBroadcast": [
+    "FUJI_PRIVATE_KEY",
+    "QUALIFICATION_ISSUER_PUBLIC",
+    "QUALIFICATION_SNAPSHOT_FILE",
+    "QUALIFICATION_SNAPSHOT_REFERENCE",
+    "QUALIFICATION_ARBITRATOR"
+  ]
+}

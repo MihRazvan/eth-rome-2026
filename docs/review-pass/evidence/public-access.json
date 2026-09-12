@@ -1,0 +1,81 @@
+{
+  "observedAt": "2026-09-12T09:44:44.682Z",
+  "elapsedMs": 1068,
+  "mode": "public-read-only",
+  "projectEnvPresent": false,
+  "checks": [
+    {
+      "name": "Fuji RPC",
+      "status": "PASS",
+      "detail": "Public read succeeded",
+      "chainId": 43113,
+      "block": "58331234"
+    },
+    {
+      "name": "Arkiv RPC",
+      "status": "PASS",
+      "detail": "Public read succeeded",
+      "chainId": 7738577,
+      "block": "348965"
+    },
+    {
+      "name": "Fuji project signer",
+      "status": "BLOCKED",
+      "detail": "No configured project signing key",
+      "configured": false
+    },
+    {
+      "name": "Arkiv project signer",
+      "status": "BLOCKED",
+      "detail": "No configured project signing key",
+      "configured": false
+    },
+    {
+      "name": "escrow deployment",
+      "status": "BLOCKED",
+      "detail": "No valid public deployment address configured"
+    },
+    {
+      "name": "verifier deployment",
+      "status": "BLOCKED",
+      "detail": "No valid public deployment address configured"
+    },
+    {
+      "name": "keyRegistry deployment",
+      "status": "BLOCKED",
+      "detail": "No valid public deployment address configured"
+    },
+    {
+      "name": "token deployment",
+      "status": "BLOCKED",
+      "detail": "No valid public deployment address configured"
+    },
+    {
+      "name": "Swarm public retrieval",
+      "status": "PASS",
+      "detail": "Endpoint reports healthy; content transfer and upload authority are NOT established"
+    },
+    {
+      "name": "Swarm public upload route",
+      "status": "BLOCKED",
+      "detail": "No configured public upload gateway/Bee endpoint"
+    },
+    {
+      "name": "Pilot public API",
+      "status": "BLOCKED",
+      "detail": "No configured public HTTPS pilot API"
+    },
+    {
+      "name": "Public transaction and byte round trip",
+      "status": "UNVERIFIED",
+      "detail": "Read-only probe: no deployment, create/expiry, upload, publication or account mutation attempted"
+    }
+  ],
+  "status": "BLOCKED",
+  "publicFundedLifecycleVerified": false,
+  "chainWrites": 0,
+  "storageWrites": 0,
+  "faucetAttempts": 0,
+  "localFallback": false,
+  "scopeNote": "Legacy general preflight, not the new Swarm-ID capability model. Canonical Fuji USDC exists and is checked separately in Avalanche probe/preparation. Missing project token configuration is not an undeployed-token claim. Browser Arkiv wallets and Swarm ID sessions are separate from server env keys/upload routes."
+}

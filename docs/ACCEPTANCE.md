@@ -1,3 +1,9 @@
+# Current Review Pass acceptance
+
+Current product-branch outcomes and limits are tracked in [Review Pass BUILD.md](review-pass/BUILD.md) and [public evidence](review-pass/evidence/README.md). The EXIT ledger below is preserved historical scope.
+
+---
+
 # Acceptance ledger
 
 Last integrated local verification: 2026-09-11. A passing local result does not discharge a public network requirement.

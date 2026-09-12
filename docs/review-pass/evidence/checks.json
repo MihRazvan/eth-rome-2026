@@ -1,0 +1,61 @@
+{
+  "observedAt": "2026-09-12T09:48:20.562535+00:00",
+  "implementationRevision": "f8e8f1a83ba84e70768b090e8f4fa1d308e7b6c1",
+  "checks": {
+    "pilotDefault": {
+      "pass": 54,
+      "skip": 1,
+      "total": 55
+    },
+    "swarmOptIn": {
+      "pass": 11,
+      "skip": 0,
+      "overlap": "10 cases also in pilotDefault"
+    },
+    "qualificationContracts": {
+      "pass": 18,
+      "disputeFuzzInputs": 256
+    },
+    "fullBrowser": {
+      "pass": 16,
+      "localOnly": true
+    },
+    "finalStartupReadOnlyBrowser": {
+      "pass": 6
+    },
+    "deploymentGuards": {
+      "pass": 4,
+      "broadcasts": 0
+    },
+    "independentCiphertextRecovery": {
+      "pass": true,
+      "chainId": 31338,
+      "gateway": "local Bee1635",
+      "appServerUsed": false
+    },
+    "goSuite": "PASS",
+    "typescript": "PASS",
+    "baseProductCheck": {
+      "jsTests": 71,
+      "reportedContractTests": 39,
+      "build": "PASS",
+      "typecheck": "PASS",
+      "note": "Includes inherited contract test repetitions; not39unique properties"
+    },
+    "publicationReceiptFollowup": {
+      "pass": 3,
+      "scope": "Independent extracted-source tests with local doubles; no public writes",
+      "report": "../arkiv/ui-review.md"
+    }
+  },
+  "limitations": [
+    "No funded public Fuji/Arkiv transaction",
+    "No authorized public Swarm upload",
+    "No real issuer/client adoption",
+    "Injected Anvil wallet bridges, not installed wallet extensions or physical devices",
+    "Experimental single-process Groth16 setup",
+    "Focused independent reviews, not a production security audit"
+  ],
+  "browserProvenance": "Full16check run completed before implementation commit. Final startup network/storage guard was added afterward and exercised in the separate6check final-startup run. Main workflow/frontend/contract behavior is retained by this implementation revision. The final publication return-network wording correction is covered by three independent extracted-source scenarios and final qualification CI, not by a funded public Arkiv publication.",
+  "finalCodeRevision": "68fdf3704801cad067d12550259bff669ca2b979"
+}

@@ -1,3 +1,33 @@
+# Review Pass Arkiv schema — version2
+
+Current product on `review-pass/product`. The earlier EXIT schema remains below as historical documentation. Implementation: [`pilot/listings.ts`](../experiments/qualification/pilot/listings.ts), SDK0.8.1/Tiramisu7738577.
+
+An entity advertises a funded technical-review opportunity. It is owned and created by the funding client's wallet, with immutable public payload and owner-only extension. Native `expiresAt` is the discovery lease, not a credential expiry or escrow deadline. No cleanup/deletion service is used to simulate expiration.
+
+| Indexed attribute | Type / value |
+|---|---|
+| `application` | string `review-pass` |
+| `kind` | string `review-listing` |
+| `schema` | numeric2 |
+| `taskclass` | string `technical-review` |
+| `qualificationclass` | canonical uint32 decimal string, currently `7` |
+| `settlementchain` | numeric43113 for public Fuji;31338 explicitly local |
+| `escrow` | lowercase configured settlement address |
+| `jobid` | canonical uint256 decimal string |
+| `paymenttoken` | lowercase canonical Fuji USDC address in public mode |
+| `reward` | typed `u256`, six-decimal base units |
+| `acceptbefore` | typed `u64`, Unix seconds |
+
+Payload version2 additionally carries the client wallet, public title (max120UTF8bytes), and public scope reference/SHA256. It includes no credential identifier, holder secret, report plaintext or decryption key. Public payment-wallet and timing metadata remain linkable.
+
+The board uses a frozen compound query over application/kind/schema/taskclass/qualificationclass/settlementchain/escrow, with optional token/minimumreward. It selects native metadata and all pages, bounded to100pages/10000entities. Before display, it checks creator and owner against the client, and public terms/digest/reference/reward/deadlines against the configured escrow. An attacker duplicate cannot hide the valid record. Read errors preserve an unavailable state, never an empty success.
+
+True WSS entity events and `newHeads` drive reconciliation without a polling interval or historical `fromBlock`. Since natural expiry emits no event, a received head reaching a known lease boundary triggers the same query; only successful absence removes the entry. Reconnect reconciles current state rather than claiming complete event replay. Client/worker financial history comes from settlement events, independent of Arkiv retention.
+
+[Detailed API and semantics](../experiments/qualification/pilot/LISTINGS.md) · [feedback](../feedback.md) · [submission evidence and missing public gates](submission.md)
+
+---
+
 # EXIT Arkiv schema — version 1
 
 Implementation: `packages/transport/arkiv.ts`. Target SDK `@arkiv-network/sdk@0.8.1`, Tiramisu chain 7738577. Live read probe at 2026-09-11T16:39:13Z returned block 318199 and zero EXIT offers. This is read connectivity evidence, not publication or expiry evidence.

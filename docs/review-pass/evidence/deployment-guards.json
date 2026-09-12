@@ -1,0 +1,12 @@
+{
+  "observedAt": "2026-09-12T09:45:45.177Z",
+  "source": "f8e8f1a",
+  "scope": "Actual CLI invocations; public RPC reads and local preparation only; no transaction broadcast",
+  "checks": [
+    "Conflicting modes fail before network/setup work",
+    "Actual prepare rejects a modified pinned setup file",
+    "Broadcast with explicitly empty project signer stops before journal or transactions",
+    "Restored setup passes actual live-read-only preparation"
+  ],
+  "publicWrites": 0
+}
