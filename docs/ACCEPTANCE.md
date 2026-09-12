@@ -1,3 +1,11 @@
+# Presenter explanation and current-state reconciliation
+
+12 September2026: rewrote the teammate cue sheet and added [full presenter guide](CUTOUT-PRESENTER-GUIDE.md), covering each action, file provenance, issuer trust, private/public data, solo demo and sponsor-specific Q&A/source pointers. Independent read-only source review found no material inaccuracies; approval-button wording was clarified. All new local documentation links resolve. No app/deployment or financial action in this documentation pass.
+
+Fresh finalized read at18:06UTC/block58335866 observed task1 Refunded, task2 Open with expired acceptance window, task3 Open/unassigned. No accepted/paid task was observed. [Public state evidence](design/cutout/evidence/presenter/public-state.json). Sponsor submission index now reflects deployed integrations while preserving outstanding public paid/expiry/two-browser evidence gates. Team1 official Builder Hub submission was located; no form submitted.
+
+---
+
 # Proof-file handoff and teammate credential — deployed
 
 12 September2026, source83e18e0, Vercel `dpl_2iAmKhZoyKhugVtbKJa6jfieVNKc`. Issued the teammate's test credential from their provided public enrollment request; no holder secret received. Private download link delivered; credential expiry2026-09-13T17:58:21Z. Their own holder/proof still requires their browser.

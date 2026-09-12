@@ -1,101 +1,63 @@
-> Storage update, 12 September: the public app now includes gateway-funded Swarm uploads. Users do **not** need a Swarm account, drive or gift code. Refresh the app and check that Document storage says included. Earlier Swarm sign-in instructions below are superseded; private report encryption and credential enrollment remain separate.
+# Cutout — the presentation cue sheet
 
-# Cutout — teammate brief and demo guide
+**Read this first.** Use the [full presenter guide](CUTOUT-PRESENTER-GUIDE.md) for what happens behind every click, sponsor questions, code links and failure cases. This replaces the earlier technical brief.
 
-Prepared 12 September 2026 from the implemented app and recorded verification.
+App: https://cutout-ethrome-2026.vercel.app
 
-**App:** https://cutout-ethrome-2026.vercel.app  
-**Instant walkthrough:** https://cutout-ethrome-2026.vercel.app/?view=demo  
-**Working branch:** `review-pass/product`
+## What to say
 
-## What it is
+> Cutout lets a team hire and pay a technical reviewer. The team puts the reward in escrow. The reviewer proves that a trusted issuer has approved them, without publishing their actual credential. They deliver an encrypted report. The client reads it and approves payment.
 
-**Cutout lets you hire a qualified technical reviewer, receive a private report, and pay through an onchain escrow. The reviewer proves they qualify without exposing a reusable credential identifier.**
+**Example:** “We changed a withdrawal permission. Can someone independently check whether an unauthorized wallet could withdraw?”
 
-Example: a protocol changes withdrawal permissions and wants a focused second review. The client posts the question and funds a reward. An eligible reviewer accepts, investigates, and delivers an encrypted report. The client opens the report and approves payment.
+The reason to use it: the client can require issuer-approved eligibility and reserve payment for the job without publishing the reviewer's credential identifier or the report's contents. This is a prototype for focused reviews, not a guarantee of a correct audit. A real issuer partnership and customer demand still need validation.
 
-The useful combination is portable qualification, private delivery, and funded work. We are not claiming to invent these primitives or to replace a full security audit.
+## Three people, three responsibilities
 
-The name and visuals express the privacy boundary: keep the qualification; cut out the identifier. Paper, ink, orange, perforations and the cut-open envelope belong throughout the application.
+- **Client:** buys the review and decides whether the work is acceptable.
+- **Reviewer:** proves eligibility, does the review and delivers it.
+- **Issuer:** decides who may receive the qualification. Currently this is our Cutout team issuing test credentials, not an external accreditor.
 
-## How it works
+The qualification proof checks the issuer's approval. It does not assess expertise or judge the report.
 
-1. **An issuer qualifies a reviewer.** The reviewer holds a signed credential and their own private holder secret. Today this is one experimental test issuer, not an accredited professional network. The reviewer can now create a private pass and enrollment request in the app. Approval and signed-credential delivery remain operator-assisted; there is no live collective/roster administration screen.
-2. **A client funds a task.** Its public scope and test-USDC reward are committed on Avalanche Fuji. Swarm stores the scope; Arkiv provides discoverable, expiring listings.
-3. **The reviewer proves eligibility.** Their browser generates a task- and wallet-bound zero-knowledge proof that the credential is valid and not revoked. The contract verifies it before assigning the work. Private credential files remain local.
-4. **The reviewer delivers privately.** The browser encrypts the report for the client and reviewer before uploading it to Swarm. An onchain reference and digest bind the delivered bytes to the assignment.
-5. **The client opens and pays.** Cutout retrieves, verifies and decrypts the report locally. The client approves payment or disputes delivery. A timely submission can become payable after the review deadline if undisputed; disputes depend on the configured arbitrator.
+## The story, step by step
 
-Qualification proves eligibility, **not report quality**. Wallets, payments and task metadata remain public; wallet reuse links jobs. Avoid saying “anonymous reviewers,” “nobody knows who you are,” or “guaranteed good work.”
+1. **Before the demo: the reviewer gets a credential.** Their browser creates a private secret and an enrollment request. They keep the secret and send the request to us. We return a signed credential. Approval happens here; generating the request does not approve anyone.
 
-## What works now — and what we must not blur
+2. **The client posts a question and reserves USDC.** The public scope goes to Swarm. A Fuji transaction puts the reward in escrow and records the scope's hash and deadlines. Show that the money is actually there.
 
-| Surface | Actual status |
-| --- | --- |
-| Public Cutout UI and no-wallet walkthrough | Deployed and tested in fresh desktop/mobile browsers. |
-| Walkthrough report encryption/decryption | Real browser AES-GCM. Nothing is uploaded. |
-| Walkthrough qualification, funding and payment | Explicit simulations; no proof verification or chain transaction. |
-| Complete local contract/storage lifecycle | 21 browser checks passed, including proof acceptance, two clients, encryption, recovery, revocation and payment. Local Anvil/Bee, not Fuji/Swarm bounty evidence. |
-| Public infrastructure | Fuji contracts deployed/source-verified; public issuer snapshot retrieved and verified; hosted browser proof accepted by the Fuji verifier in a read-only check. |
-| Full funded public lifecycle | Still outstanding. Public encrypted delivery, payment and actual Arkiv creation/expiry must be completed and recorded. |
-| Live task discovery | A recent independent browser test saw a stale Arkiv connection. Do not promise a populated working marketplace yet. |
+3. **The client lists the task.** A separate Arkiv transaction puts a searchable advertisement on the job board. Reviewers discover it there. The advertisement expires; the money does not disappear with it.
 
-## What to show judges on the frontend
+4. **The reviewer proves approval and accepts.** Select the issuer-returned credential and original private holder backup. The browser generates a proof of the issuer's signature, correct qualification, validity and nonrevocation, bound to this task and wallet. The files stay local. Then sign **Accept this task**; generating a proof alone does not reserve it.
 
-Use the **walkthrough now** for immediate hands-on exploration. Use a **prepared real client/reviewer session** for the onchain demonstration once the public rehearsal below passes. Tell judges which one they are watching.
+5. **The reviewer writes and seals the report.** Their browser encrypts it for the client and reviewer. Swarm stores the encrypted bytes. The reviewer signs a Fuji transaction recording the exact report reference and hash.
 
-A three-minute walkthrough:
+6. **The client opens the report and approves payment.** The browser retrieves, checks and decrypts it. The client reads it and signs **Approve & pay**. The escrow sends USDC to the assigned reviewer.
 
-| Time | What to do | What to say |
+## The file confusion, resolved
+
+| File | Meaning | Use |
 | --- | --- | --- |
-| 0:00–0:20 | Open Cutout; point to Client / Reviewer. | “A protocol needs a second set of eyes. The reviewer should prove eligibility without sending every client their credential.” |
-| 0:20–0:50 | Click **Try the demo**. Edit the task title, scope and budget. Continue and reserve the simulated reward. | “The brief is public. The review report will be private. This walkthrough simulates the financial steps.” |
-| 0:50–1:20 | Become the reviewer. Untick credential validity and try eligibility, then restore it. | “An expired or revoked qualification cannot take new work. The live version checks a browser-generated proof onchain.” |
-| 1:20–2:10 | Write a recognizable sentence in the report. Encrypt it. Optionally inspect ciphertext, then **drag to cut**. | “This encryption is real. We recover the exact text in this browser.” Use **Cut without dragging** for keyboard/accessibility. |
-| 2:10–2:35 | Read the report and approve simulated payment. | “The client evaluates the work. Qualification alone does not prove it is correct.” |
-| 2:35–3:00 | Show the receipt; return to the live workspace. | “The live product connects this flow to Fuji escrow, Arkiv discovery and Swarm storage.” Show actual evidence separately. |
+| `cutout-enrollment-request.json` | Request for approval | Send only this to the issuer. Never use it as a credential. |
+| `cutout-private-holder.json` | Secret needed to use that approval | Keep private; select in **Private holder JSON**. |
+| Credential JSON returned by us | Signed approval | Keep private; select in **Credential JSON**. |
 
-**Frontend priorities during the presentation:** keep the task, reward, current role and next action visible. Let a judge edit the brief or report and make the cut themselves. Keep terminals, addresses, key rotation, lease-block inputs and setup troubleshooting out of the main narrative. Open transaction receipts or technical details when explaining evidence. Do not imply fictional collectives from the design references are implemented.
+Your issued test credential expires **13 September, 19:58 Rome / 20:58 Bucharest**. Use its original matching holder backup. If file controls are disabled, reconnect the reviewer wallet on Fuji.
 
-For the real demo, prepare two browser profiles beforehand and switch visibly between **Client** and **Reviewer**. Changing the role toggle alone does not change wallets or make two independent users. Keep wallet confirmations visible when showing real transactions. If a network fails, identify the failure and switch explicitly to the walkthrough or a labelled recording; never present it as a live success.
+## What to say to each sponsor
 
-## How to test the real flow end to end
+**Avalanche / Team1 Track A:** “Fuji holds the test USDC and enforces funding, qualified assignment, delivery commitment and payment.” Show actual transaction receipts. We use existing test USDC; we did not deploy a new stablecoin. We enter one Team1 track.
 
-This is the required rehearsal procedure, **not a claim it has already passed publicly**.
+**Arkiv Mission 02 + Mission 03:** “Arkiv is our public, wallet-owned job board. Compound queries find relevant funded work, native expiry removes stale advertisements, and WebSocket updates refresh another user's board.” Show real expiry without deletion, and a second browser updating without a manual refresh. No Mission01 migration claim. Best Use consideration is also targeted; only one Arkiv award can be won.
 
-### Prepare before presenting
+**Swarm:** “Swarm stores the real documents. Reports are encrypted before upload and checked after retrieval.” Show a recognizable report being sealed and opened. The current path uses gateway-funded uploads with no customer Swarm account. Swarm ID is an optional adapter, not the active sign-in flow. Trial storage is not guaranteed permanent.
 
-- Use desktop Chromium with separate client/reviewer wallet contexts. Client needs the chosen reward in canonical **Fuji test USDC**, test AVAX for gas, and Tiramisu test GLM in that same client address for listing publication. Reviewer needs test AVAX. Existing operator rehearsal wallets have already been funded; confirm the wallets actually in use.
-- In each browser, open **Your workspace**, connect the payment wallet, **Enable private reports**, and confirm **Document storage** says **Included · no storage account needed**. There is no Swarm sign-in or drive setup.
-- Prepare a current class-7 test credential and matching holder file on the reviewer’s own machine. Use the [enrollment guide](review-pass/QUALIFICATION-PROVISIONING.md); the issuer receives the commitment, not the holder secret. Do not demonstrate enrollment or expose file contents onstage.
-- Keep each role on the same hostname/browser profile throughout. Existing operator keys were registered on `review-pass-ethrome-2026.vercel.app`, which also displays Cutout. Opening the new Cutout hostname does not transfer those browser keys.
-- Confirm the public snapshot is current and the opportunity board is live. Use generous task deadlines. The default discovery lease is 900 blocks (about 30 minutes); use a separate short lease for the expiry demonstration. Acceptance deadlines remain independent.
+## Before walking up to the judges
 
-### Execute and check
+Prepare separate **Client** and **Reviewer** browser profiles, funded wallets, registered report keys, valid credential files and a funded task with time left. A role toggle alone does not switch wallets. Keep the same hostname/profile so document keys remain available.
 
-1. **Client → Tasks:** write a concrete public brief; set **10 test USDC**; confirm the public-scope checkbox; click **Fund & post task**. Confirm the token approval and funding transactions. **Activity** should show the actual funded task and amount.
-2. **Client → Activity → List this review:** approve the Arkiv network switch and publication. Save its entity/transaction receipt. Return to Fuji and reconnect if prompted. Listing is a separate step from funding.
-3. **Reviewer → Tasks:** find the live listing and open **View verified scope**. Check the exact scope and reward. Select the issued credential and holder files locally, click **Cut a qualification proof**, then **Accept this task** and sign. The task should become accepted onchain.
-4. **Reviewer → Activity:** write a recognizable test report; click **Seal & deliver report**. Wait for upload and the delivery transaction. Save the public ciphertext reference and transaction receipt; never publish the plaintext as evidence.
-5. **Client → Activity → Refresh activity:** the task should be submitted. Payment must be disabled before opening it. **Cut open report** and verify the exact reviewer text. Export ciphertext and save the decrypted report locally if desired.
-6. **Client:** click **Approve & pay**, sign and wait for confirmation. Check **Paid**, the finalized transfer of 10 test USDC from escrow to the assigned reviewer, and the corresponding balances. Gas is separate AVAX. Other tasks may still hold funds in the same escrow.
-7. **Record:** task ID, deployment/chain, funding/acceptance/delivery/payment hashes, Swarm ciphertext reference/digest, Arkiv entity/expiry, screenshots and final balance changes. This becomes the public bounty evidence.
+Perform one complete real acceptance → delivery → opening → payment rehearsal and save its receipts. **That public paid sequence is not yet signed off in our evidence.** A successful proof simulation is not a payment. Public live tasks and storage exist, but show only completed actions as completed.
 
-### Extended checks, away from the stage
+For a three-minute pitch, start with an already-funded task and its receipt, then show the reviewer and client stages. Prepare a clearly labelled recording if wallet timing is too slow. The `?view=demo` walkthrough simulates qualification and payment; call it a simulation before using it. Its encryption is real, but nothing is uploaded.
 
-- An unrelated wallet/browser cannot decrypt the delivered report.
-- Reload preserves access with the same browser key. Wallet disconnect clears displayed plaintext.
-- An expired/revoked credential or proof bound to a different wallet/task cannot accept new work.
-- Tampered report bytes fail commitment verification. Rejected wallet signatures never produce a false Paid state.
-- A short Arkiv listing expires naturally: run the same fresh query before/after, with no deletion, and show that the escrow itself still exists. Record a second browser’s real subscription update and reconnect behavior separately.
-- Exercise missed deadlines, refund and dispute paths on separate test tasks. Use a separate credential for revocation tests; revocation changes the public root and requires a matching published snapshot. Do not invalidate the main demo credential immediately before presenting.
-
-## Bounty story and remaining responsibilities
-
-- **Avalanche / Team1 Track A:** stablecoin escrow with actual funding, qualification acceptance, delivery commitment and payment on Fuji. We use test USDC; no custom stablecoin is claimed.
-- **Arkiv Mission 02 / Mission 03 / Best Use:** useful task discovery, native expiry and real filtered subscription updates. One Arkiv award per team; write/expiry/reconnect evidence remains required.
-- **Swarm:** useful public scopes and encrypted reports, independent retrieval and verified bytes. A storage connection test alone is insufficient.
-
-**Engineering:** finish the public funded rehearsal, resolve discovery reliability, capture receipts/expiry evidence and leave fresh usable demo state. **Team:** rehearse the two roles, perform an independent participant test, prepare the presentation/recording, and complete the applicable event/bounty submissions. The guided demo is already available for judges to explore without account setup.
-
-[Acceptance evidence](design/cutout/evidence/README.md) · [Detailed release checklist](review-pass/JUDGE-READINESS.md) · [Operator runbook](review-pass/RUNBOOK.md)
+Remember: **the issuer approves the reviewer; the proof checks that approval; the client evaluates the work; the contract pays.** Wallets, rewards and public scope remain visible. Credential contents and report plaintext are the protected parts.

@@ -1,0 +1,36 @@
+{
+  "date": "2026-09-12T18:06:46.101Z",
+  "block": "58335866",
+  "chainId": 43113,
+  "escrow": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+  "jobs": [
+    {
+      "id": "1",
+      "client": "0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d",
+      "reviewer": "0x0000000000000000000000000000000000000000",
+      "usdcBaseUnits": "1000000",
+      "class": "7",
+      "acceptBefore": "1789236196",
+      "status": "Refunded"
+    },
+    {
+      "id": "2",
+      "client": "0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d",
+      "reviewer": "0x0000000000000000000000000000000000000000",
+      "usdcBaseUnits": "100000",
+      "class": "7",
+      "acceptBefore": "1789233298",
+      "status": "Open"
+    },
+    {
+      "id": "3",
+      "client": "0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d",
+      "reviewer": "0x0000000000000000000000000000000000000000",
+      "usdcBaseUnits": "150000",
+      "class": "7",
+      "acceptBefore": "1789238628",
+      "status": "Open"
+    }
+  ],
+  "scope": "Read-only finalized public state; no transactions or private documents accessed."
+}

@@ -1,3 +1,13 @@
+# Latest communication task — presenter explanation
+
+The user says the teammate does not understand the product and must present alone to judges and sponsors. `docs/CUTOUT-TEAM-BRIEF.md` is now a plain-English cue sheet; `docs/CUTOUT-PRESENTER-GUIDE.md` explains each action, three distinct files, trust/privacy boundaries, sponsor Q&A, code pointers and solo presentation preparation. Both supersede the older technical presentation narrative. Source-only independent review completed; no app/deployment change in this documentation pass.
+
+Fresh finalized Fuji read at2026-09-12T18:06:46Z/block58335866: task1 Refunded; task2 Open but acceptance deadline passed; task3 Open/unassigned. Do not advise relisting task1 or claim a completed paid public lifecycle. Read-only evidence is in `docs/design/cutout/evidence/presenter/public-state.json`.
+
+Current official Avalanche Builder Hub event page was found: https://build.avax.network/events/73a939b1-6d35-4847-9388-320024638249 . It confirms TrackA stablecoin workflows (no new stablecoin required), one track/project, separate Builder Hub submission and pitch slides. It lists Sunday16:00 Rome, while earlier verified ETHRome manual lists Sunday10:00; guide uses the earlier event deadline as safe cutoff. No submission made. Arkiv current hub rechecked: native expiry, WSS missions and one prize/team; current EUR/scoring differs from older supplied copy. Do not revive superseded conversation-gate claims from older docs without authoritative confirmation.
+
+---
+
 # Latest follow-up — teammate credential and proof files (12 September)
 
 **Deployed source83e18e0, Vercel `dpl_2iAmKhZoyKhugVtbKJa6jfieVNKc`, https://cutout-ethrome-2026.vercel.app.** It adds explicit credential/holder provenance, reconnect guidance next to disabled inputs, inline enrollment-help navigation and local file validation. Enrollment requests, swapped files, mismatched commitments, expired credentials and wrong classes cannot start proving. Validation does not replace browser cryptography/contract simulation. Six relevant tests and pilot TypeScript pass. Actual Chromium native file chooser opens after connecting; operator files generate a proof accepted by **actual funded Fuji task#3** acceptance simulation. Final production HTTPS verification also passed all five checks without API/prover interception; evidence in `docs/design/cutout/evidence/proof-file-selection`. No transaction sent. A rapid click on the new reconnect action during task refresh was initially ignored by the global busy guard; the control now respects that guard and becomes usable when refresh completes.
