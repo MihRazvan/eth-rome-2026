@@ -35,3 +35,34 @@ The server now refuses a stale issuer snapshot against the current root, a usefu
 ## Remaining evidence gates
 
 No public Arkiv creation, client publication, native lease expiry, lease renewal, wrong-owner transaction, two-client relevant event update, browser wallet network rejection or deployed-public-origin test ran in this review. The earlier socket-close probe and deterministic listings tests remain separately labeled. Native-expiry mission proof still requires an actual create receipt, identical query before/after, applied expiry and natural block advance, visible app change, and evidence no delete caused it. A live stream badge over an empty board is not Mission03 completion.
+
+## Source closure at f8e8f1a
+
+A read-only source follow-up examined root commit `f8e8f1a83ba84e70768b090e8f4fa1d308e7b6c1` on September12,2026. No wallet interaction, process restart, public write, deployment or new browser test occurred in this follow-up. The original five findings are addressed in source as follows:
+
+| Finding | Closure evidence |
+| --- | --- |
+| Publication errors suppressed by session-generation change | The publication action now catches its own errors and writes `#discovery-change`, so expected chain changes no longer suppress the error through `run`. |
+| Escrow/config identity mismatch | Startup reads escrow `token`, `verifier`, `issuer` and `arbitrator`, rejects mismatches, checks six token decimals and restricts Fuji to the configured canonical test-USDC address. |
+| Cached Open-state publication | The action now calls `verifyListing` before switching chains and publishing. That callback rechecks current/finalized job state and exact committed scope. |
+| Blanket encryption wording | Introductory text now says reports are encrypted. Public scope confirmation remains explicit. |
+| Paid jobs labeled FUNDED | An unrelated observer now sees the actual uppercase job status as the amount caption; client/reviewer role captions remain. |
+
+Exact source SHA256 values at this closure observation:
+
+```text
+experiments/qualification/pilot/web/main.ts
+b8a83c5032f9739a907a534a98b80818e0c0d7e2cfdd1d0c36171da75c0e9a0b
+experiments/qualification/pilot/web/index.html
+563dd3701b4e1f8e210ebc537548c4f6cd4ee7306f3958fa80b4149f38378fbc
+experiments/qualification/pilot/start.mjs
+35b54167d0fb9663c8ee149a2c048307f8f5852c65de3f51758d1b4a003548de
+experiments/qualification/pilot/listings.ts
+6c64fdfd3e4acf277975b04c579a41555568bba8831d336f506b7d96fa1dcca6
+```
+
+One residual low-severity publication feedback issue remains at this exact source revision: `driver.publish` can return a confirmed creation receipt, after which a rejected switch back to the settlement network reaches the same catch and replaces success text with “Publication was not confirmed.” Preserve the confirmed receipt and handle return-network failure separately. The existing instruction to inspect Arkiv activity before retrying helps avoid blind duplicate publication but does not make that status wording correct. This was reported to root; no real wallet rejection was executed.
+
+The current/finalized job check is a point-in-time observation. Another transaction can accept the job while the client is switching networks or approving publication; the board will still reject a stale advertisement. There is no cross-chain reservation or atomic publish-and-fund guarantee. Signer/client binding and browser account-list checks remain; a dedicated publication session guard for unexpected account changes is not present. The observed source does not establish a wrong-owner signing bypass, and wallet authorization remains required.
+
+Root reported separate six-check final-startup and sixteen-check full browser evidence; this source review did not rerun or independently attest those counts. The earlier actual Chromium WSS observation is preserved above at its original asset/hash context. Public creation, a relevant two-client event update, native-expiry receipts and the public deployed dapp remain unverified by this review. Closing source findings does not complete the sponsor missions.
