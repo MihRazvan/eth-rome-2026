@@ -66,3 +66,26 @@ One residual low-severity publication feedback issue remains at this exact sourc
 The current/finalized job check is a point-in-time observation. Another transaction can accept the job while the client is switching networks or approving publication; the board will still reject a stale advertisement. There is no cross-chain reservation or atomic publish-and-fund guarantee. Signer/client binding and browser account-list checks remain; a dedicated publication session guard for unexpected account changes is not present. The observed source does not establish a wrong-owner signing bypass, and wallet authorization remains required.
 
 Root reported separate six-check final-startup and sixteen-check full browser evidence; this source review did not rerun or independently attest those counts. The earlier actual Chromium WSS observation is preserved above at its original asset/hash context. Public creation, a relevant two-client event update, native-expiry receipts and the public deployed dapp remain unverified by this review. Closing source findings does not complete the sponsor missions.
+
+## Executable closure of publication receipt preservation
+
+The residual feedback issue is closed in source at root `68fdf3704801cad067d12550259bff669ca2b979`. At09:50:19UTC on September12,2026, an isolated control-flow probe extracted the actual `case "publish"` branch from `main.ts`, removed TypeScript annotations with Node24 `stripTypeScriptTypes`, and executed it with local injected wallet, verification, driver and DOM test doubles. No branch was reimplemented. All public methods were replaced with local stubs; no network call, wallet interaction or transaction occurred.
+
+| Injected scenario | Actual extracted-branch result |
+| --- | --- |
+| Successful publication and successful return switch | One verification, one publish call, Arkiv then settlement switch; entity key, transaction hash and expiry retained. |
+| Successful publication, rejected return switch | One verification and one publish call; confirmed entity key, transaction hash and expiry retained, plus explicit manual-network-switch guidance. The text does not say publication was unconfirmed. |
+| Rejected publication | One verification, one publish attempt and only the outward Arkiv switch; feedback says publication was not confirmed and instructs checking wallet activity before retry. No successful entity receipt appears. |
+
+All three scenarios passed assertions. The two switches were `0x7614d1` (Arkiv7738577) and `0x7a6a` (local settlement31338). Each action returned the existing `preserve` sentinel. The actual returned-network error is caught inside the success branch, so it cannot overwrite the confirmed publication receipt through the outer catch. The CSS now applies `overflow-wrap: anywhere` to `#discovery-change` and `#transactions`; this follow-up inspected that rule but did not rerun its browser layout.
+
+```text
+main.ts SHA256
+7c71c56567fff255a1a3fba05abe58dd6555cb93e2286a4a81cb69448ed2320b
+extracted case "publish" branch SHA256
+188932c6a4b40bc77dfcc5c7a5b7ff198b4a498c02c464c8ee8e566f83f4b7f4
+pilot.css SHA256
+a16295583fd7b70151bc6e0c89d660d26379db224d93c40e799489a057bb6dbb
+```
+
+This is an executable application-control-flow regression check, not a browser-wallet or funded-public-network test. It does not close the separately documented point-in-time cross-chain race, unexpected actor-change limitation or missing public mission evidence. The original browser and source observations retain their earlier dates and hashes.
