@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Uses PUBLIC Anvil test accounts only, with a strict local-chain guard.
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, access } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import {
@@ -10,6 +10,7 @@ import {
   defineChain,
 } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
+import { beeBytes } from "../transport/bytes.ts";
 const exec = promisify(execFile);
 const dir = ".runtime/qualification-pilot";
 await mkdir(dir, { recursive: true });
@@ -25,12 +26,6 @@ const chain = defineChain({
 const read = createPublicClient({ chain, transport: http() });
 if ((await read.getChainId()) !== 31338)
   throw Error("Local Anvil31338 required; no public account fallback");
-const publicState = await fetch("http://127.0.0.1:18787/api/state").then(
-  (r) => {
-    if (!r.ok) throw Error("Original local workbench unavailable");
-    return r.json();
-  },
-);
 const account = mnemonicToAccount(
   "test test test test test test test test test test test junk",
 );
@@ -43,13 +38,68 @@ const artifact = async (n) =>
       "utf8",
     ),
   );
-const escrowArtifact = await artifact("QualificationEscrow");
-const inspect = (fn) =>
-  read.readContract({
-    address: source.escrow,
-    abi: escrowArtifact.abi,
-    functionName: fn,
-  });
+const prover = `${process.cwd()}/${dir}/prover`;
+await exec("go", ["build", "-o", prover, "."], {
+  cwd: "experiments/qualification/prover",
+});
+const issuerDir = `${dir}/issuer`,
+  holderDir = `${dir}/holder`;
+await mkdir(holderDir, { recursive: true, mode: 0o700 });
+async function exists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch (e) {
+    if (e.code === "ENOENT") return false;
+    throw e;
+  }
+}
+if (!(await exists(issuerDir)))
+  await exec(prover, ["registry", "init", "--dir", issuerDir]);
+if (!(await exists(`${holderDir}/holder.json`)))
+  await exec(prover, ["holder-new", "--out", `${holderDir}/holder.json`]);
+const holder = JSON.parse(await readFile(`${holderDir}/holder.json`, "utf8"));
+const credentialPath = `${holderDir}/credential-${Date.now()}.json`;
+await exec(prover, [
+  "registry",
+  "issue",
+  "--dir",
+  issuerDir,
+  "--commitment",
+  holder.holderCommitment,
+  "--class",
+  "7",
+  "--expiry",
+  String(Math.floor(Date.now() / 1000) + 86400),
+  "--out",
+  credentialPath,
+]);
+await writeFile(
+  `${holderDir}/latest.json`,
+  JSON.stringify({
+    credential: credentialPath,
+    holder: `${holderDir}/holder.json`,
+  }) + "\n",
+  { mode: 0o600 },
+);
+await exec(prover, [
+  "registry",
+  "snapshot",
+  "--dir",
+  issuerDir,
+  "--out",
+  `${holderDir}/snapshot.json`,
+]);
+const issuerPublic = JSON.parse(
+  await readFile(`${issuerDir}/issuer-public.json`, "utf8"),
+);
+const snapshot = JSON.parse(
+  await readFile(`${holderDir}/snapshot.json`, "utf8"),
+);
+const arbitrator = mnemonicToAccount(
+  "test test test test test test test test test test test junk",
+  { addressIndex: 4 },
+).address;
 async function deploy(name, args = []) {
   const a = await artifact(name);
   const hash = await wallet.deployContract({
@@ -65,10 +115,10 @@ const keyRegistry = await deploy("QualificationKeys");
 const escrow = await deploy("QualificationEscrow", [
   source.token,
   source.verifier,
-  await inspect("issuerX"),
-  await inspect("issuerY"),
-  await inspect("revocationRoot"),
-  publicState.addresses.arbitrator,
+  BigInt(issuerPublic.issuerX),
+  BigInt(issuerPublic.issuerY),
+  BigInt(snapshot.root),
+  arbitrator,
 ]);
 const stack = JSON.parse(
   await readFile(
@@ -87,8 +137,8 @@ const config = {
   token: source.token,
   verifier: source.verifier,
   issuer: account.address,
-  arbitrator: publicState.addresses.arbitrator,
-  snapshot: publicState.storage.snapshot,
+  arbitrator: arbitrator,
+  snapshot: null,
   swarm: {
     environment: "local-bee",
     uploadUrl: "http://127.0.0.1:1633",
@@ -97,6 +147,9 @@ const config = {
       process.env.QUALIFICATION_LOCAL_POSTAGE ?? stack.localPostage.batchID,
   },
 };
+config.snapshot = await beeBytes(config.swarm).upload(
+  new Uint8Array(await readFile(`${holderDir}/snapshot.json`)),
+);
 await writeFile(`${dir}/config.json`, JSON.stringify(config, null, 2) + "\n");
 console.log(
   JSON.stringify(

@@ -115,8 +115,9 @@ try {
   await mkdir(`${dir}/evidence`, { recursive: true });
   const customer = await profile(1),
     worker = await profile(2),
-    outsider = await profile(3);
-  for (const actor of [customer, worker, outsider])
+    outsider = await profile(3),
+    customerB = await profile(5);
+  for (const actor of [customer, worker, outsider, customerB])
     await click(actor.page, "#register");
   await click(customer.page, "#mint");
   await click(customer.page, "#create");
@@ -137,13 +138,16 @@ try {
   await click(worker.page, `[data-action="prepare"][data-id="${id}"]`);
   const job = await contract("jobs", [BigInt(id)]),
     context = await contract("contextFor", [BigInt(id)]);
-  const prover = process.cwd() + "/.runtime/qualification/prover";
+  const prover = process.cwd() + "/.runtime/qualification-pilot/prover";
+  const holderFiles = JSON.parse(
+    await readFile(`${dir}/holder/latest.json`, "utf8"),
+  );
   await exec(prover, [
     "state",
     "--credential",
-    ".runtime/qualification/credential.json",
+    holderFiles.credential,
     "--snapshot",
-    ".runtime/qualification/snapshot.json",
+    `${dir}/holder/snapshot.json`,
     "--out",
     `${dir}/holder-private-state.json`,
   ]);
@@ -152,9 +156,9 @@ try {
     "--setup",
     ".runtime/qualification/setup",
     "--credential",
-    ".runtime/qualification/credential.json",
+    holderFiles.credential,
     "--holder",
-    ".runtime/qualification/holder.json",
+    holderFiles.holder,
     "--state",
     `${dir}/holder-private-state.json`,
     "--context",
@@ -255,11 +259,76 @@ try {
   checks.push(
     "Provider disconnect removes decrypted content and invalidates wallet session",
   );
+  await click(customerB.page, "#mint");
+  await click(customerB.page, "#create");
+  const secondId = String(await contract("nextJob"));
+  assert.notEqual(secondId, id);
+  const secondJob = await contract("jobs", [BigInt(secondId)]);
+  assert.equal(secondJob[0].toLowerCase(), customerB.account.address.toLowerCase());
+  await exec(prover, [
+    "prove", "--setup", ".runtime/qualification/setup",
+    "--credential", holderFiles.credential, "--holder", holderFiles.holder,
+    "--state", `${dir}/holder-private-state.json`,
+    "--context", String(await contract("contextFor", [BigInt(secondId)])),
+    "--recipient", worker.account.address, "--deadline", String(secondJob[4] - 1n),
+    "--class", "7", "--out", `${dir}/presentation-second.json`,
+  ]);
+  const firstProof = JSON.parse(await readFile(`${dir}/presentation.json`, "utf8"));
+  const secondProof = JSON.parse(await readFile(`${dir}/presentation-second.json`, "utf8"));
+  assert.notEqual(firstProof.publicInputs[7], secondProof.publicInputs[7]);
+  await click(worker.page, "#refresh");
+  await worker.page.locator(`[data-action="prepare"][data-id="${secondId}"]`)
+    .locator("..").locator("summary").click();
+  await worker.page.locator(`[data-proof="${secondId}"]`)
+    .setInputFiles(`${dir}/presentation-second.json`);
+  await click(worker.page, `[data-action="accept"][data-id="${secondId}"]`);
+  const secondPlaintext = "SECOND CLIENT ONLY: review of the distinct withdrawal authorization.";
+  await worker.page.locator(`#review-${secondId}`).fill(secondPlaintext);
+  await click(worker.page, `[data-action="submit"][data-id="${secondId}"]`);
+  await click(customerB.page, "#refresh");
+  await click(customerB.page, `[data-action="retrieve"][data-id="${secondId}"]`);
+  assert.equal(await customerB.page.locator(`#document-${secondId}`).textContent(), secondPlaintext);
+  await click(customer.page, "#connect");
+  await failClick(customer.page, `[data-action="retrieve"][data-id="${secondId}"]`);
+  assert.equal(await customer.page.locator(`#document-${secondId}`).textContent(), "");
+  assert.equal(requests.length, 2);
+  assert.ok(requests.every((body) => !body.includes(plaintext) && !body.includes(secondPlaintext)));
+  checks.push("Same holder credential accepts a second client's job with a different job-scoped nullifier");
+  checks.push("Second client decrypts its review; first client's wallet and retained device keys cannot decrypt it");
+  const credential = JSON.parse(await readFile(holderFiles.credential, "utf8"));
+  await exec(prover, [
+    "registry",
+    "revoke",
+    "--dir",
+    `${dir}/issuer`,
+    "--index",
+    String(credential.index),
+  ]);
+  const revokedSnapshot = JSON.parse(
+    await readFile(`${dir}/issuer/snapshot.json`, "utf8"),
+  );
+  const issuerWallet = createWalletClient({
+    account: mnemonicToAccount(mnemonic),
+    chain,
+    transport: http(),
+  });
+  const rootTx = await issuerWallet.writeContract({
+    address: config.escrow,
+    abi,
+    functionName: "setRoot",
+    args: [BigInt(revokedSnapshot.root)],
+  });
+  await read.waitForTransactionReceipt({ hash: rootTx });
+  checks.push(
+    "Durably allocated credential revoked permanently; issuer wallet advances authoritative root",
+  );
   await click(customer.page, "#connect");
   await click(customer.page, `[data-action="pay"][data-id="${id}"]`);
   assert.equal((await contract("jobs", [BigInt(id)]))[7], 3);
+  await click(customerB.page, `[data-action="pay"][data-id="${secondId}"]`);
+  assert.equal((await contract("jobs", [BigInt(secondId)]))[7], 3);
   checks.push(
-    "Client wallet approves payment to assigned worker after independent review",
+    "Both client wallets approve payment to assigned worker after review and credential revocation",
   );
   // Reproduce a stale connect race: chain lookup waits while provider announces another account.
   await customer.page.evaluate(() => {
@@ -315,7 +384,7 @@ try {
           "Local Anvil and local Bee, public test wallets injected into isolated real Chromium contexts",
         escrow: config.escrow,
         keyRegistry: config.keyRegistry,
-        job: id,
+        jobs: [id, secondId],
         checks,
         pageErrors,
       },
