@@ -654,8 +654,7 @@
   }
   .cutout-demo .cd-sidebar > .cd-kicker,
   .cutout-demo .cd-sidebar > h2,
-  .cutout-demo .cd-intro,
-  .cutout-demo .cd-honesty {
+  .cutout-demo .cd-intro {
     display: block;
     margin-top: 18px;
   }
@@ -766,5 +765,12 @@
   }
   .cutout-demo .cd-button:hover {
     transform: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .cutout-demo .cd-honesty {
+    display: block;
+    margin-top: 18px;
   }
 }
