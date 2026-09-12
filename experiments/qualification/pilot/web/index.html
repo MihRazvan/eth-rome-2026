@@ -340,7 +340,7 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
                   <summary>Timing and discovery options</summary>
                   <p class="fine">
                     Default: one hour each for acceptance, delivery and client
-                    review. The discovery listing lasts about one minute when
+                    review. The discovery listing lasts about 30 minutes when
                     published.
                   </p>
                   <label
@@ -373,12 +373,13 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
                       type="number"
                       min="3"
                       max="43200"
-                      value="30"
+                      value="900"
                   /></label>
                   <p class="fine">
                     After funding, publish a lease from the same client wallet
-                    on Arkiv. A 30-block lease lasts about a minute. Expiry
-                    removes the listing; it does not cancel the escrow.
+                    on Arkiv. The default 900-block lease lasts about 30
+                    minutes. Expiry removes the listing; it does not cancel the
+                    escrow.
                   </p>
                 </details>
                 <button id="mint" hidden disabled class="quiet">

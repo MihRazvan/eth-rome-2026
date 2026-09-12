@@ -43,6 +43,12 @@ import {
 } from "../listings";
 import { createSwarmStorage, type StorageRef } from "../swarm-id";
 import { createGatewayStorage } from "../swarm-gateway";
+import { tiramisu } from "@arkiv-network/sdk/chains";
+import {
+  ensureWalletChain,
+  walletErrorMessage,
+  WalletNetworkError,
+} from "../wallet-network";
 declare global {
   interface Window {
     ethereum?: {
@@ -122,6 +128,19 @@ function renderGuide() {
     !account && config.chainId === 31338
       ? "Local demo activity"
       : "Your review activity";
+  const walletControl = $("#connect");
+  walletControl.textContent = account
+    ? `${account.slice(0, 8)}…${account.slice(-6)} · ${config.chainId === 43113 ? "Fuji" : "Local"}`
+    : "Connect wallet";
+  walletControl.title = account
+    ? `Connected: ${account}. Click to reconnect.`
+    : "Connect your payment wallet";
+  walletControl.setAttribute(
+    "aria-label",
+    account
+      ? `Connected wallet ${account}. Reconnect wallet.`
+      : "Connect wallet",
+  );
   const r = currentReadiness();
   const storageReady = !publicStorage || publicStorage.state.canUpload;
   const next = nextStep(
@@ -1123,10 +1142,19 @@ async function action(name: string, id: string) {
           "Refresh the assignment: its funding, scope or acceptance state changed",
         );
       try {
-        await window.ethereum!.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: `0x${(7738577).toString(16)}` }],
+        $("#notice").textContent =
+          "Connecting your wallet to Arkiv. Approve adding the network if prompted.";
+        await ensureWalletChain(window.ethereum!, tiramisu, owner);
+        const arkivRead = createPublicClient({
+          chain: tiramisu,
+          transport: http(arkivConfig.rpcUrl),
         });
+        if ((await arkivRead.getBalance({ address: owner })) === 0n)
+          throw new WalletNetworkError(
+            "This client wallet needs test GLM on Arkiv Tiramisu for listing gas. Your task is already funded on Fuji; do not fund it again.",
+          );
+        $("#notice").textContent =
+          "Approve the listing transaction in your wallet. Your task is already funded on Fuji.";
         const driver = createArkivListingDriver({
           namespace: "review-pass",
           ...arkivConfig,
@@ -1159,7 +1187,7 @@ async function action(name: string, id: string) {
             " The return network switch was not completed. Your listing is published; switch back to the settlement network manually.";
         }
       } catch (error) {
-        const message = `Publication was not confirmed: ${error instanceof Error ? error.message.slice(0, 160) : "wallet or network failure"}. Check your Arkiv wallet activity before retrying, then reconnect the settlement wallet.`;
+        const message = `Publication was not confirmed: ${walletErrorMessage(error)} Your funded task remains in Activity. Check Arkiv wallet activity before retrying; do not fund the task again.`;
         $("#discovery-change").textContent = message;
         // Network switches invalidate the wallet generation. Keep the outcome
         // visible even when run() correctly refuses to restore that session.
