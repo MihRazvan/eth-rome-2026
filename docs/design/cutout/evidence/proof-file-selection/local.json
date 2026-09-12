@@ -1,0 +1,16 @@
+{
+  "date": "2026-09-12T18:02:14.735Z",
+  "source": "working tree",
+  "origin": "local Vite with real public API/prover artifacts",
+  "taskId": "3",
+  "checks": [
+    "Disconnected file controls explain reconnect; in-card wallet connection enables both",
+    "Actual native file picker opens; enrollment request rejected with issuer instructions",
+    "Swapped holder backup rejected before proving",
+    "Real issuer credential and matching holder selected locally",
+    "Actual browser proof passes funded Fuji task acceptance simulation; no signature sent"
+  ],
+  "errors": [],
+  "transactionsOrSignatures": 0,
+  "scope": "Actual file chooser and locally held operator credential; real browser proof and public Fuji eth_call acceptance simulation. No task accepted and no teammate credential issued."
+}

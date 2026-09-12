@@ -1,3 +1,13 @@
+# Latest follow-up — teammate credential and proof files (12 September)
+
+**Deployed source83e18e0, Vercel `dpl_2iAmKhZoyKhugVtbKJa6jfieVNKc`, https://cutout-ethrome-2026.vercel.app.** It adds explicit credential/holder provenance, reconnect guidance next to disabled inputs, inline enrollment-help navigation and local file validation. Enrollment requests, swapped files, mismatched commitments, expired credentials and wrong classes cannot start proving. Validation does not replace browser cryptography/contract simulation. Six relevant tests and pilot TypeScript pass. Actual Chromium native file chooser opens after connecting; operator files generate a proof accepted by **actual funded Fuji task#3** acceptance simulation. Final production HTTPS verification also passed all five checks without API/prover interception; evidence in `docs/design/cutout/evidence/proof-file-selection`. No transaction sent. A rapid click on the new reconnect action during task refresh was initially ignored by the global busy guard; the control now respects that guard and becomes usable when refresh completes.
+
+**Teammate credential actually issued** from user-provided `/Users/razvan/Desktop/cutout-enrollment-request.json`, with the existing deployed issuer/allocator and no holder secret. Private output `.runtime/cutout-enrollment/teammate-credential.json` is0600, matches the request, expires2026-09-13T17:58:21Z (20:58 Bucharest). User was given a local download link to return privately. Do not regenerate his holder, expose the credential in Git/Swarm, or reuse our operator holder for him. His proof still needs his own original `cutout-private-holder.json`; actual teammate acceptance is not verified.
+
+Task#1 is approaching/past its acceptance deadline; do not blindly tell them to relist it. Actual Arkiv board also exposed newer task#3 and the browser test used it. Use eligible existing tasks and reconcile state before any funded actions. Public paid lifecycle remains incomplete.
+
+---
+
 # Latest — wallet, Arkiv publication and reviewer enrollment (12 September)
 
 **Live source `0c690d2` (application change `42b0993`), deployment `dpl_7AuDuD9WAAXcgnmbqiAk2VGs6y3B`**, https://cutout-ethrome-2026.vercel.app. Same public contracts and issuer setup; the deployment rebuilds WASM with browser holder generation. These observations supersede older "nextJob 0", Swarm-session and CLI-only holder prerequisites below.

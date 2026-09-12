@@ -1,3 +1,11 @@
+# Proof-file handoff and teammate credential — deployed
+
+12 September2026, source83e18e0, Vercel `dpl_2iAmKhZoyKhugVtbKJa6jfieVNKc`. Issued the teammate's test credential from their provided public enrollment request; no holder secret received. Private download link delivered; credential expiry2026-09-13T17:58:21Z. Their own holder/proof still requires their browser.
+
+The proof form now explains both file sources, rejects enrollment requests/swapped/mismatched/expired files locally and provides an enabled-when-ready wallet reconnect action for disabled inputs. Six targeted tests, TypeScript/build pass. Actual production Chromium native chooser and operator-held credential/holder generated a proof accepted by funded task#3's Fuji acceptance simulation, with zero page errors and no signatures or transactions. [Evidence](design/cutout/evidence/proof-file-selection/README.md). Full paid lifecycle remains unverified.
+
+---
+
 # Wallet/publication recovery and browser enrollment — deployed
 
 12 September2026, source `0c690d2` (application change `42b0993`), production `dpl_7AuDuD9WAAXcgnmbqiAk2VGs6y3B`. Connected-wallet header repaired; Arkiv unknown-network handling and actionable error reporting added; default discovery lease up to900blocks, automatically shortened to the remaining acceptance window. Actual task#1 was funded by the user but had no Arkiv listing and zero creator gas at17:08UTC. A0.01testGLM top-up is confirmed; creator publication signature remains required.
