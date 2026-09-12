@@ -1404,7 +1404,8 @@ $("#filter-board").onclick = () =>
       message: "Reward filter applied to live Arkiv listings.",
     };
   });
-$("#refresh-board").onclick = () => run(() => board.refresh());
+// A manual refresh also recreates a stream whose bounded reconnects were exhausted.
+$("#refresh-board").onclick = () => run(startBoard);
 $("#opportunities").onclick = (e) => {
   const b = (e.target as Element).closest<HTMLButtonElement>("[data-view-job]");
   if (b && boardState?.status === "live")
