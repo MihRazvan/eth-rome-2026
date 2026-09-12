@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-12",
+  "artifactSha256": "67e3d1c9918f02a4998eb511cac75aeda6865a50017526f7ff7ae31e5f970ad7",
+  "command": "REVIEW_PASS_SWARM_LIVE_PROBE=1 node --import tsx --test experiments/qualification/pilot/swarm-id.test.ts",
+  "tests": { "passed": 11, "failed": 0, "skipped": 0 },
+  "browser": "Actual clean Chromium through Playwright",
+  "service": "https://swarm-id.snaha.net",
+  "observedState": { "connected": false, "canUpload": false, "mode": "unavailable", "reason": "not-connected" },
+  "boundary": "Rebuilt adapter imported and initialized. No connect, identity creation, postage purchase, gift redemption or public write."
+}

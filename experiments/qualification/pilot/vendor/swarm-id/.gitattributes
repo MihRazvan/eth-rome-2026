@@ -1,0 +1,3 @@
+# Preserve significant upstream template-literal bytes and distributed notices.
+client.js -whitespace
+licenses/** -whitespace

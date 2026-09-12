@@ -1,0 +1,1 @@
+{"name":"review-pass-swarm-id-rebuild","private":true,"type":"module","dependencies":{"@ethersphere/bee-js":"11.2.0","@noble/curves":"1.2.0","@noble/hashes":"1.3.2","cafe-utility":"33.3.2","zod":"4.1.13","axios":"0.33.0","esbuild":"0.28.0"},"overrides":{"axios":"0.33.0"}}
