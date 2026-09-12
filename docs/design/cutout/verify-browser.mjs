@@ -21,7 +21,7 @@ page.on("console", (message) => {
 page.on("request", (r) => {
   if (
     r.method() === "POST" &&
-    /\/api\/(upload|terms)|\/bzz|\/bytes\//.test(r.url())
+    /\/api\/(upload|terms)|\/bzz|\/bytes(?:\/|$)/.test(r.url())
   )
     writes.push(r.url());
 });
@@ -119,16 +119,32 @@ try {
   assert.equal(await page.locator("#commission").isVisible(), false);
   await page.locator('.rail-nav [data-view="help"]').click();
   await page.locator(".device-settings > summary").click();
-  await page.locator("#swarm-connect-widget iframe").waitFor();
-  assert.equal(
-    await page
-      .locator("#swarm-connect-widget iframe")
-      .evaluate((n) => getComputedStyle(n).position),
-    "static",
+  const storageMode = await page.evaluate(
+    async () => (await (await fetch("/api/config")).json()).storageMode,
   );
+  if (storageMode === "swarm-gateway") {
+    await page.waitForFunction(() =>
+      document
+        .querySelector("#storage-status")
+        ?.textContent?.includes("No Swarm account required"),
+    );
+    assert.equal(await page.locator("iframe").count(), 0);
+    assert.match(
+      await page.locator("#readiness").textContent(),
+      /no storage account needed/,
+    );
+  } else {
+    await page.locator("#swarm-connect-widget iframe").waitFor();
+    assert.equal(
+      await page
+        .locator("#swarm-connect-widget iframe")
+        .evaluate((n) => getComputedStyle(n).position),
+      "static",
+    );
+  }
   await snap("workspace-desktop");
   checks.push(
-    "Cutout branding, live task preview, distinct role/task/activity/settings navigation, in-flow official Swarm UI",
+    "Cutout branding, live task preview, distinct role/task/activity/settings navigation, configured Swarm storage readiness",
   );
   await demo();
   checks.push(

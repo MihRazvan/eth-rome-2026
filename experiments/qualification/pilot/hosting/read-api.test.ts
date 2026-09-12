@@ -269,3 +269,14 @@ test("invalid public deployment configuration cannot become an active hosted end
       ),
     );
 });
+
+test("gateway-funded storage keeps authenticated reads and a read-only hosted API", async () => {
+  const f = fixture();
+  f.config.storageMode = "swarm-gateway";
+  const api = createPublicReadAPI(f.config, f.deps);
+  const config = await api("/api/config");
+  assert.equal((config.body as PublicReadConfig).storageMode, "swarm-gateway");
+  assert.equal((await api("/api/snapshot")).status, 200);
+  assert.equal((await api("/api/terms?job=1")).status, 200);
+  assert.equal((await api("/api/upload", "POST")).status, 405);
+});

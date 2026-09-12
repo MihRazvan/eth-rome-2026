@@ -42,6 +42,7 @@ import {
   type ListingEntity,
 } from "../listings";
 import { createSwarmStorage, type StorageRef } from "../swarm-id";
+import { createGatewayStorage } from "../swarm-gateway";
 declare global {
   interface Window {
     ethereum?: {
@@ -131,6 +132,14 @@ function renderGuide() {
     chosenReward(),
     config.chainId === 31338,
   );
+  if (
+    config.storageMode === "swarm-gateway" &&
+    next.target === "connect-storage"
+  ) {
+    next.title = "Check document storage";
+    next.text =
+      "Cutout covers document uploads through Swarm’s public gateway. Retry the connection; no separate account or drive is needed.";
+  }
   $("#journey-role").textContent =
     role === "client" ? "YOUR CLIENT WORKSPACE" : "YOUR REVIEWER WORKSPACE";
   $("#journey-title").textContent = next.title;
@@ -179,9 +188,13 @@ function renderGuide() {
       storageReady,
       "Document storage",
       publicStorage
-        ? storageReady
-          ? "Swarm ID can upload"
-          : "Connect storage with an active drive"
+        ? config.storageMode === "swarm-gateway"
+          ? storageReady
+            ? "Included · no storage account needed"
+            : "Storage unavailable · retry connection"
+          : storageReady
+            ? "Swarm ID can upload"
+            : "Connect storage with an active drive"
         : "Local Bee rehearsal only",
     ],
     ...(role === "client"
@@ -258,20 +271,30 @@ const arkivConfig = config.arkiv ?? {
   wsUrl: "wss://rpc.tiramisu.db-chain.testnet.arkiv.network",
 };
 const publicStorage =
-  config.storageMode === "swarm-id"
-    ? createSwarmStorage({
+  config.storageMode === "swarm-gateway"
+    ? createGatewayStorage({
         gatewayUrl: config.gatewayUrl,
-        containerId: "swarm-connect-widget",
         onState: (state) => {
           $("#storage-status").textContent = state.canUpload
-            ? `Swarm ID connected · ${state.mode} uploads available`
-            : state.connected
-              ? `Connected; upload unavailable (${state.reason ?? "postage required"})`
-              : "Connect Swarm ID to upload. Storage identity is separate from your payment wallet.";
+            ? "Document uploads are included. Reports are encrypted in this browser before upload to Swarm. No Swarm account required."
+            : "Document storage is unavailable. Retry the connection; your report stays in this browser.";
           renderGuide();
         },
       })
-    : undefined;
+    : config.storageMode === "swarm-id"
+      ? createSwarmStorage({
+          gatewayUrl: config.gatewayUrl,
+          containerId: "swarm-connect-widget",
+          onState: (state) => {
+            $("#storage-status").textContent = state.canUpload
+              ? `Swarm ID connected · ${state.mode} uploads available`
+              : state.connected
+                ? `Connected; upload unavailable (${state.reason ?? "postage required"})`
+                : "Connect Swarm ID to upload. Storage identity is separate from your payment wallet.";
+            renderGuide();
+          },
+        })
+      : undefined;
 async function fetchDocument(id: string) {
   const job: any = await read("jobs", [BigInt(id)]);
   const digest: any = await read("documentDigests", [BigInt(id)]);
@@ -1427,16 +1450,23 @@ window.addEventListener("pagehide", () => {
   proofController?.abort();
 });
 if (publicStorage) {
+  if (config.storageMode === "swarm-gateway") {
+    $("#connect-storage").textContent = "Check storage connection";
+    $("#swarm-connect-widget").hidden = true;
+    $("#storage-retention").hidden = false;
+  }
   $("#connect-storage").onclick = () => run(() => publicStorage.connect());
   void publicStorage.initialize().catch(() => {
     $("#storage-status").textContent =
-      "Swarm ID initialization failed. Reload to retry; no storage fallback is used.";
+      config.storageMode === "swarm-gateway"
+        ? "Document storage could not be reached. Check the connection to retry. No account setup is needed."
+        : "Swarm ID initialization failed. Reload to retry; no storage fallback is used.";
   });
   window.addEventListener("pagehide", () => publicStorage.destroy());
 } else {
   $("#connect-storage").hidden = true;
   $("#storage-status").textContent =
-    "Local rehearsal: real uploads and independent retrieval use the local Bee nodes. Public deployments use Swarm ID.";
+    "Local rehearsal: real uploads and independent retrieval use the local Bee nodes. Public deployments use Swarm.";
 }
 $("#register").onclick = () => run(register);
 $("#rotate").onclick = () =>

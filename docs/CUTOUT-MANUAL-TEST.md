@@ -12,12 +12,12 @@ Use https://cutout-ethrome-2026.vercel.app in a fresh browser. The teammate owns
 
 Report only: **URL/role → action → expected result → actual result**, plus a screenshot or recording if useful. Include confusing wording even if nothing crashes.
 
-## Real payment test — after authenticated storage is ready
+## Real payment test — no Swarm account required
 
 Two separate browser/wallet contexts are required; the role toggle alone does not switch wallets. Existing operator profiles use the preserved Review Pass hostname, which displays Cutout; keep each profile on its original hostname to retain its registered private report key.
 
-1. In both prepared profiles, use **Your workspace → Private reports & storage → Connect storage** to sign into the intended Swarm account with usable upload capacity. The latest operator check found neither rehearsal role ready for uploads. No pasted IDs, keys or recovery phrase in Cutout.
+1. Refresh both prepared profiles. **Document storage** should say **Included · no storage account needed**. Cutout uses gateway-funded public Swarm uploads; no Swarm login, drive, IDs or keys are required. If the gateway is temporarily unavailable, use **Check storage connection**. Demo storage is temporary; save completed reports.
 2. Follow the prepared client/reviewer flow: **fund 10 test USDC → list review → prove and accept → seal and deliver → client opens → approve and pay**. Detailed button-by-button instructions are in the [team brief](CUTOUT-TEAM-BRIEF.md#how-to-test-the-real-flow-end-to-end).
 3. Judge the experience: wallet prompts describe the right action, the report survives reload in the same profile, another wallet cannot read it, and the final paid amount/receipt are clear.
 
-Engineering will verify transaction finality, balances, cryptography, Arkiv expiry/subscription recovery and stored-byte integrity. Do not treat a walkthrough receipt as a real payment. Public funded lifecycle and native-expiry evidence remain pending until actually executed.
+Engineering will verify transaction finality, balances, cryptography, Arkiv expiry/subscription recovery and stored-byte integrity. Do not treat a walkthrough receipt as a real payment. Public funded lifecycle and native-expiry evidence remain pending until actually executed; storage authentication is no longer a prerequisite.

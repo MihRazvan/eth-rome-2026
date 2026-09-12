@@ -119,7 +119,7 @@ export function createPublicReadAPI(
     );
   if (publicConfig.status === "active") {
     if (
-      publicConfig.storageMode !== "swarm-id" ||
+      !["swarm-id", "swarm-gateway"].includes(publicConfig.storageMode ?? "") ||
       publicConfig.token?.toLowerCase() !==
         "0x5425890298aed601595a70ab815c96711a31bc65" ||
       !/^0x[a-f0-9]{40}$/i.test(publicConfig.escrow ?? "") ||

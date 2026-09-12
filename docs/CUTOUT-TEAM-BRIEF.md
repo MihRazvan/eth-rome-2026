@@ -1,3 +1,5 @@
+> Storage update, 12 September: the public app now includes gateway-funded Swarm uploads. Users do **not** need a Swarm account, drive or gift code. Refresh the app and check that Document storage says included. Earlier Swarm sign-in instructions below are superseded; private report encryption and credential enrollment remain separate.
+
 # Cutout — teammate brief and demo guide
 
 Prepared 12 September 2026 from the implemented app and recorded verification.

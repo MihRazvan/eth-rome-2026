@@ -10,6 +10,11 @@ Cutout lets a client fund a technical review in test USDC. A reviewer proves the
 
 The guided demo requires no account. It uses actual browser encryption/decryption and explicitly simulates qualification, funding and payment. The live workspace uses the existing Fuji contracts and separate public storage/discovery integrations. The full funded public lifecycle remains a release gate; a walkthrough is not bounty evidence.
 
+**Storage is included in the public demo.** Cutout uses Swarm’s [official gateway upload path](https://github.com/ethersphere/bee-js#upload-via-swarm-gateway), which supplies postage without a user account. Reports are encrypted locally with AES-GCM and recipient HPKE before upload; independent retrieval must match SHA-256 before the app commits the reference. No Swarm login, drive purchase, recovery phrase or postage key is required. This is gateway-funded trial storage, not usage of the team’s gift drive; retention is not guaranteed, and users can export completed reports. The production next step is an operator-funded gateway with a stated retention policy.
+
+Swarm ID is optional under the [supplied bounty brief](docs/review-pass/supplied-bounties.txt). We chose direct Bee HTTP uploads because Cutout already has wallet authorization and browser-held report keys; another identity account would add no required security property. The existing Swarm ID adapter and its provenance remain available for deployments that choose it.
+
+
 Current targets: Avalanche / Team1 Track A, Arkiv Mission 02 / Mission 03 / Best Use (one Arkiv award per team), and Swarm. See the receipt-linked [acceptance ledger](docs/ACCEPTANCE.md) for what actually ran.
 
 Cutout is the active product on `review-pass/product`. The `review-pass` paths and protocol identifiers preserve existing deployed contracts, browser keys and provenance. Earlier EXIT work follows as historical material; its deployment status does not describe Cutout.

@@ -46,7 +46,7 @@ const config = {
   chainId: 43113,
   rpcUrl,
   token,
-  storageMode: "swarm-id",
+  storageMode: pending ? "swarm-id" : "swarm-gateway",
   gatewayUrl,
   arkiv,
 };
@@ -79,7 +79,7 @@ else {
   if (
     source.chainId !== 43113 ||
     source.environment !== "fuji-testnet" ||
-    source.storageMode !== "swarm-id" ||
+    !["swarm-id", "swarm-gateway"].includes(source.storageMode) ||
     source.testOnly !== true ||
     source.token?.toLowerCase() !== token.toLowerCase() ||
     source.rpcUrl !== rpcUrl ||
