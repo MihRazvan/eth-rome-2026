@@ -1,0 +1,16 @@
+{
+  "status": "BROWSER_PROVER_PROBE_ONLY",
+  "go": "go version go1.25.7 darwin/arm64",
+  "sourceHashes": {
+    "go.mod": "5c356f6f39b897f5e9f68b3130b07d6196a916c1d6f1dc4df652360c929b5630",
+    "go.sum": "3bf6fc0d6933d070b88d1671b4a48c086ee31bc25dbf3cfe25d6d3ffebbcc9d0",
+    "circuit.go": "5a60e9ef2508da1238115698e03d1c236aace25123bd3e748d197a565e7eb3ab",
+    "credential.go": "7f6b18a272e80a6594337279224b5b1be563862f72a1f5f4df397738be26cc7f",
+    "main.go": "d9f78ccdcd7e532ecc3ba127b3dfafee93a92157927d5123e86de2675db7c8fd",
+    "bridge.go.txt": "0433f96c794cca12f3befbf301859b08d70d96e42ebdc7c13b0013ee8c3a047d",
+    "worker.js": "fb2ae37c634c6e730328c94cbc0fcea532bd4145ae79cf0aeb8dcb2b1a8bf19a"
+  },
+  "wasmBytes": 14532836,
+  "wasmSha256": "1ce5e297d0b41a2e72357a5530fb709386973482a02d5f22267eedd6ef355532",
+  "buildMs": 238
+}

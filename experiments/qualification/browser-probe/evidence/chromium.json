@@ -1,0 +1,93 @@
+{
+  "status": "ACTUAL_CHROMIUM_WASM_PROOF_VERIFIED_LOCALLY",
+  "date": "2026-09-12T12:29:35.651Z",
+  "browser": "153.0.8010.12",
+  "environment": "Loopback asset server; public deterministic test fixtures; fresh single-process test setup; no wallet or public chain transaction",
+  "build": {
+    "status": "BROWSER_PROVER_PROBE_ONLY",
+    "go": "go version go1.25.7 darwin/arm64",
+    "sourceHashes": {
+      "go.mod": "5c356f6f39b897f5e9f68b3130b07d6196a916c1d6f1dc4df652360c929b5630",
+      "go.sum": "3bf6fc0d6933d070b88d1671b4a48c086ee31bc25dbf3cfe25d6d3ffebbcc9d0",
+      "circuit.go": "5a60e9ef2508da1238115698e03d1c236aace25123bd3e748d197a565e7eb3ab",
+      "credential.go": "7f6b18a272e80a6594337279224b5b1be563862f72a1f5f4df397738be26cc7f",
+      "main.go": "d9f78ccdcd7e532ecc3ba127b3dfafee93a92157927d5123e86de2675db7c8fd",
+      "bridge.go.txt": "0433f96c794cca12f3befbf301859b08d70d96e42ebdc7c13b0013ee8c3a047d",
+      "worker.js": "fb2ae37c634c6e730328c94cbc0fcea532bd4145ae79cf0aeb8dcb2b1a8bf19a"
+    },
+    "wasmBytes": 14532836,
+    "wasmSha256": "1ce5e297d0b41a2e72357a5530fb709386973482a02d5f22267eedd6ef355532",
+    "buildMs": 238
+  },
+  "setupSha256": {
+    "circuit.r1cs": "053bd5c4993b7d49350ef90ea3bffb8f437f5fe6ef4a554e63cf540432b771e9",
+    "proving.key": "5790d70188812b0b6ee6eac42dabb0cadd83920f01b1b951cb2879c0de296367",
+    "verifying.key": "567034c0a13fcfb7d528cdf1e44c8d72aab857236262d622077f6b86bfa7089e"
+  },
+  "load": {
+    "constraints": 26089,
+    "loadMs": 13014.099,
+    "ready": true,
+    "totalLoadMs": 13120.5,
+    "setupBytes": [
+      1961557,
+      4416879,
+      620
+    ]
+  },
+  "proof": {
+    "proofBytes": 256,
+    "constraints": 26089,
+    "proveMs": 4487,
+    "verifyMs": 9.499,
+    "goHeapAllocBytes": 40861416,
+    "goSysBytes": 52428800
+  },
+  "checks": [
+    "Unchanged public inputs match native fixture",
+    "Second context changes nullifier",
+    "Wrong class rejected",
+    "Tampered snapshot rejected",
+    "Unknown private input field rejected",
+    "Only public static GET requests",
+    "No page exceptions"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/worker.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/circuit.r1cs",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/proving.key",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/verifying.key",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/wasm_exec.js",
+      "hasBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/prover.wasm",
+      "hasBody": false
+    }
+  ],
+  "consoleErrors": []
+}

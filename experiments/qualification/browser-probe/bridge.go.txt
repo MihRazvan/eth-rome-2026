@@ -1,0 +1,80 @@
+// SPDX-License-Identifier: MIT
+// Browser probe wrapper. The copied circuit, credential and prover relation are unchanged.
+package main
+
+import (
+ "bytes"
+ "encoding/json"
+ "fmt"
+ "io"
+ "syscall/js"
+ "time"
+ "github.com/consensys/gnark-crypto/ecc"
+ "github.com/consensys/gnark/backend/groth16"
+ "github.com/consensys/gnark/constraint"
+ "github.com/consensys/gnark/logger"
+)
+
+// Native CLI administration is deliberately not a browser capability.
+func issuerRegistry([]string) error { return fmt.Errorf("issuer administration unavailable in browser") }
+func validatePublic([]string, io.Writer) error { return fmt.Errorf("CLI metadata validation unavailable in browser") }
+var browserCS constraint.ConstraintSystem
+var browserPK groth16.ProvingKey
+var browserVK groth16.VerifyingKey
+
+func decodeBrowserJSON(raw string, output any) error {
+ if len(raw) > 1<<20 { return fmt.Errorf("input exceeds browser bound") }
+ decoder := json.NewDecoder(bytes.NewBufferString(raw))
+ decoder.DisallowUnknownFields()
+ if decoder.Decode(output) != nil { return fmt.Errorf("invalid input JSON") }
+ var trailing any
+ if decoder.Decode(&trailing) != io.EOF { return fmt.Errorf("trailing input JSON") }
+ return nil
+}
+func result(value any, err error) string {
+ if err != nil { value = map[string]string{"error": err.Error()} }
+ encoded, _ := json.Marshal(value)
+ return string(encoded)
+}
+func initializeBrowser(_ js.Value, args []js.Value) (out any) {
+ defer func() { if recover() != nil { browserCS=nil; browserPK=nil; browserVK=nil; out=result(nil,fmt.Errorf("setup initialization failed")) } }()
+ if len(args)!=3 { return result(nil,fmt.Errorf("three setup byte arrays required")) }
+ start:=time.Now()
+ cs:=groth16.NewCS(ecc.BN254); pk:=groth16.NewProvingKey(ecc.BN254); vk:=groth16.NewVerifyingKey(ecc.BN254)
+ for i, object:=range []io.ReaderFrom{cs,pk,vk} {
+  length:=args[i].Get("byteLength").Int()
+  if length<=0 || length>32<<20 { return result(nil,fmt.Errorf("invalid setup size")) }
+  data:=make([]byte,length)
+  if js.CopyBytesToGo(data,args[i])!=length { return result(nil,fmt.Errorf("incomplete setup input")) }
+  reader:=bytes.NewReader(data)
+  if _,err:=object.ReadFrom(reader);err!=nil || reader.Len()!=0 { return result(nil,fmt.Errorf("invalid setup bytes")) }
+ }
+ browserCS=cs; browserPK=pk; browserVK=vk
+ return result(map[string]any{"ready":true,"constraints":cs.GetNbConstraints(),"loadMs":float64(time.Since(start).Microseconds())/1000},nil)
+}
+func proveBrowser(_ js.Value,args []js.Value) (out any) {
+ defer func() { if recover()!=nil { out=result(nil,fmt.Errorf("browser proof generation failed")) } }()
+ if browserCS==nil || len(args)!=1 { return result(nil,fmt.Errorf("initialize setup before proving")) }
+ var request struct { Holder Holder `json:"holder"`; Credential Credential `json:"credential"`; Snapshot Snapshot `json:"snapshot"`; Context string `json:"context"`; Recipient string `json:"recipient"`; Deadline string `json:"deadline"`; Class string `json:"class"` }
+ if err:=decodeBrowserJSON(args[0].String(),&request);err!=nil { return result(nil,err) }
+ h,c,s:=&request.Holder,&request.Credential,&request.Snapshot
+ if h.Version!=Version || h.Commitment!=c.HolderCommitment || s.Version!=Version || s.Depth!=Depth || len(s.Revoked)>1<<Depth { return result(nil,fmt.Errorf("holder, credential or snapshot mismatch")) }
+ for i,index:=range s.Revoked { if index>=1<<Depth || (i>0 && index<=s.Revoked[i-1]) { return result(nil,fmt.Errorf("invalid snapshot indices")) } }
+ state,err:=buildState(c.Index,s.Revoked)
+ if err!=nil || state.Root!=s.Root { return result(nil,fmt.Errorf("snapshot reconstruction failed")) }
+ c.HolderSecret=h.Secret
+ context,err:=field(request.Context);if err!=nil {return result(nil,fmt.Errorf("invalid context"))}
+ recipient,err:=field(request.Recipient);if err!=nil {return result(nil,fmt.Errorf("invalid recipient"))}
+ deadline,err:=field(request.Deadline);if err!=nil {return result(nil,fmt.Errorf("invalid deadline"))}
+ class,err:=field(request.Class);if err!=nil {return result(nil,fmt.Errorf("invalid class"))}
+ witness,err:=assignment(c,state,context,recipient,deadline,class)
+ if err!=nil {return result(nil,err)}
+ proof,err:=generateProof(browserCS,browserPK,browserVK,witness)
+ return result(proof,err)
+}
+func main() {
+ logger.Disable()
+ js.Global().Set("reviewPassInitialize",js.FuncOf(initializeBrowser))
+ js.Global().Set("reviewPassProve",js.FuncOf(proveBrowser))
+ select {}
+}
