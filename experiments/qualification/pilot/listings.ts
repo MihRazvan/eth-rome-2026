@@ -481,6 +481,64 @@ export function createListingBoard(options: {
     stop,
   };
 }
+/** Restart failed WSS subscriptions, including failures before viem creates its socket cache. */
+export function watchListingStream(
+  subscribe: (stream: ListingStream) => () => void,
+  stream: ListingStream,
+  options: { retryDelays?: readonly number[]; firstHeadTimeout?: number } = {},
+) {
+  const delays = options.retryDelays ?? [1000, 2000, 4000, 8000, 16000];
+  const firstHeadTimeout = options.firstHeadTimeout ?? 15000;
+  let stopped = false,
+    generation = 0,
+    retries = 0;
+  let stop: (() => void) | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let deadline: ReturnType<typeof setTimeout> | undefined;
+  function connect() {
+    if (stopped) return;
+    const mine = ++generation;
+    let failed = false;
+    const current = () => !stopped && mine === generation && !failed;
+    const disconnect = () => {
+      if (!current()) return;
+      failed = true;
+      clearTimeout(deadline);
+      stream.onDisconnect();
+      // Bound retries per board session. Explicit board restart gives the user another attempt.
+      if (retries < delays.length)
+        timer = setTimeout(() => {
+          stop?.();
+          stop = undefined;
+          connect();
+        }, delays[retries++]);
+    };
+    deadline = setTimeout(disconnect, firstHeadTimeout);
+    try {
+      stop = subscribe({
+        onEntity(key, type) {
+          if (current()) stream.onEntity(key, type);
+        },
+        onHead(head) {
+          if (!current()) return;
+          clearTimeout(deadline);
+          stream.onHead(head);
+        },
+        onDisconnect: disconnect,
+      });
+    } catch {
+      disconnect();
+    }
+  }
+  connect();
+  return () => {
+    stopped = true;
+    generation++;
+    clearTimeout(timer);
+    clearTimeout(deadline);
+    stop?.();
+  };
+}
 export function createArkivListingDriver(config: {
   rpcUrl?: string;
   wsUrl?: string;
@@ -526,26 +584,45 @@ export function createArkivListingDriver(config: {
       }
     },
     watch(stream: ListingStream) {
-      const live = createPublicClient({
-        chain: tiramisu,
-        transport: webSocket(
-          config.wsUrl ?? "wss://rpc.tiramisu.db-chain.testnet.arkiv.network",
-          { timeout: 12000, reconnect: { attempts: 5, delay: 1000 } },
-        ),
-      });
-      const unwatch = live.watchEntityEvents({
-        onEvent: (e) => stream.onEntity(e.entityKey, e.type),
-        onError: () => stream.onDisconnect(),
-      });
-      const unhead = watchBlockNumber(live, {
-        poll: false,
-        onBlockNumber: stream.onHead,
-        onError: () => stream.onDisconnect(),
-      });
-      return () => {
-        unwatch();
-        unhead();
-      };
+      return watchListingStream((connection) => {
+        const live = createPublicClient({
+          chain: tiramisu,
+          transport: webSocket(
+            config.wsUrl ?? "wss://rpc.tiramisu.db-chain.testnet.arkiv.network",
+            { timeout: 12000, reconnect: { attempts: 5, delay: 1000 } },
+          ),
+        });
+        // A head alone does not establish that entity notifications are subscribed.
+        // The SDK delegates to this transport; observe both genuine subscription ACKs.
+        const subscribe = live.transport.subscribe;
+        let logsReady = false,
+          headsReady = false;
+        let latestHead: bigint | null = null;
+        live.transport.subscribe = async (args) => {
+          const subscription = await subscribe(args);
+          if (args.params[0] === "logs") logsReady = true;
+          if (args.params[0] === "newHeads") headsReady = true;
+          if (logsReady && headsReady && latestHead !== null)
+            connection.onHead(latestHead);
+          return subscription;
+        };
+        const unwatch = live.watchEntityEvents({
+          onEvent: (e) => connection.onEntity(e.entityKey, e.type),
+          onError: () => connection.onDisconnect(),
+        });
+        const unhead = watchBlockNumber(live, {
+          poll: false,
+          onBlockNumber: (head) => {
+            latestHead = head;
+            if (logsReady && headsReady) connection.onHead(head);
+          },
+          onError: () => connection.onDisconnect(),
+        });
+        return () => {
+          unwatch();
+          unhead();
+        };
+      }, stream);
     },
     async publish(value: Listing, leaseBlocks: number) {
       const listing = projectListing(value);

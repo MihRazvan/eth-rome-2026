@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { render } from "@arkiv-network/sdk/query";
 import {
   createListingBoard,
+  watchListingStream,
   projectListing,
   listingAttributes,
   listingQuery,
@@ -358,4 +359,70 @@ test("a failed reconciliation retries on a subsequent stream head and remains si
   assert.equal(h.last().status, "live");
   assert.equal(h.last().listings.length, 2);
   h.board.stop();
+});
+
+test("failed initial WSS subscriptions restart and obsolete callbacks cannot restore live state", (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const connections: ListingStream[] = [];
+  const heads: bigint[] = [];
+  let disconnected = 0,
+    stops = 0;
+  const stop = watchListingStream(
+    (s) => {
+      connections.push(s);
+      return () => {
+        stops++;
+      };
+    },
+    {
+      onEntity() {},
+      onHead: (b) => heads.push(b),
+      onDisconnect: () => {
+        disconnected++;
+      },
+    },
+    { retryDelays: [1], firstHeadTimeout: 1000 },
+  );
+  connections[0].onDisconnect();
+  connections[0].onDisconnect();
+  connections[0].onHead(10n);
+  assert.equal(disconnected, 1);
+  assert.deepEqual(heads, []);
+  t.mock.timers.tick(1);
+  assert.equal(connections.length, 2);
+  assert.equal(stops, 1);
+  connections[0].onHead(11n);
+  connections[1].onHead(12n);
+  assert.deepEqual(heads, [12n]);
+  stop();
+  connections[1].onHead(13n);
+  assert.deepEqual(heads, [12n]);
+  assert.equal(stops, 2);
+});
+
+test("silent initial WSS setup times out and retry budget terminates without polling", (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  let attempts = 0,
+    disconnected = 0;
+  const stop = watchListingStream(
+    () => {
+      attempts++;
+      return () => {};
+    },
+    {
+      onEntity() {},
+      onHead() {},
+      onDisconnect: () => {
+        disconnected++;
+      },
+    },
+    { retryDelays: [1], firstHeadTimeout: 2 },
+  );
+  t.mock.timers.tick(2);
+  t.mock.timers.tick(1);
+  t.mock.timers.tick(2);
+  t.mock.timers.tick(1000);
+  assert.equal(attempts, 2);
+  assert.equal(disconnected, 2);
+  stop();
 });
