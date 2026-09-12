@@ -3,7 +3,7 @@
 // It must never be hosted as a remote prover or used with real credentials/funds.
 import { execFile, spawn } from "node:child_process";
 import { promisify } from "node:util";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import http from "node:http";
@@ -70,18 +70,34 @@ const wallets = Object.fromEntries(
     }),
   ]),
 );
-const artifact = async (name) =>
-  JSON.parse(
+const artifact = async (name) => {
+  if (name === "Verifier") {
+    // Fixed fixture and fresh runtime verifiers share a Solidity basename. Resolve by
+    // compiler provenance, never by whichever output path Foundry assigned first.
+    const out = path.join(contracts, "out");
+    for (const entry of await readdir(out, { recursive: true })) {
+      if (path.basename(entry) !== "Verifier.json") continue;
+      const candidate = JSON.parse(
+        await readFile(path.join(out, entry), "utf8"),
+      );
+      if (
+        candidate.metadata?.settings?.compilationTarget?.[
+          "src/generated/QualificationVerifier.sol"
+        ] === "Verifier"
+      )
+        return candidate;
+    }
+    throw new Error(
+      "Matching fresh runtime verifier artifact was not generated",
+    );
+  }
+  return JSON.parse(
     await readFile(
-      path.join(
-        contracts,
-        "out",
-        `${name === "Verifier" ? "QualificationVerifier" : name}.sol`,
-        `${name}.json`,
-      ),
+      path.join(contracts, "out", `${name}.sol`, `${name}.json`),
       "utf8",
     ),
   );
+};
 let escrow,
   token,
   verifier,
