@@ -1,3 +1,4 @@
+import { validateProofFile, validateProofPair } from "../proof-files";
 import "../../../qualification/runtime/style.css";
 import "./pilot.css";
 import { revealInWorkspace } from "./shell";
@@ -262,7 +263,10 @@ function syncButtons() {
       b.dataset.eligible === "false" ||
       (b.dataset.viewJob
         ? boardState?.status !== "live"
-        : !account && !walletFree.has(b.id) && b.dataset.action !== "export");
+        : !account &&
+          !walletFree.has(b.id) &&
+          !b.hasAttribute("data-proof-connect") &&
+          b.dataset.action !== "export");
   });
 }
 function chooseRole(next: Role) {
@@ -739,7 +743,7 @@ function render() {
               ? button("publish", j.id, "List this review")
               : "";
           if (eligibility.accept && !j.scopeError && !isClient)
-            actions = `${config.browserProver ? `<div class="local-prover"><h4>Cut a proof. Keep your credential.</h4><p class="fine">Select your issued credential and holder file. They are read locally, never uploaded. A fresh proof is bound to this assignment and your connected payment wallet.</p><label class="fine">Credential JSON<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label class="fine">Private holder JSON<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label>${button("generate", j.id, "Cut a qualification proof")}${button("cancel-proof", j.id, "Cancel proof", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Accept this task")}` : ""}`;
+            actions = `${config.browserProver ? `<div class="local-prover"><h4>Cut a proof. Keep your credential.</h4><p class="fine"><strong>Credential JSON:</strong> the signed file returned by the Cutout team after approving your enrollment request. <strong>Private holder JSON:</strong> your saved <code>cutout-private-holder.json</code>.</p><p class="fine">The generated <code>cutout-enrollment-request.json</code> is for the issuer; it cannot cut a proof. These files are read locally and never uploaded.</p><button data-ui data-enrollment-help type="button" class="quiet">Where do I get these files?</button>${!account ? '<p class="error">Connect your reviewer wallet on Fuji to enable file selection.</p><button data-proof-connect type="button">Connect reviewer wallet</button>' : ""}<label class="fine">Credential JSON<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label class="fine">Private holder JSON<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label>${button("generate", j.id, "Cut a qualification proof", false)}${button("cancel-proof", j.id, "Cancel proof", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Accept this task")}` : ""}`;
           if (j.status === "Accepted" && isWorker)
             actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Seal & deliver report", eligibility.submit)}`;
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
@@ -946,6 +950,58 @@ function withCancellation<T>(
       .finally(() => signal.removeEventListener("abort", cancel));
   });
 }
+async function checkProofFiles(id: string) {
+  const session = generation;
+  const job = jobs.find((j) => j.id === id);
+  const kinds = ["credential", "holder"] as const;
+  const inputs = kinds.map((kind) =>
+    document.querySelector<HTMLInputElement>(`[data-${kind}="${id}"]`)!,
+  );
+  const files = inputs.map((input) => input.files?.[0]);
+  const button = document.querySelector<HTMLButtonElement>(
+    `[data-action="generate"][data-id="${id}"]`,
+  )!;
+  const status = document.getElementById(`proof-progress-${id}`)!;
+  button.dataset.eligible = "false";
+  syncButtons();
+  const current = () =>
+    session === generation &&
+    button.isConnected &&
+    inputs.every((input, i) => input.files?.[0] === files[i]);
+  try {
+    const values = await Promise.all(
+      files.map(async (file, i) => {
+        if (!file) return undefined;
+        if (file.size > 16384)
+          throw Error("Choose qualification JSON files below 16 KB each.");
+        let value: unknown;
+        try {
+          value = JSON.parse(await file.text());
+        } catch {
+          throw Error(
+            "This file is not valid JSON. Select the original downloaded file.",
+          );
+        }
+        return validateProofFile(kinds[i], value);
+      }),
+    );
+    if (!current()) return;
+    if (values.some((value) => !value)) {
+      status.textContent = !values[0]
+        ? "Select the signed credential returned by the Cutout issuer. An enrollment request is not a credential."
+        : "Select the private holder backup you saved when preparing this enrollment.";
+      return;
+    }
+    validateProofPair(values[0], values[1], Number(job?.class), chainNow);
+    button.dataset.eligible = "true";
+    status.textContent =
+      "Both files selected and matched locally. Cut a proof to verify the issuer signature and current qualification.";
+  } catch (error) {
+    if (current()) status.textContent = (error as Error).message;
+  } finally {
+    if (current()) syncButtons();
+  }
+}
 async function generatePresentation(id: string) {
   const j = jobs.find((v) => v.id === id),
     owner = account!,
@@ -1000,6 +1056,12 @@ async function generatePresentation(id: string) {
       input.value = "";
     });
     current();
+    validateProofPair(
+      privateFiles[0],
+      privateFiles[1],
+      Number(j.class),
+      chainNow,
+    );
     progress("Retrieving the whole public issuer snapshot…");
     const response = await fetch("/api/snapshot", {
       signal: controller.signal,
@@ -1088,6 +1150,10 @@ async function generatePresentation(id: string) {
       input.value = "";
     });
     cancel.dataset.eligible = "false";
+    const generate = document.querySelector<HTMLButtonElement>(
+      `[data-action="generate"][data-id="${id}"]`,
+    );
+    if (generate) generate.dataset.eligible = "false";
     if (proofController === controller) proofController = undefined;
   }
 }
@@ -1605,6 +1671,14 @@ $("#create").onclick = () =>
     };
   });
 document.addEventListener("click", (e) => {
+  if ((e.target as Element).closest("[data-enrollment-help]")) {
+    reveal("reviewer-help");
+    return;
+  }
+  if ((e.target as Element).closest("[data-proof-connect]")) {
+    void run(() => connect());
+    return;
+  }
   if ((e.target as Element).closest("[data-back-tasks]"))
     window.dispatchEvent(new Event("cutout:live"));
   const b = (e.target as Element).closest<HTMLButtonElement>(
@@ -1618,6 +1692,10 @@ document.addEventListener("click", (e) => {
 });
 document.addEventListener("change", (e) => {
   const input = e.target as HTMLInputElement;
+  if (input.dataset.credential || input.dataset.holder) {
+    void checkProofFiles(input.dataset.credential ?? input.dataset.holder!);
+    return;
+  }
   if (input.dataset.cut) {
     if (Number(input.value) === 100 && !busy && account)
       void run(() => action("retrieve", input.dataset.cut!));
