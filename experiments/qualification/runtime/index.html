@@ -1,16 +1,132 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Review Pass — qualification workbench</title><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
-<body>
-<div class="experiment">LOCAL EXPERIMENT <span>Real proofs · test issuer · test money · local Bee storage</span></div>
-<header><a class="brand" href="/">REVIEW<span>PASS↗</span></a><p>A qualification. Not another dossier.</p><span class="chain">● ANVIL / 31338</span></header>
-<nav aria-label="Demo role"><span>VIEW AS</span><button data-role="worker" aria-pressed="true">Reviewer</button><button data-role="client" aria-pressed="false">Client</button><button data-role="issuer" aria-pressed="false">Issuer</button></nav>
-<main>
-<section class="intro"><p class="eyebrow">PRIVATE QUALIFICATION / WORKBENCH 01</p><h1>Prove you're qualified.<br><em>Keep your credential yours.</em></h1><p>Accept a confidential technical review with a current qualification.<br>The client gets a proof and a payment address. Your certificate stays with you.</p></section>
-<div id="notice" role="status" aria-live="polite"></div>
-<div class="workspace"><section class="assignment"><div class="section-top"><h2>Your assignment</h2><button id="create" class="quiet">+ Fund another test assignment</button></div><div id="jobs"></div></section>
-<aside><section class="disclosure"><p class="eyebrow">THE DISCLOSURE RECEIPT</p><h2>What crosses<br>the boundary?</h2><div class="disclosure-row"><span>Current qualification</span><b>Proven</b></div><div class="disclosure-row"><span>Issuer & qualification class</span><b>Public</b></div><div class="disclosure-row"><span>Payment address & amount</span><b>Public</b></div><div class="disclosure-row"><span>Credential serial / index</span><b class="private">Hidden in proof</b></div><div class="disclosure-row"><span>Holder secret</span><b class="private">Local helper</b></div><p class="fine">Reusing a payment wallet links assignments. Small qualification cohorts, timing and issuer behavior can also identify people. This is not anonymous payment.</p><details><summary>Inspect the actual public statement</summary><div id="statement">Generate a proof to inspect its nine public inputs.</div></details></section>
-<section class="issuer-card"><p class="eyebrow">TEST REVIEW COLLECTIVE</p><h3 id="qualification">Qualification ready</h3><p id="root-state">Reading authoritative issuer state…</p><div id="issuer-actions" hidden><button id="revoke" class="danger">Revoke test credential</button><button id="restore" class="quiet">Restore test credential</button></div><p class="fine">Test assessment only. No professional body has issued or endorsed this credential.</p></section></aside></div>
-<section class="ledger"><div><p class="eyebrow">SETTLEMENT RECEIPT</p><h2><span id="balance">0</span> <small>qUSD paid</small></h2><p>Test token with no monetary value.</p></div><div id="events" aria-label="Transaction history"></div></section>
-<section class="boundary"><h2>What this experiment proves</h2><p>One local machine simulates issuer, reviewer, client and arbitrator with separate test files. The Groth16 proof is genuine; proving runs in a local Go helper, not in the browser. Browser document encryption sends only ciphertext to local Bee nodes. The demonstration retains the decryption key in this tab; cross-device key sharing is not implemented.</p><p>Qualification gates admission. The client judges the review. Timely submission is paid after a three-hour review deadline unless disputed; a trusted test arbitrator resolves disputes. Later revocation does not cancel earned payment.</p></section>
-</main><footer>REVIEW PASS / FEASIBILITY BUILD <span>Public Fuji, Arkiv writes and public Swarm deployment: not verified</span></footer>
-</body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Review Pass — qualification workbench</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <div class="experiment">
+      LOCAL EXPERIMENT
+      <span>Real proofs · test issuer · test money · local Bee storage</span>
+    </div>
+    <header>
+      <a class="brand" href="/">REVIEW<span>PASS↗</span></a>
+      <p>A qualification. Not another dossier.</p>
+      <span class="chain">● ANVIL / 31338</span>
+    </header>
+    <nav aria-label="Demo role">
+      <span>VIEW AS</span
+      ><button data-role="worker" aria-pressed="true">Reviewer</button
+      ><button data-role="client" aria-pressed="false">Client</button
+      ><button data-role="issuer" aria-pressed="false">Issuer</button>
+    </nav>
+    <main>
+      <section class="intro">
+        <p class="eyebrow">PRIVATE QUALIFICATION / WORKBENCH 01</p>
+        <h1>
+          Prove you're qualified.<br /><em>Keep your credential yours.</em>
+        </h1>
+        <p>
+          Accept a confidential technical review with a current
+          qualification.<br />The client gets a proof and a payment address.
+          Your certificate stays with you.
+        </p>
+      </section>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <div class="workspace">
+        <section class="assignment">
+          <div class="section-top">
+            <h2>Your assignment</h2>
+            <button id="create" class="quiet">
+              + Fund another test assignment
+            </button>
+          </div>
+          <div id="jobs"></div>
+        </section>
+        <aside>
+          <section class="disclosure">
+            <p class="eyebrow">THE DISCLOSURE RECEIPT</p>
+            <h2>What crosses<br />the boundary?</h2>
+            <div class="disclosure-row">
+              <span>Current qualification</span><b>Checked at acceptance</b>
+            </div>
+            <div class="disclosure-row">
+              <span>Issuer & qualification class</span><b>Public</b>
+            </div>
+            <div class="disclosure-row">
+              <span>Payment address & amount</span><b>Public</b>
+            </div>
+            <div class="disclosure-row">
+              <span>Credential serial / index</span
+              ><b class="private">Hidden in proof</b>
+            </div>
+            <div class="disclosure-row">
+              <span>Holder secret</span><b class="private">Local helper</b>
+            </div>
+            <p class="fine">
+              Reusing a payment wallet links assignments. Small qualification
+              cohorts, timing and issuer behavior can also identify people. This
+              is not anonymous payment.
+            </p>
+            <details>
+              <summary>Inspect the actual public statement</summary>
+              <div id="statement">
+                Generate a proof to inspect its nine public inputs.
+              </div>
+            </details>
+          </section>
+          <section class="issuer-card">
+            <p class="eyebrow">TEST REVIEW COLLECTIVE</p>
+            <h3 id="qualification">Qualification ready</h3>
+            <p id="root-state">Reading authoritative issuer state…</p>
+            <div id="issuer-actions" hidden>
+              <button id="revoke" class="danger">Revoke test credential</button
+              ><button id="restore" class="quiet">
+                Restore test credential
+              </button>
+            </div>
+            <p class="fine">
+              Test assessment only. No professional body has issued or endorsed
+              this credential.
+            </p>
+          </section>
+        </aside>
+      </div>
+      <section class="ledger">
+        <div>
+          <p class="eyebrow">SETTLEMENT RECEIPT</p>
+          <h2><span id="balance">0</span> <small>qUSD paid</small></h2>
+          <p>Test token with no monetary value.</p>
+        </div>
+        <div id="events" aria-label="Transaction history"></div>
+      </section>
+      <section class="boundary">
+        <h2>What this experiment proves</h2>
+        <p>
+          One local machine simulates issuer, reviewer, client and arbitrator
+          with separate test files. The Groth16 proof is genuine; proving runs
+          in a local Go helper, not in the browser. Browser document encryption
+          sends only ciphertext to local Bee nodes. The demonstration retains
+          the decryption key in this tab; cross-device key sharing is not
+          implemented.
+        </p>
+        <p>
+          Qualification gates admission. The client judges the review. Timely
+          submission is paid after a three-hour review deadline unless disputed;
+          a trusted test arbitrator resolves disputes. Later revocation does not
+          cancel earned payment.
+        </p>
+      </section>
+    </main>
+    <footer>
+      REVIEW PASS / FEASIBILITY BUILD
+      <span
+        >Public Fuji, Arkiv writes and public Swarm deployment: not
+        verified</span
+      >
+    </footer>
+  </body>
+</html>
