@@ -93,6 +93,7 @@ async function profile(index) {
     if (req.url().includes("/api/upload")) requests.push(req.postData() ?? "");
   });
   await page.goto(`http://127.0.0.1:${port}`);
+  await page.locator(".device-settings > summary").click();
   await page.locator("#connect").click();
   await page.waitForFunction(
     () => document.querySelector("#wallet").textContent !== "Connect to begin",
@@ -100,6 +101,11 @@ async function profile(index) {
   return { page, context, account, wallet };
 }
 async function click(page, selector) {
+  if (
+    !(await page.locator(selector).isVisible()) &&
+    ["#register", "#rotate", "#revoke-key"].includes(selector)
+  )
+    await page.locator(".device-settings > summary").click();
   await page.locator(selector).click();
   await page.waitForFunction(
     () => !document.querySelector("#connect").disabled,

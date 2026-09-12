@@ -24,6 +24,12 @@ import {
   listDeviceKeys,
   loadDeviceKey,
 } from "../keys";
+import {
+  nextStep,
+  deadlineEligibility,
+  type Role,
+  type Readiness,
+} from "../journey";
 import { uploadMessage } from "../upload-message";
 import { encodeTerms, matchTerms, termsUploadMessage } from "../terms";
 import { waitForSettlement } from "../settlement";
@@ -71,6 +77,173 @@ let account: Address | undefined,
   generation = 0;
 let jobs: any[] = [];
 const proofs = new Map<string, any>();
+let role: Role =
+  new URL(location.href).searchParams.get("role") === "reviewer"
+    ? "reviewer"
+    : "client";
+let readiness: Readiness = { key: false, gas: null, balance: null };
+let chainNow = 0;
+function currentReadiness() {
+  return readiness.owner === account
+    ? readiness
+    : { key: false, gas: null, balance: null };
+}
+function chosenReward() {
+  const value = ($("#task-reward") as HTMLInputElement).value;
+  return /^\d{1,9}(\.\d{1,6})?$/.test(value) ? parseUnits(value, 6) : 0n;
+}
+function reveal(target: string) {
+  const el = document.getElementById(target);
+  if (!el) return;
+  const details = el.closest("details");
+  if (details) details.open = true;
+  el.scrollIntoView({
+    block: "center",
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "instant"
+      : "smooth",
+  });
+  if (el instanceof HTMLElement) el.focus({ preventScroll: true });
+}
+function renderGuide() {
+  document.body.dataset.role = role;
+  document
+    .querySelectorAll<HTMLButtonElement>("button[data-role]")
+    .forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.role === role)),
+    );
+  $("#fuji-help").hidden = config.chainId !== 43113;
+  $("#activity-title").textContent =
+    !account && config.chainId === 31338
+      ? "Local demo activity"
+      : "Your review activity";
+  const r = currentReadiness();
+  const storageReady = !publicStorage || publicStorage.state.canUpload;
+  const next = nextStep(
+    role,
+    Boolean(account),
+    r,
+    storageReady,
+    chosenReward(),
+    config.chainId === 31338,
+  );
+  $("#journey-role").textContent =
+    role === "client" ? "YOUR CLIENT WORKSPACE" : "YOUR REVIEWER WORKSPACE";
+  $("#journey-title").textContent = next.title;
+  $("#journey-text").textContent = next.text;
+  $("#next-step").textContent =
+    next.target === "commission"
+      ? "Write the review scope"
+      : next.target === "opportunity-section"
+        ? "Find a review"
+        : next.title;
+  $("#next-step").dataset.target = next.target;
+  ($("#create") as HTMLButtonElement).dataset.eligible = String(
+    Boolean(account) &&
+      r.key &&
+      storageReady &&
+      r.balance !== null &&
+      r.balance >= chosenReward() &&
+      chosenReward() > 0n &&
+      r.gas !== null &&
+      r.gas > 0n,
+  );
+  syncButtons();
+  const checks = [
+    [
+      Boolean(account),
+      "Payment wallet",
+      account
+        ? `${account.slice(0, 8)}…${account.slice(-6)} · ${config.chainId === 43113 ? "Fuji" : "local test chain"}`
+        : "Connect a test wallet to continue",
+    ],
+    [
+      r.gas !== null && r.gas > 0n,
+      "Transaction gas",
+      r.gas === null
+        ? "Not checked"
+        : `${formatUnits(r.gas, 18).slice(0, 10)} ${network.nativeCurrency.symbol}`,
+    ],
+    [
+      r.key,
+      "Private reports",
+      r.key
+        ? "This browser can receive new reports"
+        : "Enable this browser’s encryption key",
+    ],
+    [
+      storageReady,
+      "Document storage",
+      publicStorage
+        ? storageReady
+          ? "Swarm ID can upload"
+          : "Sign in and provide usable postage"
+        : "Local Bee rehearsal only",
+    ],
+    ...(role === "client"
+      ? [
+          [
+            r.balance !== null && r.balance >= chosenReward(),
+            "Review reward",
+            r.balance === null
+              ? "Balance not checked"
+              : `${formatUnits(r.balance, 6)} ${tokenSymbol} available`,
+          ],
+        ]
+      : [
+          [
+            false,
+            "Qualification",
+            "An issuer credential and fresh task proof are required",
+          ],
+        ]),
+  ];
+  $("#readiness").innerHTML = checks
+    .map(
+      ([done, title, detail], i) =>
+        `<li data-complete="${done}"><span class="check">${done ? "✓" : i + 1}</span><span>${esc(title)}<small>${esc(detail)}</small></span></li>`,
+    )
+    .join("");
+  $("#network-help").textContent =
+    config.chainId === 43113
+      ? `This app uses Fuji (43113). Reward token: ${config.token}. Test tokens have no monetary value.`
+      : `This is a local rehearsal on chain31338 at ${config.rpcUrl}. Public faucets cannot fund this local chain. The demo operator provides local test wallets.`;
+}
+function syncButtons() {
+  const walletFree = new Set([
+    "connect",
+    "refresh",
+    "filter-board",
+    "refresh-board",
+    "connect-storage",
+    "next-step",
+    "start-client",
+    "start-reviewer",
+  ]);
+  document.querySelectorAll<HTMLButtonElement>("button").forEach((b) => {
+    b.disabled =
+      busy ||
+      b.dataset.eligible === "false" ||
+      (b.dataset.viewJob
+        ? boardState?.status !== "live"
+        : !account && !walletFree.has(b.id) && b.dataset.action !== "export");
+  });
+}
+function chooseRole(next: Role) {
+  role = next;
+  const url = new URL(location.href);
+  url.searchParams.set("role", role);
+  history.replaceState(null, "", url);
+  document.body.dataset.role = role;
+  document
+    .querySelectorAll<HTMLButtonElement>("button[data-role]")
+    .forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.role === role)),
+    );
+  renderGuide();
+  reveal("journey");
+}
+
 const tokenSymbol = config.chainId === 43113 ? "test USDC" : "qUSD";
 let boardState: BoardState | undefined;
 const selectedJobs = new Set<string>();
@@ -88,6 +261,7 @@ const publicStorage =
             : state.connected
               ? `Connected; upload unavailable (${state.reason ?? "postage required"})`
               : "Connect Swarm ID to upload. Storage identity is separate from your payment wallet.";
+          renderGuide();
         },
       })
     : undefined;
@@ -233,12 +407,22 @@ async function startBoard() {
     minimumReward: String(parseUnits(raw, 6)),
   });
 }
-const button = (action: string, id: string, label: string) =>
-  `<button data-action="${action}" data-id="${id}"${!account || busy ? " disabled" : ""}>${label}</button>`;
+const button = (action: string, id: string, label: string, eligible = true) =>
+  `<button data-action="${action}" data-id="${id}" data-eligible="${eligible}"${(!account && action !== "export") || busy || !eligible ? " disabled" : ""}>${label}</button>`;
 $("#environment").textContent =
   `${config.environment.toUpperCase()} · ${config.testOnly ? "TEST ISSUER / TEST ASSETS" : "CONFIGURED PUBLIC TESTNET"} · WALLET-SIGNED TRANSACTIONS`;
-$("#contracts").textContent =
-  `Chain ${config.chainId} · escrow ${config.escrow.slice(0, 10)}…`;
+$("#contracts").textContent = `Chain ${config.chainId} · `;
+if (config.chainId === 43113) {
+  const link = document.createElement("a");
+  link.href = `https://testnet.snowtrace.io/address/${config.escrow}`;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = "View escrow on Avalanche";
+  $("#contracts").append(link);
+} else
+  $("#contracts").append(
+    document.createTextNode(`local escrow ${config.escrow.slice(0, 10)}…`),
+  );
 async function keyBinding(owner: Address) {
   const b: any = await read(
     "keys",
@@ -302,6 +486,13 @@ async function refresh() {
   const session = generation,
     owner = account,
     currentDevice = device;
+  chainNow = Number(
+    (
+      await client.getBlock({
+        blockTag: config.chainId === 43113 ? "finalized" : "latest",
+      })
+    ).timestamp,
+  );
   const ids = new Set<string>(selectedJobs);
   if (config.environment === "local-pilot") {
     const count = Number(await read("nextJob"));
@@ -409,9 +600,18 @@ async function refresh() {
   }
   let keyStatus: string | undefined;
   if (owner && currentDevice) {
-    const binding = await keyBinding(owner);
+    const [binding, gas, balance] = await Promise.all([
+      keyBinding(owner),
+      client.getBalance({ address: owner }),
+      read("balanceOf", [owner], "DemoUSD", config.token),
+    ]);
     const pub = await getDevicePublicKey(currentDevice);
     const now = (await client.getBlock()).timestamp;
+    const keyReady =
+      binding.publicKey.toLowerCase() === pub.toLowerCase() &&
+      binding.expiresAt > Number(now);
+    if (session === generation && owner === account)
+      readiness = { owner, gas, balance: balance as bigint, key: keyReady };
     keyStatus =
       binding.publicKey.toLowerCase() === pub.toLowerCase() &&
       binding.expiresAt > Number(now)
@@ -424,6 +624,7 @@ async function refresh() {
   render();
 }
 function render() {
+  renderGuide();
   $("#wallet").textContent = account
     ? `${account.slice(0, 10)}…${account.slice(-6)}`
     : "Connect to begin";
@@ -444,15 +645,55 @@ function render() {
         .map((j) => {
           const isClient = account?.toLowerCase() === j.client.toLowerCase(),
             isWorker = account?.toLowerCase() === j.worker.toLowerCase();
+          const eligibility = deadlineEligibility(
+            j.status,
+            chainNow,
+            j.acceptBefore,
+            j.submitBefore,
+            j.reviewBefore,
+          );
+          const date = (n: bigint) =>
+            new Date(Number(n) * 1000).toLocaleString(undefined, {
+              dateStyle: "medium",
+              timeStyle: "short",
+            });
+          const stageHint =
+            j.status === "Open"
+              ? eligibility.accept
+                ? `Waiting for a qualified reviewer. Accept by ${date(j.acceptBefore)}.`
+                : "The acceptance window is closed. The client can reclaim the reward."
+              : j.status === "Accepted"
+                ? `The reviewer is working. Deliver by ${date(j.submitBefore)}. After that, an undelivered task can be refunded.`
+                : j.status === "Submitted"
+                  ? `Report delivered. The client can approve payment or dispute by ${date(j.reviewBefore)}. After that, the reviewer can claim payment unless disputed.`
+                  : j.status === "Paid"
+                    ? "Complete. The funded reward was paid to the assigned reviewer. The encrypted report remains retrievable."
+                    : j.status === "Refunded"
+                      ? "Closed. The reward was returned to the client."
+                      : j.status === "Disputed"
+                        ? "Payment is held pending the configured arbitrator’s decision. Qualification does not decide work quality."
+                        : "The arbitrator resolved this dispute and distributed the reward.";
+          const stageIndex = (
+            {
+              Open: 0,
+              Accepted: 1,
+              Submitted: 2,
+              Paid: 3,
+              Refunded: 0,
+              Disputed: 2,
+              Resolved: 3,
+            } as Record<string, number>
+          )[j.status];
+          const progress = `<ol class="workflow" aria-label="Review progress">${["Funded", "Qualified", "Delivered", "Settled"].map((label, i) => `<li data-done="${i <= stageIndex}">${label}</li>`).join("")}</ol>`;
           let actions = "";
           const publish =
-            j.status === "Open" && isClient && j.scope && !j.scopeError
+            eligibility.accept && isClient && j.scope && !j.scopeError
               ? button("publish", j.id, "Publish discovery lease on Arkiv")
               : "";
-          if (j.status === "Open" && !j.scopeError)
+          if (eligibility.accept && !j.scopeError && !isClient)
             actions = `<details><summary>Generate your qualification proof locally</summary><p class="fine">Download the whole issuer snapshot. Reconstruct its root and path with your local credential; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}</details><label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label>${proofs.has(j.id) ? button("accept", j.id, "Verify proof & accept") : ""}`;
           if (j.status === "Accepted" && isWorker)
-            actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Encrypt for client & submit")}`;
+            actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Encrypt for client & submit", eligibility.submit)}`;
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
             actions =
               button("retrieve", j.id, "Retrieve & decrypt review") +
@@ -464,24 +705,31 @@ function render() {
           if (j.status === "Submitted" && isClient)
             actions +=
               button("pay", j.id, "Approve & pay") +
-              button("dispute", j.id, "Dispute review");
+              button("dispute", j.id, "Dispute review", eligibility.dispute);
           if (j.status === "Submitted" && isWorker)
-            actions += button("claim", j.id, "Claim after review deadline");
+            actions += button(
+              "claim",
+              j.id,
+              "Claim after review deadline",
+              eligibility.claim,
+            );
           if (["Open", "Accepted"].includes(j.status) && isClient)
             actions += button(
               "refund",
               j.id,
               "Refund after applicable deadline",
+              eligibility.refund,
             );
           if (
             j.status === "Disputed" &&
             account?.toLowerCase() === config.arbitrator.toLowerCase()
           )
             actions += button("resolve", j.id, "Arbitrate 50 / 50 split");
-          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>ASSIGNMENT ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body"><h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
+          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>ASSIGNMENT ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body">${progress}<h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p><p class="stage-hint">${esc(stageHint)}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
         })
         .join("")
     : '<article class="ticket"><div class="ticket-body"><h3>No assignments yet.</h3><p class="terms">Connect a client wallet, register its document key and fund the first review.</p></div></article>';
+  syncButtons();
   if (account) {
     const session = generation,
       owner = account;
@@ -508,12 +756,14 @@ function render() {
       });
   }
 }
-async function connect() {
+async function connect(allowSwitch = true) {
   const provider = window.ethereum;
-  if (!provider)
+  if (!provider) {
+    reveal("funding-help");
     throw Error(
-      "Install or enable an EIP-1193 wallet. No server wallet is substituted.",
+      "No wallet found. Install a wallet using the link in network help, or open this page inside your mobile wallet.",
     );
+  }
   await provider.request({ method: "eth_requestAccounts" });
   const session = generation;
   const assertCurrent = () => {
@@ -523,11 +773,38 @@ async function connect() {
   const chainId = Number(await provider.request({ method: "eth_chainId" }));
   assertCurrent();
   if (chainId !== config.chainId) {
-    await provider.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: `0x${config.chainId.toString(16)}` }],
-    });
-    throw Error("Network selected. Connect again to authorize this session.");
+    if (!allowSwitch)
+      throw Error(
+        "Your wallet did not select the required network. Open network help, then reconnect.",
+      );
+    try {
+      await provider.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: `0x${config.chainId.toString(16)}` }],
+      });
+    } catch (error: any) {
+      if (error?.code !== 4902 || config.chainId !== 43113) {
+        reveal("funding-help");
+        throw error;
+      }
+      await provider.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0xa869",
+            chainName: "Avalanche Fuji",
+            nativeCurrency: { name: "Avalanche", symbol: "AVAX", decimals: 18 },
+            rpcUrls: [config.rpcUrl],
+            blockExplorerUrls: ["https://testnet.snowtrace.io"],
+          },
+        ],
+      });
+      await provider.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: "0xa869" }],
+      });
+    }
+    return connect(false);
   }
   const addresses = await provider.request({ method: "eth_accounts" });
   assertCurrent();
@@ -794,7 +1071,10 @@ async function action(name: string, id: string) {
         ),
         "application/json",
       );
-      return "preserve";
+      return {
+        preserve: true,
+        message: `Downloaded review-pass-${id}-encrypted.json. This export contains ciphertext; an authorized recipient key is still required to decrypt it.`,
+      };
     }
     case "save": {
       if (
@@ -805,7 +1085,10 @@ async function action(name: string, id: string) {
       const text = $(`#document-${id}`).textContent;
       if (!text) throw Error("Retrieve and decrypt this report first");
       saveFile(`review-pass-${id}-PRIVATE.txt`, text, "text/plain");
-      return "preserve";
+      return {
+        preserve: true,
+        message: `Saved your decrypted report locally as review-pass-${id}-PRIVATE.txt.`,
+      };
     }
     case "pay":
       await tx("approveAndPay", [BigInt(id)]);
@@ -835,8 +1118,8 @@ async function run(fn: () => Promise<any>) {
   try {
     const result = await fn();
     if (session !== generation) return;
-    $("#notice").textContent = "Operation confirmed.";
-    if (result !== "preserve") await refresh();
+    $("#notice").textContent = result?.message ?? "Operation confirmed.";
+    if (result !== "preserve" && !result?.preserve) await refresh();
   } catch (error: any) {
     if (session === generation) {
       $("#notice").className = "error";
@@ -844,26 +1127,33 @@ async function run(fn: () => Promise<any>) {
     }
   } finally {
     busy = false;
-    document
-      .querySelectorAll<HTMLButtonElement>("button")
-      .forEach(
-        (b) =>
-          (b.disabled = b.dataset.viewJob
-            ? boardState?.status !== "live"
-            : !account &&
-              ![
-                "connect",
-                "refresh",
-                "filter-board",
-                "refresh-board",
-                "connect-storage",
-              ].includes(b.id)),
-      );
+    syncButtons();
+    renderGuide();
   }
 }
-$("#connect").onclick = () => run(connect);
+$("#start-client").onclick = () => chooseRole("client");
+$("#start-reviewer").onclick = () => chooseRole("reviewer");
+$("#task-reward").addEventListener("input", () => renderGuide());
+$("#next-step").onclick = () => {
+  const target = $("#next-step").dataset.target!;
+  if (
+    ["connect", "register", "mint", "connect-storage", "refresh"].includes(
+      target,
+    )
+  )
+    (document.getElementById(target) as HTMLButtonElement).click();
+  else reveal(target);
+};
+$("#connect").onclick = () => run(() => connect());
 $("#refresh").onclick = () => run(refresh);
-$("#filter-board").onclick = () => run(startBoard);
+$("#filter-board").onclick = () =>
+  run(async () => {
+    await startBoard();
+    return {
+      preserve: true,
+      message: "Reward filter applied to live Arkiv listings.",
+    };
+  });
 $("#refresh-board").onclick = () => run(() => board.refresh());
 $("#opportunities").onclick = (e) => {
   const b = (e.target as Element).closest<HTMLButtonElement>("[data-view-job]");
@@ -1029,6 +1319,7 @@ for (const event of ["accountsChanged", "chainChanged", "disconnect"])
     device = undefined;
     wallet = undefined;
     proofs.clear();
+    readiness = { key: false, gas: null, balance: null };
     $("#key-status").textContent =
       "Wallet session changed. Reconnect to continue.";
     $("#notice").textContent =

@@ -30,7 +30,7 @@ jobs:
       - run: npx tsc --ignoreConfig --noEmit --target ES2022 --module ESNext --moduleResolution bundler --skipLibCheck --types node experiments/qualification/transport/*.ts
       - run: node experiments/qualification/security/concurrency-probe.mjs --fixed
       - run: npx playwright install --with-deps chromium
-      - run: node --import tsx --test experiments/qualification/pilot/keys.test.ts experiments/qualification/pilot/terms.test.ts experiments/qualification/pilot/settlement.test.ts experiments/qualification/pilot/listings.test.ts experiments/qualification/pilot/swarm-id.test.ts
+      - run: node --import tsx --test experiments/qualification/pilot/journey.test.ts experiments/qualification/pilot/keys.test.ts experiments/qualification/pilot/terms.test.ts experiments/qualification/pilot/settlement.test.ts experiments/qualification/pilot/listings.test.ts experiments/qualification/pilot/swarm-id.test.ts
       - run: node --check experiments/qualification/pilot/deploy-fuji.mjs
       - run: node --input-type=module -e 'await import("./experiments/qualification/pilot/settlement.ts"); await import("./experiments/qualification/pilot/swarm-id.ts")'
       - run: node experiments/qualification/pilot/security-probe.mjs
