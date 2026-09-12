@@ -1,0 +1,769 @@
+.cutout-demo {
+  --cd-ink: #17150f;
+  --cd-paper: #fff6ee;
+  --cd-board: #e8d9b8;
+  --cd-backing: #e0d3b2;
+  --cd-orange: #f04e23;
+  --cd-muted: #655e4f;
+  background: var(--cd-board);
+  color: var(--cd-ink);
+  font-family: Archivo, Arial, sans-serif;
+  padding: 24px;
+  isolation: isolate;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+.cutout-demo * {
+  box-sizing: border-box;
+}
+.cutout-demo [hidden] {
+  display: none !important;
+}
+.cutout-demo .cd-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--cd-ink);
+  padding: 0 0 20px;
+  margin-bottom: 32px;
+}
+.cutout-demo .cd-label,
+.cutout-demo .cd-kicker,
+.cutout-demo .cd-eyebrow,
+.cutout-demo .cd-role,
+.cutout-demo .cd-footer,
+.cutout-demo .cd-note,
+.cutout-demo .cd-cut-hint {
+  font:
+    11px/1.5 "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.04em;
+}
+.cutout-demo .cd-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+}
+.cutout-demo .cd-label i {
+  height: 8px;
+  width: 8px;
+  background: var(--cd-orange);
+}
+.cutout-demo .cd-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.7fr);
+  gap: 64px;
+  max-width: 1230px;
+  margin: auto;
+}
+.cutout-demo .cd-sidebar h2 {
+  font-size: clamp(45px, 5.5vw, 78px);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+  font-weight: 800;
+  margin: 18px 0 25px;
+}
+.cutout-demo em {
+  font-style: normal;
+  color: var(--cd-orange);
+}
+.cutout-demo .cd-sidebar .cd-kicker {
+  text-transform: uppercase;
+}
+.cutout-demo .cd-intro {
+  max-width: 29ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--cd-muted);
+}
+.cutout-demo .cd-steps {
+  list-style: none;
+  padding: 0;
+  margin: 35px 0 28px;
+}
+.cutout-demo .cd-steps li {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--cd-muted);
+  padding: 11px 0;
+  border-bottom: 1px dashed #b6a987;
+}
+.cutout-demo .cd-steps li > span {
+  width: 26px;
+  font:
+    12px "IBM Plex Mono",
+    monospace;
+}
+.cutout-demo .cd-steps li.is-current {
+  color: var(--cd-ink);
+  font-weight: 700;
+}
+.cutout-demo .cd-steps li.is-current > span {
+  background: var(--cd-orange);
+  padding: 4px;
+  color: var(--cd-paper);
+}
+.cutout-demo .cd-steps li.is-complete {
+  color: #38513b;
+}
+.cutout-demo .cd-honesty {
+  border-left: 2px solid var(--cd-ink);
+  padding-left: 15px;
+  max-width: 30ch;
+}
+.cutout-demo .cd-honesty p {
+  font-size: 12px;
+  color: var(--cd-muted);
+  line-height: 1.65;
+  margin: 7px 0;
+}
+.cutout-demo .cd-main {
+  min-width: 0;
+}
+.cutout-demo .cd-role {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 17px;
+  background: var(--cd-ink);
+  color: var(--cd-board);
+}
+.cutout-demo .cd-sheet {
+  padding: clamp(24px, 3.5vw, 44px);
+  background: var(--cd-paper);
+  border: 1px solid var(--cd-ink);
+  position: relative;
+  min-height: 660px;
+  box-shadow: 5px 5px 0 #c8b995;
+}
+.cutout-demo .cd-sheet:after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid var(--cd-ink);
+  border-bottom: 1px solid var(--cd-ink);
+  right: 8px;
+  bottom: 8px;
+  pointer-events: none;
+}
+.cutout-demo .cd-eyebrow {
+  margin: 0 0 24px;
+  color: var(--cd-muted);
+}
+.cutout-demo h3 {
+  font-size: clamp(32px, 3.5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1.05;
+  margin: 0 0 24px;
+  outline: none;
+}
+.cutout-demo .cd-lead {
+  font-size: 15px;
+  color: #504a3e;
+  line-height: 1.7;
+  margin: 0 0 24px;
+  max-width: 52ch;
+}
+.cutout-demo label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 20px 0 8px;
+}
+.cutout-demo input,
+.cutout-demo textarea {
+  font:
+    15px/1.6 Archivo,
+    Arial,
+    sans-serif;
+  background: transparent;
+  color: var(--cd-ink);
+  border: 1px solid #a59b83;
+  border-radius: 0;
+  padding: 12px;
+  width: 100%;
+  box-shadow: none;
+}
+.cutout-demo textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+.cutout-demo button {
+  appearance: none;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+.cutout-demo :is(input, textarea, button, summary):focus-visible {
+  outline: 3px solid var(--cd-ink);
+  outline-offset: 4px;
+}
+.cutout-demo .cd-button {
+  background: var(--cd-orange);
+  border: 1px solid var(--cd-ink);
+  color: var(--cd-ink);
+  font:
+    600 13px/1.5 Archivo,
+    Arial,
+    sans-serif;
+  padding: 13px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: 46px;
+  text-align: center;
+  transition:
+    background 0.15s,
+    transform 0.15s;
+}
+.cutout-demo .cd-button:hover {
+  background: #f66b44;
+  transform: translateY(-1px);
+}
+.cutout-demo .cd-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+.cutout-demo .cd-secondary {
+  background: transparent;
+  color: var(--cd-ink);
+  font-weight: 500;
+}
+.cutout-demo .cd-secondary:hover {
+  background: #e0d3b2;
+}
+.cutout-demo .cd-budget-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 0 0 28px;
+  align-items: end;
+}
+.cutout-demo .cd-budget-row p {
+  font-size: 12px;
+  color: var(--cd-muted);
+  margin: 0 0 13px;
+}
+.cutout-demo .cd-amount {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--cd-ink);
+}
+.cutout-demo .cd-amount input {
+  border: 0;
+  font-size: 29px;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  padding: 7px 0;
+  min-width: 60px;
+}
+.cutout-demo .cd-amount span {
+  white-space: nowrap;
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+}
+.cutout-demo .cd-message {
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 21px;
+  margin: 18px 0 0;
+  font-weight: 500;
+}
+.cutout-demo .cd-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 0;
+  color: var(--cd-muted);
+}
+.cutout-demo .cd-footer .cd-button {
+  border: 0;
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+  padding: 8px;
+  min-height: 44px;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.cutout-demo .cd-task-stub {
+  border-top: 1px dashed #a59b83;
+  border-bottom: 1px dashed #a59b83;
+  padding: 20px 0;
+  margin-bottom: 22px;
+}
+.cutout-demo h4 {
+  font-size: 20px;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  margin: 10px 0;
+  overflow-wrap: anywhere;
+}
+.cutout-demo .cd-task-stub p {
+  font-size: 13px;
+  color: var(--cd-muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.cutout-demo .cd-ticket {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  align-items: center;
+  background: var(--cd-board);
+  padding: 22px;
+  margin-bottom: 24px;
+  border: 1px solid #c8b995;
+}
+.cutout-demo .cd-ticket strong {
+  display: block;
+  font-size: 48px;
+  line-height: 1.3;
+  letter-spacing: -0.06em;
+}
+.cutout-demo .cd-ticket small {
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0;
+}
+.cutout-demo .cd-stamp {
+  color: #913619;
+  transform: rotate(-8deg);
+  border: 2px solid currentColor;
+  padding: 8px 10px;
+  font:
+    700 11px/1.3 "IBM Plex Mono",
+    monospace;
+  text-align: center;
+  flex-shrink: 0;
+}
+.cutout-demo .cd-note {
+  letter-spacing: 0;
+  color: var(--cd-muted);
+  margin: 20px 0;
+  line-height: 1.7;
+}
+.cutout-demo .cd-credential {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px 17px;
+  background: var(--cd-board);
+  border: 1px solid #bbae8d;
+  margin-bottom: 24px;
+  position: relative;
+}
+.cutout-demo .cd-person {
+  width: 70px;
+  flex-shrink: 0;
+  background: var(--cd-backing);
+  overflow: hidden;
+  align-self: stretch;
+  display: flex;
+  align-items: end;
+}
+.cutout-demo .cd-person svg {
+  width: 100%;
+  fill: var(--cd-ink);
+}
+.cutout-demo .cd-credential h4 {
+  font-size: 18px;
+}
+.cutout-demo .cd-credential p {
+  font-size: 12px;
+  color: var(--cd-muted);
+  margin: 6px 0;
+}
+.cutout-demo .cd-credential .cd-stamp {
+  position: absolute;
+  right: 12px;
+  top: -15px;
+  background: var(--cd-paper);
+  font-size: 9px;
+}
+.cutout-demo .cd-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  margin: 15px 0 0;
+  font-weight: 500;
+}
+.cutout-demo .cd-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--cd-orange);
+  padding: 0;
+}
+.cutout-demo .cd-visibility {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.cutout-demo .cd-visibility > div {
+  border-top: 1px solid var(--cd-ink);
+  padding-top: 13px;
+}
+.cutout-demo .cd-visibility p {
+  font-size: 13px;
+  margin: 9px 0;
+  line-height: 1.6;
+}
+.cutout-demo .cd-seal-note {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin: 15px 0 24px;
+}
+.cutout-demo .cd-seal-note p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--cd-muted);
+}
+.cutout-demo .cd-mini-envelope {
+  width: 66px;
+  flex-shrink: 0;
+}
+.cutout-demo .cd-mini-envelope svg {
+  width: 100%;
+  display: block;
+}
+.cutout-demo .cd-delivery {
+  background: var(--cd-backing);
+  border: 1px solid var(--cd-ink);
+  min-height: 220px;
+  overflow: hidden;
+}
+.cutout-demo .cd-sealed-art {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  min-height: 240px;
+}
+.cutout-demo .cd-sealed-art svg {
+  width: 220px;
+  max-width: 80%;
+  transform: rotate(-4deg);
+}
+.cutout-demo .cd-sealed-art .cd-kicker {
+  margin: 12px 0 0;
+}
+.cutout-demo .cd-opened {
+  padding: 22px;
+  background: var(--cd-paper);
+}
+.cutout-demo .cd-opened pre {
+  font:
+    14px/1.8 Archivo,
+    Arial,
+    sans-serif;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 360px;
+  overflow: auto;
+  margin: 15px 0 0;
+}
+.cutout-demo .cd-cut-track {
+  --cut: 0;
+  position: relative;
+  min-height: 54px;
+  border: 1px solid #bbae8d;
+  margin-top: 12px;
+  background: #f2ecdd;
+  touch-action: pan-y;
+}
+.cutout-demo .cd-cut-line {
+  position: absolute;
+  top: 25px;
+  left: 24px;
+  right: 24px;
+  border-top: 1px dashed #938770;
+}
+.cutout-demo .cd-cut-grip {
+  position: absolute;
+  left: calc(4px + (100% - 48px) * var(--cut));
+  top: 4px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: var(--cd-ink);
+  color: var(--cd-board);
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  cursor: grab;
+  z-index: 2;
+  padding: 10px;
+}
+.cutout-demo .cd-cut-grip svg {
+  width: 24px;
+  height: 24px;
+}
+.cutout-demo .cd-cut-grip:active {
+  cursor: grabbing;
+}
+.cutout-demo .cd-cut-hint {
+  position: absolute;
+  right: 13px;
+  top: 17px;
+  background: #f2ecdd;
+  padding-left: 10px;
+  font-size: 10px;
+  pointer-events: none;
+}
+.cutout-demo .cd-cut-track.is-open .cd-cut-grip {
+  left: calc(100% - 48px);
+  background: var(--cd-orange);
+}
+.cutout-demo .cd-cut-track.is-open .cd-cut-hint {
+  left: 12px;
+  right: auto;
+}
+.cutout-demo .cd-cut-alternative {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+.cutout-demo .cd-cut-alternative .cd-button {
+  font-size: 11px;
+  padding: 9px 12px;
+  min-height: 44px;
+}
+.cutout-demo .cd-cut-alternative > span {
+  font-size: 10px;
+  color: var(--cd-muted);
+}
+.cutout-demo .cd-bytes {
+  margin: 24px 0 0;
+  padding-top: 17px;
+  border-top: 1px dashed #a59b83;
+  font-size: 12px;
+}
+.cutout-demo summary {
+  cursor: pointer;
+  min-height: 30px;
+}
+.cutout-demo .cd-bytes code {
+  display: block;
+  font:
+    10px/1.6 "IBM Plex Mono",
+    monospace;
+  overflow-wrap: anywhere;
+  max-height: 130px;
+  overflow: auto;
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--cd-ink);
+  color: var(--cd-board);
+}
+.cutout-demo .cd-bytes p {
+  font-size: 11px;
+  color: var(--cd-muted);
+}
+.cutout-demo .cd-receipt {
+  border-top: 1px dashed var(--cd-ink);
+  border-bottom: 1px dashed var(--cd-ink);
+  margin-bottom: 28px;
+  padding: 22px 0 26px;
+  position: relative;
+}
+.cutout-demo .cd-receipt h4 {
+  margin-bottom: 22px;
+}
+.cutout-demo dl {
+  margin: 0 0 26px;
+}
+.cutout-demo dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ded4bd;
+  font-size: 12px;
+}
+.cutout-demo dt {
+  color: var(--cd-muted);
+}
+.cutout-demo dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+}
+.cutout-demo .cd-paid {
+  display: inline-block;
+  color: #38513b;
+  border: 2px solid currentColor;
+  padding: 8px 13px;
+  font:
+    700 12px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.08em;
+  transform: rotate(-3deg);
+}
+@media (max-width: 850px) {
+  .cutout-demo .cd-layout {
+    gap: 30px;
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .cutout-demo .cd-sheet {
+    padding: 24px;
+  }
+  .cutout-demo .cd-sidebar h2 {
+    font-size: 50px;
+  }
+  .cutout-demo .cd-top .cd-button {
+    font-size: 11px;
+    padding: 10px;
+  }
+  .cutout-demo .cd-credential {
+    padding: 22px 12px;
+    gap: 12px;
+  }
+  .cutout-demo .cd-person {
+    width: 50px;
+  }
+}
+@media (max-width: 650px) {
+  .cutout-demo {
+    padding: 16px;
+  }
+  .cutout-demo .cd-top {
+    align-items: flex-start;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+  .cutout-demo .cd-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .cutout-demo .cd-sidebar > .cd-kicker,
+  .cutout-demo .cd-sidebar > h2,
+  .cutout-demo .cd-intro,
+  .cutout-demo .cd-honesty {
+    display: none;
+  }
+  .cutout-demo .cd-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px 10px;
+    margin: 0;
+  }
+  .cutout-demo .cd-steps li {
+    font-size: 10px;
+    gap: 5px;
+    padding: 7px 0;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .cutout-demo .cd-steps li > span {
+    font-size: 10px;
+    width: 19px;
+    min-width: 19px;
+  }
+  .cutout-demo .cd-steps li.is-current > span {
+    padding: 2px 3px;
+  }
+  .cutout-demo .cd-sheet {
+    padding: 25px 20px;
+    min-height: 0;
+  }
+  .cutout-demo h3 {
+    font-size: 34px;
+  }
+  .cutout-demo .cd-eyebrow {
+    font-size: 10px;
+    margin-bottom: 18px;
+  }
+  .cutout-demo .cd-lead {
+    font-size: 14px;
+  }
+  .cutout-demo .cd-role {
+    font-size: 10px;
+  }
+  .cutout-demo .cd-budget-row {
+    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .cutout-demo .cd-budget-row p {
+    font-size: 10px;
+  }
+  .cutout-demo .cd-amount input {
+    font-size: 24px;
+    width: 65px;
+  }
+  .cutout-demo .cd-amount span {
+    font-size: 9px;
+  }
+  .cutout-demo .cd-visibility {
+    gap: 14px;
+  }
+  .cutout-demo .cd-visibility .cd-kicker {
+    font-size: 9px;
+  }
+  .cutout-demo .cd-ticket {
+    padding: 18px 13px;
+  }
+  .cutout-demo .cd-ticket strong {
+    font-size: 40px;
+  }
+  .cutout-demo .cd-ticket .cd-kicker {
+    font-size: 9px;
+  }
+  .cutout-demo .cd-stamp {
+    font-size: 9px;
+  }
+  .cutout-demo .cd-footer {
+    font-size: 9px;
+    gap: 8px;
+  }
+  .cutout-demo .cd-cut-alternative {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .cutout-demo .cd-cut-alternative > span {
+    padding-left: 2px;
+  }
+  .cutout-demo .cd-credential h4 {
+    font-size: 16px;
+  }
+  .cutout-demo .cd-credential .cd-kicker {
+    font-size: 9px;
+  }
+  .cutout-demo .cd-toggle {
+    line-height: 1.4;
+  }
+  .cutout-demo .cd-button {
+    max-width: 100%;
+  }
+  .cutout-demo .cd-receipt dl > div {
+    font-size: 11px;
+  }
+  .cutout-demo .cd-receipt dd {
+    max-width: 56%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cutout-demo .cd-button {
+    transition: none;
+  }
+  .cutout-demo .cd-button:hover {
+    transform: none;
+  }
+}
