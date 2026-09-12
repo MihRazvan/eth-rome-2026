@@ -51,6 +51,7 @@ contract QualificationEscrow is ReentrancyGuard {
     }
     mapping(uint256 => Job) public jobs;
     mapping(uint256 => bool) public consumedNullifiers;
+    mapping(uint256 => bytes32) public documentDigests;
 
     error Unauthorized();
     error InvalidTerms();
@@ -63,6 +64,7 @@ contract QualificationEscrow is ReentrancyGuard {
     event JobFunded(uint256 indexed job, address indexed client, uint256 amount, uint256 qualificationClass);
     event Accepted(uint256 indexed job, address indexed worker, uint256 indexed nullifier, uint256 epoch);
     event Submitted(uint256 indexed job, bytes32 deliverable);
+    event DocumentCommitted(uint256 indexed job, bytes32 contentRef, bytes32 sha256Digest);
     event Paid(uint256 indexed job, address indexed worker, uint256 amount);
     event Refunded(uint256 indexed job, uint256 amount);
     event Disputed(uint256 indexed job);
@@ -154,6 +156,19 @@ contract QualificationEscrow is ReentrancyGuard {
     }
 
     function submit(uint256 id, bytes32 deliverable) external {
+        _submit(id, deliverable);
+    }
+
+    /// Both storage locator and byte digest are committed by the assigned worker.
+    /// Clients must match the retrieved envelope's SHA-256 before decrypting.
+    function submitDocument(uint256 id, bytes32 contentRef, bytes32 sha256Digest) external {
+        if (sha256Digest == bytes32(0)) revert InvalidTerms();
+        _submit(id, contentRef);
+        documentDigests[id] = sha256Digest;
+        emit DocumentCommitted(id, contentRef, sha256Digest);
+    }
+
+    function _submit(uint256 id, bytes32 deliverable) internal {
         Job storage job = jobs[id];
         if (msg.sender != job.worker) revert Unauthorized();
         if (job.status != Status.Accepted) revert WrongState();

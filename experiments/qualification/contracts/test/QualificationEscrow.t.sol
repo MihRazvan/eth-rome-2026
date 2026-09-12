@@ -119,6 +119,15 @@ contract QualificationEscrowTest {
         vm.expectRevert(); vm.prank(ATTACKER); escrow.setRoot(4);
         require(escrow.revocationRoot() == 3);
     }
+    function testDocumentLocatorAndDigestRequireAssignedWorker() public {
+        uint256 id = accepted();
+        bytes32 ref = keccak256("swarm locator"); bytes32 digest = sha256("ciphertext");
+        vm.expectRevert(); vm.prank(ATTACKER); escrow.submitDocument(id, ref, digest);
+        vm.prank(WORKER); escrow.submitDocument(id, ref, digest);
+        require(escrow.documentDigests(id) == digest);
+        bytes32 replacement = sha256("replacement");
+        vm.expectRevert(); vm.prank(WORKER); escrow.submitDocument(id, ref, replacement);
+    }
     function testUnprovableClassCannotLockClientFunds() public {
         vm.expectRevert(); vm.prank(CLIENT);
         escrow.createJob(100, uint256(type(uint32).max) + 1, 1100, 1200, 1300, keccak256("terms"));
