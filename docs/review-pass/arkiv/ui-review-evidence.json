@@ -1,0 +1,238 @@
+{
+  "observedAt": "2026-09-12T09:26:13.210Z",
+  "url": "http://127.0.0.1:18889",
+  "walletInteraction": false,
+  "publicWrites": 0,
+  "responseStatus": 200,
+  "csp": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' http://127.0.0.1:18547 https://rpc.tiramisu.db-chain.testnet.arkiv.network wss://rpc.tiramisu.db-chain.testnet.arkiv.network https://gateway.ethswarm.org https://swarm-id.snaha.net http://127.0.0.1:1635; frame-src https://swarm-id.snaha.net; img-src 'self'; frame-ancestors 'none'",
+  "state": {
+    "title": "Review Pass — wallet pilot",
+    "discovery": "Arkiv live · observed block 348405",
+    "opportunities": "No matching live listings. A funded review appears here after its client publishes a discovery lease.",
+    "scopeConfirmation": "<input id=\"scope-public\" type=\"checkbox\">",
+    "wallet": "Connect to begin",
+    "hasEthereum": false,
+    "width": 1440,
+    "scrollWidth": 1440,
+    "asset": [
+      "http://127.0.0.1:18889/assets/index-CCsit4Dz.js"
+    ]
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390
+  },
+  "errors": [],
+  "failures": [],
+  "sockets": 1,
+  "frames": [
+    {
+      "direction": "sent",
+      "method": "eth_subscribe",
+      "params": [
+        "logs",
+        {
+          "address": "0x4400000000000000000000000000000000000044",
+          "topics": [
+            [
+              "0xb282d7c494b8899aa8015cd07be621530beb03409eb8c5e8fdc1411ba64356a5",
+              "0xe986ee220b2d7947a009d9389d8400b2ac82d3b430a9f72700a0975d3d5a34fe",
+              "0x10dc3526654c9ba4e2370b1bfcbc0de087d141a5694b3d3305d37df7e6705d4b",
+              "0x0b659dccc8eb950324170e8d9598af5ee04ee070883eb28651a96788721fbf83",
+              "0x4059b76c47e1ecc40ba88e649b654f716515eb358c3ce83c803820e3b3130cc3"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "direction": "sent",
+      "method": "eth_subscribe",
+      "params": [
+        "newHeads"
+      ]
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    },
+    {
+      "direction": "received",
+      "method": "eth_subscription"
+    }
+  ],
+  "requests": [
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "eth_chainId"
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:18547/",
+      "methods": [
+        "eth_call"
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:18547/",
+      "methods": [
+        "eth_call"
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:18547/",
+      "methods": [
+        "eth_call"
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:18547/",
+      "methods": [
+        "eth_call"
+      ]
+    },
+    {
+      "url": "http://127.0.0.1:18547/",
+      "methods": [
+        "eth_call"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "eth_chainId"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    },
+    {
+      "url": "https://rpc.tiramisu.db-chain.testnet.arkiv.network/",
+      "methods": [
+        "arkiv_query"
+      ]
+    }
+  ],
+  "reviewSourceHashes": {
+    "experiments/qualification/pilot/web/main.ts": "888a99d89d7b9861921be9c9781d320a1f9d64942feb5bf7de3deec278b3ef81",
+    "experiments/qualification/pilot/web/index.html": "19a8a89020347534c7d466244bd99c0f0aad5d233ab7886b1f9b0d780e975823",
+    "experiments/qualification/pilot/start.mjs": "720bd0de36533349ff7417ce55a6328a129d0a3db52f0f54414f8be7319b1789"
+  },
+  "reviewBase": "ccd10426f1ce351ca45998a47181d4f9ef173ed5"
+}
