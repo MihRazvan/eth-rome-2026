@@ -1,0 +1,68 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+.ca{font-family:'Archivo',sans-serif}
+.cm{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em}
+.perf{height:1px;background:repeating-linear-gradient(90deg,#17150F 0 5px,transparent 5px 10px)}
+.perfL{width:1px;background:repeating-linear-gradient(180deg,#17150F 0 5px,transparent 5px 10px)}
+.chip{background:#E8D9B8;padding:8px 9px;position:relative}
+</style>
+<h2 class="sr-only">Brand system sheet for Cutout showing the generative wordmark, perforated dividers, crop marks, the silhouette hole grid, and the palette.</h2>
+<div style="background:var(--surface-1);border-radius:12px;padding:16px">
+<div style="background:#E8D9B8;padding:20px;position:relative">
+<svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" aria-hidden="true">
+<g stroke="#17150F" stroke-width="1"><path d="M0 12 L9 12 M12 0 L12 9"/><path d="M100% 0"/></g>
+</svg>
+<div style="position:absolute;left:8px;top:8px;width:12px;height:12px;border-left:1px solid #17150F;border-top:1px solid #17150F"></div>
+<div style="position:absolute;right:8px;top:8px;width:12px;height:12px;border-right:1px solid #17150F;border-top:1px solid #17150F"></div>
+<div style="position:absolute;left:8px;bottom:8px;width:12px;height:12px;border-left:1px solid #17150F;border-bottom:1px solid #17150F"></div>
+<div style="position:absolute;right:8px;bottom:8px;width:12px;height:12px;border-right:1px solid #17150F;border-bottom:1px solid #17150F"></div>
+
+<div style="background:#17150F;padding:18px 18px 14px">
+<div class="cm" style="color:#6B6455;margin-bottom:10px">the mark is a hole · one letter is always missing a person</div>
+<svg viewBox="0 0 620 130" width="100%" style="display:block;max-width:520px" role="img"><title>Cutout wordmark with a silhouette knocked out of a letter</title><desc>The word Cutout set large, with a person shape punched through one letterform</desc>
+<defs><mask id="km"><rect width="620" height="130" fill="#fff"/>
+<g fill="#000" id="bust"><circle cx="0" cy="0" r="0"/></g>
+<circle cx="279" cy="52" r="17" fill="#000"/><path d="M247 104 C247 79 262 70 279 70 C296 70 311 79 311 104 Z" fill="#000"/>
+</mask></defs>
+<text x="0" y="104" font-family="Archivo, sans-serif" font-size="126" font-weight="800" letter-spacing="-6" fill="#E8D9B8" mask="url(#km)">Cutout</text>
+</svg>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
+<div class="cm" style="color:#F0997B">c&#818;utout · cut&#818;out · cutou&#818;t — the hole moves per session</div>
+</div>
+</div>
+
+<div style="display:flex;align-items:center;gap:9px;margin:14px 0 12px"><div class="perf" style="flex:1"></div><span class="cm" style="color:#6B6455">cut here</span><div class="perf" style="flex:1"></div></div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:0" id="grid"></div>
+
+<div style="display:flex;align-items:center;gap:9px;margin:12px 0"><div class="perf" style="flex:1"></div><span class="cm" style="color:#6B6455">cut here</span><div class="perf" style="flex:1"></div></div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:8px">
+<div class="chip" style="background:#17150F"><div style="height:26px"></div><div class="cm" style="color:#E8D9B8">ink · #17150F</div><div class="cm" style="color:#6B6455">people, cuts, type</div></div>
+<div class="chip" style="background:#F04E23"><div style="height:26px"></div><div class="cm" style="color:#4A1B0C">cut orange · #F04E23</div><div class="cm" style="color:#712B13">actions, seals, the cut</div></div>
+<div class="chip" style="background:#E8D9B8;outline:1px solid #17150F;outline-offset:-1px"><div style="height:26px"></div><div class="cm" style="color:#17150F">board · #E8D9B8</div><div class="cm" style="color:#6B6455">the sheet itself</div></div>
+<div class="chip" style="background:#E0D3B2;outline:1px solid #C8BFA4;outline-offset:-1px"><div style="height:26px"></div><div class="cm" style="color:#17150F">backing · #E0D3B2</div><div class="cm" style="color:#6B6455">what shows through</div></div>
+</div>
+
+<div style="display:flex;align-items:center;gap:9px;margin:12px 0"><div class="perf" style="flex:1"></div><span class="cm" style="color:#6B6455">cut here</span><div class="perf" style="flex:1"></div></div>
+
+<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+<div><div class="ca" style="font-size:38px;font-weight:800;letter-spacing:-1.6px;color:#17150F;line-height:1">Nobody knows<br>who you are.</div>
+<div class="ca" style="font-size:38px;font-weight:800;letter-spacing:-1.6px;color:#F04E23;line-height:1">Everybody knows<br>you're qualified.</div></div>
+<div class="cm" style="color:#6B6455;line-height:1.7;flex:1;min-width:150px">Archivo 800<br>tracking −4%<br>two lines, ink then orange<br>never centred</div>
+</div>
+</div>
+</div>
+<script>
+const V=[{l:'reviewer',d:0},{l:'cap',d:1},{l:'long hair',d:2},{l:'broad',d:3},{l:'revoked',d:9}];
+const shp=[
+'<circle cx="32" cy="23" r="12"/><path d="M8 60 C8 42 19 36 32 36 C45 36 56 42 56 60 Z"/>',
+'<circle cx="32" cy="24" r="11"/><path d="M19 20 C17 11 24 7 32 7 C40 7 47 11 45 20 Z"/><path d="M8 60 C8 42 19 37 32 37 C45 37 56 42 56 60 Z"/>',
+'<circle cx="32" cy="23" r="11"/><path d="M44 21 C51 24 51 38 45 38 Z"/><path d="M10 60 C10 43 20 36 32 36 C44 36 54 43 54 60 Z"/>',
+'<circle cx="32" cy="22" r="10"/><path d="M4 60 C4 41 17 34 32 34 C47 34 60 41 60 60 Z"/>'];
+function conf(){let p='';for(let i=0;i<18;i++){const x=5+Math.random()*50,y=7+Math.random()*48,w=3+Math.random()*8,h=2+Math.random()*5;
+p+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" transform="rotate('+(Math.random()*70-35).toFixed(0)+' '+(x+w/2).toFixed(1)+' '+(y+h/2).toFixed(1)+')"/>'}return p}
+document.getElementById('grid').innerHTML=V.map((v,i)=>'<div style="padding:10px;border-right:'+(i<V.length-1?'1px':'0')+' dashed #9A907A">'
++'<div style="background:#E0D3B2;padding:7px"><svg viewBox="0 0 64 64" width="100%" height="62" aria-hidden="true"><g fill="#17150F">'+(v.d===9?conf():shp[v.d])+'</g>'+(v.l==='reviewer'?'<circle cx="32" cy="23" r="6" fill="#E0D3B2"/>':'')+'</svg></div>'
++'<div class="cm" style="color:#17150F;margin-top:6px">'+v.l+'</div></div>').join('');
+</script>

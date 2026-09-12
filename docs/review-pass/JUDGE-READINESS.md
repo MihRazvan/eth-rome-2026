@@ -1,6 +1,12 @@
-# Review Pass — judge release checklist
+# Cutout — judge release checklist
 
 Working checklist, 12 September 2026. Owner **Agent** means implementation/verification I can do; **Team** means Razvan/teammate-held access, participation or submission. A checked local test is not a checked public bounty requirement. This is the release plan for the existing `review-pass/product` branch, not a new product pivot.
+
+## Current customer-facing pass
+
+Cutout now has the supplied paper/ink/orange identity, Tasks / Activity / workspace navigation, a task preview, and a cut-open report interaction. Judges can enter a clearly labelled no-wallet guided demo that uses real browser encryption and simulated financial/qualification steps. Live Fuji functionality remains separate. Private device namespaces and earlier contract names are retained for compatibility.
+
+Latest actual local lifecycle:21browserchecks, including approval blocked before opening the report. Public snapshot publication and hosted browser proving are verified; the full public funded review and Arkiv expiry still need execution. The rehearsal wallets are funded. Browser Swarm authentication remains account setup; users never paste technical IDs/signers into Cutout.
 
 ## Release definition
 

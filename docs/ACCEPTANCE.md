@@ -1,3 +1,17 @@
+# Cutout — current design pass
+
+12 September 2026. Cutout is the new user-approved identity for Review Pass; previous EXIT ledgers below are historical.
+
+- Actual isolated local browser lifecycle: **21 checks passed**, including local browser-generated proof, two recipient-isolated encrypted reports/payments, reload/rotation/revocation and approval disabled before decryption. `.runtime/cutout-browser/evidence`; fresh contracts on existing local Anvil, no public transaction claimed.
+- Targeted app/read-API/storage checks: **22 passed, one optional external browser check skipped**. Explicit pilot TypeScript and active public bundle build pass.
+- Cutout uses the supplied paper/ink/orange references, locally hosted licensed fonts, role/navigation/task preview and official in-flow Swarm ID control. Brand changes preserve all cryptographic namespaces and deployed contracts.
+- Guided demo is deliberately labelled a simulation: real browser AES-GCM, simulated qualification/funding/payment. It does not count toward live sponsor requirements.
+- Public snapshot and hosted proving are verified; funded Fuji lifecycle and Arkiv creation/native expiry are still pending. Funded wallets are available; isolated Swarm login sessions were pending when the user changed focus to design.
+
+Final hosted visual evidence and deployment receipt are recorded with the Cutout design evidence. Earlier ledger entries retain their original scope/date.
+
+---
+
 > **Current Review Pass judge pass:** [shared release checklist](review-pass/JUDGE-READINESS.md), [20-check browser evidence](review-pass/evidence/judge-pass/README.md), [qualification provisioning](review-pass/QUALIFICATION-PROVISIONING.md). Browser-local proving and the complete local payment flow are verified; public bounty writes and a second-device judge rehearsal remain pending. The EXIT ledger below is historical.
 
 # Current Review Pass acceptance

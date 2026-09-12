@@ -24,7 +24,7 @@ const local = resolve(
   process.env.QUALIFICATION_PILOT_DIR ?? ".runtime/qualification-pilot",
 );
 const port = Number(process.env.QUALIFICATION_PILOT_PORT ?? 18888);
-if (![18888, 18889].includes(port))
+if (![18888, 18889, 18902].includes(port))
   throw Error("Use an assigned local pilot port");
 await mkdir(local, { recursive: true });
 const configPath =

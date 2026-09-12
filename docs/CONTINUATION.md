@@ -1,3 +1,15 @@
+# Current handoff — Cutout design integration (12 September 2026)
+
+The user renamed Review Pass to **Cutout** and explicitly prioritized customer-facing design using six supplied HTML references. Read `docs/design/cutout/DIRECTION.md`; references are preserved alongside it. Root branch remains `review-pass/product`, historical requirements and provenance preserved. Never rename protocol domains or browser key namespaces merely for branding.
+
+New shell: Tasks / Activity / Your workspace, client/reviewer roles, live brief/reward preview, integrated Swarm account control, and actual retrieval/decryption via cut-open interaction. Approval now requires opening the committed report in the current browser view. Full browser-only guided demo is explicitly simulated for qualification/payment and uses actual WebCrypto AES-GCM for report sealing/opening. This is not the Fuji bounty lifecycle.
+
+Verification so far: isolated fresh local deployment `.runtime/cutout-browser`, port18902, 21 real Chromium lifecycle checks passed including browser proof, two separate client payments, report decryption/key recovery, outsider rejection, revocation and new approval gate. Original services and public contracts untouched. The new test credential is now revoked by its test; do not present18902 as an enrolled fresh demo. Public bundle preview18903 serves `.runtime/review-pass-vercel` and its current read API; older18901 process has an old loaded API and is unsuitable for acceptance. Local UI test screenshots/evidence are in `.runtime/cutout-browser/evidence`. Read-only Cutout UI/walkthrough verifier: `node docs/design/cutout/verify-browser.mjs <base-url> <evidence-dir>`.
+
+Prior public milestone now confirmed: snapshot `19ad2c00d93447d69c66d153bbe804c686303cd8d83fd448dc58b26eb49efaf7` matches finalized root and is active; all three Fuji contracts source-verified. Rehearsal client has20testUSDC and0.1TiramisuGLM, both rehearsal browser keys version1 registered. Hosted prover evidence is committed under `docs/review-pass/evidence/hosted-prover`. The funded public review and Arkiv write/native expiry have not run. Client/reviewer Swarm sessions in isolated19222/19223 browsers were pending user login when branding took priority. Do not ask again for wallet funds, Swarm IDs or recovery phrases. Preserve their profiles and registered keys. Public deployment remains at the existing Review Pass Vercel project; record the new Cutout deployment below after promotion. Do not deploy root EXIT Vercel configuration.
+
+---
+
 # Current restart handoff — Review Pass judge pass
 
 Updated 12 September 2026. Root `/Users/razvan/Repos/real-eth-rome`, branch **`review-pass/product`**, preserved `main`. User asks for an implemented judge-readiness pass and agent/team checklist; explicitly ignore their earlier ScopeLift footer remark. Normal commits/pushes and bounded isolated subagents are authorized. Do not restart research/EXIT or change product direction.

@@ -95,6 +95,7 @@ async function profile(index) {
     privateRequests.push(req.url() + (req.postData() ?? ""));
   });
   await page.goto(`http://127.0.0.1:${port}`);
+  await page.locator('.rail-nav [data-view="help"]').click();
   await page.locator(".device-settings > summary").click();
   await page.locator("#connect").click();
   await page.waitForFunction(
@@ -102,12 +103,23 @@ async function profile(index) {
   );
   return { page, context, account, wallet };
 }
-async function click(page, selector) {
+async function showControl(page, selector) {
+  const screen = await page
+    .locator(selector)
+    .first()
+    .evaluate((node) =>
+      node.closest("[data-screen]")?.getAttribute("data-screen"),
+    );
+  if (screen && !(await page.locator(selector).first().isVisible()))
+    await page.locator(`.rail-nav [data-view="${screen}"]`).click();
   if (
-    !(await page.locator(selector).isVisible()) &&
+    !(await page.locator(selector).first().isVisible()) &&
     ["#register", "#rotate", "#revoke-key"].includes(selector)
   )
     await page.locator(".device-settings > summary").click();
+}
+async function click(page, selector) {
+  await showControl(page, selector);
   await page.locator(selector).click();
   await page.waitForFunction(
     () => !document.querySelector("#connect").disabled,
@@ -116,6 +128,7 @@ async function click(page, selector) {
     throw Error(await page.locator("#notice").textContent());
 }
 async function failClick(page, selector) {
+  await showControl(page, selector);
   await page.locator(selector).click();
   await page.waitForFunction(
     () => !document.querySelector("#connect").disabled,
@@ -356,6 +369,15 @@ try {
     "Worker signs upload authorization and commits ciphertext locator plus digest onchain; HTTP receives no plaintext or private keys",
   );
   await click(customer.page, "#refresh");
+  assert.equal(
+    await customer.page
+      .locator(`[data-action="pay"][data-id="${id}"]`)
+      .isDisabled(),
+    true,
+  );
+  checks.push(
+    "Client approval is disabled until the committed report is successfully decrypted",
+  );
   await click(customer.page, `[data-action="retrieve"][data-id="${id}"]`);
   assert.equal(
     await customer.page.locator(`#document-${id}`).textContent(),
@@ -548,6 +570,9 @@ try {
     "Durable revocation advances the root; stale published snapshot is rejected rather than served as current",
   );
   await click(customer.page, "#connect");
+  await showControl(customer.page, `[data-action="retrieve"][data-id="${id}"]`);
+  await customer.page.locator(`[data-history="${id}"]`).selectOption(old);
+  await click(customer.page, `[data-action="retrieve"][data-id="${id}"]`);
   await click(customer.page, `[data-action="pay"][data-id="${id}"]`);
   assert.equal((await contract("jobs", [BigInt(id)]))[7], 3);
   await click(customerB.page, `[data-action="pay"][data-id="${secondId}"]`);

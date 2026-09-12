@@ -1,4 +1,20 @@
-# EXIT ↗
+# Cutout
+
+**Qualified work. Private by design.**
+
+Cutout lets a client fund a technical review in test USDC. A reviewer proves their qualification is currently valid without exposing a reusable credential identifier, delivers an encrypted report, and receives payment after the client opens and approves it. Qualification is eligibility, not a guarantee of report quality. Wallets and payments remain public.
+
+[Open Cutout](https://review-pass-ethrome-2026.vercel.app) · [Try the guided demo](https://review-pass-ethrome-2026.vercel.app/?view=demo) · [Judge checklist](docs/review-pass/JUDGE-READINESS.md) · [Runbook](docs/review-pass/RUNBOOK.md) · [Design direction](docs/design/cutout/DIRECTION.md)
+
+The guided demo requires no account. It uses actual browser encryption/decryption and explicitly simulates qualification, funding and payment. The live workspace uses the existing Fuji contracts and separate public storage/discovery integrations. The full funded public lifecycle remains a release gate; a walkthrough is not bounty evidence.
+
+Current targets: Avalanche / Team1 Track A, Arkiv Mission 02 / Mission 03 / Best Use (one Arkiv award per team), and Swarm. See the receipt-linked [acceptance ledger](docs/ACCEPTANCE.md) for what actually ran.
+
+Cutout is the active product on `review-pass/product`. The `review-pass` paths and protocol identifiers preserve existing deployed contracts, browser keys and provenance. Earlier EXIT work follows as historical material; its deployment status does not describe Cutout.
+
+---
+
+# Earlier project: EXIT ↗
 
 **Sell your withdrawal. Get paid now. Let the buyer wait.**
 

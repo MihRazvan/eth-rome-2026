@@ -43,7 +43,7 @@ export function nextStep(
     return {
       target: "connect-storage",
       title: "Connect document storage",
-      text: "Swarm ID needs an authenticated session and usable postage. Signing in alone may not enable uploads.",
+      text: "Sign in through Swarm ID to connect a storage drive. Cutout never asks you to paste storage IDs or private keys. Your drive needs available upload capacity.",
     };
   if (role === "client" && state.balance < reward)
     return {

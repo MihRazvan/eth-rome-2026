@@ -1,5 +1,6 @@
 import "../../../qualification/runtime/style.css";
 import "./pilot.css";
+import { revealInWorkspace } from "./shell";
 import {
   createPublicClient,
   createWalletClient,
@@ -97,6 +98,7 @@ function chosenReward() {
 function reveal(target: string) {
   const el = document.getElementById(target);
   if (!el) return;
+  revealInWorkspace(el);
   const details = el.closest("details");
   if (details) details.open = true;
   el.scrollIntoView({
@@ -179,7 +181,7 @@ function renderGuide() {
       publicStorage
         ? storageReady
           ? "Swarm ID can upload"
-          : "Sign in and provide usable postage"
+          : "Connect storage with an active drive"
         : "Local Bee rehearsal only",
     ],
     ...(role === "client"
@@ -223,6 +225,7 @@ function syncButtons() {
     "start-reviewer",
   ]);
   document.querySelectorAll<HTMLButtonElement>("button").forEach((b) => {
+    if (b.hasAttribute("data-ui") || b.closest("#cutout-demo")) return;
     b.disabled =
       (busy && b.dataset.action !== "cancel-proof") ||
       b.dataset.eligible === "false" ||
@@ -243,6 +246,7 @@ function chooseRole(next: Role) {
       b.setAttribute("aria-pressed", String(b.dataset.role === role)),
     );
   renderGuide();
+  window.dispatchEvent(new Event("cutout:role"));
   reveal("journey");
 }
 
@@ -257,6 +261,7 @@ const publicStorage =
   config.storageMode === "swarm-id"
     ? createSwarmStorage({
         gatewayUrl: config.gatewayUrl,
+        containerId: "swarm-connect-widget",
         onState: (state) => {
           $("#storage-status").textContent = state.canUpload
             ? `Swarm ID connected · ${state.mode} uploads available`
@@ -377,10 +382,10 @@ function renderBoard() {
     ? state.listings
         .map(
           (e) =>
-            `<article class="listing"><h3>${esc(e.listing.title)}</h3><p>${formatUnits(BigInt(e.listing.reward), 6)} ${tokenSymbol} · qualification class ${esc(e.listing.qualificationClass)}</p><p class="fine">Discovery lease ends at Arkiv block ${e.expiresAt}. Funding follows its own deadlines.</p><button data-view-job="${e.listing.jobId}" ${state.status !== "live" ? "disabled" : ""}>View verified scope</button></article>`,
+            `<article class="listing"><h3>${esc(e.listing.title)}</h3><p>${formatUnits(BigInt(e.listing.reward), 6)} ${tokenSymbol} · Technical review</p><p class="fine">This listing has a limited lifetime. The funded task keeps its own delivery and payment deadlines.</p><button data-view-job="${e.listing.jobId}" ${state.status !== "live" ? "disabled" : ""}>View verified scope</button></article>`,
         )
         .join("")
-    : `<p class="fine">${state?.status === "live" ? "No matching live listings. A funded review appears here after its client publishes a discovery lease." : "Discovery is not yet available. Existing funded work remains accessible below."}</p>${config.chainId === 31338 ? '<p class="fine">This public Arkiv board is separate from the local rehearsal. <a href="#jobs">Open local rehearsal tasks below</a>.</p>' : ""}`;
+    : `<p class="fine">${state?.status === "live" ? "No open reviews match this filter. Try a lower minimum reward, or explore the guided demo." : "Discovery is not yet available. Your existing funded work is available in Activity."}</p>${config.chainId === 31338 ? '<p class="fine">This public Arkiv board is separate from the local rehearsal. <a href="#jobs">Open local rehearsal tasks below</a>.</p>' : ""}`;
   if (state?.removed.some((x) => x.reason === "native-expired"))
     $("#discovery-change").textContent =
       "A discovery lease is no longer active. Its escrow and accepted work remain on the settlement chain.";
@@ -669,7 +674,7 @@ function render() {
                 : j.status === "Submitted"
                   ? `Report delivered. The client can approve payment or dispute by ${date(j.reviewBefore)}. After that, the reviewer can claim payment unless disputed.`
                   : j.status === "Paid"
-                    ? "Complete. The funded reward was paid to the assigned reviewer. The encrypted report remains retrievable."
+                    ? "Complete. The funded reward was paid to the assigned reviewer. Keep a downloaded copy; storage availability depends on its remaining lifetime."
                     : j.status === "Refunded"
                       ? "Closed. The reward was returned to the client."
                       : j.status === "Disputed"
@@ -690,15 +695,15 @@ function render() {
           let actions = "";
           const publish =
             eligibility.accept && isClient && j.scope && !j.scopeError
-              ? button("publish", j.id, "Publish discovery lease on Arkiv")
+              ? button("publish", j.id, "List this review")
               : "";
           if (eligibility.accept && !j.scopeError && !isClient)
-            actions = `${config.browserProver ? `<div class="local-prover"><h4>Prove qualification in this browser</h4><p class="fine">Select your issued credential and holder file. They are read locally, never uploaded. A fresh proof is bound to this assignment and your connected payment wallet.</p><label class="fine">Credential JSON<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label class="fine">Private holder JSON<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label>${button("generate", j.id, "Generate qualification proof")}${button("cancel-proof", j.id, "Cancel proof", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Verify proof & accept")}` : ""}`;
+            actions = `${config.browserProver ? `<div class="local-prover"><h4>Cut a proof. Keep your credential.</h4><p class="fine">Select your issued credential and holder file. They are read locally, never uploaded. A fresh proof is bound to this assignment and your connected payment wallet.</p><label class="fine">Credential JSON<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label class="fine">Private holder JSON<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label>${button("generate", j.id, "Cut a qualification proof")}${button("cancel-proof", j.id, "Cancel proof", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Accept this task")}` : ""}`;
           if (j.status === "Accepted" && isWorker)
-            actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Encrypt for client & submit", eligibility.submit)}`;
+            actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Seal & deliver report", eligibility.submit)}`;
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
             actions =
-              button("retrieve", j.id, "Retrieve & decrypt review") +
+              `<div class="sealed-report"><div class="sealed-art" aria-hidden="true"><svg viewBox="0 0 120 80"><path d="M8 12h104v58H8Z" fill="#F04E23" stroke="currentColor"/><path d="m8 12 52 37 52-37" fill="none" stroke="currentColor"/></svg></div><div><h4>A review, just for you.</h4><p class="fine">Cut along the line to retrieve and decrypt the report in this browser.</p><label class="cut-track">Drag to cut<input type="range" min="0" max="100" value="0" data-cut="${j.id}" aria-label="Cut open report for task ${j.id}"${!account ? " disabled" : ""}></label>${button("retrieve", j.id, "Cut open report")}</div></div>` +
               button("export", j.id, "Export encrypted review") +
               (isClient || isWorker
                 ? button("save", j.id, "Save decrypted report")
@@ -706,7 +711,12 @@ function render() {
               `<label class="fine">Device key<select data-history="${j.id}"><option value="">Current device key</option></select></label>`;
           if (j.status === "Submitted" && isClient)
             actions +=
-              button("pay", j.id, "Approve & pay") +
+              button(
+                "pay",
+                j.id,
+                `Approve & pay ${formatUnits(j.amount, 6)} ${tokenSymbol}`,
+                false,
+              ) +
               button("dispute", j.id, "Dispute review", eligibility.dispute);
           if (j.status === "Submitted" && isWorker)
             actions += button(
@@ -727,10 +737,10 @@ function render() {
             account?.toLowerCase() === config.arbitrator.toLowerCase()
           )
             actions += button("resolve", j.id, "Arbitrate 50 / 50 split");
-          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>ASSIGNMENT ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body">${progress}<h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p><p class="stage-hint">${esc(stageHint)}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
+          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>TASK ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body">${progress}<h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p><p class="stage-hint">${esc(stageHint)}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
         })
         .join("")
-    : '<article class="ticket"><div class="ticket-body"><h3>No assignments yet.</h3><p class="terms">Connect a client wallet, register its document key and fund the first review.</p></div></article>';
+    : `<article class="ticket empty-state"><div class="ticket-body"><h3>${role === "reviewer" ? "Your next review starts here." : "Make room for your first review."}</h3><p class="terms">${role === "reviewer" ? "Choose an open task from the board. Your accepted work and delivered reports will appear here." : "Post a specific question and fund its reward. You can follow the review from acceptance to payment here."}</p><button data-ui data-back-tasks>${role === "reviewer" ? "Find a task" : "Post a task"}</button></div></article>`;
   syncButtons();
   if (account) {
     const session = generation,
@@ -1028,7 +1038,7 @@ async function generatePresentation(id: string) {
     proofs.set(id, p);
     return {
       message:
-        "Qualification proof verified. Review the scope, then select Verify proof & accept to sign with your wallet.",
+        "Qualification proof verified. Review the scope, then select Accept this task to sign with your wallet.",
     };
   } finally {
     controller.abort();
@@ -1242,13 +1252,28 @@ async function action(name: string, id: string) {
         key,
       );
       if (session !== generation) throw Error("Wallet session changed");
-      $(`#document-${id}`).textContent = new TextDecoder().decode(plaintext);
-      return "preserve";
+      const report = $(`#document-${id}`);
+      report.textContent = new TextDecoder().decode(plaintext);
+      report.dataset.verifiedDigest = String(digest);
+      report.classList.add("report-open");
+      document
+        .querySelector(`#job-${id} .sealed-report`)
+        ?.classList.add("is-open");
+      const pay = document.querySelector<HTMLButtonElement>(
+        `[data-action="pay"][data-id="${id}"]`,
+      );
+      if (pay) pay.dataset.eligible = "true";
+      report.scrollIntoView({ block: "center", behavior: "smooth" });
+      return {
+        preserve: true,
+        message:
+          "Report opened. Its stored bytes match the reviewer’s onchain commitment. Read it before approving payment.",
+      };
     }
     case "export": {
       const result = await fetchDocument(id);
       saveFile(
-        `review-pass-${id}-encrypted.json`,
+        `cutout-${id}-encrypted.json`,
         JSON.stringify(
           {
             format: "review-pass-export",
@@ -1276,13 +1301,21 @@ async function action(name: string, id: string) {
         throw Error("Only a recipient can save a decrypted report");
       const text = $(`#document-${id}`).textContent;
       if (!text) throw Error("Retrieve and decrypt this report first");
-      saveFile(`review-pass-${id}-PRIVATE.txt`, text, "text/plain");
+      saveFile(`cutout-${id}-PRIVATE.txt`, text, "text/plain");
       return {
         preserve: true,
-        message: `Saved your decrypted report locally as review-pass-${id}-PRIVATE.txt.`,
+        message: `Saved your decrypted report locally as cutout-${id}-PRIVATE.txt.`,
       };
     }
     case "pay":
+      if (
+        !$(`#document-${id}`).textContent ||
+        $(`#document-${id}`).dataset.verifiedDigest !==
+          String(await read("documentDigests", [BigInt(id)]))
+      )
+        throw Error(
+          "Open and read the committed report before approving payment.",
+        );
       await tx("approveAndPay", [BigInt(id)]);
       break;
     case "dispute":
@@ -1306,7 +1339,11 @@ async function run(fn: () => Promise<any>) {
   $("#notice").className = "";
   $("#notice").textContent =
     "Waiting for your wallet or the configured network…";
-  document.querySelectorAll("button").forEach((b) => (b.disabled = true));
+  document
+    .querySelectorAll<HTMLButtonElement>("button:not([data-ui])")
+    .forEach((b) => {
+      if (!b.closest("#cutout-demo")) b.disabled = true;
+    });
   try {
     const result = await fn();
     if (session !== generation) return;
@@ -1353,9 +1390,11 @@ $("#opportunities").onclick = (e) => {
     run(async () => {
       selectedJobs.add(b.dataset.viewJob!);
       await refresh();
-      document
-        .getElementById(`job-${b.dataset.viewJob}`)
-        ?.scrollIntoView({ block: "start" });
+      const target = document.getElementById(`job-${b.dataset.viewJob}`);
+      if (target) {
+        revealInWorkspace(target);
+        target.scrollIntoView({ block: "start" });
+      }
     });
 };
 void startBoard().catch(() => {
@@ -1480,8 +1519,15 @@ $("#create").onclick = () =>
       encoded.digest,
       `0x${content.reference}`,
     ]);
+    window.dispatchEvent(new Event("cutout:activity"));
+    return {
+      message:
+        "Task funded. List this review so qualified reviewers can find it.",
+    };
   });
 document.addEventListener("click", (e) => {
+  if ((e.target as Element).closest("[data-back-tasks]"))
+    window.dispatchEvent(new Event("cutout:live"));
   const b = (e.target as Element).closest<HTMLButtonElement>(
     "button[data-action]",
   );
@@ -1493,6 +1539,12 @@ document.addEventListener("click", (e) => {
 });
 document.addEventListener("change", (e) => {
   const input = e.target as HTMLInputElement;
+  if (input.dataset.cut) {
+    if (Number(input.value) === 100 && !busy && account)
+      void run(() => action("retrieve", input.dataset.cut!));
+    input.value = "0";
+    return;
+  }
   if (!input.dataset.proof) return;
   run(async () => {
     const session = generation,

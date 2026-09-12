@@ -1,0 +1,141 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+.ca{font-family:'Archivo',sans-serif;color:#17150F}
+.cm{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;color:#6B6455}
+.nv{display:flex;align-items:center;gap:8px;width:calc(100% + 10px);background:transparent;border:none;border-radius:0;color:#9A907A;font-family:'Archivo',sans-serif;font-size:14px;font-weight:600;letter-spacing:-.01em;padding:9px 12px;cursor:pointer;text-align:left}
+.nv:hover{color:#E8D9B8}
+.nv.on{background:#F04E23;color:#FFF6EE;margin-right:-10px}
+.perf{height:1px;background:repeating-linear-gradient(90deg,#9A907A 0 5px,transparent 5px 10px)}
+.lab{font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#17150F;display:block;margin-bottom:3px}
+.hlp{font-family:'Archivo',sans-serif;font-size:12px;color:#3D382C;margin-bottom:6px;line-height:1.45}
+.fin{font-family:'IBM Plex Mono',monospace;font-size:12px;border:1px solid #17150F;border-radius:0;background:#FFF6EE;color:#17150F;padding:7px 8px;box-sizing:border-box;width:100%;height:34px}
+textarea.fin{height:auto;line-height:1.5}
+.err{font-family:'Archivo',sans-serif;font-size:12px;color:#B3260A;min-height:15px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:8px 9px;border:1px dashed #9A907A;cursor:pointer;background:transparent;text-align:left;width:100%;border-radius:0}
+.opt:hover{background:#EFE4C9}
+.opt.on{border:1px solid #17150F;background:#FFF6EE}
+.bx{width:13px;height:13px;border:1px solid #17150F;flex-shrink:0;margin-top:2px}
+.opt.on .bx{background:#F04E23}
+.cbtn{font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;background:#F04E23;color:#FFF6EE;border:1px solid #17150F;border-radius:0;padding:9px 14px;cursor:pointer}
+.cbtn:hover{background:#D63F17}
+.fold{width:100%;background:transparent;border:none;border-top:1px dashed #9A907A;border-radius:0;padding:8px 0 7px;cursor:pointer;display:flex;align-items:center;gap:7px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;color:#17150F;text-align:left}
+</style>
+<h2 class="sr-only">Mockup of the Cutout post a task screen for a client, with scope, deadline, accepted collectives, reward, and a live sheet preview.</h2>
+<div style="background:var(--surface-1);border-radius:12px;padding:16px">
+<div style="display:flex;min-height:520px;background:#E8D9B8">
+<div style="background:#17150F;width:150px;flex-shrink:0;padding:13px 0 12px;display:flex;flex-direction:column">
+<div style="padding:0 12px"><svg viewBox="0 0 620 130" width="100%" aria-hidden="true" style="display:block"><defs><mask id="m3"><rect width="620" height="130" fill="#fff"/><circle cx="279" cy="52" r="17" fill="#000"/><path d="M247 104 C247 79 262 70 279 70 C296 70 311 79 311 104 Z" fill="#000"/></mask></defs><text x="0" y="104" font-family="Archivo, sans-serif" font-size="126" font-weight="800" letter-spacing="-6" fill="#E8D9B8" mask="url(#m3)">Cutout</text></svg></div>
+<div style="margin:12px 12px 4px;background:#2A2619;padding:8px"><svg viewBox="0 0 64 64" width="100%" height="96" aria-hidden="true"><g fill="none" stroke="#6B6455" stroke-width="2.5" stroke-dasharray="5 4"><circle cx="32" cy="22" r="11"/><path d="M10 58 C10 42 21 36 32 36 C43 36 54 42 54 58 Z"/></g></svg></div>
+<div class="cm" style="padding:0 12px 12px;color:#F0997B">a hole you are filling</div>
+<div style="padding-left:10px">
+<button class="nv on"><i class="ti ti-file-description" style="font-size:17px" aria-hidden="true"></i>Tasks</button>
+<button class="nv"><i class="ti ti-users" style="font-size:17px" aria-hidden="true"></i>People</button>
+<button class="nv"><i class="ti ti-clock" style="font-size:17px" aria-hidden="true"></i>Activity</button></div>
+<div style="flex:1"></div><div class="cm" style="padding:0 12px;color:#4A463A;line-height:1.7">fuji<br>41,208,663</div>
+</div>
+
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 16px 10px;flex-wrap:wrap">
+<span class="cm" style="color:#17150F"><i class="ti ti-arrow-left" style="font-size:13px;vertical-align:-2px" aria-hidden="true"></i> tasks / new</span>
+<span class="cm" style="color:#17150F">acme-protocol.eth</span></div>
+<div class="perf" style="margin:0 16px"></div>
+
+<div style="padding:14px 16px 18px;position:relative;flex:1">
+<div style="position:absolute;left:8px;top:8px;width:10px;height:10px;border-left:1px solid #9A907A;border-top:1px solid #9A907A"></div>
+<div style="position:absolute;right:8px;top:8px;width:10px;height:10px;border-right:1px solid #9A907A;border-top:1px solid #9A907A"></div>
+<div style="position:absolute;left:8px;bottom:8px;width:10px;height:10px;border-left:1px solid #9A907A;border-bottom:1px solid #9A907A"></div>
+<div style="position:absolute;right:8px;bottom:8px;width:10px;height:10px;border-right:1px solid #9A907A;border-bottom:1px solid #9A907A"></div>
+
+<div class="ca" style="font-size:31px;font-weight:800;letter-spacing:-1.4px;line-height:1.02">Post a<br><span style="color:#F04E23">review task.</span></div>
+<div class="ca" style="font-size:13px;color:#3D382C;margin:6px 0 12px;max-width:52ch;line-height:1.5">Describe the work, set the bar, fund the reward. Anyone who can prove they clear that bar can claim it.</div>
+<div class="perf"></div>
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:13px">
+<div style="flex:1 1 250px;min-width:0">
+<label class="lab" for="ti">What needs reviewing</label>
+<input class="fin" id="ti" value="Fee-switch hook change" placeholder="Fee-switch hook change">
+<div class="err" id="e1"></div>
+<label class="lab" for="sc">Scope</label>
+<div class="hlp">What the reviewer should look at, and what counts as done.</div>
+<textarea class="fin" id="sc" rows="2">Uniswap v4 hook, 340 lines changed. Look for fee accounting errors and reentrancy on the settle path.</textarea>
+<div style="height:9px"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<div style="flex:1 1 110px"><label class="lab" for="dl">Deadline</label><input class="fin" id="dl" type="number" min="1" max="60" step="1" value="4"><div class="hlp" style="margin-top:3px">days from posting</div></div>
+<div style="flex:1 1 110px"><label class="lab" for="rw">Reward</label><input class="fin" id="rw" value="1800"><div class="err" id="e2"></div></div>
+</div>
+<div class="perf" style="margin:10px 0"></div>
+<label class="lab">Who may claim it</label>
+<div class="hlp">Pick the collectives whose judgement you trust. You are trusting their assessment, not a resume.</div>
+<div id="cols" style="display:flex;flex-direction:column;gap:6px"></div>
+<div class="err" id="e3"></div>
+<label class="lab" for="lv" style="margin-top:8px">Minimum level</label>
+<select class="fin" id="lv"><option value="1">Level 1 and above</option><option value="2">Level 2 and above</option><option value="3" selected>Level 3 only</option></select>
+</div>
+
+<div style="flex:0 1 196px;min-width:180px">
+<div class="cm" style="margin-bottom:6px">live preview</div>
+<div style="background:#F2ECDD;border:1px solid #17150F">
+<div style="padding:9px 11px 7px">
+<div style="display:flex;justify-content:space-between;gap:6px;align-items:center"><span class="cm" style="color:#17150F">RT-0431</span><span class="cm" style="border:1px dashed #9A907A;padding:2px 6px">draft</span></div>
+<div class="ca" id="pt" style="font-size:14px;font-weight:600;letter-spacing:-.01em;margin-top:4px;line-height:1.25"></div>
+<div class="cm" id="ps" style="margin-top:2px;line-height:1.4"></div>
+</div>
+<div style="height:104px;margin:0 11px;background:#E0D3B2;border:1px solid #C8BFA4;position:relative">
+<div style="position:absolute;inset:0;padding:7px"><svg viewBox="0 0 64 64" width="100%" height="100%" aria-hidden="true"><g fill="none" stroke="#9A907A" stroke-width="2.5" stroke-dasharray="5 4"><circle cx="32" cy="22" r="11"/><path d="M10 58 C10 42 21 36 32 36 C43 36 54 42 54 58 Z"/></g></svg></div>
+<div class="cm" id="pc" style="position:absolute;left:0;right:0;bottom:5px;text-align:center"></div>
+</div>
+<div style="padding:8px 11px 10px">
+<div class="ca" style="font-size:12px;display:flex;justify-content:space-between"><span style="font-weight:600" id="pr"></span><span style="color:#6B6455" id="pd"></span></div>
+<div class="cm" id="pq" style="margin-top:3px;line-height:1.4"></div>
+</div>
+</div>
+<div class="cm" id="pn" style="margin-top:7px;line-height:1.5"></div>
+</div>
+</div>
+
+<div class="perf" style="margin:12px 0 0"></div>
+<button class="fold" id="fb"><i class="ti ti-plus" style="font-size:14px" aria-hidden="true"></i>What this does not guarantee</button>
+<div id="fc" style="display:none;padding-bottom:8px"><div class="ca" style="font-size:13px;line-height:1.55;max-width:60ch">Cutout guarantees the reviewer was vetted by a collective you named. It does not guarantee the review is good. Your escrow payment is public onchain, so the reviewer's identity is protected but their payout address is not. If the work is weak, dispute it and the collective rules on the escrow.</div></div>
+<div class="perf"></div>
+
+<div style="display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-top:12px">
+<button class="cbtn" id="go">Fund escrow and post</button>
+<span class="cm" id="msg" style="color:#17150F"></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+const $=i=>document.getElementById(i);
+const C=[{k:'sigil',n:'Sigil Collective',d:'Solidity · 24 credentialed',lv:{1:24,2:19,3:11},on:true},
+{k:'assay',n:'Assay Guild',d:'Protocol economics · 11',lv:{1:11,2:8,3:4},on:false},
+{k:'lumen',n:'Lumen Review Co-op',d:'Cryptography · 7',lv:{1:7,2:5,3:2},on:false}];
+let posted=false;
+function cols(){$('cols').innerHTML=C.map((c,i)=>'<button class="opt'+(c.on?' on':'')+'" data-i="'+i+'"><span class="bx"></span><span><span class="ca" style="font-size:13px;font-weight:600;display:block">'+c.n+'</span><span class="cm">'+c.d+'</span></span></button>').join('');
+document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{C[+b.dataset.i].on=!C[+b.dataset.i].on;$('e3').textContent='';cols();calc()})}
+function calc(){const lv=$('lv').value,sel=C.filter(c=>c.on);
+const n=sel.reduce((a,c)=>a+c.lv[lv],0);
+const t=$('ti').value.trim()||'Untitled task';
+const rwRaw=$('rw').value.replace(/[^0-9.]/g,''),rw=parseFloat(rwRaw);
+const d=Math.max(1,Math.min(60,parseInt($('dl').value)||1));
+$('pt').textContent=t;
+$('ps').textContent=($('sc').value.trim().slice(0,58)||'no scope yet')+($('sc').value.trim().length>58?'…':'');
+$('pc').textContent=sel.length?n+' qualified nearby':'nobody can claim this';
+$('pr').textContent=(isNaN(rw)?'—':rw.toLocaleString())+' USDC';
+$('pd').textContent='due in '+d+'d';
+$('pq').textContent=sel.length?sel.map(c=>c.n.split(' ')[0]).join(' · ')+' · level '+lv+'+':'no collective chosen';
+$('pn').textContent=sel.length?'Listed on Arkiv until the deadline, then it expires and your escrow refunds automatically.':'Pick at least one collective, or nobody can prove they qualify.';
+if(posted){posted=false;$('go').textContent='Fund escrow and post';$('msg').textContent=''}}
+['ti','sc','dl','rw','lv'].forEach(id=>$(id).addEventListener('input',()=>{if(id==='ti')$('e1').textContent='';if(id==='rw')$('e2').textContent='';calc()}));
+$('fb').onclick=()=>{const c=$('fc'),o=c.style.display==='none';c.style.display=o?'block':'none';$('fb').firstElementChild.className='ti ti-'+(o?'minus':'plus')};
+$('go').onclick=()=>{let ok=true;
+if(!$('ti').value.trim()){$('e1').textContent='Give the task a title reviewers can scan.';ok=false}
+const rw=parseFloat($('rw').value.replace(/[^0-9.]/g,''));
+if(!(rw>0)){$('e2').textContent='Enter a reward above 0.';ok=false}
+if(!C.some(c=>c.on)){$('e3').textContent='Pick at least one collective.';ok=false}
+if(!ok){$('msg').textContent='';return}
+posted=true;$('go').textContent='Posted · escrow locked';
+$('msg').textContent='RT-0431 is live. Escrow holds '+rw.toLocaleString()+' USDC until you approve or the deadline passes.'};
+cols();calc();
+</script>

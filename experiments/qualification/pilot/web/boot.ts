@@ -1,16 +1,20 @@
 import "../../../qualification/runtime/style.css";
 import "./pilot.css";
+import { mountShell } from "./shell";
+mountShell();
 import { createSwarmStorage } from "../swarm-id";
-import { mountSnapshotPublisher, type SnapshotPublication } from "./publish-snapshot";
+import {
+  mountSnapshotPublisher,
+  type SnapshotPublication,
+} from "./publish-snapshot";
 
 async function setupPage(reason: string, publication?: SnapshotPublication) {
   document.body.dataset.role = "client";
   document.getElementById("environment")!.textContent =
-    "REVIEW PASS · PUBLIC TESTNET SETUP IN PROGRESS";
+    "CUTOUT · PUBLIC TESTNET SETUP IN PROGRESS";
   document.getElementById("connect")!.hidden = true;
-  const main = document.querySelector("main")!;
-  const intro = main.querySelector(".intro")!;
-  main.replaceChildren(intro);
+  const main = document.getElementById("live-workspace")!;
+  main.replaceChildren();
   const section = document.createElement("section");
   section.className = "journey";
   section.innerHTML = `<div><p class="eyebrow">PREPARE FOR THE PUBLIC PILOT</p><h2 id="setup-title">Fund a review. Inspect the result. Approve payment.</h2><p id="setup-role">The client writes a public scope and funds test USDC. A currently qualified reviewer accepts, delivers an encrypted report, and gets paid after approval.</p><p id="setup-reason" role="status"></p><p class="fine">This deployment does not yet accept funded reviews. No sample tasks or simulated transactions are displayed.</p></div><div><h3>Prepare your storage account</h3><p>Connect Swarm ID in this browser. Once your storage credit is active, you can test a real public upload and independent retrieval here.</p><button id="setup-connect" disabled>Connect Swarm ID</button><p id="setup-storage" role="status">Loading the storage connection…</p><button id="setup-upload" disabled>Upload a public test note</button><p class="fine">This uploads a generated, non-sensitive connection test. Your actual review reports will be encrypted in the workspace.</p><pre id="setup-result"></pre></div>`;
@@ -51,7 +55,10 @@ async function setupPage(reason: string, publication?: SnapshotPublication) {
           : "Sign in to check your storage credit. Your recovery phrase stays in Swarm ID.";
     },
   });
-  window.addEventListener("pagehide", () => { publisher?.destroy(); storage.destroy(); });
+  window.addEventListener("pagehide", () => {
+    publisher?.destroy();
+    storage.destroy();
+  });
   try {
     await storage.initialize();
     connect.disabled = false;
@@ -69,7 +76,8 @@ async function setupPage(reason: string, publication?: SnapshotPublication) {
       connect.disabled = false;
     }
   };
-  if (publication) publisher = mountSnapshotPublisher(main, storage, publication);
+  if (publication)
+    publisher = mountSnapshotPublisher(main, storage, publication);
   upload.onclick = async () => {
     working = true;
     upload.disabled = true;
@@ -111,20 +119,22 @@ try {
   else if (config.abi) {
     activeDeployment = true;
     await import("./main");
-  }
-  else throw Error("Invalid configuration");
+  } else throw Error("Invalid configuration");
 } catch {
   if (activeDeployment) {
-    document.getElementById("environment")!.textContent = "REVIEW PASS · CONNECTION UNAVAILABLE";
+    document.getElementById("environment")!.textContent =
+      "CUTOUT · CONNECTION UNAVAILABLE";
     document.getElementById("connect")!.hidden = true;
     const message = document.createElement("p");
     message.setAttribute("role", "alert");
-    message.textContent = "The deployed workspace could not finish loading. Reload to retry its network connections. Existing onchain reviews remain unchanged.";
+    message.textContent =
+      "The deployed workspace could not finish loading. Reload to retry its network connections. Existing onchain reviews remain unchanged.";
     const retry = document.createElement("button");
     retry.textContent = "Reload workspace";
     retry.onclick = () => window.location.reload();
-    document.querySelector("main")!.replaceChildren(message, retry);
-  } else await setupPage(
-    "The public deployment configuration is unavailable. Funded reviews remain disabled until it is restored.",
-  );
+    document.getElementById("live-workspace")!.replaceChildren(message, retry);
+  } else
+    await setupPage(
+      "The public deployment configuration is unavailable. Funded reviews remain disabled until it is restored.",
+    );
 }

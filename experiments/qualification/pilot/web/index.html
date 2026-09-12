@@ -3,283 +3,468 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Review Pass — qualified reviews, private reports</title>
+    <meta name="theme-color" content="#17150F" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="./assets/qualification-cutout.svg"
+    />
+    <meta
+      name="description"
+      content="Cutout: qualified reviewers, private reports. Post a task, fund the reward, and open a review only you can read."
+    />
+    <title>Cutout — Qualified work. Private by design.</title>
     <script type="module" src="/boot.ts"></script>
   </head>
-  <body data-role="client">
+  <body data-role="client" data-view="tasks">
     <a class="skip" href="#main">Skip to your workspace</a>
-    <div class="experiment" id="environment">
-      CONNECTING TO CONFIGURED NETWORK
-    </div>
-    <header>
-      <a class="brand" href="/">REVIEW<span>PASS↗</span></a>
-      <p>Your qualification. Your wallet. Your work.</p>
-      <button id="connect">Connect wallet</button>
-    </header>
-    <main id="main">
-      <section class="intro">
-        <p class="eyebrow">QUALIFIED PEOPLE. PRIVATE REPORTS. FUNDED WORK.</p>
-        <h1>
-          Commission a second review.<br /><em>Keep the report private.</em>
-        </h1>
-        <p>
-          Set a scope and fund the reward. A reviewer proves their qualification
-          without sharing a certificate identifier. You inspect the encrypted
-          report, then approve payment.
-        </p>
-        <div class="role-switch" aria-label="Choose your role">
-          <button id="start-client" data-role="client" aria-pressed="true">
-            I need a review <span>Scope → fund → approve</span>
-          </button>
-          <button id="start-reviewer" data-role="reviewer" aria-pressed="false">
-            I want to review <span>Qualify → deliver → get paid</span>
-          </button>
-        </div>
-      </section>
-      <section class="journey" id="journey" aria-labelledby="journey-title">
-        <div>
-          <p class="eyebrow" id="journey-role">YOUR CLIENT WORKSPACE</p>
-          <h2 id="journey-title">Connect your payment wallet</h2>
-          <p id="journey-text">
-            Follow the steps to commission your first review.
-          </p>
-          <button id="next-step">Get started</button>
-        </div>
-        <ol id="readiness" aria-label="Setup progress"></ol>
-      </section>
-      <details class="help-panel" id="funding-help">
-        <summary>Wallet, test funds and network help</summary>
-        <p>
-          Use an extension wallet on desktop or open this page in your wallet’s
-          built-in browser on mobile. A normal mobile browser may not expose a
-          wallet.
-        </p>
-        <p>
-          <a
-            href="https://metamask.io/download"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Install a wallet</a
-          >
-        </p>
-        <div id="fuji-help">
-          <p>
-            <a
-              href="https://build.avax.network/academy/blockchain/x402-payment-infrastructure/04-x402-on-avalanche/02-network-setup"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Set up Fuji and get test AVAX</a
+    <div class="cutout-shell">
+      <aside class="cutout-rail" aria-label="Cutout navigation">
+        <a class="brand-wordmark" href="/" aria-label="Cutout home"
+          ><svg viewBox="0 0 360 100" role="img" aria-label="Cutout">
+            <defs>
+              <mask id="wordmark-cut">
+                <rect width="360" height="100" fill="white" />
+                <circle cx="166" cy="44" r="9" fill="black" />
+                <path d="M150 72C150 55 182 55 182 72Z" fill="black" />
+              </mask>
+            </defs>
+            <text
+              x="0"
+              y="78"
+              font-family="Archivo,sans-serif"
+              font-size="88"
+              font-weight="800"
+              letter-spacing="-5"
+              fill="currentColor"
+              mask="url(#wordmark-cut)"
             >
-            ·
-            <a
-              href="https://faucet.circle.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Get test USDC</a
+              Cutout
+            </text>
+          </svg></a
+        >
+        <div class="rail-portrait" aria-hidden="true">
+          <svg viewBox="0 0 160 180">
+            <path
+              d="M8 24V8h16M136 8h16v16M152 156v16h-16M24 172H8v-16"
+              fill="none"
+              stroke="currentColor"
+            />
+            <g class="portrait-person">
+              <circle cx="80" cy="59" r="27" />
+              <path d="M24 151c0-42 25-63 56-63s56 21 56 63Z" />
+            </g>
+            <circle class="portrait-hole" cx="80" cy="59" r="11" />
+          </svg>
+        </div>
+        <p class="rail-caption" id="rail-caption">Make room for good work.</p>
+        <nav class="rail-nav">
+          <button data-ui data-view="tasks" aria-current="page">
+            <span aria-hidden="true">⌑</span> Tasks</button
+          ><button data-ui data-view="activity">
+            <span aria-hidden="true">↳</span> Activity</button
+          ><button data-ui data-view="help">
+            <span aria-hidden="true">⊕</span> Your workspace
+          </button>
+        </nav>
+        <div class="rail-bottom">
+          <button data-ui id="try-demo" class="rail-demo">
+            Try the demo <span aria-hidden="true">↗</span>
+          </button>
+          <p>No wallet needed.<br />A complete guided review.</p>
+          <span class="rail-network"><i></i> Avalanche Fuji</span
+          ><small>Testnet edition / ETHRome 2026</small>
+        </div>
+      </aside>
+      <main class="cutout-main" id="main">
+        <div class="cutout-topbar">
+          <div class="role-switch" aria-label="Choose your role">
+            <button id="start-client" data-role="client" aria-pressed="true">
+              Client</button
+            ><button
+              id="start-reviewer"
+              data-role="reviewer"
+              aria-pressed="false"
             >
-          </p>
-          <p>
-            Keep test AVAX for gas and test USDC for rewards. Refresh balances
-            after using a faucet. Faucets can require a sign-in or challenge.
-          </p>
-        </div>
-        <p id="network-help"></p>
-      </details>
-      <details class="help-panel reviewer-only" id="reviewer-help">
-        <summary>How do I qualify for a review?</summary>
-        <p>
-          This pilot trusts one test issuer. The issuer gives you a credential
-          for the technical-review class. It does not prove that a report is
-          correct: the client evaluates the work.
-        </p>
-        <p id="prover-help">
-          Current setup: bring your issuer-provided credential and holder file,
-          and run the local prover with the public setup. A team member must
-          provision these before a first reviewer test. Do not upload those
-          private files to a website or send them in chat.
-        </p>
-        <p>
-          A proof is specific to the task and your wallet. An old proof or a
-          revoked qualification cannot be reused for a new acceptance.
-        </p>
-      </details>
-      <div id="notice" role="status" aria-live="polite"></div>
-      <section class="discovery reviewer-only" id="opportunity-section">
-        <div class="section-top">
-          <h2>Opportunity board</h2>
-          <button id="refresh-board" class="quiet">Recheck listings</button>
-        </div>
-        <p id="discovery-status" class="fine" role="status">
-          Connecting to Arkiv…
-        </p>
-        <div class="actions">
-          <label
-            >Minimum reward
-            <input id="minimum-reward" inputmode="decimal" value="0" /></label
-          ><button id="filter-board">Apply filter</button>
-        </div>
-        <p id="discovery-change" class="fine" role="status"></p>
-        <div id="opportunities"></div>
-      </section>
-      <details class="device-settings">
-        <summary>Private report settings</summary>
-        <section class="device">
-          <div>
-            <p class="eyebrow">THIS WALLET / THIS DEVICE</p>
-            <h2 id="wallet">Connect to begin</h2>
-            <p id="key-status">
-              No wallet is connected. No private key is held by the server.
-            </p>
-          </div>
-          <div class="actions">
-            <button id="register" disabled>Enable private reports</button
-            ><button id="rotate" disabled class="quiet">
-              Rotate device key</button
-            ><button id="revoke-key" disabled class="quiet">
-              Revoke encryption key
+              Reviewer
             </button>
           </div>
-        </section>
-        <section class="storage" id="storage-settings">
-          <p id="storage-status" class="fine" role="status">
-            Checking document storage…
-          </p>
-          <button id="connect-storage" class="quiet">Connect Swarm ID</button>
-        </section>
-      </details>
-      <div class="workspace">
-        <section>
-          <div class="section-top">
-            <h2 id="activity-title">Local demo activity</h2>
-            <button id="refresh" class="quiet">Refresh chain state</button>
+          <div class="topbar-wallet">
+            <span class="testnet-label">Test assets only</span
+            ><button id="connect">Connect wallet</button>
           </div>
-          <div id="jobs"></div>
+        </div>
+        <section class="intro workspace-heading">
+          <div>
+            <p class="eyebrow" id="view-caption">
+              A SECOND SET OF EYES. ON YOUR TERMS.
+            </p>
+            <h1 id="workspace-title">
+              Good work.<br /><em>Less exposure.</em>
+            </h1>
+            <p id="workspace-description">
+              Hire a qualified reviewer. Keep their credential details private,
+              and the report between the two of you.
+            </p>
+            <div class="intro-actions">
+              <button data-ui id="post-task">Post a task</button
+              ><button data-ui id="intro-demo" class="quiet">
+                See how Cutout works
+              </button>
+            </div>
+          </div>
+          <div class="workspace-art" aria-hidden="true">
+            <svg viewBox="0 0 240 220">
+              <path
+                d="M24 22h155l35 34v144H24Z"
+                fill="#E0D3B2"
+                stroke="#17150F"
+              />
+              <path d="M179 22v34h35" fill="none" stroke="#17150F" />
+              <path
+                d="M38 174h160M38 184h89"
+                stroke="#9A907A"
+                stroke-dasharray="4 5"
+              />
+              <circle cx="118" cy="80" r="27" fill="#17150F" />
+              <path d="M63 155c0-40 24-59 55-59s55 19 55 59Z" fill="#17150F" />
+              <circle cx="118" cy="80" r="11" fill="#E0D3B2" />
+              <path
+                d="M15 12h14M15 12v14M207 207h16v-16"
+                fill="none"
+                stroke="#17150F"
+              />
+              <circle cx="182" cy="157" r="26" fill="#F04E23" />
+              <path
+                d="m169 157 9 9 18-20"
+                stroke="#17150F"
+                stroke-width="3"
+                fill="none"
+              /></svg
+            ><span>Keep the qualification.<br />Cut out the identifier.</span>
+          </div>
         </section>
-        <aside class="client-only" id="commission" tabindex="-1">
-          <section class="disclosure">
-            <p class="eyebrow">COMMISSION A REVIEW</p>
-            <h2>Commission a review.</h2>
-            <p class="fine">
-              Start with one specific code change or question. The scope is
-              public; the delivered report is private. This pilot uses a test
-              qualification issuer and valueless test assets.
-            </p>
-            <label
-              >Task title<input
-                id="task-title"
-                maxlength="100"
-                value="Review withdrawal authorization"
-            /></label>
-            <label
-              >Public scope and acceptance criteria<textarea
-                id="task-scope"
-                maxlength="4000"
-                rows="5"
-              >
-Review the public withdrawal authorization flow. Identify permission bypasses, cite the affected functions, and include a reproducible test for each finding. Do not include secrets or private repository access.</textarea>
-            </label>
-            <label
-              >Reward<input id="task-reward" inputmode="decimal" value="10"
-            /></label>
-            <label class="fine"
-              ><input id="scope-public" type="checkbox" /> This scope is safe to
-              publish. Only the completed report is encrypted.</label
-            >
-            <details class="advanced">
-              <summary>Timing and discovery options</summary>
-              <p class="fine">
-                Default: one hour each for acceptance, delivery and client
-                review. The discovery listing lasts about one minute when
-                published.
+        <section
+          id="cutout-demo"
+          class="cutout-demo"
+          hidden
+          aria-label="Guided Cutout demo"
+        ></section>
+        <div id="live-workspace">
+          <section
+            class="journey"
+            id="journey"
+            data-screen="tasks"
+            aria-labelledby="journey-title"
+          >
+            <div>
+              <p class="eyebrow" id="journey-role">YOUR CLIENT WORKSPACE</p>
+              <h2 id="journey-title">Connect your payment wallet</h2>
+              <p id="journey-text">
+                Follow the steps to commission your first review.
               </p>
-              <label
-                >Accept within (minutes)<input
-                  id="accept-minutes"
-                  type="number"
-                  min="2"
-                  max="10080"
-                  value="60"
-              /></label>
-              <label
-                >Time to deliver after acceptance window (minutes)<input
-                  id="submit-minutes"
-                  type="number"
-                  min="2"
-                  max="10080"
-                  value="60"
-              /></label>
-              <label
-                >Client review window (minutes)<input
-                  id="review-minutes"
-                  type="number"
-                  min="2"
-                  max="10080"
-                  value="60"
-              /></label>
-              <label
-                >Discovery lease (Arkiv blocks)<input
-                  id="lease-blocks"
-                  type="number"
-                  min="3"
-                  max="43200"
-                  value="30"
-              /></label>
-              <p class="fine">
-                After funding, publish a lease from the same client wallet on
-                Arkiv. A 30-block lease lasts about a minute. Expiry removes the
-                listing; it does not cancel the escrow.
-              </p>
+              <button id="next-step">Get started</button>
+            </div>
+            <details class="setup-progress">
+              <summary>Wallet &amp; storage readiness</summary>
+              <ol id="readiness" aria-label="Setup progress"></ol>
             </details>
-            <button id="mint" disabled class="quiet">Get 1,000 test qUSD</button
-            ><button id="create" disabled>Fund this review</button>
+          </section>
+          <details class="help-panel" id="funding-help" data-screen="help">
+            <summary>Wallet, test funds and network help</summary>
+            <p>
+              Use an extension wallet on desktop or open this page in your
+              wallet’s built-in browser on mobile. A normal mobile browser may
+              not expose a wallet.
+            </p>
+            <p>
+              <a
+                href="https://metamask.io/download"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Install a wallet</a
+              >
+            </p>
+            <div id="fuji-help">
+              <p>
+                <a
+                  href="https://build.avax.network/academy/blockchain/x402-payment-infrastructure/04-x402-on-avalanche/02-network-setup"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Set up Fuji and get test AVAX</a
+                >
+                ·
+                <a
+                  href="https://faucet.circle.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Get test USDC</a
+                >
+              </p>
+              <p>
+                Keep test AVAX for gas and test USDC for rewards. Refresh
+                balances after using a faucet. Faucets can require a sign-in or
+                challenge.
+              </p>
+            </div>
+            <p id="network-help"></p>
+          </details>
+          <details
+            class="help-panel reviewer-only"
+            id="reviewer-help"
+            data-screen="help"
+          >
+            <summary>How do I qualify for a review?</summary>
+            <p>
+              This pilot trusts one test issuer. The issuer gives you a
+              credential for the technical-review class. It does not prove that
+              a report is correct: the client evaluates the work.
+            </p>
+            <p id="prover-help">
+              For live work, first receive a test credential from the team.
+              Select your two private credential files on a task; Cutout
+              generates the proof in this browser. No command line is needed. To
+              explore without enrollment, choose “Try the demo”.
+            </p>
+            <p>
+              A proof is specific to the task and your wallet. An old proof or a
+              revoked qualification cannot be reused for a new acceptance.
+            </p>
+          </details>
+          <div id="notice" role="status" aria-live="polite"></div>
+          <section
+            class="discovery reviewer-only"
+            id="opportunity-section"
+            data-screen="tasks"
+          >
+            <div class="section-top">
+              <h2>Find a task</h2>
+              <button id="refresh-board" class="quiet">Refresh</button>
+            </div>
+            <p id="discovery-status" class="fine" role="status">
+              Connecting to Arkiv…
+            </p>
+            <div class="actions">
+              <label
+                >Minimum reward
+                <input
+                  id="minimum-reward"
+                  inputmode="decimal"
+                  value="0" /></label
+              ><button id="filter-board">Apply filter</button>
+            </div>
+            <p id="discovery-change" class="fine" role="status"></p>
+            <div id="opportunities"></div>
+          </section>
+          <details class="device-settings" data-screen="help">
+            <summary>Private reports & storage</summary>
+            <section class="device">
+              <div>
+                <p class="eyebrow">Your private workspace</p>
+                <h2 id="wallet">Connect to begin</h2>
+                <p id="key-status">
+                  No wallet is connected. No private key is held by the server.
+                </p>
+              </div>
+              <div class="actions">
+                <button id="register" disabled>Enable private reports</button
+                ><button id="rotate" disabled class="quiet">
+                  Rotate device key</button
+                ><button id="revoke-key" disabled class="quiet">
+                  Revoke encryption key
+                </button>
+              </div>
+            </section>
+            <section class="storage" id="storage-settings">
+              <div
+                id="swarm-connect-widget"
+                style="min-height: 48px; position: relative"
+              ></div>
+              <p id="storage-status" class="fine" role="status">
+                Checking document storage…
+              </p>
+              <button id="connect-storage" class="quiet">
+                Connect storage
+              </button>
+            </section>
+          </details>
+          <div class="workspace">
+            <section id="job-section" data-screen="activity">
+              <div class="section-top">
+                <h2 id="activity-title">Local demo activity</h2>
+                <button id="refresh" class="quiet">Refresh activity</button>
+              </div>
+              <div id="jobs"></div>
+            </section>
+            <aside
+              class="client-only"
+              id="commission"
+              data-screen="tasks"
+              tabindex="-1"
+            >
+              <section class="disclosure">
+                <p class="eyebrow">THE PUBLIC BRIEF</p>
+                <h2>Post a task.</h2>
+                <p class="fine">
+                  A specific question gets a useful review. Your brief is
+                  public. The finished report is encrypted for you and the
+                  reviewer.
+                </p>
+                <label
+                  >Task title<input
+                    id="task-title"
+                    maxlength="100"
+                    value="Review withdrawal authorization"
+                /></label>
+                <label
+                  >What should the reviewer investigate?<textarea
+                    id="task-scope"
+                    maxlength="4000"
+                    rows="5"
+                  >
+Review the public withdrawal authorization flow. Identify permission bypasses, cite the affected functions, and include a reproducible test for each finding. Do not include secrets or private repository access.</textarea>
+                </label>
+                <label
+                  >Reward (test USDC)<input
+                    id="task-reward"
+                    inputmode="decimal"
+                    value="10"
+                /></label>
+                <label class="fine"
+                  ><input id="scope-public" type="checkbox" /> This scope is
+                  safe to publish. Only the completed report is
+                  encrypted.</label
+                >
+                <details class="advanced">
+                  <summary>Timing and discovery options</summary>
+                  <p class="fine">
+                    Default: one hour each for acceptance, delivery and client
+                    review. The discovery listing lasts about one minute when
+                    published.
+                  </p>
+                  <label
+                    >Accept within (minutes)<input
+                      id="accept-minutes"
+                      type="number"
+                      min="2"
+                      max="10080"
+                      value="60"
+                  /></label>
+                  <label
+                    >Time to deliver after acceptance window (minutes)<input
+                      id="submit-minutes"
+                      type="number"
+                      min="2"
+                      max="10080"
+                      value="60"
+                  /></label>
+                  <label
+                    >Client review window (minutes)<input
+                      id="review-minutes"
+                      type="number"
+                      min="2"
+                      max="10080"
+                      value="60"
+                  /></label>
+                  <label
+                    >Discovery lease (Arkiv blocks)<input
+                      id="lease-blocks"
+                      type="number"
+                      min="3"
+                      max="43200"
+                      value="30"
+                  /></label>
+                  <p class="fine">
+                    After funding, publish a lease from the same client wallet
+                    on Arkiv. A 30-block lease lasts about a minute. Expiry
+                    removes the listing; it does not cancel the escrow.
+                  </p>
+                </details>
+                <button id="mint" hidden disabled class="quiet">
+                  Get 1,000 test qUSD</button
+                ><button id="create" disabled>Fund & post task</button>
+                <p class="fine">
+                  The client approves completed work or disputes it before the
+                  review deadline. A timely submission can claim payment after
+                  that deadline unless disputed. The configured arbitrator
+                  resolves disputes.
+                </p>
+              </section>
+              <section
+                class="issuer-card task-receipt"
+                aria-label="Task preview"
+              >
+                <p class="eyebrow">YOUR TASK / BEFORE THE CUT</p>
+                <svg
+                  class="receipt-portrait"
+                  viewBox="0 0 120 120"
+                  aria-hidden="true"
+                >
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-dasharray="5 4"
+                  >
+                    <circle cx="60" cy="35" r="20" />
+                    <path d="M20 104c0-31 18-48 40-48s40 17 40 48Z" />
+                  </g>
+                </svg>
+                <h3 id="preview-title">Review withdrawal authorization</h3>
+                <p class="preview-reward">
+                  <strong id="preview-reward">10</strong> <span>test USDC</span>
+                </p>
+                <span class="receipt-stamp">Draft · not funded</span>
+                <p class="fine">
+                  One qualified reviewer.<br />One report, encrypted for two.
+                </p>
+                <p class="eyebrow">Public brief. Private report.</p>
+                <p class="fine">
+                  Issuer, qualification class, deadline, payment address and
+                  assignment are public. Credential identifier and holder secret
+                  remain inside your local prover. Reusing a wallet links
+                  assignments.
+                </p>
+                <p class="fine">
+                  Device-key bindings and encrypted recipient metadata are
+                  public. Revoking a key stops new encryption to it; it cannot
+                  recall old documents.
+                </p>
+              </section>
+            </aside>
+          </div>
+          <details class="boundary" id="receipts" data-screen="activity">
+            <summary>Wallet transaction receipts</summary>
+            <ol id="transactions"></ol>
             <p class="fine">
-              The client approves completed work or disputes it before the
-              review deadline. A timely submission can claim payment after that
-              deadline unless disputed. The configured arbitrator resolves
-              disputes.
+              A sent transaction may still settle after a timeout. Check its
+              hash before retrying.
+            </p>
+          </details>
+          <section class="boundary protocol-notes" data-screen="help">
+            <h2>What this version can do</h2>
+            <p>
+              Cutout currently accepts credentials from one test issuer and uses
+              an experimental Groth16 setup. Qualification proves eligibility,
+              not the quality of a report. Private credential files selected for
+              browser proving stay in a local worker. Only the resulting public
+              proof is submitted to the contract. Keep your original files for
+              recovery; the app does not save them.
+            </p>
+            <p>
+              Private document keys persist in this browser profile. Other
+              devices need their own registered key; losing all copies of an old
+              private key can lose access to older documents. Keep this browser
+              profile to retain access to your private reports.
             </p>
           </section>
-          <section class="issuer-card">
-            <p class="eyebrow">WHAT GETS DISCLOSED</p>
-            <p class="fine">
-              Issuer, qualification class, deadline, payment address and
-              assignment are public. Credential identifier and holder secret
-              remain inside your local prover. Reusing a wallet links
-              assignments.
-            </p>
-            <p class="fine">
-              Device-key bindings and encrypted recipient metadata are public.
-              Revoking a key stops new encryption to it; it cannot recall old
-              documents.
-            </p>
-          </section>
-        </aside>
-      </div>
-      <details class="boundary" id="receipts">
-        <summary>Wallet transaction receipts</summary>
-        <ol id="transactions"></ol>
-        <p class="fine">
-          A sent transaction may still settle after a timeout. Check its hash
-          before retrying.
-        </p>
-      </details>
-      <section class="boundary">
-        <h2>About this test deployment</h2>
-        <p>
-          No issuer or client adoption is claimed. The proof uses a local test
-          Groth16 setup. Private credential files selected for browser proving
-          stay in a local worker. Only the resulting public proof is submitted
-          to the contract. Keep your original files for recovery; the app does
-          not save them.
-        </p>
-        <p>
-          Private document keys persist in this browser profile. Other devices
-          need their own registered key; losing all copies of an old private key
-          can lose access to older documents. Public sponsor writes remain
-          separately gated.
-        </p>
-      </section>
-    </main>
-    <footer>REVIEW PASS / WALLET PILOT <span id="contracts"></span></footer>
+        </div>
+        <footer>
+          <span>Cutout / Qualified work. Private by design.</span
+          ><span id="contracts"></span
+          ><span class="experiment" id="environment">Connecting to Fuji…</span>
+        </footer>
+      </main>
+    </div>
   </body>
 </html>

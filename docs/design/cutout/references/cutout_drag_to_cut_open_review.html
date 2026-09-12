@@ -1,0 +1,74 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+.ca{font-family:'Archivo',sans-serif;color:#17150F}
+.cm{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B6455}
+.cbtn{font-family:'Archivo',sans-serif;font-size:13px;font-weight:500;background:#F04E23;color:#FFF6EE;border:1px solid #17150F;border-radius:0;padding:8px 13px;cursor:pointer}
+.cbtn:hover{background:#D63F17}
+.cbtn2{font-family:'Archivo',sans-serif;font-size:13px;font-weight:500;background:transparent;color:#17150F;border:1px solid #17150F;border-radius:0;padding:8px 13px;cursor:pointer}
+.cbtn2:hover{background:#E8DFC8}
+#track{touch-action:none}
+#grip{touch-action:none;cursor:grab}
+#grip:active{cursor:grabbing}
+</style>
+<h2 class="sr-only">Interactive mockup: dragging a pair of scissors along a perforated line cuts open a sealed encrypted review.</h2>
+<div style="background:var(--surface-1);border-radius:12px;padding:16px">
+<div style="background:#E8D9B8;padding:18px 18px 20px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+<div><div class="cm">RT-0402 · Assay Guild</div>
+<div class="ca" style="font-size:21px;font-weight:700;letter-spacing:-.03em">Withdrawal queue accounting</div></div>
+<span class="cm" id="state">sealed to your key · 41 KB</span>
+</div>
+
+<div style="position:relative;background:#FFF6EE;border:1px solid #17150F;overflow:hidden">
+<div style="padding:14px 16px 16px">
+<div class="cm" style="margin-bottom:6px">decrypted locally · 6 findings · 1 critical</div>
+<div class="ca" style="font-size:14px;line-height:1.6;max-width:62ch">Critical: the partial-exit path rounds the shortfall toward the pool, so a caller can repeat small exits to drain the rounding dust. Recommend rounding toward the queue and adding an invariant test.</div>
+<div class="ca" style="font-size:14px;line-height:1.6;max-width:62ch;margin-top:8px;color:#3D382C">Five lower-severity findings follow, covering event ordering, a stale comment on the escape hatch, and three gas notes.</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="cbtn" id="pay">Approve and pay 3,000 USDC</button><button class="cbtn2">Dispute delivery</button></div>
+<div class="cm" id="paid" style="margin-top:8px"></div>
+</div>
+<div id="cover" style="position:absolute;inset:0;background:#E0D3B2;display:flex;align-items:center;justify-content:center">
+<svg width="90" height="70" viewBox="0 0 90 70" aria-hidden="true"><rect x="6" y="10" width="78" height="50" fill="#F04E23" stroke="#17150F"/><path d="M6 10 L45 40 L84 10" fill="none" stroke="#17150F"/></svg>
+</div>
+<div id="edge" style="position:absolute;top:0;bottom:0;width:2px;background:#17150F;opacity:0"></div>
+</div>
+
+<div id="track" style="position:relative;height:46px;margin-top:10px;background:#F2ECDD;border:1px solid #C8BFA4">
+<div style="position:absolute;left:14px;right:14px;top:22px;height:1px;background:repeating-linear-gradient(90deg,#9A907A 0 5px,transparent 5px 10px)"></div>
+<div id="fill" style="position:absolute;left:14px;top:22px;width:0;height:1px;background:#F04E23"></div>
+<div id="grip" style="position:absolute;left:14px;top:7px;width:30px;height:30px;margin-left:-15px;background:#17150F;display:flex;align-items:center;justify-content:center">
+<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#E8D9B8" stroke-width="1.8" aria-hidden="true"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.1 15.9 19 4 M15.9 15.9 5 4"/></svg>
+</div>
+<span class="cm" id="hint" style="position:absolute;right:12px;top:15px">drag to cut</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px">
+<button class="cbtn2" id="kb" style="padding:5px 10px;font-size:12px">Cut without dragging</button>
+<span class="cm">Your key decrypts it in the browser. Nothing leaves this tab.</span>
+</div>
+<div id="chads" style="position:relative;height:0"></div>
+</div>
+</div>
+<script>
+const $=i=>document.getElementById(i),track=$('track'),grip=$('grip'),cover=$('cover'),fill=$('fill'),edge=$('edge');
+let p=0,done=false;
+function set(v){p=Math.max(0,Math.min(1,v));
+const L=track.clientWidth-28;grip.style.left=(14+L*p)+'px';fill.style.width=(L*p)+'px';
+cover.style.clipPath='polygon('+(p*100).toFixed(1)+'% 0,100% 0,100% 100%,'+(p*100).toFixed(1)+'% 100%)';
+edge.style.left='calc('+(p*100).toFixed(1)+'% - 1px)';edge.style.opacity=p>0&&p<1?1:0;
+if(p>0&&!done)$('state').textContent='cutting…';
+if(p>=1&&!done){done=true;$('state').textContent='opened '+new Date().toLocaleTimeString();$('hint').textContent='opened';grip.style.background='#F04E23';chads()}}
+function chads(){const c=$('chads');for(let i=0;i<14;i++){const d=document.createElement('div');
+d.style.cssText='position:absolute;width:'+(3+Math.random()*5).toFixed(0)+'px;height:'+(2+Math.random()*4).toFixed(0)+'px;background:#17150F;left:'+(Math.random()*94).toFixed(0)+'%;top:-6px;transform:rotate('+(Math.random()*90-45).toFixed(0)+'deg);transition:transform 900ms ease-in, opacity 900ms';
+c.appendChild(d);setTimeout(()=>{d.style.transform='translateY('+(20+Math.random()*26).toFixed(0)+'px) rotate('+(Math.random()*300-150).toFixed(0)+'deg)';d.style.opacity=0},20+i*35);
+setTimeout(()=>d.remove(),1400)}}
+let drag=false;
+const at=e=>{const r=track.getBoundingClientRect();return((e.clientX-r.left-14)/(r.width-28))};
+grip.addEventListener('pointerdown',e=>{if(done)return;drag=true;grip.setPointerCapture(e.pointerId)});
+grip.addEventListener('pointermove',e=>{if(drag)set(at(e))});
+grip.addEventListener('pointerup',()=>{drag=false;if(!done&&p<1)set(0)});
+track.addEventListener('pointerdown',e=>{if(done||e.target===grip)return;set(at(e))});
+$('kb').onclick=()=>{if(done)return;let v=p;const t=setInterval(()=>{v+=0.06;set(v);if(v>=1)clearInterval(t)},16)};
+$('pay').onclick=()=>{if(!done){$('paid').textContent='Cut it open first. You cannot approve a review you have not read.';return}
+$('paid').textContent='Paid. The reviewer keeps this credential for their next client.';$('pay').textContent='Paid 3,000 USDC'};
+set(0);
+</script>
