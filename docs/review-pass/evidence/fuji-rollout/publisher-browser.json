@@ -1,0 +1,15 @@
+{
+  "observedAt": "2026-09-12T14:00:55.505Z",
+  "site": "https://review-pass-ethrome-2026.vercel.app",
+  "status": "pending",
+  "checks": [
+    "Explicit publisher present and disabled without storage session",
+    "Both public metadata files HTTP200 and exact pinned hashes",
+    "Real Swarm ID initialization",
+    "No financial ABI or enabled public workflow",
+    "390px viewport no overflow",
+    "No browser exceptions"
+  ],
+  "uploads": 0,
+  "publicationStillRequired": true
+}

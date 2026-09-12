@@ -1,0 +1,18 @@
+{
+  "observedAt": "2026-09-12T14:05:55.087Z",
+  "scope": "Agent-controlled public rehearsal wallets; separate from user participant wallets",
+  "roles": {
+    "client": {
+      "address": "0x7259c94d93d83E539B57ba7A360cB06Bd9b53a60",
+      "testAvax": "0.05",
+      "testUsdc": "0",
+      "testGlm": "0"
+    },
+    "reviewer": {
+      "address": "0x7292C1652e831031175947daEcC7F85bF86381A1",
+      "testAvax": "0.05",
+      "testUsdc": "0",
+      "testGlm": "0"
+    }
+  }
+}

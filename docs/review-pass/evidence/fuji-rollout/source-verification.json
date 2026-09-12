@@ -1,0 +1,36 @@
+{
+  "observedAt": "2026-09-12T14:10:07.892Z",
+  "chainId": 43113,
+  "contracts": {
+    "verifier": {
+      "matchId": "49940853",
+      "creationMatch": "exact_match",
+      "runtimeMatch": "exact_match",
+      "verifiedAt": "2026-09-12T14:03:19Z",
+      "match": "exact_match",
+      "chainId": "43113",
+      "address": "0x9C1293e7E499D56FDc52186E7624Dcfa04dfCBD1",
+      "sourceBrowser": "https://repo.sourcify.dev/43113/0x9c1293e7e499d56fdc52186e7624dcfa04dfcbd1"
+    },
+    "keyRegistry": {
+      "matchId": "49941299",
+      "creationMatch": "exact_match",
+      "runtimeMatch": "exact_match",
+      "verifiedAt": "2026-09-12T14:04:07Z",
+      "match": "exact_match",
+      "chainId": "43113",
+      "address": "0x181Db4e48A0e76FDc50101085aC3b831464792c1",
+      "sourceBrowser": "https://repo.sourcify.dev/43113/0x181db4e48a0e76fdc50101085ac3b831464792c1"
+    },
+    "escrow": {
+      "matchId": "49942389",
+      "creationMatch": "match",
+      "runtimeMatch": "exact_match",
+      "verifiedAt": "2026-09-12T14:06:50Z",
+      "match": "exact_match",
+      "chainId": "43113",
+      "address": "0xB431E570d506168711cC1F9f91E325b3114c62af",
+      "sourceBrowser": "https://repo.sourcify.dev/43113/0xb431e570d506168711cc1f9f91e325b3114c62af"
+    }
+  }
+}

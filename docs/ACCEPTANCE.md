@@ -55,3 +55,12 @@ The research pass reproduced approval side-channel and cross-wallet plaintext de
 ## Review Pass public Swarm connection — September 12
 
 User uploaded a generated non-sensitive connection note through Review Pass on Vercel using sponsor-funded Swarm ID. The first independent read failed because the configured gateway website returned HTML200. Corrected the retrieval API origin and CSP, preserving SHA-256 verification. The application adapter and fresh Chromium at the production origin now retrieve the actual142bytes with the exact expected digest. This verifies public storage connectivity only; encrypted reports, issuer snapshot publication and the Fuji lifecycle remain pending.19storage/read-API tests passed,1optional live test skipped; TypeScript, public build and hosted setup browser checks passed. [Durable evidence](review-pass/evidence/swarm-public/README.md).
+
+
+## Review Pass public contract rollout — September12
+
+Clean sourcea9d0181 deployed the verifier, wallet-owned encryption-key registry and canonical-Fuji-USDC escrow, with three finalized success receipts and post-deployment authority/code checks. All three have exact runtime source verification on Sourcify. The issuer root and arbitrator are controlled by the disclosed team deployer. Separate agent rehearsal client/reviewer wallets each received0.05testAVAX; testUSDC/ArkivGLM transfer remains required. [Deployment, source and funding evidence](review-pass/evidence/fuji-rollout/README.md).
+
+Chromium generated a real qualification proof with the matching experimental public setup; an eth_call to the deployed Fuji verifier accepted it and rejected an altered recipient. This used a synthetic unfunded context and sent0transactions; it is not funded escrow acceptance. [Replayable crypto evidence](review-pass/evidence/fuji-crypto-probe/README.md).
+
+Hosted publisher now exposes only a reviewed public whole-snapshot upload, exact hash checks and independent retrieval. The user must perform its explicit click from the connected Swarm ID session. Public metadata static hashes, capability gating, real iframe initialization and390px layout were verified in Chromium.6publisher tests,19storage/read-API tests,18contract tests, TypeScript and pending build pass;1optional network test skipped. Active build/finalizer actually reject absent/wrong snapshot references without modifying deployment. The funded UI remains disabled; public payment/report/Arkiv lifecycle is not yet complete. The guarded Arkiv runner is prepared, with source/readonly checks only.

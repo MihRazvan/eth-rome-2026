@@ -1,0 +1,27 @@
+{
+  "isJobCompleted": true,
+  "verificationId": "adc6e449-9930-416d-90a1-d06965e2126c",
+  "jobStartTime": "2026-09-12T14:06:49Z",
+  "jobFinishTime": "2026-09-12T14:06:50Z",
+  "compilationTime": "293",
+  "externalVerifications": {
+    "etherscan": {
+      "error": "Daily limit of 500 source code submissions reached"
+    },
+    "routescan": {
+      "verificationId": "941b898b-9aa7-5a05-afc5-ea94c41de56e",
+      "statusUrl": "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan/api?module=contract&action=checkverifystatus&chainid=43113&guid=941b898b-9aa7-5a05-afc5-ea94c41de56e",
+      "explorerUrl": "https://routescan.io/address/0xB431E570d506168711cC1F9f91E325b3114c62af?chainid=43113",
+      "contractApiUrl": "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan/api?module=contract&action=getabi&chainid=43113&address=0xB431E570d506168711cC1F9f91E325b3114c62af"
+    }
+  },
+  "contract": {
+    "match": "exact_match",
+    "creationMatch": "match",
+    "runtimeMatch": "exact_match",
+    "chainId": "43113",
+    "address": "0xB431E570d506168711cC1F9f91E325b3114c62af",
+    "verifiedAt": "2026-09-12T14:06:50Z",
+    "matchId": "49942389"
+  }
+}
