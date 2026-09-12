@@ -6,7 +6,7 @@ Cutout lets a client fund a technical review in test USDC. A reviewer proves the
 
 [Open Cutout](https://cutout-ethrome-2026.vercel.app) · [Try the guided demo](https://cutout-ethrome-2026.vercel.app/?view=demo) · [Judge checklist](docs/review-pass/JUDGE-READINESS.md) · [Runbook](docs/review-pass/RUNBOOK.md) · [Design direction](docs/design/cutout/DIRECTION.md)
 
-[Teammate brief and judge demo guide](docs/CUTOUT-TEAM-BRIEF.md) explains the product, presentation sequence, real end-to-end test, and current limits.
+[Short manual test checklist](docs/CUTOUT-MANUAL-TEST.md) · [Teammate brief and judge demo guide](docs/CUTOUT-TEAM-BRIEF.md) explains the product, presentation sequence, real end-to-end test, and current limits.
 
 The guided demo requires no account. It uses actual browser encryption/decryption and explicitly simulates qualification, funding and payment. The live workspace uses the existing Fuji contracts and separate public storage/discovery integrations. The full funded public lifecycle remains a release gate; a walkthrough is not bounty evidence.
 

@@ -1,0 +1,22 @@
+{
+  "observedAt": "2026-09-12T16:01:01.034Z",
+  "wallets": [
+    {
+      "role": "client",
+      "address": "0x7259c94d93d83E539B57ba7A360cB06Bd9b53a60",
+      "testAVAX": "3.04986132199861322",
+      "testUSDC": "20",
+      "arkivGas": "0.1"
+    },
+    {
+      "role": "reviewer",
+      "address": "0x7292C1652e831031175947daEcC7F85bF86381A1",
+      "testAVAX": "0.04986132199861322",
+      "testUSDC": "0",
+      "arkivGas": "0"
+    }
+  ],
+  "nextJob": "0",
+  "snapshotHTTP": 200,
+  "scope": "Read-only network/account preflight. No transactions, uploads or credential data."
+}

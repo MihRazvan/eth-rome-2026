@@ -1,0 +1,78 @@
+{
+  "at": "2026-09-12T16:10:04.304Z",
+  "attempts": 2,
+  "notes": [
+    {
+      "attempt": 1,
+      "at": 1789229395334
+    },
+    {
+      "injected": "Deliberate established browser socket close",
+      "at": 1789229400335
+    },
+    {
+      "attempt": 2,
+      "at": 1789229401339
+    }
+  ],
+  "states": [
+    {
+      "status": "stopped",
+      "listings": [],
+      "removed": [],
+      "head": "null",
+      "at": 1789229395318
+    },
+    {
+      "status": "connecting",
+      "listings": [],
+      "removed": [],
+      "head": "null",
+      "at": 1789229395319
+    },
+    {
+      "status": "live",
+      "listings": [],
+      "removed": [],
+      "head": "360521",
+      "at": 1789229396209
+    },
+    {
+      "status": "live",
+      "listings": [],
+      "removed": [],
+      "head": "360521",
+      "at": 1789229396478
+    },
+    {
+      "status": "stale",
+      "listings": [],
+      "removed": [],
+      "head": "360523",
+      "reason": "Arkiv stream disconnected",
+      "at": 1789229400337
+    },
+    {
+      "status": "stale",
+      "listings": [],
+      "removed": [],
+      "head": "360523",
+      "reason": "Arkiv stream disconnected",
+      "at": 1789229401338
+    },
+    {
+      "status": "live",
+      "listings": [],
+      "removed": [],
+      "head": "360525",
+      "at": 1789229404292
+    },
+    {
+      "status": "stopped",
+      "listings": [],
+      "removed": [],
+      "head": "null",
+      "at": 1789229404304
+    }
+  ]
+}

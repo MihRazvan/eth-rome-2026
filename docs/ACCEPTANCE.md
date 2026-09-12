@@ -1,3 +1,11 @@
+# Technical follow-up before teammate manual review
+
+12 September 2026: deployed Arkiv recovery and client-visible listing receipts, source dfa6054. 16 listing and 26 journey/settlement/storage tests passed; 1 optional external browser test skipped; targeted TypeScript/build pass. Actual isolated Chromium with public WSS recovered deliberate initial failure and established disconnect. No public write/expiry/payment is claimed by those fault-injected tests. Current deployment and production browser observation: [follow-up evidence](design/cutout/evidence/release-followup/README.md). [Teammate's short checklist](CUTOUT-MANUAL-TEST.md).
+
+Wallets are funded and the public snapshot returns HTTP 200. Neither isolated Swarm role session was ready for uploads at the latest check; finalized nextJob was 0. Full public paid lifecycle/native expiry remains pending authenticated storage. Earlier evidence remains below with its original scope.
+
+---
+
 # Cutout — current design pass
 
 12 September 2026. Cutout is the new user-approved identity for Review Pass; previous EXIT ledgers below are historical.

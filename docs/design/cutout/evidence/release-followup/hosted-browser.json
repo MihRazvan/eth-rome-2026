@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-09-12T16:12:39.895Z",
+  "base": "https://cutout-ethrome-2026.vercel.app",
+  "checks": [
+    "Cutout branding, live task preview, distinct role/task/activity/settings navigation, in-flow official Swarm UI",
+    "Desktop walkthrough: invalid eligibility blocked; real AES-GCM encryption and drag-to-cut exact Unicode recovery; explicitly simulated payment; restart and live return",
+    "390px walkthrough and role navigation; keyboard decryption alternative; no horizontal overflow",
+    "Guided walkthrough stays available when live configuration cannot load"
+  ],
+  "errors": [],
+  "storageWrites": [],
+  "scope": "Read-only hosted workspace plus explicit browser simulation. No funded transaction, credential proof or Swarm upload performed."
+}

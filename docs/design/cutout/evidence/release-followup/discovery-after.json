@@ -1,0 +1,21 @@
+{
+  "recordedAt": "2026-09-12T16:12:44.220Z",
+  "base": "https://cutout-ethrome-2026.vercel.app",
+  "acknowledgedSubscriptions": [
+    "logs",
+    "newHeads"
+  ],
+  "distinctHeads": 7,
+  "entityNotifications": 14,
+  "queries": 16,
+  "states": [
+    "Arkiv live · observed block 360599",
+    "Arkiv live · observed block 360599",
+    "Arkiv live · observed block 360599",
+    "Arkiv live · observed block 360599",
+    "Arkiv live · observed block 360599",
+    "Arkiv live · observed block 360599"
+  ],
+  "errors": [],
+  "scope": "Real public WSS acknowledgements and healthy board observation. Entity traffic may belong to other applications. No Cutout publication, native expiry or funded settlement demonstrated."
+}
