@@ -1,0 +1,31 @@
+name: Verify qualification experiment
+on:
+  push:
+    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json']
+  pull_request:
+    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json']
+  workflow_dispatch:
+jobs:
+  proof-and-protocol:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.12.0
+          cache: npm
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.25.7
+          cache-dependency-path: experiments/qualification/prover/go.sum
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+      - run: npm ci
+      - run: go test -count=1 ./...
+        working-directory: experiments/qualification/prover
+      - run: sh experiments/qualification/security/run-probes.sh
+      - run: forge test --root experiments/qualification/contracts
+      - run: node --import tsx --test experiments/qualification/transport/adapters.test.ts experiments/qualification/transport/assignment.test.ts
+      - run: npx tsc --ignoreConfig --noEmit --target ES2022 --module ESNext --moduleResolution bundler --skipLibCheck --types node experiments/qualification/transport/*.ts
+      - run: node experiments/qualification/security/concurrency-probe.mjs --fixed
