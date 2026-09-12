@@ -1,3 +1,5 @@
+> **Cutout is the active product in this directory.** Start with the [current README](../../../README.md), [quickstart](../../../docs/cutout/QUICKSTART.md) and [architecture](../../../docs/cutout/ARCHITECTURE.md). The pilot notes below are historical; current public deployment and account-free storage supersede their access blockers.
+
 # Review Pass product continuation
 
 The current `review-pass/product` branch adds client-defined funded scope, Arkiv discovery, Swarm ID delivery and Fuji deployment preparation. Start with the [current product runbook](../../../docs/review-pass/RUNBOOK.md), [research](../../../docs/review-pass/README.md) and [acceptance](../../../docs/review-pass/BUILD.md). Its local port is18889;18888 below is the preserved earlier pilot.

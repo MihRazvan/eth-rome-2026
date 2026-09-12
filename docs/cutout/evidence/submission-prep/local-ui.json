@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-12T20:38:07.018Z",
+  "base": "http://127.0.0.1:18904",
+  "checks": [
+    "Desktop local UI walkthrough: actual encryption/decryption, simulated settlement",
+    "Mobile local UI walkthrough and keyboard open"
+  ],
+  "errors": [],
+  "writes": [],
+  "scope": "Bare Vite frontend, no API/backend, no onchain or Swarm writes"
+}

@@ -1,101 +1,102 @@
 # Cutout
 
-**Qualified work. Private by design.**
+![Cutout — Good work. Less exposure.](docs/cutout/assets/banner.svg)
 
-Cutout lets a client fund a technical review in test USDC. A reviewer proves their qualification is currently valid without exposing a reusable credential identifier, delivers an encrypted report, and receives payment after the client opens and approves it. Qualification is eligibility, not a guarantee of report quality. Wallets and payments remain public.
+**Hire a qualified reviewer. Keep their credential private. Pay for the work.**
 
-[Open Cutout](https://cutout-ethrome-2026.vercel.app) · [Try the guided demo](https://cutout-ethrome-2026.vercel.app/?view=demo) · [Judge checklist](docs/review-pass/JUDGE-READINESS.md) · [Runbook](docs/review-pass/RUNBOOK.md) · [Design direction](docs/design/cutout/DIRECTION.md)
+Cutout lets a team fund a technical review in USDC, require a private proof of issuer-approved qualification, and receive an encrypted report. The client opens the report and approves payment; Avalanche settles it. Wallets and payments remain public.
 
-[Judge walkthrough](docs/CUTOUT-JUDGE-TUTORIAL.md) · [Teammate end-to-end tutorial](docs/CUTOUT-MANUAL-TEST.md) · [Teammate brief and judge demo guide](docs/CUTOUT-TEAM-BRIEF.md) explains the product, presentation sequence, real end-to-end test, and current limits.
+[Open Cutout](https://cutout-ethrome-2026.vercel.app) · [Interactive demo](https://cutout-ethrome-2026.vercel.app/?view=demo) · [Project brief](PROJECT_BRIEF.md) · [Quickstart](docs/cutout/QUICKSTART.md) · [User flow](docs/cutout/USER-FLOW.md) · [Architecture](docs/cutout/ARCHITECTURE.md) · [Bounties](docs/cutout/BOUNTIES.md) · [Docs index](docs/README.md)
 
-The guided demo requires no account. It uses actual browser encryption/decryption and explicitly simulates qualification, funding and payment. The live workspace uses the existing Fuji contracts and separate public storage/discovery integrations. The full funded public lifecycle remains a release gate; a walkthrough is not bounty evidence.
+## Problem first
 
-**Storage is included in the public demo.** Cutout uses Swarm’s [official gateway upload path](https://github.com/ethersphere/bee-js#upload-via-swarm-gateway), which supplies postage without a user account. Reports are encrypted locally with AES-GCM and recipient HPKE before upload; independent retrieval must match SHA-256 before the app commits the reference. No Swarm login, drive purchase, recovery phrase or postage key is required. This is gateway-funded trial storage, not usage of the team’s gift drive; retention is not guaranteed, and users can export completed reports. The production next step is an operator-funded gateway with a stated retention policy.
+A team needs a second pair of eyes on a sensitive change: “Can an unauthorized wallet withdraw after this permissions update?” It wants an approved reviewer and a funded agreement. The reviewer should not have to publish a reusable credential identifier for every small engagement, and the resulting report should stay between the participants.
 
-Swarm ID is optional under the [supplied bounty brief](docs/review-pass/supplied-bounties.txt). We chose direct Bee HTTP uploads because Cutout already has wallet authorization and browser-held report keys; another identity account would add no required security property. The existing Swarm ID adapter and its provenance remain available for deployments that choose it.
+Cutout separates those responsibilities. An issuer approves the reviewer. A proof checks that approval without revealing the credential. The client evaluates the work. An escrow holds and pays the reward.
 
+The first use case is a focused technical review, not a replacement for a full security audit. External issuer partnerships and customer demand still need validation.
 
-Current targets: Avalanche / Team1 Track A, Arkiv Mission 02 / Mission 03 / Best Use (one Arkiv award per team), and Swarm. See the receipt-linked [acceptance ledger](docs/ACCEPTANCE.md) for what actually ran.
+## How it works
 
-Cutout is the active product on `review-pass/product`. The `review-pass` paths and protocol identifiers preserve existing deployed contracts, browser keys and provenance. Earlier EXIT work follows as historical material; its deployment status does not describe Cutout.
+1. **Get qualified.** The reviewer's browser creates a private holder secret and an enrollment request. The issuer approves the request and returns a signed credential. The secret stays with the reviewer.
+2. **Fund a task.** The client writes a public scope and locks test USDC on Avalanche Fuji. A separate Arkiv transaction lists the task for discovery.
+3. **Cut a proof.** The reviewer proves, in their browser, that the required credential is valid and unrevoked. The proof is bound to this task and wallet. Fuji verifies it when they accept.
+4. **Seal the report.** The browser encrypts the report for the client and reviewer, uploads ciphertext to Swarm, and checks retrieval. A Fuji transaction commits its reference and hash.
+5. **Open and pay.** The client retrieves and decrypts the report, then approves payment to the assigned reviewer.
 
----
+Read the [complete user flow](docs/cutout/USER-FLOW.md) for qualification issuance, wallet roles, deadlines and disputes.
 
-# Earlier project: EXIT ↗
+![Cutout workspace on desktop](docs/cutout/assets/application.png)
 
-**Sell your withdrawal. Get paid now. Let the buyer wait.**
+*Actual hosted application capture, 12 September 2026; the visible scope is an unfunded draft. For current deployment and verification scope, see [evidence](docs/cutout/EVIDENCE.md).*
 
-EXIT is testing a narrower opportunity: an owner whose liquidity needs changed **after entering a noncancellable withdrawal queue** can sell the existing claim to a buyer willing to wait. The [viability assessment](docs/viability/README.md) explains why ordinary BENQI exits and a generic liquid-token marketplace are weak launch choices. Commercial demand and independent buyer capital remain unverified.
+## Try it
 
-[Open Exit Check](https://exit-ethrome-2026.vercel.app/?check=1) to inspect a real Lido unstETH or standard ether.fi NFT on Ethereum, without connecting a wallet. It reports source state at one block and provides an optional calculation using your own assumptions. It does not trade native NFTs, publish bids or guarantee collection. Finalized claims point toward the source's collection workflow.
+**No setup:** the [guided demo](https://cutout-ethrome-2026.vercel.app/?view=demo) walks through a review in about three minutes. Browser encryption and decryption are real; qualification, funding and payment are explicitly simulated, and the walkthrough does not upload to Swarm.
 
-The separate local onchain product demonstrates public/private offers, exact payment, collection and residual resale using a disclosed test vault. [Open its labelled visual preview](https://exit-ethrome-2026.vercel.app/?preview=1). The static preview has no hosted settlement backend.
+**Real testnet work:** the [live workspace](https://cutout-ethrome-2026.vercel.app) uses deployed Fuji contracts, public Arkiv discovery and public Swarm storage. A paid review needs two wallet roles, test funds, registered browser report keys and an issuer-approved credential. Storage requires no customer Swarm account. Follow the [end-to-end test](docs/CUTOUT-MANUAL-TEST.md).
 
-## Inspect an actual claim
+**Run the frontend locally:**
 
 ```sh
+git clone --branch review-pass/product https://github.com/MihRazvan/eth-rome-2026.git
+cd eth-rome-2026
 npm ci
-npm run dev
-# Open http://127.0.0.1:5173/?check=1; no local chain or maker API needed.
-npm run inspect:claim -- lido 135118          # current public Ethereum read
-npm run inspect:claim -- etherfi 82520       # current public Ethereum read
-npm run research:economics                    # hypothetical, reproducible cost scenarios
+npx vite experiments/qualification/pilot/web --host 127.0.0.1 --port 18904 --strictPort
 ```
 
-NFT IDs in these commands are public research examples, not your assets. Age is not remaining wait; a source amount getter is not a simulated payout. RPC failures remain errors. No fixtures replace source reads. The optional CLI block argument requires an RPC with access to that historical state; public providers can reject older reads.
+Open **http://127.0.0.1:18904/?view=demo**. Requires Node 24.12+. This starts the UI walkthrough; the live workspace requires a configured backend. The [quickstart](docs/cutout/QUICKSTART.md) covers the full local chain/storage rehearsal and verification. Root `npm run dev` still starts the preserved EXIT application.
 
-## Run the real local product
+## Why these technologies
 
-Requires Node **24.12+**, npm, Foundry **1.5.1** (Forge/Anvil), and Chromium for browser tests.
+| Layer | Technology | Responsibility |
+| --- | --- | --- |
+| Settlement | **Avalanche Fuji + Solidity + test USDC** | Hold rewards, enforce proof-bound assignment, commit delivery and settle payment |
+| Discovery | **Arkiv Tiramisu** | Wallet-owned, queryable task listings with native expiry and WebSocket updates |
+| Documents | **Swarm / Bee HTTP** | Public scopes and issuer snapshots; recipient-encrypted reports |
+| Qualification | **gnark Groth16 on BN254, Go → WebAssembly** | Prove issuer approval and current nonrevocation locally; verify onchain |
+| Report privacy | **WebCrypto + HPKE** | Encrypt locally and wrap document keys separately for each recipient |
+| Product | **TypeScript + Vite; Vercel** | Cutout interface, browser proving worker and public read API |
 
-```sh
-npm ci
-npm run start:local
-```
+The [architecture](docs/cutout/ARCHITECTURE.md) maps each boundary to source. The [security model](docs/cutout/SECURITY.md) explains exactly what remains trusted or public.
 
-Open **http://127.0.0.1:5173**. This starts an isolated Anvil chain on 8547, deploys funded test contracts, starts the maker/discovery API on 8787, and starts the app. Ctrl+C stops the three child services. Logs/manifests are under `.runtime/local` and `.runtime/*.log`. It refuses occupied ports and never reuses a live manifest. A fresh start resets **local** demo records and chain only.
+## Bounty targets
 
-Browse first, then select **Seller** in Local test wallets. Portfolio → Get funds gives valueless test USDC; Create originates a genuinely backed 10,000-unit claim. Sell a withdrawal → Request fresh offers → Review sale. After purchase, select the acquiring maker in the local wallet selector, inspect Portfolio, collect and withdraw. The local chain mines timed blocks as well as transactions, so payouts mature while you wait. Source installments release 40% after 60 seconds and the remainder after 120 seconds. These are disclosed test-source timers, not accelerated BENQI time.
+| Sponsor | Entry | Where to inspect |
+| --- | --- | --- |
+| Avalanche / Team1 | Track A — stablecoin payments for qualified work | [Integration and demo proof](docs/cutout/bounties/AVALANCHE.md) |
+| Arkiv | Mission 02, Mission 03; Best Use consideration | [Queries, expiry, subscriptions and feedback](docs/cutout/bounties/ARKIV.md) |
+| Swarm | Useful decentralized document storage | [Encryption, upload and retrieval](docs/cutout/bounties/SWARM.md) |
 
-Private Offers generates a separate non-extractable browser key and wallet-signed certificate, registers its active hash onchain, and encrypts bids before byte upload. A buyer can submit a custom private price from Claim detail → Make an offer. Seller reconnect/reload preserves keys in IndexedDB; another device cannot recover them from a wallet signature. Use Private offer device keys below the app to rotate/revoke future encryption. Settlement exposes submitted terms and addresses, including on failed transactions.
+We enter one Team1 track. Arkiv awards are not additive per team. These are targets, not claims that eligibility or awards have been confirmed. [Requirements and remaining submission items](docs/cutout/BOUNTIES.md).
 
-Private bids reuse sufficient allowance or request a separately disclosed 100,000 test-USDC spending limit. This public limit is independent of the bid price; it does not reserve funds.
+## What is verified
 
-The local identities use the standard public Anvil mnemonic **only on chain 31337**. They are not Fuji keys. The local storage/index adapter is explicitly labelled and is not sponsor evidence. Team-operated demo makers use public rates 99.60%, 99.40%, 99.00%; private demonstration rates are randomly drawn in 99.00–99.60%. These are demonstration quotes, not commercial valuation or guaranteed execution.
+Deployed/source-verified Fuji contracts, real public funding/listings, public encrypted Swarm round trips, and browser proofs accepted by the deployed verifier and funded-task acceptance simulation have evidence. The complete paid lifecycle has passed locally on Anvil/Bee.
 
-## Verify
+**The full public acceptance → delivery → payment sequence and the recorded Arkiv mission demonstrations are not yet signed off.** The [evidence index](docs/cutout/EVIDENCE.md) separates public transactions, read-only simulations, local tests and guided UI behavior. No recording or submission is represented as completed without its artifact.
 
-```sh
-npm run check          # TypeScript, privacy/recovery tests, Solidity tests, production build
-npm run test:browser   # starts local stack if absent; visible actions + independent chain checks
-npm run scenario       # running stack: exact public lifecycle + separate adverse scenario
-npm run test:source    # pinned source forks; BENQI future operator publication explicitly simulated
-npm run preflight      # read-only readiness; never publishes or prints secrets
-npm run probe:sponsors # sponsor probe; performs writes when credentials are configured
-```
+## Deployments
 
-The integrated Solidity suite reports 39 tests: 16 base cases, two invariant campaigns, and 21 reviewer-harness tests (including 16 inherited repeats and five independently authored probes). Invariants each run 128×64 actions with zero reverts. Evidence preserves actual scope rather than calling inherited repeats new coverage. This code is **not audited**.
+Avalanche Fuji C-Chain, **43113**. Links open exact-runtime source verification records.
 
-## Actual integration status
+| Contract | Address |
+| --- | --- |
+| Qualification escrow | [0xb431e570d506168711cc1f9f91e325b3114c62af](https://repo.sourcify.dev/43113/0xb431e570d506168711cc1f9f91e325b3114c62af) |
+| Groth16 verifier | [0x9c1293e7e499d56fdc52186e7624dcfa04dfcbd1](https://repo.sourcify.dev/43113/0x9c1293e7e499d56fdc52186e7624dcfa04dfcbd1) |
+| Document-key registry | [0x181db4e48a0e76fdc50101085ac3b831464792c1](https://repo.sourcify.dev/43113/0x181db4e48a0e76fdc50101085ac3b831464792c1) |
 
-- **Local onchain product:** purchase, partial collection, stale quote rejection, resale, final collection, adverse outcome and continuing recovery verified.
-- **Privacy:** real HPKE, purpose-bound separate keys, registry rotation/revocation, custom client ciphertext, reload, outsider separation and public settlement verified locally.
-- **Native ETH claims:** live read-only inspection plus four pinned Ethereum fork tests prove sampled pending-NFT transfer/resale and already-finalized collection to the new owner. This is not a native-NFT sale integration or production admission. See [source evidence](docs/viability/claim-sources.md).
-- **BENQI:** three pinned-mainnet-fork tests validate caller-owned account origination, ownership, cancellation, whole-request collection and overdue-share recovery. The account is an admission prototype, not an enabled market source. See [source evidence](docs/evidence/benqi-source.md).
-- **Arkiv:** SDK 0.8.1 live Tiramisu compound discovery reads verified. Publication/native expiry require a funded Arkiv signer and remain unverified.
-- **Swarm:** gateway reachability verified; actual upload/independent live retrieval require an upload endpoint and funded postage and remain unverified.
-- **Fuji:** deployment/lifecycle blocked by missing funded deployment/maker accounts. No public chain transactions are claimed.
+Payment token: canonical Fuji test USDC, `0x5425890298aed601595a70AB815c96711a31Bc65`. [Public manifest, network details and hosting instructions](docs/cutout/DEPLOYMENT.md).
 
-The [product research](docs/research/README.md) covers comparable markets, trading UX, independent privacy findings and inspected agent workflows. The project-local `$exit-verify` skill packages the release checks.
+## Explore the repository
 
-See [acceptance ledger](docs/ACCEPTANCE.md), [independent contract review](docs/evidence/independent-security-review.md), [runtime review](docs/evidence/runtime-review.md), [Arkiv schema](arkiv/schema.md), and [genuine integration friction](friction.md).
+| Path | Contents |
+| --- | --- |
+| [experiments/qualification/pilot/web](experiments/qualification/pilot/web) | Current Cutout frontend and guided demo |
+| [experiments/qualification/pilot](experiments/qualification/pilot) | Wallets, encryption, Arkiv, Swarm, browser prover and hosting |
+| [experiments/qualification/contracts](experiments/qualification/contracts) | Qualification escrow, document keys and contract tests |
+| [experiments/qualification/prover](experiments/qualification/prover) | Circuit, issuer registry, native/Go WASM prover |
+| [docs](docs/README.md) | Product, developer, presenter, sponsor and evidence paths |
+| [arkiv](arkiv) | Data schema and submission evidence matrix |
 
-## Public deployment
-
-Use testnet-only accounts with gas; four distinct addresses are required (deployer plus three makers). Configure `.env` from `.env.example`; never put secrets in `VITE_` variables. Run `node --env-file=.env --import tsx scripts/deploy.ts --fuji`, then the same runtime server with `EXIT_DEPLOYMENT=deployments/fuji.json`. The generated public manifest uses a browser-safe public RPC; a secret provider URL stays server-side. The runtime needs persistent storage for public key certificates and configured Arkiv/Swarm write access. See [deployment guide](docs/DEPLOYMENT.md).
-
-`?preview=1` is an explicitly labelled visual fixture preview. It never replaces failed live reads. A hosted static preview does not prove a hosted trading backend or funded Fuji contracts.
-
-## Repository
-
-`contracts/` settlement + disclosed test source; `packages/shared/` canonical EIP-712 quote and generated ABIs; `packages/transport/` privacy/index/storage; `packages/client/` wallet/chain adapter; `packages/runtime/` maker service; `packages/source/` separate source fork probes; `packages/viability/` native read inspection and explicit economics; `apps/web/` receipt market. MIT for new EXIT work; third-party notices preserved. Supplied handoff material predates implementation and is retained in `docs/handoff/`. Git history records actual work; no provenance rewriting.
+Cutout evolved from Review Pass during ETHRome 2026. Existing `review-pass` protocol names and paths preserve deployed compatibility and browser key namespaces. Earlier EXIT work is retained in [history](docs/history/EXIT.md), with its original code and [handoff](docs/handoff/PRODUCT.md). The [MIT license](LICENSE), [asset licenses](experiments/qualification/pilot/web/assets/README.md), dependency licenses and real Git history remain intact.

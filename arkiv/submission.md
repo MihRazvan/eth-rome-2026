@@ -1,3 +1,5 @@
+> **Current submission navigation:** [Cutout bounty map](../docs/cutout/BOUNTIES.md), [Arkiv integration](../docs/cutout/bounties/ARKIV.md) and [evidence index](../docs/cutout/EVIDENCE.md).
+
 # Review Pass bounty evidence index
 
 Target: Arkiv Mission02 + Mission03 + Best Use consideration, Swarm, and Avalanche Team1 TrackA. Updated12September: deployment, public funding/listings/storage and proof simulations exist; full paid public lifecycle and mission demonstration evidence remain incomplete. No submission claimed. Start with the [presenter guide](../docs/CUTOUT-PRESENTER-GUIDE.md). [Research synthesis](../docs/review-pass/README.md) explains source conflicts and nonadditive awards.

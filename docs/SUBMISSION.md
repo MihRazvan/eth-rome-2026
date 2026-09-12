@@ -1,3 +1,5 @@
+> **Historical EXIT document.** For the current Cutout submission, use the [bounty map and checklist](cutout/BOUNTIES.md).
+
 # Submission draft and demo runbook
 
 ## Fifteen-second hook

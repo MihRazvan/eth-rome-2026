@@ -1,3 +1,11 @@
+# Cutout submission documentation — verified
+
+Submission-facing README now follows the layered structure of the team's Anyware/Autark repos: product brief, quickstart, user flow, architecture, security boundaries, deployed contracts, individual sponsor pages and evidence index. Current entrypoint is [docs index](README.md); EXIT's earlier README remains in [history](history/EXIT.md). Original code, handoff and licenses are preserved. No application deployment changed.
+
+125 focused Node tests passed; one optional external test skipped. 18 contract tests, explicit pilot TypeScript and UI build passed. Bare Vite desktop/mobile walkthrough and four actual public hosted browser checks passed with zero page errors/writes. Independent read-only documentation review corrected setup prerequisites and scoped evidence claims. [Artifacts](cutout/evidence/submission-prep/README.md). Fresh Docker bootstrap and full public paid flow were not run. Arkiv mission recordings, final paid receipts, video/slides and actual submissions remain listed in [the submission checklist](cutout/BOUNTIES.md).
+
+---
+
 # Reviewer wallet role recovery — deployed
 
 12 September2026: source5530ce8, production `dpl_9KwmtoqwTKQxUWNevCFThysqxuu8`. Reviewer view no longer replaces proof setup with client publication when the wallet returns the funding account. It displays an explicit mismatch and lets the user request account selection, or reconnect after selecting manually. Same-account selection remains a mismatch; only Client view offers publication. Account permissions do not request signing/spending or revoke existing access.

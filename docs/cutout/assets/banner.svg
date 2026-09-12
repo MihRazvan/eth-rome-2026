@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="400" viewBox="0 0 1600 400" role="img" aria-labelledby="title desc">
+  <title id="title">Cutout — Good work. Less exposure.</title>
+  <desc id="desc">Cream paper, black typography, orange cut line and a folded qualification card.</desc>
+  <rect width="1600" height="400" fill="#e8ddba"/>
+  <path d="M50 52H1550M50 347H1550" stroke="#96896a" stroke-dasharray="5 7"/>
+  <path d="M56 90h27l-13.5 24z" fill="#f24e1e"/>
+  <text x="96" y="117" fill="#17170f" font-family="Arial,Helvetica,sans-serif" font-size="47" font-weight="900" letter-spacing="-2">CUTOUT</text>
+  <text x="53" y="222" fill="#17170f" font-family="Arial,Helvetica,sans-serif" font-size="87" font-weight="900" letter-spacing="-5">Good work.</text>
+  <text x="53" y="312" fill="#f24e1e" font-family="Arial,Helvetica,sans-serif" font-size="87" font-weight="900" letter-spacing="-5">Less exposure.</text>
+  <g transform="translate(1260 83) rotate(7 110 115)">
+    <path d="M0 0h167l45 45v206H0z" fill="#f5edda" stroke="#17170f" stroke-width="2"/>
+    <path d="M167 0v45h45" fill="none" stroke="#17170f" stroke-width="2"/>
+    <circle cx="99" cy="92" r="29" fill="#17170f"/>
+    <path d="M46 177c0-58 106-58 106 0z" fill="#17170f"/>
+    <path d="M18 207h172M18 223h130" stroke="#96896a" stroke-dasharray="4 5"/>
+    <circle cx="178" cy="185" r="36" fill="#f24e1e"/>
+    <path d="m162 186 10 11 22-25" fill="none" stroke="#17170f" stroke-width="4"/>
+  </g>
+  <text x="1550" y="377" text-anchor="end" fill="#625a47" font-family="monospace" font-size="15">ETHROME 2026 · QUALIFIED WORK, PRIVATE BY DESIGN</text>
+</svg>

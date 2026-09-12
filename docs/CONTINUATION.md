@@ -1,3 +1,13 @@
+# Latest — Cutout submission documentation
+
+Current product entrypoints: root README, PROJECT_BRIEF.md and docs/README.md. `docs/cutout/` contains the judge/developer doc set and sponsor-specific pages. `docs/history/EXIT.md` preserves the old root README; no application/protocol paths, licenses or handoff docs were removed. AGENTS now points to the current user-approved product before the historical EXIT contract. Push the `review-pass/product` branch through normal history; submit the branch-specific URL until normal review makes it the default.
+
+Verified: 125 focused Node tests pass, 1 optional skip; 18 contract tests; pilot TypeScript/build; actual bare-Vite desktop/mobile guided UI; 4 public hosted read-only browser checks. Evidence under `docs/cutout/evidence/submission-prep`. No fresh Docker bootstrap, public funded writes or deployment in this pass. Application still source5530ce8 / dpl_9KwmtoqwTKQxUWNevCFThysqxuu8.
+
+Outstanding: public acceptance→delivery→payment receipt bundle and balance reconciliation; native Arkiv expiry and actual two-browser publication/stream recordings; final video/slides and submission confirmations. Do not present these as complete. Teammate credential already exists privately at `.runtime/cutout-enrollment/teammate-credential.json`, expires 2026-09-13T17:58:21Z; user received its local link again during this task. It requires teammate's original private holder backup. No private credential copies belong in Git. Preserve current test issuer registry and existing browser origins.
+
+---
+
 # Latest — reviewer/client wallet loop fixed
 
 Deployed source5530ce8, Vercel `dpl_9KwmtoqwTKQxUWNevCFThysqxuu8`, https://cutout-ethrome-2026.vercel.app. Connecting a wallet can return the task funding account even in Reviewer view. That previously replaced the proof form with List this review. Reviewer view now shows a full-address client-wallet mismatch and Choose reviewer account / Reconnect selected account. Client publication stays in Client view. Explicit account selection uses only wallet_requestPermissions eth_accounts; no signing, spending, revocation or automatic retries. Standard connection then rechecks account/chain and preserves the selected task. Wallets without that method get manual account/site-permission instructions.

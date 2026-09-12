@@ -1,3 +1,5 @@
+> **Historical EXIT document.** For the current Cutout application, use the [Cutout deployment guide](cutout/DEPLOYMENT.md).
+
 # Deployment and access boundaries
 
 ## Local

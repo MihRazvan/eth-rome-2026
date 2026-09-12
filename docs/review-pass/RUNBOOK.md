@@ -1,3 +1,5 @@
+> **Current Cutout entrypoint:** [Quickstart](../cutout/QUICKSTART.md) and [deployment](../cutout/DEPLOYMENT.md). The current hosted app uses account-free Swarm gateway storage. This earlier runbook retains historical Swarm ID/setup assumptions; the local pilot commands also require the underlying qualification runtime first.
+
 # Run and verify Review Pass
 
 Node24.12+, Go1.25.7 selected by the module, Foundry1.5.1 and pinned `npm ci` dependencies. The existing qualification runtime supplies local Anvil31338 on18547 and Bee1633/1635. Do not restart it during a pilot: that resets the shared local chain. The original port18888 pilot and EXIT services are separate.
