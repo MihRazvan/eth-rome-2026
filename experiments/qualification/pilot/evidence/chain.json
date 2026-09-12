@@ -1,0 +1,228 @@
+{
+  "recordedAt": "2026-09-12T08:37:46.218Z",
+  "environment": "local-anvil",
+  "chainId": 31338,
+  "blockNumber": "59",
+  "escrow": "0xb7f8bc63bbcad18155201308c8f3540b07f84f5e",
+  "keyRegistry": "0x610178da211fef7d417bc0e6fed39f05609ad788",
+  "verifier": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "token": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+  "observations": [
+    {
+      "transactionHash": "0xb63d386e3fc65c64ee20abdc661b80cf41e26105b95c48e3d1e088614ec80feb",
+      "blockNumber": "41",
+      "eventName": "RootUpdated",
+      "args": {
+        "epoch": "1",
+        "root": "21510442260602099095514907523374847901103278677142421422797744945395947134623"
+      }
+    },
+    {
+      "transactionHash": "0x0d43a91451177042934819cd26643f30e29fe693e19cefb999a904bd33a82a41",
+      "blockNumber": "48",
+      "eventName": "JobFunded",
+      "args": {
+        "job": "1",
+        "client": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "amount": "250000000",
+        "qualificationClass": "7"
+      }
+    },
+    {
+      "transactionHash": "0x580da2cfd67eb0151df76330dcd0ef45256891bb3c721b809a55fd594b5412ad",
+      "blockNumber": "49",
+      "eventName": "Accepted",
+      "args": {
+        "job": "1",
+        "worker": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "nullifier": "20832607318291392383159714207042469067528802958608568745976203067112682119637",
+        "epoch": "1"
+      }
+    },
+    {
+      "transactionHash": "0xfed00633d75fd9b0852c22c8ae961d246ad0c4d581ab8b6959c964246b617b9f",
+      "blockNumber": "50",
+      "eventName": "Submitted",
+      "args": {
+        "job": "1",
+        "deliverable": "0x7fcaf6d99ce01988432e719b8238e45ebae3f28fb6db6e2691057a09b68065ae"
+      }
+    },
+    {
+      "transactionHash": "0xfed00633d75fd9b0852c22c8ae961d246ad0c4d581ab8b6959c964246b617b9f",
+      "blockNumber": "50",
+      "eventName": "DocumentCommitted",
+      "args": {
+        "job": "1",
+        "contentRef": "0x7fcaf6d99ce01988432e719b8238e45ebae3f28fb6db6e2691057a09b68065ae",
+        "sha256Digest": "0x445ab2dcce3f3af900aaef93d4fbb92df2bf50997d4d1f65987d76cf5bb86162"
+      }
+    },
+    {
+      "transactionHash": "0xab5d71698fcdb45425abc47d19ecb37ed0dc4392f29c1d87fea647ac7fc92900",
+      "blockNumber": "54",
+      "eventName": "JobFunded",
+      "args": {
+        "job": "2",
+        "client": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+        "amount": "250000000",
+        "qualificationClass": "7"
+      }
+    },
+    {
+      "transactionHash": "0x8e9a2e5ac8d5fe5c06bf81ac26667e4fc0709f565fe30a1cb7bf3e847e8cd111",
+      "blockNumber": "55",
+      "eventName": "Accepted",
+      "args": {
+        "job": "2",
+        "worker": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "nullifier": "4334522807219858315699257231058151157092875879320718806729262845768694775260",
+        "epoch": "1"
+      }
+    },
+    {
+      "transactionHash": "0xc3ecd2a0240b388a8029056b0acedef71114fde70a33c90529a2e21e93c2e9a5",
+      "blockNumber": "56",
+      "eventName": "Submitted",
+      "args": {
+        "job": "2",
+        "deliverable": "0x37c796963abe5ea2752b0667a6bd10f89ab582af802de6a200f46e69c4277d74"
+      }
+    },
+    {
+      "transactionHash": "0xc3ecd2a0240b388a8029056b0acedef71114fde70a33c90529a2e21e93c2e9a5",
+      "blockNumber": "56",
+      "eventName": "DocumentCommitted",
+      "args": {
+        "job": "2",
+        "contentRef": "0x37c796963abe5ea2752b0667a6bd10f89ab582af802de6a200f46e69c4277d74",
+        "sha256Digest": "0x4900661934ed06f1e6d42113a331362a40e17add6263d748d369a85f4b8a1227"
+      }
+    },
+    {
+      "transactionHash": "0x175bd4f8849d186420a4cdd092eea0f820717ea7543c901d3d5ccb239aba4520",
+      "blockNumber": "57",
+      "eventName": "RootUpdated",
+      "args": {
+        "epoch": "2",
+        "root": "14314055677327985826760793718575112314400867005415727124269019409410901235942"
+      }
+    },
+    {
+      "transactionHash": "0x939e02928cd1a32fa27f59d57583d1c831823c45aaf510a8c6696acb1b18546e",
+      "blockNumber": "58",
+      "eventName": "Paid",
+      "args": {
+        "job": "1",
+        "worker": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "amount": "250000000"
+      }
+    },
+    {
+      "transactionHash": "0x3f0ee6fdbcf6ccfc7831d04ff106b501653bab4676d80c870664fc6f545df961",
+      "blockNumber": "59",
+      "eventName": "Paid",
+      "args": {
+        "job": "2",
+        "worker": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "amount": "250000000"
+      }
+    }
+  ],
+  "receipts": [
+    {
+      "transactionHash": "0xb63d386e3fc65c64ee20abdc661b80cf41e26105b95c48e3d1e088614ec80feb",
+      "status": "success",
+      "blockNumber": "41",
+      "gasUsed": "1545698"
+    },
+    {
+      "transactionHash": "0x0d43a91451177042934819cd26643f30e29fe693e19cefb999a904bd33a82a41",
+      "status": "success",
+      "blockNumber": "48",
+      "gasUsed": "201716"
+    },
+    {
+      "transactionHash": "0x580da2cfd67eb0151df76330dcd0ef45256891bb3c721b809a55fd594b5412ad",
+      "status": "success",
+      "blockNumber": "49",
+      "gasUsed": "338016"
+    },
+    {
+      "transactionHash": "0xfed00633d75fd9b0852c22c8ae961d246ad0c4d581ab8b6959c964246b617b9f",
+      "status": "success",
+      "blockNumber": "50",
+      "gasUsed": "77702"
+    },
+    {
+      "transactionHash": "0xab5d71698fcdb45425abc47d19ecb37ed0dc4392f29c1d87fea647ac7fc92900",
+      "status": "success",
+      "blockNumber": "54",
+      "gasUsed": "167516"
+    },
+    {
+      "transactionHash": "0x8e9a2e5ac8d5fe5c06bf81ac26667e4fc0709f565fe30a1cb7bf3e847e8cd111",
+      "status": "success",
+      "blockNumber": "55",
+      "gasUsed": "338016"
+    },
+    {
+      "transactionHash": "0xc3ecd2a0240b388a8029056b0acedef71114fde70a33c90529a2e21e93c2e9a5",
+      "status": "success",
+      "blockNumber": "56",
+      "gasUsed": "77690"
+    },
+    {
+      "transactionHash": "0x175bd4f8849d186420a4cdd092eea0f820717ea7543c901d3d5ccb239aba4520",
+      "status": "success",
+      "blockNumber": "57",
+      "gasUsed": "33577"
+    },
+    {
+      "transactionHash": "0x939e02928cd1a32fa27f59d57583d1c831823c45aaf510a8c6696acb1b18546e",
+      "status": "success",
+      "blockNumber": "58",
+      "gasUsed": "53383"
+    },
+    {
+      "transactionHash": "0x3f0ee6fdbcf6ccfc7831d04ff106b501653bab4676d80c870664fc6f545df961",
+      "status": "success",
+      "blockNumber": "59",
+      "gasUsed": "48583"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "1",
+      "state": [
+        "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "250000000",
+        "7",
+        "1789205677",
+        "1789209277",
+        "1789212877",
+        3,
+        "0x1bc56b8a386736163b3a67c2c03d2d079aea9c413733f205cb6fc3218cf935ac",
+        "0x7fcaf6d99ce01988432e719b8238e45ebae3f28fb6db6e2691057a09b68065ae"
+      ],
+      "digest": "0x445ab2dcce3f3af900aaef93d4fbb92df2bf50997d4d1f65987d76cf5bb86162"
+    },
+    {
+      "id": "2",
+      "state": [
+        "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+        "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "250000000",
+        "7",
+        "1789205678",
+        "1789209278",
+        "1789212878",
+        3,
+        "0x1bc56b8a386736163b3a67c2c03d2d079aea9c413733f205cb6fc3218cf935ac",
+        "0x37c796963abe5ea2752b0667a6bd10f89ab582af802de6a200f46e69c4277d74"
+      ],
+      "digest": "0x4900661934ed06f1e6d42113a331362a40e17add6263d748d369a85f4b8a1227"
+    }
+  ]
+}

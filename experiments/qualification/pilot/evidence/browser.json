@@ -1,0 +1,26 @@
+{
+  "recordedAt": "2026-09-12T08:34:42.050Z",
+  "environment": "Local Anvil and local Bee, public test wallets injected into isolated real Chromium contexts",
+  "escrow": "0xb7f8bc63bbcad18155201308c8f3540b07f84f5e",
+  "keyRegistry": "0x610178da211fef7d417bc0e6fed39f05609ad788",
+  "jobs": [
+    "1",
+    "2"
+  ],
+  "checks": [
+    "Client wallet owns funding; device bindings registered by distinct wallets",
+    "Holder-local CLI exports real proof; reviewer wallet accepts exact bound assignment",
+    "Worker signs upload authorization and commits ciphertext locator plus digest onchain; HTTP receives no plaintext or private keys",
+    "Independent client browser decrypts actual Bee retrieval; private key survives reload",
+    "Third wallet/browser cannot decrypt the public ciphertext",
+    "Rotated key cannot decrypt historical review; explicitly retained previous key can",
+    "Provider disconnect removes decrypted content and invalidates wallet session",
+    "Same holder credential accepts a second client's job with a different job-scoped nullifier",
+    "Second client decrypts its review; first client's wallet and retained device keys cannot decrypt it",
+    "Durably allocated credential revoked permanently; issuer wallet advances authoritative root",
+    "Both client wallets approve payment to assigned worker after review and credential revocation",
+    "Delayed connect cannot restore the prior wallet/device after accountsChanged",
+    "390px responsive pilot has no horizontal overflow"
+  ],
+  "pageErrors": []
+}

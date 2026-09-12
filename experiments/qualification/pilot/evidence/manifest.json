@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-09-12T08:37:46.221Z",
+  "implementationRevision": "9fb24a9e5cebf0404b74c1627da5430ac255d90c",
+  "scope": "Local wallet pilot, actual chain/Bee/Chromium. Test bridge, no real participant or public deployment claim.",
+  "files": {
+    "browser.json": {
+      "bytes": 1539,
+      "sha256": "3f4d4a86c485d4e4d365814bbe7fd4536e827ea78a31ffeb5fc275c02e3931f2"
+    },
+    "reviewer-desktop.png": {
+      "bytes": 245870,
+      "sha256": "4348a3e958b1d0cf07ad0f304400fee1543e12b47dbdb52fca992d86399639c3"
+    },
+    "reviewer-mobile.png": {
+      "bytes": 209390,
+      "sha256": "58c498d806e8b818221966d18f597259ed0cf506df56f58e9d4e799f39c3459a"
+    },
+    "client-disconnected.png": {
+      "bytes": 242225,
+      "sha256": "7cd375dcc8179df31be1faf2d1318507f7a074321d57b6b62cc4c640809996b0"
+    },
+    "chain.json": {
+      "bytes": 7435,
+      "sha256": "edac5ed19f45aa5a793eadf4d96d950834d797cf15f98e9cc88eee4e764f845b"
+    },
+    "ci-qualification.json": {
+      "bytes": 5204,
+      "sha256": "63625dade70989730797c44276f4a2ccab69f3164248deae3ee3be00a27522b1"
+    },
+    "ci-exit.json": {
+      "bytes": 3082,
+      "sha256": "fc8cdf7c2d9e5bd81a5ee470d9d721304e9064fbd50c7ba0d6616aed240b0072"
+    }
+  }
+}
