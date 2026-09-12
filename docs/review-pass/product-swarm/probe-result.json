@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-12",
+  "package": "@snaha/swarm-id",
+  "version": "0.4.1",
+  "source_sha": "59c376991b2c4c9962dfec72f6ac84115f393114",
+  "scope": "Actual clean Chromium, no sign-in, no public writes, no gift redemption",
+  "nodeImport": {
+    "ok": false,
+    "name": "ReferenceError",
+    "message": "window is not defined"
+  },
+  "browserImport": true,
+  "methods": {
+    "initialize": "function",
+    "connect": "function",
+    "disconnect": "function",
+    "uploadData": "function",
+    "downloadData": "function",
+    "deriveAppSecret": "function",
+    "actUploadData": "function",
+    "actDownloadData": "function",
+    "actAddGrantees": "function",
+    "actRevokeGrantees": "function",
+    "actGetGrantees": "function"
+  },
+  "initialized": {
+    "ok": true,
+    "connected": false,
+    "canUpload": false,
+    "uploadMode": "unavailable"
+  }
+}

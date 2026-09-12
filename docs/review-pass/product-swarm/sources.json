@@ -1,0 +1,258 @@
+{
+  "research_date": "2026-09-12",
+  "base": "4f0cc87b405b8522f59e4c14d87ea546e77a4858",
+  "sources": [
+    {
+      "id": "uploaded-bounties",
+      "title": "A Web3 database you can actually query \u2014 supplied sponsor brief",
+      "publisher": "Arkiv / Swarm / Team1, via user attachment",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": null,
+      "access_note": "User attachment47e5fc73-3ebc-4411-8e4a-84f66cc8f21e/pasted-text.txt; sections Swarm, Team1, Arkiv"
+    },
+    {
+      "id": "source-1",
+      "title": "AnonCreds specification",
+      "publisher": "anoncreds.github.io",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://anoncreds.github.io/anoncreds-spec/",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-2",
+      "title": "anoncreds-rs",
+      "publisher": "github.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://github.com/anoncreds/anoncreds-rs",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-3",
+      "title": "Privado onchain verifier",
+      "publisher": "docs.privado.id",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://docs.privado.id/docs/verifier/on-chain-verification/overview/",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-4",
+      "title": "iden3/contracts",
+      "publisher": "github.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://github.com/iden3/contracts",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-5",
+      "title": "js-iden3-auth",
+      "publisher": "github.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://github.com/iden3/js-iden3-auth",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-6",
+      "title": "Semaphore",
+      "publisher": "github.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://github.com/semaphore-protocol/semaphore",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-7",
+      "title": "TalentLayer contracts",
+      "publisher": "github.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://github.com/TalentLayer/talentlayer-contracts",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-8",
+      "title": "Kleros Escrow",
+      "publisher": "docs.kleros.io",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://docs.kleros.io/products/escrow",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-9",
+      "title": "escrow-v2",
+      "publisher": "github.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://github.com/kleros/escrow-v2",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-10",
+      "title": "Swarm ID",
+      "publisher": "github.com",
+      "published": "2026-09-11",
+      "accessed": "2026-09-12",
+      "url": "https://github.com/snaha/swarm-id/tree/59c376991b2c4c9962dfec72f6ac84115f393114",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-11",
+      "title": "Bee-JS",
+      "publisher": "github.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://github.com/ethersphere/bee-js",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-12",
+      "title": "Core SDK",
+      "publisher": "github.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://github.com/ethersphere/core-sdk",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-13",
+      "title": "TalentLayer escrow",
+      "publisher": "docs.talentlayer.org",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://docs.talentlayer.org/readme/basics/escrow-and-dispute",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-14",
+      "title": "contract guide",
+      "publisher": "docs.talentlayer.org",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://docs.talentlayer.org/technical-guides/lower-level-guides/smart-contracts/escrow-and-dispute",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-15",
+      "title": "Code4rena criteria",
+      "publisher": "docs.code4rena.com",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://docs.code4rena.com/roles/sr-wardens",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-16",
+      "title": "Cantina product description",
+      "publisher": "cantina.xyz",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://cantina.xyz/blog/cantina-for-newcomers",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-17",
+      "title": "August update",
+      "publisher": "blog.ethswarm.org",
+      "published": "2026-09-05",
+      "accessed": "2026-09-12",
+      "url": "https://blog.ethswarm.org/foundation/2026/monthly-development-update-august-2026/",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-18",
+      "title": "pinned Swarm ID changelog",
+      "publisher": "github.com",
+      "published": "2026-09-11",
+      "accessed": "2026-09-12",
+      "url": "https://github.com/snaha/swarm-id/blob/59c376991b2c4c9962dfec72f6ac84115f393114/lib/CHANGELOG.md",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-19",
+      "title": "Release announcement",
+      "publisher": "blog.ethswarm.org",
+      "published": "2026-08-28",
+      "accessed": "2026-09-12",
+      "url": "https://blog.ethswarm.org/foundation/2026/bee-2-8-2-release/",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-20",
+      "title": "ShadowPath",
+      "publisher": "arxiv.org",
+      "published": "2026-08-20",
+      "accessed": "2026-09-12",
+      "url": "https://arxiv.org/html/2608.19937v1",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-21",
+      "title": "Swarm ID issue 496",
+      "publisher": "github.com",
+      "published": "2026-07-15",
+      "accessed": "2026-09-12",
+      "url": "https://github.com/snaha/swarm-id/issues/496",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-22",
+      "title": "Package source",
+      "publisher": "github.com",
+      "published": "2026-09-11",
+      "accessed": "2026-09-12",
+      "url": "https://github.com/snaha/swarm-id/blob/59c376991b2c4c9962dfec72f6ac84115f393114/lib/package.json",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-23",
+      "title": "Quick start",
+      "publisher": "swarm.snaha.net",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://swarm.snaha.net/docs/getting-started/",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-24",
+      "title": "Subsidized gateway",
+      "publisher": "swarm.snaha.net",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://swarm.snaha.net/docs/subsidised-gateway/",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-25",
+      "title": "Pinned client implementation",
+      "publisher": "github.com",
+      "published": "2026-09-11",
+      "accessed": "2026-09-12",
+      "url": "https://github.com/snaha/swarm-id/blob/59c376991b2c4c9962dfec72f6ac84115f393114/lib/src/swarm-id-client.ts",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-26",
+      "title": "Swarm encryption documentation",
+      "publisher": "docs.ethswarm.org",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://docs.ethswarm.org/docs/develop/tools-and-features/store-with-encryption/",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    },
+    {
+      "id": "source-27",
+      "title": "ACT API",
+      "publisher": "swarm.snaha.net",
+      "published": null,
+      "accessed": "2026-09-12",
+      "url": "https://swarm.snaha.net/docs/api/#act-methods",
+      "access_note": "Primary source inspected; null publication date means not established, not current publication."
+    }
+  ]
+}
