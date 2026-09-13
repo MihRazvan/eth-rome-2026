@@ -71,7 +71,7 @@
           <button data-ui id="try-demo" class="rail-demo">
             Try the demo <span aria-hidden="true">↗</span>
           </button>
-          <p>No wallet needed.<br />A complete guided review.</p>
+          <p>No wallet needed.</p>
           <span class="rail-network"><i></i> Avalanche Fuji</span
           ><small>Testnet edition / ETHRome 2026</small>
         </div>
@@ -96,20 +96,15 @@
         </div>
         <section class="intro workspace-heading">
           <div>
-            <p class="eyebrow" id="view-caption">
-              A SECOND SET OF EYES. ON YOUR TERMS.
-            </p>
-            <h1 id="workspace-title">
-              Good work.<br /><em>Less exposure.</em>
-            </h1>
+            <p class="eyebrow" id="view-caption">CLIENT / NEW REVIEW</p>
+            <h1 id="workspace-title">Post a review task</h1>
             <p id="workspace-description">
-              Hire a qualified reviewer. Keep their credential details private,
-              and the report between the two of you.
+              A qualified reviewer. A report encrypted for both of you.
             </p>
             <div class="intro-actions">
               <button data-ui id="post-task">Post a task</button
               ><button data-ui id="intro-demo" class="quiet">
-                See how Cutout works
+                How it works ↗
               </button>
             </div>
           </div>
@@ -166,12 +161,12 @@
               <button id="next-step">Get started</button>
             </div>
             <details class="setup-progress">
-              <summary>Wallet &amp; storage readiness</summary>
+              <summary>Setup checklist</summary>
               <ol id="readiness" aria-label="Setup progress"></ol>
             </details>
           </section>
           <details class="help-panel" id="funding-help" data-screen="help">
-            <summary>Wallet, test funds and network help</summary>
+            <summary>Wallet &amp; test funds</summary>
             <p>
               Use an extension wallet on desktop or open this page in your
               wallet’s built-in browser on mobile. A normal mobile browser may
@@ -317,13 +312,13 @@
             <div id="opportunities"></div>
           </section>
           <details class="device-settings" data-screen="help">
-            <summary>Private reports & storage</summary>
+            <summary>Private reports &amp; storage</summary>
             <section class="device">
               <div>
                 <p class="eyebrow">Your private workspace</p>
                 <h2 id="wallet">Connect to begin</h2>
                 <p id="key-status">
-                  No wallet is connected. No private key is held by the server.
+                  Connect a wallet to enable encrypted reports.
                 </p>
               </div>
               <div class="actions">
@@ -364,12 +359,10 @@
               tabindex="-1"
             >
               <section class="disclosure">
-                <p class="eyebrow">THE PUBLIC BRIEF</p>
-                <h2>Post a task.</h2>
+                <p class="eyebrow">01 / WRITE THE BRIEF</p>
+                <h2>What needs a second look?</h2>
                 <p class="fine">
-                  A specific question gets a useful review. Your brief is
-                  public. The finished report is encrypted for you and the
-                  reviewer.
+                  Your brief is public. Your finished report is private.
                 </p>
                 <label
                   >Task title<input
@@ -378,7 +371,7 @@
                     value="Review withdrawal authorization"
                 /></label>
                 <label
-                  >What should the reviewer investigate?<textarea
+                  >Review scope<textarea
                     id="task-scope"
                     maxlength="4000"
                     rows="5"
@@ -392,12 +385,11 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
                     value="10"
                 /></label>
                 <label class="fine"
-                  ><input id="scope-public" type="checkbox" /> This scope is
-                  safe to publish. Only the completed report is
-                  encrypted.</label
+                  ><input id="scope-public" type="checkbox" /> This brief is
+                  safe to publish.</label
                 >
                 <details class="advanced">
-                  <summary>Timing and discovery options</summary>
+                  <summary>Deadlines &amp; listing duration</summary>
                   <p class="fine">
                     Default: one hour each for acceptance, delivery and client
                     review. The discovery listing lasts about 30 minutes when
@@ -447,17 +439,23 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
                   Get 1,000 test qUSD</button
                 ><button id="create" disabled>Fund & post task</button>
                 <p class="fine">
-                  The client approves completed work or disputes it before the
-                  review deadline. A timely submission can claim payment after
-                  that deadline unless disputed. The configured arbitrator
-                  resolves disputes.
+                  After funding, publish the task to the reviewer board.
                 </p>
+                <details class="plain-details">
+                  <summary>When is the reviewer paid?</summary>
+                  <p class="fine">
+                    Approve the report or dispute it before your review
+                    deadline. After that deadline, a timely report can claim
+                    payment unless disputed. The test arbitrator resolves
+                    disputes.
+                  </p>
+                </details>
               </section>
               <section
                 class="issuer-card task-receipt"
                 aria-label="Task preview"
               >
-                <p class="eyebrow">YOUR TASK / BEFORE THE CUT</p>
+                <p class="eyebrow">02 / YOUR REVIEW</p>
                 <svg
                   class="receipt-portrait"
                   viewBox="0 0 120 120"
@@ -479,20 +477,23 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
                 </p>
                 <span class="receipt-stamp">Draft · not funded</span>
                 <p class="fine">
-                  One qualified reviewer.<br />One report, encrypted for two.
+                  One qualified reviewer.<br />A report encrypted for both of
+                  you.
                 </p>
-                <p class="eyebrow">Public brief. Private report.</p>
-                <p class="fine">
-                  Issuer, qualification class, deadline, payment address and
-                  assignment are public. Credential identifier and holder secret
-                  remain inside your local prover. Reusing a wallet links
-                  assignments.
-                </p>
-                <p class="fine">
-                  Device-key bindings and encrypted recipient metadata are
-                  public. Revoking a key stops new encryption to it; it cannot
-                  recall old documents.
-                </p>
+                <details class="plain-details">
+                  <summary>What stays private?</summary>
+                  <p class="fine">
+                    The credential identifier and holder secret stay in the
+                    reviewer’s browser. The issuer, qualification class,
+                    deadlines, task and payment wallet are public. Wallet reuse
+                    links tasks.
+                  </p>
+                  <p class="fine">
+                    Report-key bindings and recipient metadata are public.
+                    Revoking a key prevents new encryption to it; existing
+                    documents cannot be recalled.
+                  </p>
+                </details>
               </section>
             </aside>
           </div>
@@ -504,23 +505,20 @@ Review the public withdrawal authorization flow. Identify permission bypasses, c
               hash before retrying.
             </p>
           </details>
-          <section class="boundary protocol-notes" data-screen="help">
-            <h2>What this version can do</h2>
+          <details class="boundary protocol-notes" data-screen="help">
+            <summary>Privacy &amp; test edition details</summary>
             <p>
-              Cutout currently accepts credentials from one test issuer and uses
-              an experimental Groth16 setup. Qualification proves eligibility,
-              not the quality of a report. Private credential files selected for
-              browser proving stay in a local worker. Only the resulting public
-              proof is submitted to the contract. Keep your original files for
-              recovery; the app does not save them.
+              This edition uses one test issuer, test assets and an experimental
+              proof system. Qualification verifies eligibility, not report
+              quality. Credential inputs stay in your browser; only the proof
+              goes onchain.
             </p>
             <p>
-              Private document keys persist in this browser profile. Other
-              devices need their own registered key; losing all copies of an old
-              private key can lose access to older documents. Keep this browser
-              profile to retain access to your private reports.
+              Private report keys stay in this browser profile. Keep this
+              profile and save copies of completed reports: another device
+              cannot open an old report without its original key.
             </p>
-          </section>
+          </details>
         </div>
         <footer>
           <span>Cutout / Qualified work. Private by design.</span

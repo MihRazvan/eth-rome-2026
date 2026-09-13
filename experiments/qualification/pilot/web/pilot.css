@@ -284,7 +284,8 @@ h3 {
   color: var(--paper);
   box-shadow: none;
 }
-.rail-nav button[aria-pressed="true"]:hover {
+.rail-nav button[aria-pressed="true"]:hover,
+.rail-nav button[aria-current="page"]:hover {
   background: #ff7547;
   color: var(--ink);
 }
@@ -1611,4 +1612,181 @@ body[data-view="demo"] #environment {
 }
 .enrollment-card h4 {
   margin-top: 0;
+}
+
+/* A compact heading keeps the task and its next action in view. */
+.workspace-heading {
+  padding: 28px 0 24px;
+  gap: 24px;
+}
+.workspace-heading h1 {
+  font-size: clamp(30px, 3vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+.workspace-heading .eyebrow {
+  margin-bottom: 8px;
+}
+.workspace-heading > div > p:not(.eyebrow) {
+  max-width: 620px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.workspace-art {
+  width: 92px;
+}
+.workspace-art > span {
+  display: none;
+}
+body:not([data-view="tasks"]) .workspace-art {
+  display: none;
+}
+.intro-actions {
+  margin-top: 12px;
+}
+.intro-actions .quiet {
+  padding: 5px 0;
+  min-height: 32px;
+  border: 0;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.journey {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 24px;
+  padding: 18px 0;
+  margin-bottom: 24px;
+}
+.journey > div:first-child {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 20px;
+  align-items: center;
+}
+.journey .eyebrow {
+  display: none;
+}
+.journey h2 {
+  font-size: 18px;
+  margin: 0 0 5px;
+}
+.journey p:not(.eyebrow) {
+  max-width: 540px;
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 0;
+  grid-column: 1;
+}
+.journey #next-step {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  max-width: 210px;
+}
+.setup-progress {
+  max-width: 320px;
+}
+.setup-progress #readiness {
+  grid-template-columns: 1fr;
+}
+.setup-progress summary {
+  white-space: nowrap;
+}
+#commission {
+  gap: 38px;
+}
+#commission .disclosure {
+  background: var(--sheet);
+  padding: 26px;
+  border: 1px solid var(--ink);
+}
+#commission .disclosure h2 {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+#commission .disclosure label {
+  margin: 14px 0;
+}
+#commission .task-receipt {
+  margin-top: 0;
+  padding-top: 20px;
+}
+.task-receipt .receipt-portrait {
+  height: 125px;
+}
+.plain-details {
+  border-top: 1px dashed var(--line);
+  margin-top: 12px;
+  padding-top: 4px;
+}
+.plain-details p {
+  margin-top: 10px;
+}
+.protocol-notes {
+  margin-top: 18px;
+  padding-top: 8px;
+}
+.protocol-notes p {
+  max-width: 720px;
+}
+body[data-view="help"] .help-panel,
+body[data-view="help"] .device-settings {
+  margin: 0;
+  padding: 14px 0;
+}
+body[data-view="help"] .help-panel > summary,
+body[data-view="help"] .device-settings > summary {
+  font-size: 15px;
+}
+@media (max-width: 1100px) {
+  .journey {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .setup-progress {
+    max-width: none;
+  }
+  .setup-progress #readiness {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 760px) {
+  .workspace-heading {
+    padding: 22px 0 18px;
+  }
+  .workspace-heading h1 {
+    font-size: 32px;
+  }
+  .workspace-heading > div > p:not(.eyebrow) {
+    font-size: 13px;
+    margin-top: 9px;
+  }
+  .workspace-art {
+    display: none;
+  }
+  .journey > div:first-child {
+    display: block;
+  }
+  .journey #next-step {
+    margin-top: 12px;
+    max-width: none;
+  }
+  #commission {
+    gap: 20px;
+  }
+  #commission .disclosure {
+    padding: 20px;
+  }
+  #commission .task-receipt {
+    padding-top: 0;
+  }
+  .task-receipt .receipt-portrait {
+    height: 100px;
+  }
+}
+
+.intro-actions:has(> [hidden]):not(:has(> :not([hidden]))) {
+  display: none;
 }

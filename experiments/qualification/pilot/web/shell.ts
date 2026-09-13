@@ -22,45 +22,44 @@ export async function setView(view: string) {
   const copy =
     view === "activity"
       ? [
-          "Your work.",
-          "Every step.",
-          "Follow your funded tasks, open delivered reports, and check payment receipts.",
+          "Your reviews",
+          reviewer
+            ? "Track your assignments, deliver reports and collect payment."
+            : "Track progress, open reports and approve payment.",
         ]
       : view === "help"
         ? [
-            "Your workspace.",
-            "Your keys.",
-            "Connect your wallet and enable private reports. Your private keys stay on your device.",
+            "Your workspace",
+            reviewer
+              ? "Manage your qualification, wallet and private reports."
+              : "Manage your wallet and private reports.",
           ]
         : reviewer
           ? [
-              "Your expertise.",
-              "Less exposure.",
-              "Find a funded task. Prove you qualify without sharing your credential identifier. Deliver privately.",
+              "Find your next review",
+              "Prove you qualify. Deliver a private report. Get paid.",
             ]
           : [
-              "Good work.",
-              "Less exposure.",
-              "Hire a qualified reviewer. Keep their credential details private, and the report between the two of you.",
+              "Post a review task",
+              "A qualified reviewer. A report encrypted for both of you.",
             ];
-  el("workspace-title").replaceChildren(
-    document.createTextNode(copy[0]),
-    document.createElement("br"),
-  );
-  const emphasis = document.createElement("em");
-  emphasis.textContent = copy[1];
-  el("workspace-title").append(emphasis);
-  el("workspace-description").textContent = copy[2];
+  el("workspace-title").textContent = copy[0];
+  el("workspace-description").textContent = copy[1];
+  el("post-task").hidden = true;
+  el("intro-demo").textContent = "How it works ↗";
+  el("intro-demo").hidden = view !== "tasks";
   el("rail-caption").textContent = reviewer
     ? "Let your work speak."
     : "Make room for good work.";
   el("post-task").textContent = reviewer ? "Find a task" : "Post a task";
   el("view-caption").textContent =
     view === "tasks"
-      ? "A SECOND SET OF EYES. ON YOUR TERMS."
+      ? reviewer
+        ? "REVIEWER / TASKS"
+        : "CLIENT / NEW REVIEW"
       : view === "activity"
-        ? "THE WORK, FROM START TO FINISH."
-        : "A LITTLE SETUP. THEN GOOD WORK.";
+        ? "ACTIVITY"
+        : "SETTINGS";
   if (view === "demo" && !cleanupDemo) {
     const { mountCutoutDemo } = await import("./demo");
     if (requestedView === "demo" && !cleanupDemo)
@@ -70,8 +69,11 @@ export async function setView(view: string) {
 export function revealInWorkspace(target: HTMLElement) {
   const screen = target.closest<HTMLElement>("[data-screen]")?.dataset.screen;
   if (screen && document.body.dataset.view !== screen) void setView(screen);
-  const details = target.closest("details");
-  if (details) details.open = true;
+  let parent: HTMLElement | null = target;
+  while (parent) {
+    if (parent instanceof HTMLDetailsElement) parent.open = true;
+    parent = parent.parentElement;
+  }
 }
 export function mountShell() {
   document.querySelectorAll<HTMLButtonElement>(".rail-nav [data-view]").forEach(
