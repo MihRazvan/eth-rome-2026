@@ -1,9 +1,9 @@
 name: Verify Deaddrop
 on:
   push:
-    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json', 'package.json', 'tsconfig.json', 'vite.config.ts', 'scripts/**']
+    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json', 'package.json', 'tsconfig.json', 'vite.config.ts', 'scripts/**', 'deployments/**']
   pull_request:
-    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json', 'package.json', 'tsconfig.json', 'vite.config.ts', 'scripts/**']
+    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json', 'package.json', 'tsconfig.json', 'vite.config.ts', 'scripts/**', 'deployments/**']
   workflow_dispatch:
 jobs:
   proof-and-protocol:

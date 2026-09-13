@@ -26,7 +26,7 @@ Today the issuer and dispute arbitrator are the Deaddrop team. Test enrollment i
 
 ## What exists today
 
-A distinctive, responsive web application; a no-account walkthrough with real browser encryption and simulated settlement; deployed Fuji contracts; public Arkiv discovery; public Swarm documents; and local/browser proof generation. [Evidence](docs/cutout/evidence/saved-pass/README.md) includes a complete public paid task: browser pass issuance/collection, proof-checked acceptance, encrypted Swarm delivery, client decryption and finalized 0.1 test USDC payment. Real Arkiv two-browser publication and native expiry were also captured. These used operator-controlled wallets; independent teammate review and final presentation recording remain separate.
+A distinctive, responsive web application; a no-account walkthrough with real browser encryption and simulated settlement; deployed Fuji contracts; public Arkiv discovery; public Swarm documents; and local/browser proof generation. [Evidence](docs/deaddrop/evidence/saved-pass/README.md) includes a complete public paid task: browser pass issuance/collection, proof-checked acceptance, encrypted Swarm delivery, client decryption and finalized 0.1 test USDC payment. Real Arkiv two-browser publication and native expiry were also captured. These used operator-controlled wallets; independent teammate review and final presentation recording remain separate.
 
 Wallets, rewards and scope are public. Credential contents and report plaintext are protected. This is an experimental testnet product, with a single-process proving setup and no production audit or external accreditation.
 
@@ -34,4 +34,4 @@ Wallets, rewards and scope are public. Credential contents and report plaintext 
 
 Pilot focused reviews with one real reviewer collective and a small group of protocol teams. Validate whether clients value the qualification requirement and whether reviewers value reduced credential exposure. Replace temporary gateway storage with an operator-funded retention policy, improve credential delivery and document-key recovery, and commission independent cryptographic and contract review before real-value use. The [first-100-users proposal](feedback.md#first100users-hypothesis) is a recruitment hypothesis, not claimed traction.
 
-For the presentation, use the [cue sheet](docs/CUTOUT-TEAM-BRIEF.md). For what happens behind every click and sponsor questions, use the [presenter guide](docs/CUTOUT-PRESENTER-GUIDE.md).
+See the [user flow](docs/deaddrop/USER-FLOW.md), [architecture](docs/deaddrop/ARCHITECTURE.md) and [sponsor integrations](docs/deaddrop/BOUNTIES.md) for implementation details.

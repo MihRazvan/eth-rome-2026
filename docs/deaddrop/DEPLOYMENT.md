@@ -64,6 +64,12 @@ node docs/design/deaddrop/verify-browser.mjs https://cutout-ethrome-2026.vercel.
 
 This checks public desktop/mobile UI and the explicitly simulated walkthrough. It does not sign, upload or establish paid completion. Use the [manual test](TESTING.md) for the funded lifecycle and preserve its public receipts separately.
 
+## Reproduce the existing hosted build
+
+With Node24.12+, Go1.25.7 and Foundry1.5.1 installed, run `npm ci` and `npm run build:hosting`. The wrapper retrieves the existing **public** proving artifacts from the hosted app, checks their pinned hashes from the [public deployment manifest](../../deployments/fuji.json), compiles contracts and runs the verified active build. It does not create a new setup or require credential/holder secrets. The exact deployed verifier remains authoritative.
+
+This produces `.runtime/review-pass-vercel/.vercel/output` and `.vercel/output`. Use the prebuilt deploy command above with the configured project. Automatic source builds additionally need Go/Foundry available; the project remains disconnected from automatic Git builds. An unavailable or mismatched public artifact fails the build rather than substituting fixtures.
+
 ## Deploy a separate Fuji instance
 
 ```sh

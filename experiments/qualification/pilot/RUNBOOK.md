@@ -50,4 +50,4 @@ node experiments/qualification/pilot/browser-test.mjs
 
 Run `go test -count=1 ./...` inside `experiments/qualification/prover` too. Browser commands require installed Playwright Chromium. The integrated browser test needs a **fresh pilot deployment**, the running18888server and actual local chain/Bee. It creates two jobs, revokes its durable credential and pays both jobs; it is not read-only and should not run during a user's session. Evidence goes under `.runtime/qualification-pilot/evidence`.
 
-Public preflight and the unfilled participant worksheet are in [ACCESS.md](ACCESS.md) and [PILOT.md](PILOT.md). This runbook does not provide a completed public deployment or production hosting path.
+Public preflight and the unfilled participant worksheet are in [ACCESS.md](ACCESS.md) and [PILOT.md](../../../docs/deaddrop/TESTING.md). This runbook does not provide a completed public deployment or production hosting path.

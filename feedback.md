@@ -1,4 +1,4 @@
-# Review Pass — Arkiv integration feedback
+# Deaddrop — Arkiv integration feedback
 
 Observed12September2026; SDK0.8.1, viem2.56.3, Tiramisu7738577. [Research and reproducible read-only probe](docs/review-pass/arkiv/research.md). No public funded entity was created during these checks. Findings below come from actual source/RPC/browser observations unless explicitly described as deterministic adapter tests.
 

@@ -41,7 +41,7 @@ Some linked READMEs contain then-current blockers such as “Swarm login require
 | Invalid/mismatched proof files rejected before proving | [Proof input tests and browser checks](../design/cutout/evidence/proof-file-selection/README.md) | Shape/consistency validation is not signature verification |
 | Desktop/mobile product and walkthrough | [Hosted browser record](../design/cutout/evidence/hosted/browser.json) | Guided settlement simulated, browser encryption real |
 
-Verification commands are in the [quickstart](QUICKSTART.md#verification). The [acceptance ledger](../ACCEPTANCE.md) retains detailed results, failed attempts, corrections and explicit skipped cases. Older passing tests describe their recorded source revisions; they do not imply every later commit reran every integration.
+Verification commands are in the [quickstart](QUICKSTART.md#verification). The dated evidence bundles retain results, failed attempts, corrections and explicit skipped cases. Older passing tests describe their recorded source revisions; they do not imply every later commit reran every integration.
 
 ## Submission documentation checks
 

@@ -18,6 +18,6 @@ These are rendered application captures, not design mockups. The paid task's his
 
 ## Preserved boundaries
 
-No contract deployment, funding, acceptance, payment, Arkiv publication, issuer reset, proof setup regeneration or new Swarm upload was performed for this visual release. Existing public paid-lifecycle receipts remain in [saved-pass evidence](../../../cutout/evidence/saved-pass/README.md). Retrieval in this pass used that genuine prior report.
+No contract deployment, funding, acceptance, payment, Arkiv publication, issuer reset, proof setup regeneration or new Swarm upload was performed for this visual release. Existing public paid-lifecycle receipts remain in [saved-pass evidence](../../../deaddrop/evidence/saved-pass/README.md). Retrieval in this pass used that genuine prior report.
 
 The existing app hostname remains in use because credential/report keys are origin-bound. Historical internal names and paths remain for compatibility. [Design and bounty decisions](../README.md) explicitly separate the proposed heartbeat, auction, feeds, padding and asset-track changes from implemented behavior. Team1 track selection was not changed in this pass.

@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "chainId": 43113,
+  "token": "0x5425890298aed601595a70AB815c96711a31Bc65",
+  "tokenDecimals": 6,
+  "testOnly": true,
+  "sourceRevision": "a9d0181640148523b2b9ecbb160fbab76f2455a0",
+  "setupTrust": "Single-process experimental Groth16 setup; no production ceremony",
+  "setupHashes": {
+    "proving.key": "6345df1dd836c5b70667456093d51beb31ea4cd7b7f64d8c135fd5d8a6db49a3",
+    "verifying.key": "c924236aaf25dad8d3519f66d477dbaf22b51c4a21c763ad0255a8bbb09c3840",
+    "circuit.r1cs": "053bd5c4993b7d49350ef90ea3bffb8f437f5fe6ef4a554e63cf540432b771e9",
+    "setup.json": "0b81ee1657d6fa8ce064fa89d4d2faf8087d4fe907a4370e3270984ab006bc06"
+  },
+  "circuitHashes": {
+    "circuit.go": "5a60e9ef2508da1238115698e03d1c236aace25123bd3e748d197a565e7eb3ab",
+    "credential.go": "7f6b18a272e80a6594337279224b5b1be563862f72a1f5f4df397738be26cc7f",
+    "go.mod": "5c356f6f39b897f5e9f68b3130b07d6196a916c1d6f1dc4df652360c929b5630",
+    "go.sum": "3bf6fc0d6933d070b88d1671b4a48c086ee31bc25dbf3cfe25d6d3ffebbcc9d0"
+  },
+  "sourceHashes": {
+    "QualificationEscrow": "0fdfbb30f835a49cf22e08291c1ccab93a6120d97a843050458884e52bffba9a",
+    "QualificationKeys": "85535201f1a6bff197d3ec0c5bc7db70ae8d6bb1be6448fd4fc87c2d3db1b088"
+  },
+  "verifierSourceSha256": "4b7ad212059c3f52fdf028de9746009bf6fb4b62f92edc010bd0a38cab8d9d16",
+  "runtimeCodeHashes": {
+    "verifier": "0x0869a21c9b77e97378db524e6a617230d7a72965e49e47fc0dc41ba0d2574128",
+    "keyRegistry": "0xd79319cbb0accd355784dc9b48bd987befadd053be95da2873851640716f197b",
+    "escrow": "0x6b9bfb94d3d975067b5d5118601abd1b02138703a74bb1cd03e6d4e96fb4a2de"
+  },
+  "environment": "fuji-testnet",
+  "rpcUrl": "https://api.avax-test.network/ext/bc/C/rpc",
+  "escrow": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+  "verifier": "0x9c1293e7e499d56fdc52186e7624dcfa04dfcbd1",
+  "keyRegistry": "0x181db4e48a0e76fdc50101085ac3b831464792c1",
+  "deploymentBlock": "58333611",
+  "issuer": "0xB9080458DE79F614DB5d5208AB31bbF22A33DeAd",
+  "arbitrator": "0xB9080458DE79F614DB5d5208AB31bbF22A33DeAd",
+  "snapshot": {
+    "sha256": "0xb6f119bc297631f7b7af8f5ae39fb9bbf569efb9b15ab14751ec77995e52d156",
+    "reference": "19ad2c00d93447d69c66d153bbe804c686303cd8d83fd448dc58b26eb49efaf7"
+  },
+  "snapshotPublication": "verified",
+  "swarm": {
+    "retrievalUrl": "https://api.gateway.ethswarm.org"
+  },
+  "arkiv": {
+    "rpcUrl": "https://rpc.tiramisu.db-chain.testnet.arkiv.network",
+    "wsUrl": "wss://rpc.tiramisu.db-chain.testnet.arkiv.network"
+  },
+  "transactions": [
+    {
+      "name": "verifier",
+      "hash": "0x82d76d1a59c812c992c74a8aa52a8f26d99d63e955b92ec3d47790bc3cdb7281",
+      "receipt": {
+        "blockNumber": "58333611",
+        "blockHash": "0x71f7161b73a0dc6304b35785a6772536032dd9187d58a9dca8c619d4109fb85b",
+        "contractAddress": "0x9c1293e7e499d56fdc52186e7624dcfa04dfcbd1",
+        "status": "success"
+      }
+    },
+    {
+      "name": "keyRegistry",
+      "hash": "0x42fffa69eaf0a7dac6c543705c71db6b04e66d2160bf51bd266421bee2a96026",
+      "receipt": {
+        "blockNumber": "58333613",
+        "blockHash": "0x6bf5829f3994266f995a11a05060e7f6c3b0cc30ad237e02f9e815f450f45f28",
+        "contractAddress": "0x181db4e48a0e76fdc50101085ac3b831464792c1",
+        "status": "success"
+      }
+    },
+    {
+      "name": "escrow",
+      "hash": "0xcc4088b926d5f957abc37c9d4b8a73865814de73f6c0ac92cdce6be8e23f684f",
+      "receipt": {
+        "blockNumber": "58333615",
+        "blockHash": "0x2923ba65b6645260fc67c8c6d8ca9fcaab924412a5fda3484752f79475bef5a0",
+        "contractAddress": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+        "status": "success"
+      }
+    }
+  ],
+  "storageMode": "swarm-gateway"
+}

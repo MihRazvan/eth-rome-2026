@@ -1,4 +1,4 @@
-# Run and demonstrate Review Pass
+# Run and demonstrate Deaddrop
 
 Run from the repository root. This is an isolated local experiment with test issuer/holder files and public development transaction accounts. Do not put real credentials or assets into this helper, or bind it to a public interface.
 

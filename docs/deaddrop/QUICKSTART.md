@@ -12,7 +12,7 @@ Requires Node **24.12+** and npm. From a fresh checkout:
 git clone --branch main https://github.com/MihRazvan/eth-rome-2026.git
 cd eth-rome-2026
 npm ci
-npx vite experiments/qualification/pilot/web --host 127.0.0.1 --port 18904 --strictPort
+npm run dev
 ```
 
 Open **http://127.0.0.1:18904/?view=demo**. Follow the scope → qualification → seal → open → payment walkthrough. Encryption/decryption happen in the browser; qualification and settlement are simulated. No document upload or transaction is performed by the walkthrough.
@@ -22,7 +22,7 @@ This command serves only the UI. `/api/config` is absent, so the live workspace 
 For a static UI build:
 
 ```sh
-npx vite build experiments/qualification/pilot/web --outDir ../../../../.runtime/deaddrop-ui-build
+npm run build
 ```
 
 The output is not an active Fuji deployment and contains no configured read API. Root `npm run dev` opens the Deaddrop interface; the complete local rehearsal below provides its chain and storage services.

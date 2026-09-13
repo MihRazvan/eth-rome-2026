@@ -1,6 +1,6 @@
-# Cutout Arkiv schema — version2
+# Deaddrop Arkiv schema — version2
 
-Current product on `review-pass/product`. The earlier EXIT schema remains below as historical documentation. Implementation: [`pilot/listings.ts`](../experiments/qualification/pilot/listings.ts), SDK0.8.1/Tiramisu7738577.
+Current product on `main`. The earlier EXIT schema remains below as historical documentation. Implementation: [`pilot/listings.ts`](../experiments/qualification/pilot/listings.ts), SDK0.8.1/Tiramisu7738577.
 
 An entity advertises a funded technical-review opportunity. It is owned and created by the funding client's wallet, with immutable public payload and owner-only extension. Native `expiresAt` is the discovery lease, not a credential expiry or escrow deadline. No cleanup/deletion service is used to simulate expiration.
 

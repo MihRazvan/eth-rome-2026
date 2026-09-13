@@ -1,82 +1,20 @@
-> Current active build: gateway-funded Swarm storage (`swarm-gateway`) needs no user identity or postage setup. The historical `--pending` publisher still uses Swarm ID. The active builder accepts existing `swarm-id` deployment manifests and deliberately selects the new adapter; addresses, cryptography and onchain state are unchanged. See [verification and service limits](../../../../docs/design/cutout/evidence/account-free-storage/README.md).
+# Deaddrop hosting
 
-# Review Pass on Vercel
+The [deployment guide](../../../../docs/deaddrop/DEPLOYMENT.md) is authoritative. The existing app hostname is retained because private browser keys are origin-bound.
 
-The local long-running server is not uploaded. Build Output API v3 packages the frontend as static files and an independently bundled Node24 read-only function. Browser proving, wallets and Swarm ID uploads stay in the user's browser. This deployment never needs a wallet private key, issuer secret, holder file, recovery phrase or server upload endpoint.
+From the root, `npm run build:hosting` fetches the exact public proving artifacts pinned by the deployment manifest, checks their hashes, compiles the existing contracts and builds the static app plus Vercel Build Output API. It requires Node24.12+, Go1.25.7 and Foundry1.5.1. It does not run a new cryptographic setup, deploy contracts or load issuer/holder secrets.
 
-## Build and deploy
-
-From the repository root with the pinned npm dependencies installed:
+With the already-configured project access:
 
 ```sh
-# Explicit honest setup screen while public contracts/storage are pending.
-node experiments/qualification/pilot/hosting/build.mjs --pending
-
-# When an actual Fuji manifest and matching public artifacts exist:
-node experiments/qualification/pilot/hosting/build.mjs --config .runtime/review-pass-fuji/deployment.json
-
-# Only the isolated build directory is the Vercel project root.
-vercel link --yes --project review-pass-ethrome-2026 --scope mihrazvans-projects --cwd .runtime/review-pass-vercel
-# First link can auto-connect the repository. Disconnect this NEW project
-# to prevent the root EXIT build from replacing it; confirm the CLI prompt.
-vercel git disconnect --cwd .runtime/review-pass-vercel --scope mihrazvans-projects
+npm run build:hosting
 vercel deploy --prebuilt --prod --cwd .runtime/review-pass-vercel --scope mihrazvans-projects
 ```
 
-The existing linked staging directory can be redeployed directly; do not repeat linking on every build.
+The wrapper also prepares `.vercel/output` for standard prebuilt deployment. Do not reconnect automatic Git builds unless that environment has the required Go/Foundry tools. The static `npm run build` output alone is the UI walkthrough; it does not contain the live API.
 
-Do not run the deployment from the repository root: its root vercel.json serves the preserved EXIT project. The separate project leaves that application and teammate projects untouched. Vercel authentication is the existing CLI login; the Fuji deployer key remains local in the Git-ignored .env. No secret is required in Vercel environment variables. The build does not read .env.
+For another deployment, use `build.mjs --config <verified-public-manifest>` with its matching public setup directory. The builder checks finalized Fuji bytecode and authorities, the whole Swarm snapshot and artifact hashes before enabling financial actions. No fixture fallback is used.
 
-The active build refuses local-chain manifests, custom/private endpoints, missing deployment hashes, unmatched finalized bytecode/escrow authorities, a stale public snapshot and mismatched setup hashes. It extracts only an explicit public projection. Prover binaries and matching public setup are copied by filename allowlist; private runtime directories are never copied. An inventory with byte hashes is saved outside deployment output as build-evidence.json. The build's output is .runtime/review-pass-vercel/.vercel/output; it is not tracked in Git. A pending build is explicit and is never a fallback when an active build fails.
+The Node24 function provides bounded public reads. `/api/enrollment` additionally accepts wallet-authorized encrypted applications through a dedicated server-only gas relay; its compatibility environment variable is `CUTOUT_ENROLLMENT_RELAY_KEY`. This is not the issuer signing key. Reports are encrypted and uploaded in the browser using gateway-funded Swarm postage. New issuances are manually reviewed offline.
 
-The public setup page explains both user roles and enables real Swarm ID sign-in. After storage credit is active, an explicit click can upload a generated public test note and verify independent retrieval. It never offers financial transactions or claims a public funded workflow. Once the active manifest is available, rebuild and redeploy to activate the existing workspace at the same origin. First-time reviewer enrollment remains separate.
-
-## HTTP and deployment boundaries
-
-- GET /api/config exposes reviewed public configuration and explicit pending/active status.
-- GET /api/snapshot downloads the whole snapshot and compares the root with finalized escrow state.
-- GET /api/terms?job= and /api/document?job= derive locator/digest from the configured escrow, retrieve independently and authenticate bytes. Related chain reads share one finalized block and recheck its canonical hash.
-- Mutation methods return405; pending data reads return503. No server signs or uploads.
-- Vercel function duration60seconds; internal read deadline40seconds. Responses are bounded below the platform4.5MB response limit. No in-memory upload quota or long-running WebSocket server is hosted.
-- Arkiv WSS runs directly in the browser. Fixed public origins are permitted by CSP. The worker response alone permits wasm-unsafe-eval; general script unsafe-eval is not enabled.
-- Unknown/private paths return404. CDN config/data caching is disabled so issuer state is rechecked. Static assets are deployment-specific.
-
-The current active-manifest promotion path cannot be declared live until the Fuji deployment and public snapshot exist. Mocked API tests prove handling, not public sponsor completion. Deployment verification must open the public HTTPS URL without a Vercel login and check status, API routes, CSP, mobile layout and actual Swarm connection initialization. A signed-in storage test still requires the participant's browser and credit.
-
-## References checked
-
-- https://vercel.com/docs/build-output-api/primitives
-- https://vercel.com/docs/build-output-api/configuration
-- https://vercel.com/docs/cli/deploy
-- https://vercel.com/docs/functions/runtimes/node-js/node-js-versions
-- https://vercel.com/docs/functions/limitations
-
-Vercel CLI59.11.7 and Node24.12.0 were available locally. No framework/dependency change was needed.
-
-## Reviewed snapshot publication before activation
-
-The pending build validates `hosting/publication/issuer-public.json` and `snapshot.json` through the Go public-metadata validator and serves only those two explicit public files. It exposes an exact byte hash/length/root manifest and an explicit browser publication button. No private registry or credential is copied. A connected participant spends their Swarm postage to upload the whole reviewed snapshot; independent retrieval is required and its public reference can be shared with the operator.
-
-Contracts may be deployed first with `deploy-fuji.mjs --broadcast-contracts` using a validated local public snapshot and no reference. This writes `snapshotPublication: pending`; contracts are publicly callable but the funded workspace remains disabled. The normal `--broadcast` still requires verified prior Swarm publication. After a participant publishes, run:
-
-```sh
-node experiments/qualification/pilot/publish-snapshot.mjs <64-hex-public-reference>
-node experiments/qualification/pilot/hosting/build.mjs --config .runtime/review-pass-fuji/deployment.json
-vercel deploy --prebuilt --prod --cwd .runtime/review-pass-vercel --scope mihrazvans-projects
-```
-
-Publication finalization checks the exact original byte digest, public issuer key and current finalized onchain root before recording the reference. Active hosting again checks public retrieval, code hashes and authorities. It never promotes an unpublished snapshot implicitly.
-
-This pilot uses the project deployer as both issuer root authority and explicitly trusted arbitrator, with separate client and reviewer wallets. This is a team-administered experiment, not independent arbitration or external professional accreditation.
-
-## Cutout production alias
-
-Cutout is the current product name. Keep the existing Vercel project and original URL to preserve previously enrolled browser origins. The Cutout hostname is registered as a verified production domain on the existing project. Production deployments should assign it automatically. The following command can repair the alias after checking the project domain is registered:
-
-```sh
-vercel alias set <immutable-deployment-url> cutout-ethrome-2026.vercel.app --cwd .runtime/review-pass-vercel --scope mihrazvans-projects
-```
-
-Verify the actual alias with `node docs/design/cutout/verify-browser.mjs https://cutout-ethrome-2026.vercel.app <evidence-directory>`. The walkthrough is a declared simulation and does not perform funded transactions or storage uploads. Device keys are origin-bound browser state; do not silently redirect old enrolled profiles to a new hostname.
-
-A bare `vercel alias set` initially returned Vercel SSO for fresh visitors. Registering `cutout-ethrome-2026.vercel.app` through the project domains API fixed this without changing `ssoProtection: all_except_custom_domains`. Always verify with a fresh browser, not an authenticated Vercel bypass. [Domain assignment behavior](https://vercel.com/docs/cli/alias).
+The optional `--pending` setup mode supports original public snapshot publication; it does not enable funded work. The active deployment and original paid-lifecycle receipts are documented in [evidence](../../../../docs/deaddrop/EVIDENCE.md).
