@@ -24,8 +24,10 @@ Deaddrop connects reviewers with paid technical review tasks. Enrollment is auto
 
 ## Inspect the submission
 
+[Presentation video](https://youtu.be/oYqHnYT8WfU) · [Pitch slides](../SLIDES.md)
+
 - [Bounty map and submission checklist](deaddrop/BOUNTIES.md)
-- [Avalanche / Team1 Track A](deaddrop/bounties/AVALANCHE.md)
+- [Avalanche / Team1 Track B](deaddrop/bounties/AVALANCHE.md)
 - [Arkiv Missions 02 / 03](deaddrop/bounties/ARKIV.md), [schema](../arkiv/schema.md) and [SDK feedback](../feedback.md)
 - [Swarm](deaddrop/bounties/SWARM.md)
 - [Verification evidence](deaddrop/EVIDENCE.md), including the paid public review and native-expiry receipts
