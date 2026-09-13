@@ -100,7 +100,7 @@ let role: Role =
     : "client";
 let readiness: Readiness = { key: false, gas: null, balance: null };
 let chainNow = 0;
-let enrollmentMessage = "Reviewer pass needed";
+let enrollmentMessage = "Set up when you accept";
 let savedPass: CredentialVaultEntry | undefined;
 let enrollment: ReturnType<typeof mountEnrollment> | undefined;
 let issuerCoordinates: {issuerX:string;issuerY:string} | undefined;
@@ -116,7 +116,7 @@ async function syncSavedPass(){
   const entry=scope?await loadCredentialVault(scope):undefined;
   if(session!==generation)return;
   savedPass=entry;
-  enrollmentMessage=entry?.credential && entry.credential.expiry>chainNow ? "Reviewer pass ready" : entry?.pending ? "Awaiting issuer approval" : "Reviewer pass needed";
+  enrollmentMessage=entry?.credential && entry.credential.expiry>chainNow ? "Ready to review" : entry?.pending ? "Finishing setup" : "Set up when you accept";
 }
 function hasSavedPass(qualificationClass:number){
   try{if(!savedPass?.credential)return false;validateProofPair(savedPass.credential,savedPass.holder,qualificationClass,chainNow);return true;}catch{return false;}
@@ -254,12 +254,12 @@ function renderGuide() {
               : `${formatUnits(r.balance, 6)} ${tokenSymbol} available`,
           ],
         ]
-      : [[false, "Qualification", enrollmentMessage]]),
+      : [[hasSavedPass(7), "Private access", enrollmentMessage]]),
   ];
   $("#readiness").innerHTML = checks
     .map(
       ([done, title, detail], i) =>
-        `<li data-complete="${done}"><span class="check">${done ? "✓" : i + 1}</span><span>${esc(title)}<small>${esc(detail)}</small>${title === "Qualification" ? '<button id="qualification-help" data-ui type="button" class="quiet">Set up qualification</button>' : ""}</span></li>`,
+        `<li data-complete="${done}"><span class="check">${done ? "✓" : i + 1}</span><span>${esc(title)}<small>${esc(detail)}</small>${title === "Private access" ? '<button id="qualification-help" data-ui type="button" class="quiet">View private access</button>' : ""}</span></li>`,
     )
     .join("");
   document
@@ -739,7 +739,7 @@ function render() {
           const stageHint =
             j.status === "Open"
               ? eligibility.accept
-                ? `Waiting for a qualified reviewer. Accept by ${date(j.acceptBefore)}.`
+                ? `Waiting for a reviewer. Accept by ${date(j.acceptBefore)}.`
                 : "The acceptance window is closed. The client can reclaim the reward."
               : j.status === "Accepted"
                 ? `The reviewer is working. Deliver by ${date(j.submitBefore)}. After that, an undelivered task can be refunded.`
@@ -774,7 +774,7 @@ function render() {
               ? button("publish", j.id, "List this review")
               : "";
           if (eligibility.accept && !j.scopeError && !isClient)
-            actions = `${config.browserProver ? `<div class="local-prover"><h4>${hasSavedPass(Number(j.class)) ? "Your reviewer pass is ready." : "A reviewer pass is required."}</h4><p class="fine">${hasSavedPass(Number(j.class)) ? "Verify your eligibility privately, then accept this review." : "Apply once, or restore an existing pass in your workspace."}</p>${!account ? '<button data-proof-connect type="button">Connect reviewer wallet</button>' : !hasSavedPass(Number(j.class)) ? '<button data-ui data-enrollment-help type="button">Set up my reviewer pass</button>' : ""}${button("generate", j.id, "Verify my eligibility", hasSavedPass(Number(j.class)))}${button("cancel-proof", j.id, "Cancel", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p><details><summary>Use older credential files</summary><p class="fine">One-time import. Your pass will be saved privately in this browser.</p><label>Issued credential<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label>Original holder backup<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label></details></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Accept this task")}` : ""}`;
+            actions = `${config.browserProver ? `<div class="local-prover"><h4>${proofs.has(j.id) ? "Ready for your wallet signature." : "Take this review."}</h4><p class="fine">${proofs.has(j.id) ? "Your private proof is ready. Confirm acceptance to reserve this task on Avalanche." : hasSavedPass(Number(j.class)) ? "Your browser prepares a private proof, then you confirm the assignment in your wallet." : "First time? Confirm one message. We set up your private access and prepare the task automatically."}</p>${!account ? '<button data-proof-connect type="button">Connect reviewer wallet</button>' : proofs.has(j.id) ? button("accept", j.id, "Confirm acceptance") : button("generate", j.id, "Accept this task", !!account)}${button("cancel-proof", j.id, "Cancel", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>`;
           if (role === "reviewer" && isClient && eligibility.accept) {
             actions = `<div class="local-prover" data-wallet-mismatch="${j.id}"><h4>This is the client's wallet.</h4><p>You connected <code>${esc(account!)}</code>, the account that funded this task. The Reviewer tab changes the view; it does not switch your wallet account.</p><p>To review as a separate participant, select your reviewer account in the wallet. Keep this task open; you do not need to list or fund it again.</p><button data-select-reviewer type="button">Choose reviewer account</button><button data-proof-connect type="button" class="quiet">Reconnect selected account</button><p class="fine">If the wallet keeps choosing this address, open its connected-site settings and connect only the reviewer account to Deaddrop. A separate reviewer browser profile also works.</p></div>`;
           }
@@ -813,7 +813,7 @@ function render() {
             account?.toLowerCase() === config.arbitrator.toLowerCase()
           )
             actions += button("resolve", j.id, "Arbitrate 50 / 50 split");
-          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>TASK ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body">${progress}<h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<details class="task-people"><summary>People & verification</summary><p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p></details><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><details class="task-deadlines"><summary>All deadlines</summary><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p></details><p class="stage-hint">${esc(stageHint)}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
+          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>TASK ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body">${progress}<h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<details class="task-people"><summary>People & verification</summary><p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a reviewer with active private access"}</p></details><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><details class="task-deadlines"><summary>All deadlines</summary><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p></details><p class="stage-hint">${esc(stageHint)}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
         })
         .join("")
     : `<article class="ticket empty-state"><div class="ticket-body"><h3>${role === "reviewer" ? "Your next review starts here." : "Make room for your first review."}</h3><p class="terms">${role === "reviewer" ? "Choose an open task from the board. Your accepted work and delivered reports will appear here." : "Post a specific question and fund its reward. You can follow the review from acceptance to payment here."}</p><button data-ui data-back-tasks>${role === "reviewer" ? "Find a task" : "Post a task"}</button></div></article>`;
@@ -1053,7 +1053,7 @@ async function generatePresentation(id: string) {
     throw Error("Connect your wallet to a configured browser prover");
   const controller = new AbortController();
   proofController = controller;
-  const timeout = setTimeout(() => controller.abort(), 180_000);
+  const timeout = setTimeout(() => controller.abort(), 300_000);
   const current = () => {
     if (
       controller.signal.aborted ||
@@ -1066,6 +1066,8 @@ async function generatePresentation(id: string) {
     current();
     const el = document.getElementById(`proof-progress-${id}`);
     if (el) el.textContent = text;
+    const cancelButton=document.querySelector<HTMLButtonElement>(`[data-action="cancel-proof"][data-id="${id}"]`);
+    if(cancelButton){cancelButton.dataset.eligible="true";syncButtons();}
     $("#notice").textContent = text;
   };
   const cancel = document.querySelector<HTMLButtonElement>(
@@ -1077,9 +1079,13 @@ async function generatePresentation(id: string) {
     document.querySelector<HTMLInputElement>(`[data-${kind}="${id}"]`)!,
   );
   try {
+    if(!hasSavedPass(Number(j.class))){
+      if(!enrollment)throw Error("Reviewer setup is temporarily unavailable. Please try again shortly.");
+      await enrollment.ensure({signal:controller.signal,onProgress:progress});current();
+    }
     const scope=await qualificationScope();current();
     const stored=scope?await loadCredentialVault(scope):undefined;current();
-    if(!stored?.credential)throw Error("Set up your reviewer pass first.");
+    if(!stored?.credential)throw Error("Private access could not be loaded. Please retry acceptance.");
     const privateFiles: any[] = [stored.credential,stored.holder];
     inputs.forEach((input) => { if(input) input.value = ""; });
     current();
@@ -1168,19 +1174,21 @@ async function generatePresentation(id: string) {
     proofs.set(id, p);
     return {
       message:
-        "Qualification proof verified. Review the scope, then select Accept this task to sign with your wallet.",
+        "Ready to accept. Select Confirm acceptance to reserve this task with your wallet.",
     };
   } finally {
     controller.abort();
     clearTimeout(timeout);
     inputs.forEach((input) => {
-      input.value = "";
+      if(input) input.value = "";
     });
     cancel.dataset.eligible = "false";
+    const currentCancel=document.querySelector<HTMLButtonElement>(`[data-action="cancel-proof"][data-id="${id}"]`);
+    if(currentCancel)currentCancel.dataset.eligible="false";
     const generate = document.querySelector<HTMLButtonElement>(
       `[data-action="generate"][data-id="${id}"]`,
     );
-    if (generate) generate.dataset.eligible = "false";
+    if (generate) generate.dataset.eligible = account && session === generation ? "true" : "false";
     if (proofController === controller) proofController = undefined;
   }
 }
@@ -1443,7 +1451,7 @@ async function action(name: string, id: string) {
     case "export": {
       const result = await fetchDocument(id);
       saveFile(
-        `cutout-${id}-encrypted.json`,
+        `deaddrop-${id}-encrypted.json`,
         JSON.stringify(
           {
             format: "review-pass-export",
@@ -1460,7 +1468,7 @@ async function action(name: string, id: string) {
       );
       return {
         preserve: true,
-        message: `Downloaded review-pass-${id}-encrypted.json. This export contains ciphertext; an authorized recipient key is still required to decrypt it.`,
+        message: `Downloaded deaddrop-${id}-encrypted.json. This export contains ciphertext; an authorized recipient key is still required to decrypt it.`,
       };
     }
     case "save": {
@@ -1471,10 +1479,10 @@ async function action(name: string, id: string) {
         throw Error("Only a recipient can save a decrypted report");
       const text = $(`#document-${id}`).textContent;
       if (!text) throw Error("Retrieve and decrypt this report first");
-      saveFile(`cutout-${id}-PRIVATE.txt`, text, "text/plain");
+      saveFile(`deaddrop-${id}-PRIVATE.txt`, text, "text/plain");
       return {
         preserve: true,
-        message: `Saved your decrypted report locally as cutout-${id}-PRIVATE.txt.`,
+        message: `Saved your decrypted report locally as deaddrop-${id}-PRIVATE.txt.`,
       };
     }
     case "pay":
@@ -1707,7 +1715,7 @@ $("#create").onclick = () =>
     window.dispatchEvent(new Event("cutout:activity"));
     return {
       message:
-        "Task funded. List this review so qualified reviewers can find it.",
+        "Task funded. List this review so reviewers can find it.",
     };
   });
 document.addEventListener("click", (e) => {
@@ -1801,7 +1809,7 @@ if (config.browserProver) {
   enrollment=mountEnrollment(config,{
     scope:qualificationScope,
     connect:()=>{if(busy)throw Error("Finish the current wallet action first.");return connect();},
-    sign:async(message)=>{if(busy)throw Error("Finish the current wallet action first.");if(!wallet||!account)throw Error("Connect reviewer wallet first.");return wallet.signMessage({account,message});},
+    sign:async(message)=>{if(busy&&!proofController)throw Error("Finish the current wallet action first.");if(!wallet||!account)throw Error("Connect reviewer wallet first.");return wallet.signMessage({account,message});},
     changed:async()=>{await syncSavedPass();render();},
     state:(message)=>{enrollmentMessage=message;renderGuide();},
   });

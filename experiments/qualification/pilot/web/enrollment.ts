@@ -7,8 +7,11 @@ import { bytesToHex, sha256 } from 'viem';
 export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVaultScope|undefined>; connect():Promise<void>; sign(message:string):Promise<string>; changed():Promise<void>; state(message:string):void }) {
  const $=(id:string)=>document.getElementById(id)!;
  let epoch=0,working=false,controller:AbortController|undefined;
- const message=(text:string)=>{$('enrollment-status').textContent=text;};
+ let operation:Promise<void>|undefined,progress:((text:string)=>void)|undefined;
+ const resumed=new Set<string>();
+ const message=(text:string)=>{$('enrollment-status').textContent=text;progress?.(text);};
  async function currentScope(){const s=await hooks.scope();if(!s)throw Error('Connect your reviewer wallet first.');return s;}
+ const current=(mine:number)=>{if(mine!==epoch||controller?.signal.aborted)throw Error('Setup paused. Your progress is saved; reconnect to continue.');};
  async function refresh(){
   const mine=epoch,scope=await hooks.scope();if(mine!==epoch)return;
   const entry=scope?await loadCredentialVault(scope):undefined;if(mine!==epoch)return;
@@ -21,62 +24,100 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
   $('enrollment-connect').hidden=!!scope;
   ($('save-private-pass') as HTMLButtonElement).disabled=!entry||working;
   if(!working){
-   const text=!scope?'Connect your reviewer wallet to apply or use a saved pass.':valid?`Reviewer pass ready · valid until ${new Date(entry!.credential!.expiry*1000).toLocaleString()}. You can accept eligible tasks.`:pending?'Application sent or prepared · awaiting issuer approval. Check approval to collect your pass.':entry?.credential?'Your test pass has expired. Apply again to renew it.':config.enrollment?'Apply for a temporary reviewer pass. Sign one message; no payment is requested.':'Online applications are unavailable on this deployment. You can restore an existing pass.';
-   message(text);hooks.state(valid?'Reviewer pass ready':pending?'Awaiting issuer approval':'Reviewer pass needed');
+   message(!scope?'Connect your reviewer wallet to get started.':valid?'Ready to accept work. Your private access is saved in this browser.':pending?'Finishing your private access. Your progress is saved.':config.enrollment?'Choose a task to get started. Private access is set up automatically when you accept work.':'Reviewer setup is temporarily unavailable. An existing saved pass can still be used.');
+   hooks.state(valid?'Ready to review':pending?'Finishing setup':'Set up when you accept');
+  }
+  const ticket=(entry?.pending as any)?.context?.ticket;
+  // Resume collection after reload without opening an unsolicited signature prompt.
+  if(scope&&ticket&&!valid&&!working&&!resumed.has(ticket)){
+   resumed.add(ticket);
+   queueMicrotask(()=>void ensure({allowSign:false}).catch(()=>{}));
   }
  }
- async function run(fn:(mine:number)=>Promise<void>){if(working)return;working=true;const mine=epoch;try{await refresh();await fn(mine);}catch(e){if(mine===epoch)message((e as Error).message);}finally{if(mine===epoch){working=false;const text=$('enrollment-status').textContent;try{await refresh();}catch{message('Private pass storage is unavailable. Reconnect to retry.');}if(text)message(text);}}}
- const current=(mine:number)=>{if(mine!==epoch)throw Error('Wallet changed. Reconnect to continue.');};
+ async function run(fn:(mine:number)=>Promise<void>){if(working)return;working=true;const mine=epoch;try{await refresh();await fn(mine);}catch(e){if(mine===epoch)message((e as Error).message);}finally{if(mine===epoch){working=false;const text=$('enrollment-status').textContent;try{await refresh();}catch{message('Private browser storage is unavailable. Reconnect to retry.');}if(text)message(text);}}}
  async function submit(scope:CredentialVaultScope,entry:CredentialVaultEntry,mine:number){
   const pending=entry.pending as any;
   const expires=Math.floor(Date.now()/1000)+240;
   const digest=sha256(bytesToHex(new TextEncoder().encode(JSON.stringify(pending.envelope))));
-  message('Confirm the application message in your wallet. No payment is requested.');
+  message('Confirm one message to set up your private reviewer access. No payment is requested.');
   const signature=await hooks.sign(enrollmentAuthorization(pending.context,digest,expires));current(mine);
-  const response=await fetch('/api/enrollment',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({applicant:scope.wallet,envelope:pending.envelope,expires,signature}),signal:controller?.signal});
+  const response=await fetch('/api/enrollment',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({applicant:scope.wallet,envelope:pending.envelope,expires,signature}),signal:AbortSignal.any([controller!.signal,AbortSignal.timeout(25000)])});
   const result=await response.json();current(mine);
-  if(!response.ok)throw Error(result.error||'Application was not confirmed. Check approval before retrying.');
-  message('Application received. The Deaddrop team will review it. Your pass will arrive here after approval.');
-  $('prepare-enrollment').hidden=true;$('check-enrollment').hidden=false;hooks.state('Awaiting issuer approval');
+  if(!response.ok)throw Error(result.error||'Setup was not confirmed. Continue setup to retry safely.');
+  pending.submittedAt=Math.floor(Date.now()/1000);
+  await saveCredentialVault(scope,entry,{replace:true});current(mine);
+  message('Creating your private reviewer access… This usually takes a few seconds.');
+  hooks.state('Finishing setup');
  }
- $('prepare-enrollment').onclick=()=>run(async(mine)=>{
-  const scope=await currentScope();current(mine);controller=new AbortController();
-  const existing=await loadCredentialVault(scope);current(mine);
-  if(existing?.credential && existing.credential.expiry>Math.floor(Date.now()/1000)){await refresh();return;}
-  if(!config.enrollment)throw Error('Online applications are unavailable.');
-  const holder=existing?.holder??await createHolderInBrowser({signal:controller.signal,onProgress:message});current(mine);
-  const reply=await generateChannelKeys();current(mine);
-  const context={chainId:config.chainId,escrow:config.escrow,issuer:config.issuer,ticket:bytesToHex(crypto.getRandomValues(new Uint8Array(32))).slice(2)};
-  const request=parseEnrollmentRequest({format:'cutout-enrollment-request',version:1,testOnly:true,chainId:config.chainId,escrow:config.escrow,issuer:config.issuer,qualificationClass:'7',holderCommitment:holder.holderCommitment,createdAt:Math.floor(Date.now()/1000)});
-  const envelope=await sealEnrollment({request,replyKey:reply.publicKey,applicant:scope.wallet},config.enrollment.publicKey,context,'application');current(mine);
-  const entry={holder,pending:{reply,context,envelope,createdAt:Math.floor(Date.now()/1000)}} as unknown as CredentialVaultEntry;
-  await saveCredentialVault(scope,entry,{replace:!!existing});current(mine);
-  await hooks.changed();current(mine);await submit(scope,entry,mine);
- });
- $('check-enrollment').onclick=()=>run(async(mine)=>{
-  const scope=await currentScope(),entry=await loadCredentialVault(scope);current(mine);
-  if(!entry?.pending)throw Error('No application is saved for this wallet.');
-  const pending=entry.pending as any;
-  message('Checking your application…');
-  const response=await fetch(`/api/enrollment?ticket=${encodeURIComponent(pending.context.ticket)}`,{cache:'no-store',redirect:'error'});
-  const result=await response.json();current(mine);
-  if(response.status===404){
-    if(!pending.createdAt || Math.floor(Date.now()/1000)-pending.createdAt>172800){
-      await saveCredentialVault(scope,{holder:entry.holder},{replace:true});current(mine);await hooks.changed();message('This application has expired. Apply again; your private holder stays the same.');return;
+ async function setup(mine:number,allowSign:boolean){
+  const scope=await currentScope();current(mine);
+  let entry=await loadCredentialVault(scope);current(mine);
+  if(entry?.credential&&entry.credential.expiry>Math.floor(Date.now()/1000))return;
+  if(!config.enrollment)throw Error('Reviewer setup is temporarily unavailable. Please try again shortly.');
+  if(entry?.pending&&Math.floor(Date.now()/1000)-Number((entry.pending as any).createdAt||0)>172800){
+   entry={holder:entry.holder};await saveCredentialVault(scope,entry,{replace:true});current(mine);
+  }
+  if(!entry?.pending){
+   if(!allowSign)throw Error('Select Continue setup to finish connecting your reviewer access.');
+   const holder=entry?.holder??await createHolderInBrowser({signal:controller!.signal,onProgress:message});current(mine);
+   const reply=await generateChannelKeys();current(mine);
+   const context={chainId:config.chainId,escrow:config.escrow,issuer:config.issuer,ticket:bytesToHex(crypto.getRandomValues(new Uint8Array(32))).slice(2)};
+   const request=parseEnrollmentRequest({format:'cutout-enrollment-request',version:1,testOnly:true,chainId:config.chainId,escrow:config.escrow,issuer:config.issuer,qualificationClass:'7',holderCommitment:holder.holderCommitment,createdAt:Math.floor(Date.now()/1000)});
+   const envelope=await sealEnrollment({request,replyKey:reply.publicKey,applicant:scope.wallet},config.enrollment.publicKey,context,'application');current(mine);
+   const next={holder,pending:{reply,context,envelope,createdAt:Math.floor(Date.now()/1000)}} as unknown as CredentialVaultEntry;
+   await saveCredentialVault(scope,next,{replace:!!entry});current(mine);entry=next;
+   await submit(scope,entry,mine);
+  }
+  const pending=entry.pending as any;resumed.add(pending.context.ticket);
+  const until=Date.now()+110000;let resent=false;
+  while(Date.now()<until){
+   current(mine);
+   message('Finishing your private reviewer access… You can keep this page open.');
+   const response=await fetch(`/api/enrollment?ticket=${encodeURIComponent(pending.context.ticket)}`,{cache:'no-store',redirect:'error',signal:AbortSignal.any([controller!.signal,AbortSignal.timeout(15000)])});
+   const result=await response.json();current(mine);
+   if(response.status===404&&!pending.submittedAt&&!resent){
+    if(!allowSign)throw Error('One wallet confirmation is still needed. Select Continue setup.');
+    resent=true;await submit(scope,entry,mine);continue;
+   }
+   if(response.status!==404&&!response.ok)throw Error(result.error||'Setup is taking longer than expected. Continue setup to retry.');
+   if(response.ok&&result.status==='approved'){
+    const credential=parseApproval(await openEnrollment(result.approval,pending.reply as ChannelKeys,pending.context,'approval'));current(mine);
+    if(Number(credential.expiry)<=Math.floor(Date.now()/1000)){
+     await saveCredentialVault(scope,{holder:entry.holder},{replace:true});current(mine);
+     throw Error('Your access needs renewing. Select Get started to continue.');
     }
-    await submit(scope,entry,mine);return;
+    validateProofPair(credential,entry.holder,7,Math.floor(Date.now()/1000));current(mine);
+    await saveCredentialVault(scope,{holder:entry.holder,credential} as CredentialVaultEntry,{replace:!!entry.credential});current(mine);
+    await hooks.changed();current(mine);message('Private access ready. You can accept a task.');return;
+   }
+   await new Promise<void>((resolve,reject)=>{
+    const signal=controller!.signal;
+    const abort=()=>{clearTimeout(timer);reject(Error('Setup paused. Your progress is saved.'));};
+    const timer=setTimeout(()=>{signal.removeEventListener('abort',abort);resolve();},2500);
+    signal.addEventListener('abort',abort,{once:true});
+   });
   }
-  if(!response.ok)throw Error(result.error||'Approval check unavailable. Try again.');
-  if(result.status!=='approved'){message('Your application is waiting for the Deaddrop team. Check back after approval.');return;}
-  const credential=parseApproval(await openEnrollment(result.approval,pending.reply as ChannelKeys,pending.context,'approval'));
-  current(mine);
-  if(Number(credential.expiry)<=Math.floor(Date.now()/1000)){
-    await saveCredentialVault(scope,{holder:entry.holder},{replace:true});current(mine);await hooks.changed();message('The issued test pass expired before collection. Apply again to renew it.');return;
-  }
-  validateProofPair(credential,entry.holder,7,Math.floor(Date.now()/1000));current(mine);
-  await saveCredentialVault(scope,{holder:entry.holder,credential} as CredentialVaultEntry,{replace:!!entry.credential});current(mine);
-  await hooks.changed();working=false;await refresh();
- });
+  throw Error('Setup is taking longer than expected. Your progress is saved. Select Continue setup to try again.');
+ }
+ async function ensure(options:{signal?:AbortSignal;onProgress?:(text:string)=>void;allowSign?:boolean}={}){
+  if(operation){try{await operation;}catch(e){if(options.allowSign===false)throw e;}if(options.signal?.aborted)throw Error('Setup paused. Your progress is saved.');return ensure(options);}
+  if(working)throw Error('Finish the current private access action first.');
+  working=true;controller=new AbortController();const activeController=controller,mine=epoch;
+  const abort=()=>activeController.abort();
+  if(options.signal?.aborted)controller.abort();
+  options.signal?.addEventListener('abort',abort,{once:true});progress=options.onProgress;
+  const active=(async()=>{
+   try{await refresh();await setup(mine,options.allowSign!==false);}
+   catch(e){if(mine===epoch)message((e as Error).message);throw e;}
+   finally{
+    options.signal?.removeEventListener('abort',abort);
+    if(mine===epoch){working=false;progress=undefined;controller=undefined;const text=$('enrollment-status').textContent;await refresh();if(text)message(text);}
+   }
+  })();operation=active;
+  try{await active;}finally{if(operation===active)operation=undefined;}
+ }
+ $('prepare-enrollment').onclick=()=>{void ensure().catch(()=>{});};
+ $('check-enrollment').onclick=()=>{void ensure().catch(()=>{});};
  $('enrollment-connect').onclick=()=>run(async()=>{await hooks.connect();working=false;await refresh();});
  $('save-private-pass').onclick=()=>run(async(mine)=>{
   const scope=await currentScope(),entry=await loadCredentialVault(scope);current(mine);if(!entry)throw Error('No pass is saved in this browser yet.');
@@ -93,7 +134,7 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
   const scope=await currentScope(),credential=await readFile('restore-credential'),holder=await readFile('restore-holder');current(mine);
   validateProofPair(credential,holder,7,Math.floor(Date.now()/1000));await saveCredentialVault(scope,{holder,credential});current(mine);await hooks.changed();working=false;await refresh();
  });
- function clear(){epoch++;controller?.abort();controller=undefined;working=false;for(const id of ['restore-private-pass','restore-credential','restore-holder'])($(id) as HTMLInputElement).value='';void refresh().catch(()=>message('Reconnect to load your private pass.'));}
+ function clear(){epoch++;controller?.abort();controller=undefined;working=false;progress=undefined;operation=undefined;resumed.clear();for(const id of ['restore-private-pass','restore-credential','restore-holder'])($(id) as HTMLInputElement).value='';void refresh().catch(()=>message('Reconnect to load your private pass.'));}
  window.addEventListener('pagehide',clear,{once:true});
- return {refresh,clear};
+ return {refresh,clear,ensure};
 }
