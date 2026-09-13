@@ -40,13 +40,13 @@ export async function setView(view: string) {
         ? [
             "Your workspace",
             reviewer
-              ? "Manage your qualification, wallet and private reports."
+              ? "Manage your wallet, reviewer access and private reports."
               : "Manage your wallet and private reports.",
           ]
         : reviewer
           ? [
               "Find your next review",
-              "Prove you qualify. Deliver a private report. Get paid.",
+              "Choose a task. Deliver a private report. Get paid.",
             ]
           : [
               "Post a review task",

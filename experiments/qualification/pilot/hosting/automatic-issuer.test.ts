@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
-import {allocateCredential,encryptIssuerState,decryptIssuerState} from './automatic-issuer';
+import {allocateCredential,encryptIssuerState,decryptIssuerState,requireStrongIssuerEtag} from './automatic-issuer';
 test('encrypted issuer ledger rejects tampering, wrong keys and plaintext',()=>{
  const key=randomBytes(32),data={version:1,registry:{private:'unique-private-registry'},issued:{}};
  const bytes=encryptIssuerState(data,key);
@@ -35,4 +35,10 @@ test('storage failure never returns an uncommitted credential or resets state',a
  const s=storage();s.deps.commit=async()=>{throw Error('storage down');};
  await assert.rejects(allocateCredential('a','hash',s.deps),/storage down/);assert.equal(s.get().state.registry.nextIndex,12);
  s.deps.read=async()=>{throw Error('missing ledger');};await assert.rejects(allocateCredential('a','hash',s.deps),/missing ledger/);
+});
+
+test('compressed weak validators cannot authorize issuer-state overwrites',()=>{
+ assert.equal(requireStrongIssuerEtag('"revision"'),'"revision"');
+ assert.throws(()=>requireStrongIssuerEtag('W/"revision"'));
+ assert.throws(()=>requireStrongIssuerEtag(''));
 });

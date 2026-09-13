@@ -20,6 +20,7 @@ export function decryptIssuerState(bytes:Buffer,key:Buffer){
  const decipher=createDecipheriv('aes-256-gcm',key,bytes.subarray(0,12));decipher.setAAD(AAD);decipher.setAuthTag(bytes.subarray(12,28));
  return JSON.parse(Buffer.concat([decipher.update(bytes.subarray(28)),decipher.final()]).toString('utf8'));
 }
+export function requireStrongIssuerEtag(etag:string){if(!/^"[^"]+"$/.test(etag))throw Error('Issuer ledger requires an uncompressed strong ETag');return etag;}
 // Injectable storage/signing boundaries let tests force real race/retry conditions.
 export async function allocateCredential(ticket:string,digest:string,deps:any){
  for(let attempt=0;attempt<6;attempt++){
@@ -57,8 +58,10 @@ export function createAutomaticIssuer(config:any,deps:any={}){
   const credential=await allocateCredential(record.ticket,digest,{
    read:async()=>{
     phase='ledger-read';
-    const result=await get(PATH,{access:'private',useCache:false});
+    const result=await get(PATH,{access:'private',useCache:false,token:process.env.BLOB_READ_WRITE_TOKEN,headers:{'accept-encoding':'identity'}});
     if(!result||result.statusCode!==200)throw Error('Issuer ledger unavailable; automatic reset forbidden');
+    // Compression can turn a strong ETag into W/"...", which cannot authorize CAS.
+    requireStrongIssuerEtag(result.blob.etag);
     return {state:decryptIssuerState(Buffer.from(await new Response(result.stream).arrayBuffer()),storageKey),etag:result.blob.etag};
    },
    issue:async(registry:any)=>{
@@ -73,7 +76,7 @@ export function createAutomaticIssuer(config:any,deps:any={}){
      return {credential,registry:JSON.parse(await readFile(join(dir,'registry-state.json'),'utf8'))};
     }finally{await rm(dir,{recursive:true,force:true});}
    },
-   commit:(next:any,etag:string)=>{phase='ledger-commit';return put(PATH,encryptIssuerState(next,storageKey),{access:'private',addRandomSuffix:false,allowOverwrite:true,ifMatch:etag,contentType:'application/octet-stream'});},
+   commit:(next:any,etag:string)=>{phase='ledger-commit';return put(PATH,encryptIssuerState(next,storageKey),{access:'private',token:process.env.BLOB_READ_WRITE_TOKEN,addRandomSuffix:false,allowOverwrite:true,ifMatch:etag,contentType:'application/octet-stream'});},
    conflict:(e:unknown)=>e instanceof BlobPreconditionFailedError,
   });
   return await sealEnrollment(credential,application.replyKey,context,'approval');
