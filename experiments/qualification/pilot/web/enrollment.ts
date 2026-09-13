@@ -69,6 +69,7 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
   if(!response.ok)throw Error(result.error||'Approval check unavailable. Try again.');
   if(result.status!=='approved'){message('Your application is waiting for the Cutout team. Check back after approval.');return;}
   const credential=parseApproval(await openEnrollment(result.approval,pending.reply as ChannelKeys,pending.context,'approval'));
+  current(mine);
   if(Number(credential.expiry)<=Math.floor(Date.now()/1000)){
     await saveCredentialVault(scope,{holder:entry.holder},{replace:true});current(mine);await hooks.changed();message('The issued test pass expired before collection. Apply again to renew it.');return;
   }
