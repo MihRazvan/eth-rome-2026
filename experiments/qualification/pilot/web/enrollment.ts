@@ -100,7 +100,21 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
   throw Error('Setup is taking longer than expected. Your progress is saved. Select Continue setup to try again.');
  }
  async function ensure(options:{signal?:AbortSignal;onProgress?:(text:string)=>void;allowSign?:boolean}={}){
-  if(operation){try{await operation;}catch(e){if(options.allowSign===false)throw e;}if(options.signal?.aborted)throw Error('Setup paused. Your progress is saved.');return ensure(options);}
+  if(operation){
+   const existing=operation;
+   let removeAbort=()=>{};
+   const cancelled=new Promise<never>((_,reject)=>{
+    const abort=()=>reject(Error('Setup paused. Your progress is saved.'));
+    if(options.signal?.aborted){abort();return;}
+    options.signal?.addEventListener('abort',abort,{once:true});
+    removeAbort=()=>options.signal?.removeEventListener('abort',abort);
+   });
+   try{await Promise.race([existing,cancelled]);}
+   catch(e){if(options.allowSign===false||options.signal?.aborted)throw e;}
+   finally{removeAbort();}
+   if(options.signal?.aborted)throw Error('Setup paused. Your progress is saved.');
+   return ensure(options);
+  }
   if(working)throw Error('Finish the current private access action first.');
   working=true;controller=new AbortController();const activeController=controller,mine=epoch;
   const abort=()=>activeController.abort();
