@@ -1,5 +1,7 @@
 # Deaddrop documentation
 
+Current product: **Deaddrop** (previously Cutout). Existing technical document paths and the hosted origin are preserved for compatibility.
+
 [Project README](../README.md) · [Open Deaddrop](https://cutout-ethrome-2026.vercel.app)
 
 ## Understand and try it

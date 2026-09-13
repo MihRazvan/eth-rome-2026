@@ -1,10 +1,14 @@
-# Cutout — verification evidence
+# Deaddrop — verification evidence
 
 [Docs](../README.md) · [Bounties](BOUNTIES.md) · [Deployment](DEPLOYMENT.md)
 
 This index maps claims to dated artifacts. A successful read-only contract simulation is not a transaction. Local Anvil/Bee execution is not a public sponsor integration. The guided walkthrough's settlement is explicitly simulated.
 
-## Latest interface follow-up
+## Deaddrop rebrand
+
+[13 September Deaddrop evidence](../design/deaddrop/evidence/README.md) records the thermal landing, dark working app, eleven hosted browser checks, preserved saved pass and exact paid-report decryption, plus passing qualification CI. The existing origin is retained for browser key continuity.
+
+## Earlier interface follow-up
 
 [Selective UX follow-up](evidence/ux-followup/README.md) records clearer task cards/sorting, the opened-report state, direct reviewer links and an actual empty-board-to-demo path. Public reads and paid-report decryption were checked; populated card screenshots are explicitly labelled visual fixtures. No new funded transaction was made.
 

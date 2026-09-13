@@ -1,3 +1,15 @@
+# Latest — Deaddrop rebrand
+
+13 September 2026. Current product **Deaddrop**, source **8afc0e7**, Vercel **dpl_61mGwgZyBDWUEbrfJF7bKUsjmuBw**, https://cutout-ethrome-2026.vercel.app. Rebuilt from the user’s thermal reference: interactive WebGL landing, dark compact app, self-hosted reference fonts, actual role entry, manual-issuer explanation and all guided/live states. [Design/proposal decisions](design/deaddrop/README.md). No invented collectives, telemetry promises or expiry-based financial behavior. Existing Team1 target unchanged.
+
+Verified:145 Node passes/1 optional skip; pilot TS/build;6 actual hosted browser groups;5 original-profile paid-report/saved-pass checks;0 page errors. Full qualification CI passed at8afc0e7 (run34735573627). Exact old report decrypts after reload; saved reviewer pass survives. Original public task4 remains Paid and its committed Cutout title/text intentionally remain historical. No public writes in this release. [Durable evidence](design/deaddrop/evidence/README.md).
+
+Keep original cutout-ethrome hostname and private profiles so users retain browser keys. Protocol formats, IndexedDB names, report keys, issuer registry and credentials were not renamed/reset. Actual application lives experiments/qualification/pilot/web; deploy only via isolated hosting/build.mjs + .runtime/review-pass-vercel. Main app edits9181000, CSS/fonts7a54418, deployment source8afc0e7. Root README/project brief/docs index now Deaddrop; old technical paths remain valid.
+
+Independent review corrections: guard landing role entry while authoritative role control is busy; synchronize view URL; reveal/focus skip target; preserve thermal resources on BFCache. Continue manual test-issuer approval as required and teammate extension-wallet rehearsal. Do not re-fund settledtask4. Submission video/forms are still separate human work. No extra setup is required for reviewing the new design or using the wallet-free demo.
+
+---
+
 # Latest — selective UX follow-up
 
 13 September2026. Appsource **4f67608**, Vercel **dpl_8GKnxs7ajBUfXwBUjMzMS2BLQein**, https://cutout-ethrome-2026.vercel.app. User supplied external AI bounty/privacy suggestions but explicitly prioritized UX/look/feel. [Selective decisions](cutout/UX-PRIORITIES.md): keep TrackA, optional SwarmID/account-free uploads, actual existing WSS/native-expiry semantics, whole snapshots and task-scoped proof. Do not implement heartbeat cancellation, jitter, duplicated key authority or fake indexer migration. Padding/distinct payout remain deferred; no anonymity/permanent-availability claim.
