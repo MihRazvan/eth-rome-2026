@@ -32,7 +32,7 @@ export async function requestWalletAccountSelection(
         "A wallet request is already pending. Finish it in your wallet before choosing another account.",
       );
     throw new WalletNetworkError(
-      "This wallet could not open account selection. Select your reviewer account inside the wallet, allow it to connect to Cutout, then click Reconnect selected account.",
+      "This wallet could not open account selection. Select your reviewer account inside the wallet, allow it to connect to Deaddrop, then click Reconnect selected account.",
     );
   }
 }
@@ -75,7 +75,7 @@ export function walletErrorMessage(
   if (codes.includes(4902))
     return "This network is not available in your wallet. Approve adding the requested network, then try again.";
   if (codes.includes(4100))
-    return "This account is not authorized. Reconnect your wallet to Cutout.";
+    return "This account is not authorized. Reconnect your wallet to Deaddrop.";
   if (codes.includes(4900) || codes.includes(4901))
     return "Your wallet is disconnected from the requested network. Reconnect it and try again.";
   if (codes.includes(4200) || codes.includes(-32601))
@@ -109,7 +109,7 @@ export function walletErrorMessage(
 function selectedAccount(accounts: unknown): Address {
   if (!Array.isArray(accounts) || !accounts.length)
     throw new WalletNetworkError(
-      "No wallet account is authorized. Connect your wallet to Cutout first.",
+      "No wallet account is authorized. Connect your wallet to Deaddrop first.",
     );
   if (
     !accounts.every(

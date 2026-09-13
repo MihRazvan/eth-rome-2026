@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto';
-import { createPublicClient, http, verifyMessage, sha256, bytesToHex, type Hex } from 'viem';
-import { enrollmentAuthorization, parseSealedEnrollment, MAX_ENROLLMENT_BYTES } from '../enrollment-channel';
+import { createPublicClient, http, sha256, bytesToHex, type Hex } from 'viem';
+import { verifyEnrollmentAuthorization, parseSealedEnrollment, MAX_ENROLLMENT_BYTES } from '../enrollment-channel';
 import { enrollmentInbox } from '../enrollment-inbox';
 export type EnrollmentServiceConfig = { chainId:number; escrow:Hex; issuer:Hex; rpcUrl:string; enrollment?: { publicKey:Hex;relayAddress:Hex;issuerX:string;issuerY:string } };
 export function createEnrollmentAPI(config:EnrollmentServiceConfig, deps:any={}) {
@@ -40,7 +40,7 @@ export function createEnrollmentAPI(config:EnrollmentServiceConfig, deps:any={})
    if(envelope.kind!=='application'||c.chainId!==config.chainId||c.escrow!==config.escrow.toLowerCase()||c.issuer!==config.issuer.toLowerCase())throw Error('Wrong application destination');
    if(!Number.isSafeInteger(body.expires)||body.expires<=now()||body.expires>now()+300||!/^0x[0-9a-f]{40}$/i.test(body.applicant)||!/^0x[0-9a-f]{130}$/i.test(body.signature))throw Error('Application signature expired or invalid');
    const digest=sha256(bytesToHex(new TextEncoder().encode(JSON.stringify(envelope))));
-   if(!(await verifyMessage({address:body.applicant,message:enrollmentAuthorization(c,digest,body.expires),signature:body.signature})))throw Error('Application signature does not match');
+   if(!(await verifyEnrollmentAuthorization(body.applicant,c,digest,body.expires,body.signature)))throw Error('Application signature does not match');
    const existing=await inbox.query({ticket:c.ticket});
    if(existing.length){if(existing[0].record.digest!==digest)throw Error('Application reference already used');respond(200,{status:existing[0].record.approval?'approved':'pending'});return true;}
    const bucket=createHmac('sha256',key).update(body.applicant.toLowerCase()).digest('hex');

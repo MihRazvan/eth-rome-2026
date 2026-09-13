@@ -18,11 +18,11 @@ export function validateProofFile(
   const v = object(value);
   if (v.format === "cutout-enrollment-request")
     throw Error(
-      "This is an enrollment request, not a signed credential. Send only this request to the Cutout team and wait for the issued credential JSON.",
+      "This is an enrollment request, not a signed credential. Send only this request to the Deaddrop team and wait for the issued credential JSON.",
     );
   if (kind === "credential" && "holderSecret" in v)
     throw Error(
-      "This is your private holder backup. Select it in Private holder JSON; Credential JSON needs the file returned by the Cutout issuer.",
+      "This is your private holder backup. Select it in Private holder JSON; Credential JSON needs the file returned by the Deaddrop issuer.",
     );
   if (kind === "holder" && "signature" in v)
     throw Error(
@@ -33,7 +33,7 @@ export function validateProofFile(
     v.testOnly !== true ||
     !field(v.holderCommitment)
   )
-    throw Error("This file is not a supported Cutout test qualification file.");
+    throw Error("This file is not a supported Deaddrop test qualification file.");
   if (kind === "credential") {
     if (
       typeof v.signature !== "string" ||
@@ -49,7 +49,7 @@ export function validateProofFile(
       Number(v.expiry) <= 0
     )
       throw Error(
-        "Choose the signed credential JSON returned by the Cutout issuer. A generated enrollment request cannot replace it.",
+        "Choose the signed credential JSON returned by the Deaddrop issuer. A generated enrollment request cannot replace it.",
       );
   } else if (
     !field(v.holderSecret) ||
@@ -76,6 +76,6 @@ export function validateProofPair(
     throw Error("This credential does not qualify for this task class.");
   if (Number(c.expiry) <= now)
     throw Error(
-      "This credential has expired. Ask the Cutout issuer for a renewed credential.",
+      "This credential has expired. Ask the Deaddrop issuer for a renewed credential.",
     );
 }

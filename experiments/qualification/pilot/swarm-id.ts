@@ -129,7 +129,7 @@ export function createSwarmStorage(
     initializing = (async () => {
       const config: ClientConfig = {
         iframeOrigin: "https://swarm-id.snaha.net",
-        metadata: { name: "Cutout" },
+        metadata: { name: "Deaddrop" },
         ...(options.containerId ? { containerId: options.containerId } : {}),
         buttonConfig: {
           connectText: "Connect storage",

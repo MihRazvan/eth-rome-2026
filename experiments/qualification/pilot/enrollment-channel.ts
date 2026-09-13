@@ -1,5 +1,5 @@
 import { Aes256Gcm, CipherSuite, DhkemP256HkdfSha256, HkdfSha256 } from '@hpke/core';
-import { bytesToHex, hexToBytes, type Hex } from 'viem';
+import { bytesToHex, hexToBytes, verifyMessage, type Hex } from 'viem';
 import { parseEnrollmentRequest, type EnrollmentRequest } from './enrollment-request';
 import { validateProofFile } from './proof-files';
 const suite = new CipherSuite({ kem: new DhkemP256HkdfSha256(), kdf: new HkdfSha256(), aead: new Aes256Gcm() });
@@ -54,8 +54,17 @@ export function parseApplication(v: any, context: ChannelContext): {request:Enro
   return {request,replyKey:v.replyKey,applicant:v.applicant.toLowerCase()};
 }
 export function parseApproval(v:any) { return validateProofFile('credential',v); }
-export function enrollmentAuthorization(c:ChannelContext, hash:string, expires:number) {
+export function enrollmentAuthorization(c:ChannelContext, hash:string, expires:number, legacy = false) {
   c=channelContext(c);
   if(!/^0x[0-9a-f]{64}$/.test(hash) || !Number.isSafeInteger(expires)) throw Error('Invalid application authorization');
-  return `Cutout test qualification application\nChain: ${c.chainId}\nEscrow: ${c.escrow}\nIssuer: ${c.issuer}\nRequest: ${c.ticket}\nEncrypted application SHA-256: ${hash}\nExpires: ${expires}\nThis requests manual issuer approval. No payment or token approval.`;
+  return `${legacy ? "Cutout" : "Deaddrop"} test qualification application\nChain: ${c.chainId}\nEscrow: ${c.escrow}\nIssuer: ${c.issuer}\nRequest: ${c.ticket}\nEncrypted application SHA-256: ${hash}\nExpires: ${expires}\nThis requests manual issuer approval. No payment or token approval.`;
+}
+
+// Previously signed applications remain collectable through the visual rebrand.
+// Both labels authorize the exact same context, ciphertext digest and expiry.
+export async function verifyEnrollmentAuthorization(applicant: Hex, context: ChannelContext, digest: string, expires: number, signature: Hex) {
+  for (const legacy of [false, true]) {
+    if (await verifyMessage({ address: applicant, message: enrollmentAuthorization(context, digest, expires, legacy), signature })) return true;
+  }
+  return false;
 }

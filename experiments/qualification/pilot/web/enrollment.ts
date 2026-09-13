@@ -81,7 +81,7 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
  $('save-private-pass').onclick=()=>run(async(mine)=>{
   const scope=await currentScope(),entry=await loadCredentialVault(scope);current(mine);if(!entry)throw Error('No pass is saved in this browser yet.');
   const url=URL.createObjectURL(new Blob([JSON.stringify({format:'cutout-private-backup',version:1,scope,entry})],{type:'application/json'}));
-  const a=document.createElement('a');a.href=url;a.download='cutout-private-pass.cutout';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('Private backup saved. Keep it private; normal task acceptance does not need this file.');
+  const a=document.createElement('a');a.href=url;a.download='deaddrop-private-pass.deaddrop';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('Private backup saved. Keep it private; normal task acceptance does not need this file.');
  });
  async function readFile(id:string){const input=$(id) as HTMLInputElement,f=input.files?.[0];if(!f||f.size>65536)throw Error('Choose a supported private backup below 64 KB.');try{return JSON.parse(await f.text());}finally{input.value='';}}
  $('restore-private-pass').onchange=()=>run(async(mine)=>{

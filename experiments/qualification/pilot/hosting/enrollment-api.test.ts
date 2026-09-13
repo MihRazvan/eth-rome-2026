@@ -52,3 +52,15 @@ test('one service instance serializes concurrent retries and prefers an approved
  s.rows.push({...s.rows[0],record:{...s.rows[0].record,approval:{ciphertext:'sealed'}}});
  const response=await s.request('GET',undefined,{url:`/api/enrollment?ticket=${ctx.ticket}`});assert.equal(response.body.status,'approved');
 });
+
+test('Deaddrop authorization and already-signed Cutout applications both retain exact ciphertext binding', async () => {
+ const s=await setup();
+ const digest=sha256(bytesToHex(new TextEncoder().encode(JSON.stringify(s.body.envelope))));
+ assert.match(enrollmentAuthorization(ctx,digest,s.body.expires), /^Deaddrop test qualification application/);
+ const signature=await account.signMessage({message:enrollmentAuthorization(ctx,digest,s.body.expires,true)});
+ assert.equal((await s.request('POST',{...s.body,signature})).status,201);
+ assert.equal(s.writes(),1);
+ const altered={...s.body.envelope,context:{...ctx,ticket:'b'.repeat(64)}};
+ assert.equal((await s.request('POST',{...s.body,signature,envelope:altered})).status,503);
+ assert.equal(s.writes(),1);
+});
