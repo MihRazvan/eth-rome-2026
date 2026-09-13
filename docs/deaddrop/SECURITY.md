@@ -21,7 +21,7 @@ This is credential and document privacy, not anonymous employment or private pay
 
 ## What remains trusted
 
-- **Issuer:** decides who qualifies, signs credentials and updates revocation state. Currently the Deaddrop team approves test participation; there is no external accreditor. A proof verifies issuer authorization, not expertise.
+- **Issuer:** automatically signs participation credentials after validating enrollment requests and maintains revocation state. Enrollment is open; no human assessment or external accreditation occurs. A proof verifies a valid issuer-signed pass, not expertise.
 - **Arbitrator:** the team-controlled address resolves disputes and can split escrow funds under the contract rules. The protocol does not judge work quality or automatically share private evidence with an arbitrator.
 - **Proving setup:** Groth16 parameters were generated experimentally in a single process. No production multiparty ceremony or setup-integrity guarantee beyond recorded artifact hashes is claimed.
 - **Frontend and device:** users trust the code delivered to their browser and their wallet prompts. Browser compromise can expose proof inputs or decrypted reports. Hosting is Vercel, not decentralized frontend governance.
@@ -35,7 +35,7 @@ Discovery listings are checked against actual funded tasks and their creators. A
 
 Only the assigned reviewer commits delivery. The onchain digest authenticates exact stored bytes. Recipient-key bindings are checked before encryption, and only corresponding browser keys unwrap the report key. The UI requires successful opening before approval, but a direct contract call cannot establish that a human read a report.
 
-The application relay can delay or refuse publication, but holds only an Arkiv gas key, not the credential signing key or holder secret. Admission quotas are best-effort across serverless instances, backed by finite relay funds. The issuer approves offline; collecting a response checks its holder/issuer pairing, while actual proof acceptance verifies eligibility cryptographically. [Channel, vault and service boundaries](QUALIFICATION.md).
+The application relay can delay or refuse publication, but holds only an Arkiv gas key, not the credential signing key or holder secret. Admission quotas are best-effort across serverless instances, backed by finite relay funds. A separate persistent issuer worker holds the signing key and durable allocation state. It decrypts validated requests and automatically returns encrypted credentials. Compromising that worker can authorize passes; it cannot recover browser holder secrets or sign user escrow transactions. Collecting a response checks its holder/issuer pairing, while actual proof acceptance verifies eligibility cryptographically. [Channel, vault and service boundaries](QUALIFICATION.md).
 
 ## Recovery limits
 

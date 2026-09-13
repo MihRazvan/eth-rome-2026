@@ -2,13 +2,13 @@
 
 [Docs](../README.md) · [User flow](USER-FLOW.md) · [Security](SECURITY.md) · [Deployment](DEPLOYMENT.md)
 
-Deaddrop has three public infrastructure responsibilities: Avalanche determines task and payment state, Arkiv provides discovery, and Swarm carries documents. The participant's browser holds the private inputs and performs proving and encryption. The document read API has no financial signer. A separate enrollment endpoint relays encrypted applications to Arkiv with an operator-funded gas key; credential signing remains with the offline issuer.
+Deaddrop has three public infrastructure responsibilities: Avalanche determines task and payment state, Arkiv provides discovery, and Swarm carries documents. The participant's browser holds the private inputs and performs proving and encryption. The document read API has no financial signer. A separate enrollment endpoint relays encrypted applications to Arkiv with an operator-funded gas key; a separate persistent issuer worker validates requests and signs passes automatically.
 
 ## Data path
 
 ```mermaid
 flowchart LR
-    I["Test issuer"] -->|"Signed credential"| R["Reviewer browser"]
+    I["Automatic issuer"] -->|"Signed credential"| R["Reviewer browser"]
     I -->|"Revocation root"| F["Avalanche Fuji escrow"]
     C["Client browser"] -->|"Fund scope and reward"| F
     C -->|"Publish task listing"| A["Arkiv Tiramisu"]
@@ -25,7 +25,7 @@ The public scope and whole issuer snapshot also live on Swarm. The snapshot's ro
 
 ## Qualification relation
 
-The reviewer receives an EdDSA-signed credential covering a holder commitment, allocated revocation index, qualification class and expiry. The browser proves knowledge of that signature and the holder secret, verifies a depth-16 Merkle nonrevocation path at the same index, and binds the presentation to its task context and receiving wallet.
+Open enrollment issues a participation pass; no skill assessment is performed. The reviewer receives an EdDSA-signed credential covering a holder commitment, allocated revocation index, qualification class and expiry. The browser proves knowledge of that signature and the holder secret, verifies a depth-16 Merkle nonrevocation path at the same index, and binds the presentation to its task context and receiving wallet.
 
 The implementation uses gnark Groth16 over BN254. The same Go relation runs natively and through a Go WebAssembly worker. Public proving artifacts are downloaded to the browser; private inputs are not sent to a remote prover. It is an experimental construction inspired by the private-qualification research direction, not an implementation of ShadowPath.
 

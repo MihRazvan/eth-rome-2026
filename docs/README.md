@@ -2,7 +2,7 @@
 
 [Project overview](../README.md) · [Open the app](https://cutout-ethrome-2026.vercel.app)
 
-Deaddrop connects issuer-approved reviewers with paid technical review tasks. The credential stays private, the report is encrypted for its recipients, and payment settles publicly on Avalanche Fuji.
+Deaddrop connects reviewers with paid technical review tasks. Enrollment is automatic and open; it does not assess expertise. The credential stays private, the report is encrypted for its recipients, and payment settles publicly on Avalanche Fuji.
 
 ## Try the product
 
@@ -18,7 +18,7 @@ Deaddrop connects issuer-approved reviewers with paid technical review tasks. Th
 | --- | --- |
 | [Quickstart](deaddrop/QUICKSTART.md) | Run the interface, complete local stack and verification commands |
 | [Architecture](deaddrop/ARCHITECTURE.md) | Proof, settlement, discovery, documents and source map |
-| [Qualification](deaddrop/QUALIFICATION.md) | Encrypted applications, manual issuance and saved browser passes |
+| [Qualification](deaddrop/QUALIFICATION.md) | Automatic enrollment, issuer trust and saved browser passes |
 | [Security model](deaddrop/SECURITY.md) | What is private, what remains public, trusted roles and recovery limits |
 | [Deployment](deaddrop/DEPLOYMENT.md) | Public contracts, network configuration and hosting |
 

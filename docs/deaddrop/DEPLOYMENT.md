@@ -34,11 +34,11 @@ Keep an existing participant on the hostname/profile where they registered their
 
 [Deployment manifest and finalized receipts](../review-pass/evidence/fuji-rollout/deployment.json) · [Source verification results](../review-pass/evidence/fuji-rollout/source-verification.json). The original rollout README is a dated record; its then-pending storage/funding gates do not describe today's active deployment.
 
-Public configuration is available at [/api/config](https://cutout-ethrome-2026.vercel.app/api/config). The [whole public status snapshot](https://cutout-ethrome-2026.vercel.app/api/snapshot) is checked against the current finalized issuer root. Task scope and report reads are derived from their actual escrow commitments. These document/config endpoints do not issue credentials or receive holder secrets. The separate `/api/enrollment` endpoint queues signed, encrypted applications on Arkiv using a dedicated gas relay key. The issuer approves offline and the browser collects the encrypted response. [Qualification service](QUALIFICATION.md).
+Public configuration is available at [/api/config](https://cutout-ethrome-2026.vercel.app/api/config). The [whole public status snapshot](https://cutout-ethrome-2026.vercel.app/api/snapshot) is checked against the current finalized issuer root. Task scope and report reads are derived from their actual escrow commitments. These document/config endpoints do not issue credentials or receive holder secrets. The separate `/api/enrollment` endpoint queues signed, encrypted applications on Arkiv using a dedicated gas relay key. A separate persistent issuer worker validates requests and returns encrypted credentials automatically; the browser collects the response. [Qualification service](QUALIFICATION.md).
 
 ## Build and deploy the existing project
 
-This is the authorized operator route, not required for a judge to try the app. It requires the existing verified Fuji manifest and matching **public** proving artifacts on disk. The credential signing key remains offline and must never enter Vercel output. The separate Arkiv gas relay key is a production Secret named `CUTOUT_ENROLLMENT_RELAY_KEY`, never a frontend environment variable.
+This is the authorized operator route, not required for a judge to try the app. It requires the existing verified Fuji manifest and matching **public** proving artifacts on disk. The credential signing key belongs only to the separate issuer service and must never enter Vercel output or a browser bundle. The separate Arkiv gas relay key is a production Secret named `CUTOUT_ENROLLMENT_RELAY_KEY`, never a frontend environment variable.
 
 ```sh
 forge build --root experiments/qualification/contracts
@@ -99,4 +99,10 @@ node experiments/qualification/pilot/deploy-fuji.mjs --broadcast
 This is the write command. It uses canonical Circle Fuji test USDC `0x5425890298aed601595a70AB815c96711a31Bc65`, waits for finalized receipts and checks deployed authorities. Its exclusive operation lock and transaction journal prevent blind concurrent/resumed sends. A partial deployment needs receipt inspection and deliberate recovery; the script does not automatically resume or discard the journal. A nonzero gas balance is only a prerequisite, not a guarantee that all deployments can finish. Test USDC has no monetary value or fiat backing.
 
 
-After deployment, build and host using its generated manifest and matching public artifacts. Configure the separate encrypted enrollment relay for the exact deployed origins. The [qualification guide](QUALIFICATION.md) describes manual approval and private operator custody.
+After deployment, build and host using its generated manifest and matching public artifacts. Configure the separate encrypted enrollment relay for the exact deployed origins. The [qualification guide](QUALIFICATION.md) describes automatic enrollment and issuer-service custody.
+
+## Automatic issuer rollout
+
+The [issuer worker](../../experiments/qualification/pilot/enrollment-worker.mjs) runs separately from Vercel using the [container definition](../../experiments/qualification/pilot/issuer-hosting/Dockerfile), one replica and a persistent `/data` volume. It uses the existing signing key, channel and durable allocation state; never create a new issuer or reset the allocator during rollout. The health endpoint reports queue-read availability, not a completed user enrollment.
+
+At this revision, continuous cloud hosting and unattended first-time enrollment are not yet verified. A locally supervised worker can exercise the protocol but does not establish that new users can enroll after the operator’s machine stops. Record the hosted service, restart test and fresh enrollment-to-payment evidence before claiming that availability.

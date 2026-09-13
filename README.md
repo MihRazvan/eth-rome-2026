@@ -2,9 +2,9 @@
 
 ![Deaddrop — Private work. Public settlement.](docs/design/deaddrop/assets/home.png)
 
-**Hire a qualified reviewer. Keep their credential private. Pay for the work.**
+**Fund a review. Keep the report private. Pay for the work.**
 
-Deaddrop lets a team fund a technical review in USDC, require a private proof of issuer-approved qualification, and receive an encrypted report. The client opens the report and approves payment; Avalanche settles it. Wallets and payments remain public.
+Deaddrop lets a team fund a technical review in USDC, lets a reviewer accept with a private proof of enrollment, and delivers an encrypted report. The client opens the report and approves payment; Avalanche settles it. Wallets and payments remain public.
 
 [Open Deaddrop](https://cutout-ethrome-2026.vercel.app) · [Interactive demo](https://cutout-ethrome-2026.vercel.app/?view=demo) · [Project brief](PROJECT_BRIEF.md) · [Quickstart](docs/deaddrop/QUICKSTART.md) · [User flow](docs/deaddrop/USER-FLOW.md) · [Architecture](docs/deaddrop/ARCHITECTURE.md) · [Bounties](docs/deaddrop/BOUNTIES.md) · [Docs index](docs/README.md)
 
@@ -12,20 +12,22 @@ The product was previously called Cutout. The app URL and browser storage namesp
 
 ## Submission release
 
+Automatic enrollment removes the manual reviewer approval gate in this revision. Continuous issuer hosting and a fresh first-time paid flow still require release verification; the receipts below cover the earlier saved-pass flow.
+
 The default repository commands now run Deaddrop. The final app includes the complete thermal landing, product explanation, lifecycle and FAQs. A new public review, **task #6**, completed browser proof → Fuji acceptance → encrypted Swarm delivery → client decryption → **0.1 test USDC payment**. Original browser keys and saved passes survived the release. [Release evidence](docs/deaddrop/evidence/submission/README.md), including clean-checkout builds, hosted checks and finalized receipts.
 
 ## Problem first
 
-A team needs a second pair of eyes on a sensitive change: “Can an unauthorized wallet withdraw after this permissions update?” It wants an approved reviewer and a funded agreement. The reviewer should not have to publish a reusable credential identifier for every small engagement, and the resulting report should stay between the participants.
+A team needs a second pair of eyes on a sensitive change: “Can an unauthorized wallet withdraw after this permissions update?” It wants a reviewer and a funded agreement. The reviewer should not have to publish a reusable credential identifier for every small engagement, and the resulting report should stay between the participants.
 
-Deaddrop separates those responsibilities. An issuer approves the reviewer. A proof checks that approval without revealing the credential. The client evaluates the work. An escrow holds and pays the reward.
+Deaddrop separates those responsibilities. An issuer automatically enrolls the reviewer. A proof checks their valid pass without revealing the credential. The client evaluates the work. An escrow holds and pays the reward.
 
-The first use case is a focused technical review, not a replacement for a full security audit. External issuer partnerships and customer demand still need validation.
+The first use case is a focused technical review, not a replacement for a full security audit. Enrollment is open and does not assess technical expertise. Assessed credentials from external issuers are a future integration; customer demand still needs validation.
 
 ## How it works
 
-1. **Get qualified.** Apply in Deaddrop. The browser saves your private pass and sends an encrypted application. After issuer approval, collect the pass in the app; no credential files need to change hands.
-2. **Fund a task.** The client writes a public scope and locks test USDC on Avalanche Fuji. A separate Arkiv transaction lists the task for discovery.
+1. **Fund a task.** The client writes a public scope and locks test USDC on Avalanche Fuji. A separate Arkiv transaction lists the task for discovery.
+2. **Choose work.** The reviewer connects their wallet and opens a task. First-time setup requests a wallet signature and obtains a private reviewer pass automatically. No team approval or credential files are needed.
 3. **Prove eligibility.** The reviewer proves, in their browser, that the required credential is valid and unrevoked. The proof is bound to this task and wallet. Fuji verifies it when they accept.
 4. **Seal the report.** The browser encrypts the report for the client and reviewer, uploads ciphertext to Swarm, and checks retrieval. A Fuji transaction commits its reference and hash.
 5. **Open and pay.** The client retrieves and decrypts the report, then approves payment to the assigned reviewer.
@@ -40,7 +42,7 @@ Read the [complete user flow](docs/deaddrop/USER-FLOW.md) for qualification issu
 
 **No setup:** the [guided demo](https://cutout-ethrome-2026.vercel.app/?view=demo) walks through a review in about three minutes. Browser encryption and decryption are real; qualification, funding and payment are explicitly simulated, and the walkthrough does not upload to Swarm.
 
-**Real testnet work:** the [live workspace](https://cutout-ethrome-2026.vercel.app) uses deployed Fuji contracts, public Arkiv discovery and public Swarm storage. A paid review needs two wallet roles, test funds, registered browser report keys and an issuer-approved credential. Storage requires no customer Swarm account. Follow the [end-to-end test](docs/deaddrop/TESTING.md).
+**Real testnet work:** the [live workspace](https://cutout-ethrome-2026.vercel.app) uses deployed Fuji contracts, public Arkiv discovery and public Swarm storage. A paid review needs two wallet roles, test funds, registered browser report keys and a private reviewer pass obtained automatically in the app. Storage requires no customer Swarm account. Follow the [end-to-end test](docs/deaddrop/TESTING.md).
 
 **Run the frontend locally:**
 
@@ -60,7 +62,7 @@ Open **http://127.0.0.1:18904/?view=demo**. Requires Node 24.12+. This starts th
 | Settlement | **Avalanche Fuji + Solidity + test USDC** | Hold rewards, enforce proof-bound assignment, commit delivery and settle payment |
 | Discovery | **Arkiv Tiramisu** | Wallet-owned, queryable task listings with native expiry and WebSocket updates |
 | Documents | **Swarm / Bee HTTP** | Public scopes and issuer snapshots; recipient-encrypted reports |
-| Qualification | **gnark Groth16 on BN254, Go → WebAssembly** | Prove issuer approval and current nonrevocation locally; verify onchain |
+| Qualification | **gnark Groth16 on BN254, Go → WebAssembly** | Prove a valid issuer-signed pass and current nonrevocation locally; verify onchain |
 | Report privacy | **WebCrypto + HPKE** | Encrypt locally and wrap document keys separately for each recipient |
 | Product | **TypeScript + Vite; Vercel** | Deaddrop interface, browser proving worker, public reads and encrypted application relay |
 
@@ -70,13 +72,13 @@ The [architecture](docs/deaddrop/ARCHITECTURE.md) maps each boundary to source. 
 
 | Sponsor | Entry | Where to inspect |
 | --- | --- | --- |
-| Avalanche / Team1 | Track A — stablecoin payments for qualified work | [Integration and demo proof](docs/deaddrop/bounties/AVALANCHE.md) |
+| Avalanche / Team1 | Track A — stablecoin payments for technical reviews | [Integration and demo proof](docs/deaddrop/bounties/AVALANCHE.md) |
 | Arkiv | Mission 02, Mission 03; Best Use consideration | [Queries, expiry, subscriptions and feedback](docs/deaddrop/bounties/ARKIV.md) |
 | Swarm | Useful decentralized document storage | [Encryption, upload and retrieval](docs/deaddrop/bounties/SWARM.md) |
 
 We enter one Team1 track. Arkiv awards are not additive per team. These are targets, not claims that eligibility or awards have been confirmed. [Requirements and remaining submission items](docs/deaddrop/BOUNTIES.md).
 
-Reviewer passes now persist privately in the browser. Files are optional backups or a one-time migration path. [Qualification and approval workflow](docs/deaddrop/QUALIFICATION.md).
+Reviewer enrollment is open; a pass confirms participation, not assessed expertise. Passes persist privately in the browser. Files are optional backups or a one-time migration path. [Automatic enrollment and private proofs](docs/deaddrop/QUALIFICATION.md).
 
 ## What is verified
 

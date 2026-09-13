@@ -16,8 +16,8 @@ Reloading or restarting discards the walkthrough and its in-memory key. Use a ha
 
 ## What the real product adds
 
-The client funds test USDC on Fuji and advertises the task on Arkiv. An approved reviewer generates a real proof in the browser and signs acceptance. Swarm stores the encrypted report. The client opens it and releases the escrowed payment.
+The client funds test USDC on Fuji and advertises the task on Arkiv. An enrolled reviewer generates a real proof in the browser and signs acceptance. Swarm stores the encrypted report. The client opens it and releases the escrowed payment.
 
-Reviewer approval is manual. Apply in **Reviewer → Your workspace → Your reviewer pass**, then collect the issuer’s approval in the app. The resulting pass is saved locally; ordinary use requires no credential JSON exchange. The issuer approves test participation, not professional accreditation.
+Reviewer enrollment is automatic. Choose a task, sign the setup message when prompted and let the app collect your private pass before proving. No team approval or credential JSON exchange is required. The pass confirms enrollment, not professional accreditation.
 
 A complete public run already settled **task #4 for 0.1 test USDC**, including browser proving, Swarm delivery and exact report decryption. [Inspect the receipts and verification scope](evidence/saved-pass/README.md). For your own real flow, use the [two-wallet tutorial](TESTING.md).

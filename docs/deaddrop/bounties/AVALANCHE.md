@@ -2,7 +2,7 @@
 
 [All bounties](../BOUNTIES.md) · [Deployment](../DEPLOYMENT.md) · [Evidence](../EVIDENCE.md)
 
-**The payment is for a specific review, by a qualified accepting wallet, under explicit delivery and review deadlines.** Avalanche is the settlement authority, not a decorative wallet connection.
+**The payment is for a specific review, by a proof-bound accepting wallet, under explicit delivery and review deadlines.** Avalanche is the settlement authority, not a decorative wallet connection.
 
 ## Integration
 
@@ -32,7 +32,7 @@ Start from a funded task and show its scope/reward receipt. In the reviewer brow
 
 **Did you deploy a stablecoin?** We use canonical Circle Fuji test USDC. The local rehearsal's freely minted token is a separate test fixture. The [official Track A description](https://build.avax.network/events/73a939b1-6d35-4847-9388-320024638249) asks for a stablecoin application with a complete verifiable flow, not issuance of a new currency.
 
-**Who decides the reviewer is good?** The issuer approves eligibility; currently that is our experimental team issuer. The proof checks approval, not professional competence. The client evaluates the report.
+**Who decides the reviewer is good?** Nobody assesses expertise during enrollment. The issuer service automatically issues a participation pass after validating the signed request. The proof checks its signature, class, expiry and nonrevocation. The client evaluates the report; an externally assessed issuer would be a future integration.
 
 **What if the client disappears?** After timely delivery and the review deadline, the reviewer may explicitly claim if there is no dispute. Refunds and arbitration are separate contract paths; no cron performs them automatically.
 

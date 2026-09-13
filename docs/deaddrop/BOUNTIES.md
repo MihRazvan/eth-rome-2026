@@ -8,7 +8,7 @@ Target entries: **Avalanche / Team1 Track A; Arkiv Mission 02 and Mission 03 wit
 
 | Entry | Why Deaddrop fits | What judges should inspect |
 | --- | --- | --- |
-| [Avalanche / Team1 Track A](bounties/AVALANCHE.md) | Stablecoin payment for qualified work, enforced by a Fuji escrow | Funding → proof-checked assignment → committed delivery → USDC payment, with real receipts |
+| [Avalanche / Team1 Track A](bounties/AVALANCHE.md) | Stablecoin payment for technical reviews, enforced by a Fuji escrow | Funding → proof-checked assignment → committed delivery → USDC payment, with real receipts |
 | [Arkiv Mission 02](bounties/ARKIV.md) | Recruiting advertisements expire without changing escrow rights | The same query/board loses a real listing through native expiry, without deletion |
 | [Arkiv Mission 03](bounties/ARKIV.md) | A shared board reacts to relevant public entity changes | One browser publishes; another updates through WebSocket subscriptions without manual refresh or polling |
 | [Arkiv Best Use](bounties/ARKIV.md) | A queryable, wallet-owned discovery layer other clients can use | Architecture, working flow, first-user plan and specific SDK feedback |

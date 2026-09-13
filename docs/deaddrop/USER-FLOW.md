@@ -2,17 +2,17 @@
 
 [Docs](../README.md) · [Architecture](ARCHITECTURE.md) · [Manual end-to-end test](TESTING.md)
 
-The client buys a review. The reviewer does the work. The issuer decides who qualifies. These are separate responsibilities, even when one presenter demonstrates them all.
+The client buys a review. The reviewer does the work. The issuer service automatically enrolls reviewers. These are separate responsibilities, even when one presenter demonstrates them all.
 
-## 1. Qualify before taking work
+## 1. Connect and choose work
 
-In **Reviewer → Your workspace → Your reviewer pass**, connect your reviewer wallet and click **Apply for a reviewer pass**. Sign the application message; no token approval or payment is requested. The browser creates and saves your private holder and reply key, then submits an encrypted application to the team's inbox.
+Connect your reviewer wallet and open a task. If this browser needs a reviewer pass, Deaddrop starts setup as part of taking the task. Sign the enrollment message; it requests no token transfer. The browser saves your private holder and reply key, submits an encrypted request and collects the issuer’s encrypted response automatically.
 
-The Deaddrop team reviews the request and approves test participation. Click **Check approval** to collect your pass into this browser. Later tasks use it automatically: you no longer download, send or select credential JSON files. Application and credential bytes are encrypted in the public inbox; the issuer never receives your holder secret.
+No team approval or credential file exchange is required. The pass remains in this browser for later tasks. The issuer never receives your holder secret.
 
 **Backup or restore a pass** is optional. Existing users can import their old issued credential and matching holder file once. A private pass backup preserves a pass when changing browsers; it must remain private. Wallet recovery alone does not recover these browser secrets.
 
-There is no public “approve myself” endpoint. The team still performs actual issuer approval; no external professional accreditation is claimed. [Qualification architecture and operator workflow](QUALIFICATION.md).
+Enrollment is open. A pass confirms valid enrollment, not technical expertise; the client evaluates the work. [Automatic enrollment and proof architecture](QUALIFICATION.md).
 
 ## 2. Prepare each participant's browser
 
@@ -38,9 +38,9 @@ The listing has a native expiration time in blocks. When it expires, it disappea
 
 Find the task, open **View verified scope**, and check its terms. Deaddrop verifies the listing against finalized Fuji state rather than trusting advertisement text alone.
 
-Click **Verify my eligibility**. Deaddrop uses the saved private pass automatically and runs the Go prover inside a WebAssembly worker in the browser. It proves the issuer signature, required class, validity and nonrevocation, and binds the proof to this task and payment wallet. Private proof inputs stay local.
+Click **Accept this task**. Deaddrop completes automatic pass setup if needed, then runs the Go prover inside a WebAssembly worker in the browser. It proves the issuer signature, required class, validity and nonrevocation, and binds the proof to this task and payment wallet. Private proof inputs stay local.
 
-After proof verification/simulation, click **Accept this task** and sign. The contract rechecks eligibility and freshness when the transaction executes. A generated proof alone does not reserve the task; another eligible reviewer can accept first.
+After proof verification/simulation, click **Confirm acceptance** and sign. The contract rechecks eligibility and freshness when the transaction executes. A generated proof alone does not reserve the task; another eligible reviewer can accept first.
 
 ## 6. Reviewer: seal and deliver
 
@@ -71,4 +71,4 @@ These paths require transactions; no automatic cron pays or refunds. The app doe
 
 ## Showing the flow to judges
 
-For a quick explanation, use the [no-account walkthrough](TRY-IT.md), clearly introducing its simulated settlement. For a live demo, prepare both funded wallet profiles and the reviewer’s saved pass first, then start from an eligible funded task and its receipt. Follow the [manual test](TESTING.md) through Paid before relying on that task flow onstage. The [bounty pages](BOUNTIES.md) explain each sponsor’s role and integration.
+For a quick explanation, use the [no-account walkthrough](TRY-IT.md), clearly introducing its simulated settlement. For a live demo, prepare both funded wallet profiles, then show task funding, automatic reviewer setup and acceptance. A returning reviewer reuses their saved pass. Follow the [manual test](TESTING.md) through Paid before relying on that task flow onstage. The [bounty pages](BOUNTIES.md) explain each sponsor’s role and integration.
