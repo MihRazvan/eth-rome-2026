@@ -1,3 +1,19 @@
+# 13 September acceptance — saved reviewer passes and completed public task #4
+
+13 September 2026. Active application source **57fff10**, Vercel **dpl_GBXCpXne5U5ZopaUxCcDFQKyNHWy**, https://cutout-ethrome-2026.vercel.app. Normal qualification is Apply → explicit offline issuer approval → Check approval → saved browser pass → Verify my eligibility. No normal credential JSON exchange. Private backup/one-time legacy import is optional. Compact task workspace and disclosure-based recovery/settings deployed. Issuer expertise remains a trust decision; this is test participation, not accreditation.
+
+**Actually verified on public networks:** encrypted application/approval collection and vault reload; operator-owned client/reviewer Chromium profiles completed task #4 for **0.1 canonical Fuji test USDC**. Real browser proof → Fuji acceptance → encrypted public Swarm delivery → exact client decryption → finalized approveAndPay; independent token balance reconciliation 0→100000. Real creator publication reached the already-open reviewer WSS board; native 20-block expiry removed the listing from an unchanged query at377474 while Fuji stayed funded/Open. Existing task4 then relisted and settled. Do not refund/recreate it. [Durable artifacts, receipts, screenshots and read-only replay](cutout/evidence/saved-pass/README.md).
+
+Tests:142 Node passes,1 optional skip; full pilot TS/build;4 final public desktop/mobile walkthrough checks and5 paid/saved-pass read-only browser checks,0page errors. Final browser profiles retained original report keys and saved pass across deployment/reload. The funded harness had hidden-field/busy-control interruptions and a case-sensitive Paid/PAID timeout after actual successful payment. Evidence preserves these; independent finalized reconciliation and subsequent read-only Paid/decryption checks passed. This is not an uninterrupted passing harness or teammate human extension-wallet signoff.
+
+Offline approval: `node --import tsx experiments/qualification/pilot/enrollment-operator.mjs list` then `approve <ticket>` after reviewing test participation. NEVER rerun init/reset issuer. Existing registry `.runtime/review-pass-fuji/issuer` preserved. Private channel/relay/ticket files `.runtime/cutout-enrollment-service/`; Vercel holds only a dedicated finitely funded Arkiv relay gas key. No credential signing key/holder secret on server. Per-instance serialized publications, best-effort cross-instance quotas and2day inbox expiry documented. Keep user secrets out of Git/logs.
+
+Preserve `.runtime/cutout-pass-ux/browser-apply` (reviewer pass/report keys), `browser-flow-client` (client report key), and existing earlier profiles. Rehearsal wallet keys remain in the pre-existing private wallets.json. Do not share operator credentials with the teammate. Their own old pair can be imported once or they can apply in-app; approvals are manual. Normal pass expiry is displayed; the newly approved operator pass expires14September.
+
+Updated current README, sponsor evidence map and teammate/presenter manuals. Earlier missing-public-paid/M02/M03 observations below are superseded by the dated evidence above. Remaining: teammate extension-wallet rehearsal, final video/slides, actual submission confirmations. No form or third-party message sent. Push normal branch history; do not deploy root EXIT config.
+
+---
+
 # Cutout submission documentation — verified
 
 Submission-facing README now follows the layered structure of the team's Anyware/Autark repos: product brief, quickstart, user flow, architecture, security boundaries, deployed contracts, individual sponsor pages and evidence index. Current entrypoint is [docs index](README.md); EXIT's earlier README remains in [history](history/EXIT.md). Original code, handoff and licenses are preserved. No application deployment changed.

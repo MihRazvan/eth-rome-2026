@@ -28,7 +28,7 @@ Read the [complete user flow](docs/cutout/USER-FLOW.md) for qualification issuan
 
 ![Cutout workspace on desktop](docs/cutout/assets/application.png)
 
-*Actual hosted application capture, 12 September 2026; the visible scope is an unfunded draft. For current deployment and verification scope, see [evidence](docs/cutout/EVIDENCE.md).*
+*Actual hosted application capture, 13 September 2026; the visible scope is an unfunded draft. For current deployment and verification scope, see [evidence](docs/cutout/EVIDENCE.md).*
 
 ## Try it
 
@@ -56,7 +56,7 @@ Open **http://127.0.0.1:18904/?view=demo**. Requires Node 24.12+. This starts th
 | Documents | **Swarm / Bee HTTP** | Public scopes and issuer snapshots; recipient-encrypted reports |
 | Qualification | **gnark Groth16 on BN254, Go → WebAssembly** | Prove issuer approval and current nonrevocation locally; verify onchain |
 | Report privacy | **WebCrypto + HPKE** | Encrypt locally and wrap document keys separately for each recipient |
-| Product | **TypeScript + Vite; Vercel** | Cutout interface, browser proving worker and public read API |
+| Product | **TypeScript + Vite; Vercel** | Cutout interface, browser proving worker, public reads and encrypted application relay |
 
 The [architecture](docs/cutout/ARCHITECTURE.md) maps each boundary to source. The [security model](docs/cutout/SECURITY.md) explains exactly what remains trusted or public.
 
@@ -74,9 +74,9 @@ Reviewer passes now persist privately in the browser. Files are optional backups
 
 ## What is verified
 
-Deployed/source-verified Fuji contracts, real public funding/listings, public encrypted Swarm round trips, and browser proofs accepted by the deployed verifier and funded-task acceptance simulation have evidence. The complete paid lifecycle has passed locally on Anvil/Bee.
+**A complete public review has settled:** task #4 funded, accepted with a browser proof from a saved pass, delivered through encrypted Swarm storage, opened by the client and paid on Fuji. The reviewer received **0.1 test USDC**, reconciled against finalized receipts and token balances. Real two-browser Arkiv publication and native expiry were also exercised. [Receipts and browser evidence](docs/cutout/evidence/saved-pass/README.md).
 
-**The full public acceptance → delivery → payment sequence and the recorded Arkiv mission demonstrations are not yet signed off.** The [evidence index](docs/cutout/EVIDENCE.md) separates public transactions, read-only simulations, local tests and guided UI behavior. No recording or submission is represented as completed without its artifact.
+These checks used operator-owned test wallets in actual Chromium profiles. Independent teammate extension-wallet review and the final presentation video remain separate. The [evidence index](docs/cutout/EVIDENCE.md) distinguishes public transactions, local tests and the simulated walkthrough.
 
 ## Deployments
 

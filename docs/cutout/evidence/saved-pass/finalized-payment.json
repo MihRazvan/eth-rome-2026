@@ -1,0 +1,106 @@
+{
+  "date": "2026-09-13T01:43:41.358Z",
+  "chainId": 43113,
+  "finalizedBlock": "58339834",
+  "finalizedBlockHash": "0x53ae577ae017fe2b505889117722177fb177c1faa1e3550080ac09de3918c132",
+  "escrow": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+  "token": "0x5425890298aed601595a70AB815c96711a31Bc65",
+  "taskId": "4",
+  "status": "Paid",
+  "client": "0x7259c94d93d83E539B57ba7A360cB06Bd9b53a60",
+  "reviewer": "0x7292C1652e831031175947daEcC7F85bF86381A1",
+  "rewardBaseUnits": "100000",
+  "reviewerBalanceBefore": "0",
+  "reviewerBalanceAfter": "100000",
+  "reviewerDeltaBaseUnits": "100000",
+  "report": {
+    "reference": "8553a793c071dd6c5a6cc5343eb9c5742c5cbabd160c2bc125f0a9cc51fffe21",
+    "digest": "0x361d0b6b3c7ee10cf5b571a1fd1ab3a7dda8a7550cbb7acb2913f23d80a78899",
+    "bytes": 1739,
+    "independentPublicRetrieval": "passed"
+  },
+  "transactions": [
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "register",
+      "hash": "0x05505e7954941a6162518eaede8616dd8136303cd94a44c51b1bf2a2aa0d1d62",
+      "status": "success",
+      "blockNumber": "58339697",
+      "blockHash": "0x3fed539f13bb55d568fa07f8bf0d356534e064ebc3dc7bdc74162016120dab36"
+    },
+    {
+      "role": "reviewer",
+      "chainId": 43113,
+      "action": "register",
+      "hash": "0xf5d6cc774b149d7f6961c4aac94039ecf5411d509994cd8d5e2538b6ec44a1d0",
+      "status": "success",
+      "blockNumber": "58339702",
+      "blockHash": "0xbeb4904f40b16327f8c14ea7b4dac8ab288e7653611ab5cc39b60947a0bf8818"
+    },
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "approve",
+      "hash": "0x337ff0da781374ea81f265e3fff0a4a5b2c867271c142de959c4dd2afd06b8d8",
+      "status": "success",
+      "blockNumber": "58339705",
+      "blockHash": "0x5a0fda243f319f0df0d264d5853e282a3bd5571c2d59a805e8bb879e725f86e8"
+    },
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "createJobWithDocument",
+      "hash": "0x7fdb3a01bd937f656edd27772d40d8c3b288af49925d2458195c02c07e8a5765",
+      "status": "success",
+      "blockNumber": "58339710",
+      "blockHash": "0xfc9ab8d31f0e866ca563a8d13d31e3c16c46b2d4fea01c197976fc53b7d4db4c"
+    },
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "register",
+      "hash": "0xae5d0c54853ff51654c5e507d80eeb91f353583cb29763dbcf8c292e85fe45cd",
+      "status": "success",
+      "blockNumber": "58339744",
+      "blockHash": "0x62a247cfc2c5339d45956d487f1f28fa63979c9a83a3499ef09d5e0059e1d5ba"
+    },
+    {
+      "role": "reviewer",
+      "chainId": 43113,
+      "action": "register",
+      "hash": "0x7d550cff4a0c7c0cd5bad6dd06a17f9ee97f55c8882a6b80aee5b5b774270f68",
+      "status": "success",
+      "blockNumber": "58339745",
+      "blockHash": "0x72d7525975c3eee339eb190eb09f824f85c2024500f1e937406a44bad59dca2e"
+    },
+    {
+      "role": "reviewer",
+      "chainId": 43113,
+      "action": "accept",
+      "hash": "0x5d135c612b5cd94f8d8763a5ec2adcac69414a53cd47252aab079e66ff301d06",
+      "status": "success",
+      "blockNumber": "58339771",
+      "blockHash": "0x51e8a0b6552985fadbbd516c8cabc617da90dd49f77c6b1a05d1a196b7feaf0e"
+    },
+    {
+      "role": "reviewer",
+      "chainId": 43113,
+      "action": "submitDocument",
+      "hash": "0xdc4b47d50757a1a590ac0f10dda211c8570ec9cc8a5af0750c7bf2142dc9bd9f",
+      "status": "success",
+      "blockNumber": "58339775",
+      "blockHash": "0xfae56859c69089658744d203bb05b2dc190bb06735a1e1b6cb8ec0d285c334f0"
+    },
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "approveAndPay",
+      "hash": "0x6dec0e1aeb77edfa57693c7952687e9ce3f364597f015e66dc6acaf47483783e",
+      "status": "success",
+      "blockNumber": "58339779",
+      "blockHash": "0xeb0e30c3c48494749d481bbf74fccb21917f278ce5368e876e08bf31cb1fb37c"
+    }
+  ],
+  "scope": "Actual public finalized payment and separate public ciphertext retrieval; generated non-sensitive report in operator-owned browser test"
+}

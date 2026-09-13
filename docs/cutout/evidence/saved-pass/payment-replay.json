@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-13T01:56:16.702Z",
+  "taskId": "4",
+  "status": "Paid",
+  "finalizedBlock": "58339990",
+  "finalizedReceipts": 9,
+  "paymentTransferBaseUnits": "100000",
+  "publicCiphertextDigest": "verified",
+  "writes": 0
+}

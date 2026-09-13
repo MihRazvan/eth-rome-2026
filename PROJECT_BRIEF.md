@@ -26,7 +26,7 @@ Today the issuer and dispute arbitrator are the Cutout team. Test enrollment is 
 
 ## What exists today
 
-A distinctive, responsive web application; a no-account walkthrough with real browser encryption and simulated settlement; deployed Fuji contracts; public Arkiv discovery; public Swarm documents; and local/browser proof generation. [Evidence](docs/cutout/EVIDENCE.md) includes real public storage and verifier checks and a complete local paid lifecycle. The full public paid lifecycle and recorded Arkiv mission demonstrations remain acceptance items.
+A distinctive, responsive web application; a no-account walkthrough with real browser encryption and simulated settlement; deployed Fuji contracts; public Arkiv discovery; public Swarm documents; and local/browser proof generation. [Evidence](docs/cutout/evidence/saved-pass/README.md) includes a complete public paid task: browser pass issuance/collection, proof-checked acceptance, encrypted Swarm delivery, client decryption and finalized 0.1 test USDC payment. Real Arkiv two-browser publication and native expiry were also captured. These used operator-controlled wallets; independent teammate review and final presentation recording remain separate.
 
 Wallets, rewards and scope are public. Credential contents and report plaintext are protected. This is an experimental testnet product, with a single-process proving setup and no production audit or external accreditation.
 

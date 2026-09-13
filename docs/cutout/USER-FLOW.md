@@ -71,4 +71,4 @@ These paths require transactions; no automatic cron pays or refunds. The app doe
 
 ## Showing the flow to judges
 
-For a quick explanation, use the [no-account walkthrough](../CUTOUT-JUDGE-TUTORIAL.md), clearly introducing its simulated settlement. For a live demo, prepare both funded wallet profiles and credential files first, then start from an eligible funded task and its receipt. Follow the [manual test](../CUTOUT-MANUAL-TEST.md) through Paid before relying on that task flow onstage. The [presenter guide](../CUTOUT-PRESENTER-GUIDE.md) explains each sponsor's role and likely questions.
+For a quick explanation, use the [no-account walkthrough](../CUTOUT-JUDGE-TUTORIAL.md), clearly introducing its simulated settlement. For a live demo, prepare both funded wallet profiles and the reviewer’s saved pass first, then start from an eligible funded task and its receipt. Follow the [manual test](../CUTOUT-MANUAL-TEST.md) through Paid before relying on that task flow onstage. The [presenter guide](../CUTOUT-PRESENTER-GUIDE.md) explains each sponsor's role and likely questions.

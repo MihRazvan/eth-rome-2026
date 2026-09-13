@@ -45,4 +45,4 @@ Inbox entities expire natively after two days. Collected passes remain in the br
 - [HPKE channel](../../experiments/qualification/pilot/enrollment-channel.ts), [relay API](../../experiments/qualification/pilot/hosting/enrollment-api.ts), [Arkiv inbox](../../experiments/qualification/pilot/enrollment-inbox.ts)
 - [Offline operator](../../experiments/qualification/pilot/enrollment-operator.mjs)
 
-Focused tests cover vault namespace/race/rollback behavior, encryption tampering/outsiders/context binding, signed requests, admission failures and duplicate recovery. See the current acceptance record for actual hosted browser results; source support alone is not a public end-to-end completion claim.
+Focused tests cover vault namespace/race/rollback behavior, encryption tampering/outsiders/context binding, signed requests, admission failures and duplicate recovery. [Public browser evidence](evidence/saved-pass/README.md) records actual application, offline approval, in-app collection, reload and successful proof-checked acceptance/payment on task #4. The test uses operator-controlled wallets; it is not an independent assessment of reviewer competence.

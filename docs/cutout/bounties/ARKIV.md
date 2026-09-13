@@ -26,12 +26,14 @@ Actual public socket traffic and fault/reconnect probes exist. Events written by
 
 ## Evidence and remaining work
 
+**Completed public mission sequence, 13 September:** creator browser published task #4; a separate reviewer browser received the listing through its existing WebSocket board. The same query returned the entity at block 377455 and no entity at its native expiration block 377474. The board removed it while the funded Fuji task stayed Open. No delete transaction or manual refresh was used. [Query, entity and transaction evidence](../evidence/saved-pass/arkiv-missions.json), [browser capture and verification boundaries](../evidence/saved-pass/README.md).
+
 | Evidence | Actual scope |
 | --- | --- |
 | [Public state observation](../../design/cutout/evidence/presenter/public-state.json) | Finalized funded-task state at a recorded time; separate browser artifacts below cover discovery |
 | [Subscription/reconnect probes](../../design/cutout/evidence/release-followup/README.md) | Public WebSocket traffic and intentionally injected connection faults; no mission publication sequence |
 | [Publication recovery](../../design/cutout/evidence/enrollment-publication/README.md) | Real network reads with synthetic wallet errors/cancellation; diagnosis and actual test gas top-up |
-| [Schema](../../../arkiv/schema.md), [submission matrix](../../../arkiv/submission.md) | Implemented data model and current missing mission artifacts |
+| [Schema](../../../arkiv/schema.md), [submission matrix](../../../arkiv/submission.md) | Implemented data model and current submission artifacts |
 | [Feedback and first-user plan](../../../feedback.md) | Observed integration friction and a recruitment hypothesis |
 
-Public listings have been observed, but complete native-expiry and two-browser publication/update demonstrations still need recorded evidence. The [current Arkiv hub](https://hub.arkiv.network/ethrome) is the requirements authority. We target Missions 02/03 and Best Use consideration; we do not claim Mission 01's indexer replacement, and only one Arkiv award can be won per team.
+The public mission sequence above has recorded browser/query evidence. A final presentation video is still needed. The wallet bridge signs operator-controlled test accounts; this does not claim two independent human testers. The [current Arkiv hub](https://hub.arkiv.network/ethrome) is the requirements authority. We target Missions 02/03 and Best Use consideration; we do not claim Mission 01's indexer replacement, and only one Arkiv award can be won per team.

@@ -1,0 +1,101 @@
+{
+  "recordedAt": "2026-09-13T01:33:12.679Z",
+  "source": "a52e21f",
+  "origin": "https://cutout-ethrome-2026.vercel.app",
+  "taskId": "4",
+  "firstListing": "Listing published: 0x5aea8dcf4c12810cebf1c9b2884a2150c017dbfa8c20ee9e0dbd060af0d7a2c7; transaction 0x5606897d939065c37be99907d3d955d6b329608abefaf1277f75f811a6375aca; expires at Arkiv block 377474. Reconnect your settlement wallet to continue.",
+  "expiryQuery": {
+    "filter": {
+      "namespace": "review-pass",
+      "taskClass": "technical-review",
+      "qualificationClass": "7",
+      "settlementChain": 43113,
+      "escrow": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+      "paymentToken": "0x5425890298aed601595a70AB815c96711a31Bc65"
+    },
+    "beforeBlock": "377455",
+    "before": [
+      {
+        "key": "0x5aea8dcf4c12810cebf1c9b2884a2150c017dbfa8c20ee9e0dbd060af0d7a2c7",
+        "owner": "0x7259c94d93d83E539B57ba7A360cB06Bd9b53a60",
+        "creator": "0x7259c94d93d83E539B57ba7A360cB06Bd9b53a60",
+        "expiresAt": "377474",
+        "creationFlags": {
+          "readonly": true,
+          "permissionlessExtension": false,
+          "raw": 1
+        },
+        "payload": {
+          "schema": 2,
+          "taskClass": "technical-review",
+          "qualificationClass": "7",
+          "settlementChain": 43113,
+          "escrow": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+          "jobId": "4",
+          "client": "0x7259c94d93d83e539b57ba7a360cb06bd9b53a60",
+          "paymentToken": "0x5425890298aed601595a70ab815c96711a31bc65",
+          "reward": "100000",
+          "acceptBefore": 1789266820,
+          "title": "Check Cutout payment authorization",
+          "publicScope": {
+            "reference": "493113228b8351b3b4ae82b657696f4f93f469e5b836245c882132834f966e37",
+            "sha256": "0x64238c6a688e6c0fd9418cc4b38c38da08c626512a258c364c38d6b92da217fa"
+          }
+        },
+        "attributes": {
+          "acceptbefore": {
+            "type": "u64",
+            "value": "1789266820"
+          },
+          "application": {
+            "type": "str",
+            "value": "review-pass"
+          },
+          "escrow": {
+            "type": "str",
+            "value": "0xb431e570d506168711cc1f9f91e325b3114c62af"
+          },
+          "jobid": {
+            "type": "str",
+            "value": "4"
+          },
+          "kind": {
+            "type": "str",
+            "value": "review-listing"
+          },
+          "paymenttoken": {
+            "type": "str",
+            "value": "0x5425890298aed601595a70ab815c96711a31bc65"
+          },
+          "qualificationclass": {
+            "type": "str",
+            "value": "7"
+          },
+          "reward": {
+            "type": "u256",
+            "value": "100000"
+          },
+          "schema": {
+            "type": "i32",
+            "value": 2
+          },
+          "settlementchain": {
+            "type": "i32",
+            "value": 43113
+          },
+          "taskclass": {
+            "type": "str",
+            "value": "technical-review"
+          }
+        }
+      }
+    ],
+    "afterBlock": "377474",
+    "after": []
+  },
+  "checks": [
+    "Second browser received the actual new listing through its existing Arkiv WebSocket board, without refresh",
+    "Native Arkiv expiry removed the listing from the same query and live board while the funded Fuji task remained Open"
+  ],
+  "scope": "Real creator and reviewer Chromium profiles; actual public Arkiv publication, live WebSocket board and identical query across native expiry. Wallets are operator-controlled."
+}

@@ -4,6 +4,10 @@
 
 This index maps claims to dated artifacts. A successful read-only contract simulation is not a transaction. Local Anvil/Bee execution is not a public sponsor integration. The guided walkthrough's settlement is explicitly simulated.
 
+## Latest: saved pass and public paid review
+
+[13 September saved-pass evidence](evidence/saved-pass/README.md) contains actual encrypted application/approval collection, browser persistence, full paid public task #4, finalized receipts and a reviewer balance increase of 0.1 test USDC. The same run captured real two-browser Arkiv publication and an unchanged query through native expiry. This supersedes earlier missing-public-lifecycle observations below. The actual UI used operator-controlled test wallet signing bridges, not a human wallet-extension session.
+
 ## Public deployment and integration
 
 | Claim | Evidence | Boundary |
@@ -37,9 +41,8 @@ Verification commands are in the [quickstart](QUICKSTART.md#verification). The [
 
 ## Still needed for submission evidence
 
-- **One complete public paid review:** finalized funding, acceptance, delivery and payment receipts for the same task; scope/report integrity checks; reviewer token balance reconciliation.
-- **Arkiv native expiration:** actual listing creation and unchanged query before/after native expiry, with entity key, expiration block and visible board change. No delete operation.
-- **Arkiv two-browser stream:** a creator's real publication causing the other browser's filtered board update without polling or manual refresh.
-- **Final demo artifacts:** a working-flow recording and pitch slides linked in the [submission packet](BOUNTIES.md#submission-packet).
+- Independent teammate manual review with their actual wallet extension and their own saved pass.
+- Final working-flow video and pitch slides linked in the [submission packet](BOUNTIES.md#submission-packet).
+- Actual event/sponsor submission confirmations.
 
-The teammate owns independent manual user review. Engineering owns receipt reconciliation and mission probes. No sponsor form submission or full public paid completion is claimed by preparing these documents.
+Engineering completed the public receipt/balance reconciliation and mission probes above. Test harness interruptions and the independent checks that resolved their observations are retained in the evidence record; they are not reported as an uninterrupted passing run. No sponsor form submission is claimed.

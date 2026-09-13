@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-13T01:21:43.697Z",
+  "base": "http://127.0.0.1:18905",
+  "checks": [
+    "Legacy pair imports once into wallet-scoped browser pass",
+    "Private pass/application survives reload in same browser profile"
+  ],
+  "errors": [],
+  "applicationPosts": 0,
+  "scope": "Actual browser and public RPCs; operator-controlled wallet bridge. No financial transactions."
+}

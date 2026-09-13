@@ -13,6 +13,7 @@ Cutout is an experimental testnet product. It has targeted security reviews and 
 | Issuer signing public key and status snapshot/root | Public |
 | Credential signature, index, holder commitment/secret, witness | Local private proof inputs |
 | Qualification class and presentation inputs | Public in the proof/acceptance |
+| Application wallet, ticket, signature and encrypted credential delivery | Public on Arkiv; plaintext readable by the designated issuer/reviewer |
 | Report plaintext and content key | Available to intended recipients after decryption |
 | Encrypted report and envelope recipient metadata | Publicly retrievable; metadata is not hidden |
 
@@ -33,6 +34,8 @@ The onchain acceptance binds a proof to the task and wallet and checks the issue
 Discovery listings are checked against actual funded tasks and their creators. A forged listing cannot independently move escrow funds. Listing expiration changes discovery without deleting payment rights.
 
 Only the assigned reviewer commits delivery. The onchain digest authenticates exact stored bytes. Recipient-key bindings are checked before encryption, and only corresponding browser keys unwrap the report key. The UI requires successful opening before approval, but a direct contract call cannot establish that a human read a report.
+
+The application relay can delay or refuse publication, but holds only an Arkiv gas key, not the credential signing key or holder secret. Admission quotas are best-effort across serverless instances, backed by finite relay funds. The issuer approves offline; collecting a response checks its holder/issuer pairing, while actual proof acceptance verifies eligibility cryptographically. [Channel, vault and service boundaries](QUALIFICATION.md).
 
 ## Recovery limits
 

@@ -26,7 +26,7 @@ The same contract handles unaccepted/undelivered refunds, delayed undisputed cla
 
 Start from a funded task and show its scope/reward receipt. In the reviewer browser, generate the proof and sign acceptance. Seal/deliver a report. In the client browser, open it and approve payment. Show the resulting Paid state and reconcile reviewer USDC before/after. Gas is paid separately in test AVAX.
 
-**Verified:** deployed/source-verified contracts, actual public funding and a refund, real browser proofs verified by the deployed contract and simulated against a funded task. **Still required:** the complete public acceptance → delivery → payment receipt bundle. The local paid lifecycle is evidence of implementation, not a substitute for public testnet completion.
+**Verified on public Fuji:** task #4 funded 0.1 test USDC, accepted with a real browser-generated qualification proof, delivered a Swarm report and paid the assigned reviewer after client decryption. [Finalized receipts and reviewer balance increase](../evidence/saved-pass/finalized-payment.json), [browser/issuance scope and harness corrections](../evidence/saved-pass/README.md). This used actual Chromium UI and operator-owned test wallet signers; teammate wallet-extension rehearsal and the final presentation recording remain separate.
 
 ## Questions to expect
 

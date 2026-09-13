@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-13T01:27:47.831Z",
+  "base": "https://cutout-ethrome-2026.vercel.app",
+  "checks": [
+    "Approved encrypted credential is collected into original browser automatically without download/upload",
+    "Private pass/application survives reload in same browser profile"
+  ],
+  "errors": [],
+  "applicationPosts": 0,
+  "scope": "Actual browser and public RPCs; operator-controlled wallet bridge. No financial transactions."
+}

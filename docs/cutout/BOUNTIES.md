@@ -27,8 +27,8 @@ The [current Arkiv hub](https://hub.arkiv.network/ethrome) allows only one award
 | Setup instructions and source map | [Quickstart](QUICKSTART.md), [architecture](ARCHITECTURE.md), [deployment](DEPLOYMENT.md) — prepared |
 | Sponsor integration explanations | Three dedicated pages above — prepared |
 | Arkiv schema, feedback and first-user hypothesis | [Schema](../../arkiv/schema.md), [feedback](../../feedback.md), [artifact matrix](../../arkiv/submission.md) — prepared |
-| Complete public paid-task receipt bundle | Teammate live test + engineering reconciliation — still to capture/sign off |
-| Native expiry and two-browser stream evidence | Engineering mission probes — still to record as complete public sequences |
+| Complete public paid-task receipt bundle | [Task #4, finalized payment and balance reconciliation](evidence/saved-pass/finalized-payment.json) — passed with operator-controlled browser wallets |
+| Native expiry and two-browser stream evidence | [Real public listing, unchanged query and browser observations](evidence/saved-pass/arkiv-missions.json) — captured; final presentation video remains separate |
 | Short working-flow video | Team presenter — no final video link recorded |
 | Pitch slides | Team presenter — no final deck linked; required by the Team1 Builder Hub page |
 | Correct repository branch URL in forms | Use `https://github.com/MihRazvan/eth-rome-2026/tree/review-pass/product` until this branch becomes the default through normal review |
@@ -36,8 +36,9 @@ The [current Arkiv hub](https://hub.arkiv.network/ethrome) allows only one award
 
 ## Final checks before submitting
 
-- [ ] Complete the [manual end-to-end test](../CUTOUT-MANUAL-TEST.md), then save the task ID, acceptance/delivery/payment hashes and independent balance reconciliation.
-- [ ] Record one native Arkiv expiration and one real two-browser publication/update, with entity keys, transactions, same-query results and timestamps.
+- [x] Capture a complete public paid review with finalized receipts and independent balance reconciliation: [task #4](evidence/saved-pass/README.md).
+- [x] Capture native Arkiv expiration and actual two-browser publication/update with entity, transaction and same-query evidence.
+- [ ] Teammate completes the [manual end-to-end test](../CUTOUT-MANUAL-TEST.md) with their actual wallet extension; operator automation does not substitute for this review.
 - [ ] Link the actual video and pitch deck here when available. Show only completed actions as completed; disclose the guided simulation if used.
 - [ ] Confirm the app opens in a fresh browser without Vercel authentication and the team has a valid demo credential and eligible task.
 - [ ] Submit the ETHRome entry, [Arkiv form](https://tally.so/r/vGZ98v) and [Team1 Builder Hub entry](https://build.avax.network/events/73a939b1-6d35-4847-9388-320024638249) through the relevant team accounts. Preserve confirmations privately or redact personal fields before committing.

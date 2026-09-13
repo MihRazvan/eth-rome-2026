@@ -83,6 +83,6 @@ All paths are relative to the repository root. The `experiments/qualification` n
 
 ## Hosting boundary
 
-Vercel serves static assets and a bounded read-only Node function. It exposes public configuration, whole snapshots and task document reads. Its separate enrollment API receives signed encrypted applications and uses a narrowly purposed Arkiv relay key; it never receives holder secrets or the credential signing key. Browser wallets perform transactions, the browser worker generates proofs, and browser WebSockets connect to Arkiv directly. A source deployment manifest and matching proving artifacts are required for the active build; a missing live dependency is not replaced with fixture data.
+Vercel serves static assets and a bounded Node function with public read routes and a separate encrypted application relay. It exposes public configuration, whole snapshots and task document reads. Its separate enrollment API receives signed encrypted applications and uses a narrowly purposed Arkiv relay key; it never receives holder secrets or the credential signing key. Browser wallets perform transactions, the browser worker generates proofs, and browser WebSockets connect to Arkiv directly. A source deployment manifest and matching proving artifacts are required for the active build; a missing live dependency is not replaced with fixture data.
 
 The root Vercel configuration belongs to earlier EXIT. Cutout has an isolated build-output deployment. [Deployment instructions](DEPLOYMENT.md) explain the distinction.

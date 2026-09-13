@@ -1,0 +1,9 @@
+{
+  "source": "a52e21f",
+  "origin": "https://cutout-ethrome-2026.vercel.app",
+  "reviewer": "0x7292C1652e831031175947daEcC7F85bF86381A1",
+  "ticket": "14831e9fa5088426fac43a1df77d36105683e7e4d9d58ff704773ae179c41cc7",
+  "entity": "0x59fd34fced1b956641f95c84687daca96ff1967b8a208247f8a33334ca4ec81d",
+  "approvalTransaction": "0xbb06a4687e2e7e3afe2eec93db169528826d9acd1194cbd2ee05348900f3726e",
+  "scope": "Browser generated and stored holder; signed encrypted application published through actual relay API; explicit offline issuer approval; browser collected encrypted credential without file transfer. Private key/credential/request plaintext omitted."
+}
