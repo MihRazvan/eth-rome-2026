@@ -11,7 +11,7 @@
     />
     <meta
       name="description"
-      content="Cutout: qualified reviewers, private reports. Post a task, fund the reward, and open a review only you can read."
+      content="Cutout: qualified reviewers, private reports. Post a task, fund the reward, and receive a report encrypted for you and the reviewer."
     />
     <title>Cutout — Qualified work. Private by design.</title>
     <script type="module" src="/boot.ts"></script>
@@ -239,23 +239,16 @@
             data-screen="tasks"
           >
             <div class="section-top">
-              <h2>Find a task</h2>
-              <button id="refresh-board" class="quiet">Refresh</button>
+              <div><p class="eyebrow">Funded work. Private reports.</p><h2>Find a task</h2></div>
+              <span id="board-live" class="board-live" role="status">Connecting…</span>
             </div>
-            <p id="discovery-status" class="fine" role="status">
-              Connecting to Arkiv…
-            </p>
-            <div class="actions">
-              <label
-                >Minimum reward
-                <input
-                  id="minimum-reward"
-                  inputmode="decimal"
-                  value="0" /></label
-              ><button id="filter-board">Apply filter</button>
+            <div class="board-toolbar">
+              <div class="board-filter"><label for="minimum-reward">Minimum reward (test USDC)</label><div><input id="minimum-reward" inputmode="decimal" value="0" /><button id="filter-board" class="quiet">Apply filter</button></div></div>
+              <label class="board-sort" for="board-order">Sort reviews<select id="board-order"><option value="deadline">Closing soon</option><option value="reward">Highest reward</option></select></label>
             </div>
-            <p id="discovery-change" class="fine" role="status"></p>
+            <div class="board-count"><p id="board-summary" role="status">Checking available reviews</p><button id="refresh-board" class="quiet">Refresh</button></div>
             <div id="opportunities"></div>
+            <details class="board-diagnostics"><summary>How the live board works</summary><p class="fine">Listings expire automatically. An expired listing leaves the board; it does not cancel funded or accepted work. Wallets and task timing are public.</p><p id="discovery-status" class="fine">Connecting to Arkiv…</p><p id="discovery-change" class="fine" role="status"></p></details>
           </section>
           <details class="device-settings" data-screen="help">
             <summary>Private reports &amp; storage</summary>
@@ -322,7 +315,7 @@
                     maxlength="4000"
                     rows="5"
                   >
-Review the public withdrawal authorization flow. Identify permission bypasses, cite the affected functions, and include a reproducible test for each finding. Do not include secrets or private repository access.</textarea>
+Review the public payment authorization flow. Identify permission bypasses, cite the affected functions, and include a reproducible test for each finding. Do not include secrets or private repository access.</textarea>
                 </label>
                 <label
                   >Reward (test USDC)<input

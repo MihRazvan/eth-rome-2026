@@ -4,6 +4,7 @@ import "../../../qualification/runtime/style.css";
 import "./pilot.css";
 import { revealInWorkspace } from "./shell";
 import { mountEnrollment } from "./enrollment";
+import { opportunityMarkup, type BoardOrder } from "../board-presentation";
 import {
   createPublicClient,
   createWalletClient,
@@ -446,14 +447,14 @@ function renderBoard() {
   $("#discovery-status").textContent = state
     ? `Arkiv ${state.status}${state.head === null ? "" : ` · observed block ${state.head}`}${state.reason ? ` · ${state.reason}` : ""}`
     : "Connecting to public opportunity listings…";
+  const live = state?.status === "live";
+  $("#board-live").textContent = live ? "Live board" : state?.status === "connecting" || !state ? "Connecting…" : "Connection interrupted";
+  $("#board-live").dataset.live = String(live);
+  $("#board-summary").textContent = state?.listings.length ? `${state.listings.length} ${state.listings.length === 1 ? "review" : "reviews"} ${live ? "available" : "last seen · reconnect to open"}` : live ? "No matching reviews right now" : "Checking available reviews";
+  const order = ($("#board-order") as HTMLSelectElement).value as BoardOrder;
   $("#opportunities").innerHTML = state?.listings.length
-    ? state.listings
-        .map(
-          (e) =>
-            `<article class="listing"><h3>${esc(e.listing.title)}</h3><p>${formatUnits(BigInt(e.listing.reward), 6)} ${tokenSymbol} · Technical review</p><p class="fine">This listing has a limited lifetime. The funded task keeps its own delivery and payment deadlines.</p><button data-view-job="${e.listing.jobId}" ${state.status !== "live" ? "disabled" : ""}>View verified scope</button></article>`,
-        )
-        .join("")
-    : `<p class="fine">${state?.status === "live" ? "No open reviews match this filter. Try a lower minimum reward, or explore the guided demo." : "Discovery is not yet available. Your existing funded work is available in Activity."}</p>${config.chainId === 31338 ? '<p class="fine">This public Arkiv board is separate from the local rehearsal. <a href="#jobs">Open local rehearsal tasks below</a>.</p>' : ""}`;
+    ? opportunityMarkup(state.listings, order, !!live, tokenSymbol)
+    : `<div class="board-empty"><span aria-hidden="true" class="board-empty-mark">⌑</span><h3>${live ? "Make room for your next review." : "The board is reconnecting."}</h3><p>${live ? "There are no funded reviews matching your reward filter. Try a lower minimum, or come back when a client posts new work." : "Your accepted work is still in Activity. Refresh the board to try again."}</p>${live ? '<button data-ui data-reset-board class="quiet">Show all rewards</button>' : ''}</div>${config.chainId === 31338 ? '<p class="fine">This public board is separate from the local rehearsal. <a href="#jobs">Open local rehearsal tasks below</a>.</p>' : ""}`;
   if (state?.removed.some((x) => x.reason === "native-expired"))
     $("#discovery-change").textContent =
       "A discovery lease is no longer active. Its escrow and accepted work remain on the settlement chain.";
@@ -779,7 +780,7 @@ function render() {
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
             actions =
               `<div class="sealed-report"><div class="sealed-art" aria-hidden="true"><svg viewBox="0 0 120 80"><path d="M8 12h104v58H8Z" fill="#F04E23" stroke="currentColor"/><path d="m8 12 52 37 52-37" fill="none" stroke="currentColor"/></svg></div><div><h4>A review, just for you.</h4><p class="fine">Cut along the line to open your private report.</p><label class="cut-track">Drag to cut<input type="range" min="0" max="100" value="0" data-cut="${j.id}" aria-label="Cut open report for task ${j.id}"${!account ? " disabled" : ""}></label>${button("retrieve", j.id, "Cut open report")}</div></div>` +
-              (isClient || isWorker ? button("save", j.id, "Download report") : "") +
+              (isClient || isWorker ? button("save", j.id, "Download report", false) : "") +
               `<details class="report-recovery"><summary>Encrypted backup & device recovery</summary><p class="fine">Demo storage is temporary. Keep a downloaded copy. Use an older device key only when recovering a report encrypted to it.</p>${button("export", j.id, "Export encrypted backup")}<label class="fine">Device key<select data-history="${j.id}"><option value="">Current device key</option></select></label></details>`;
           if (j.status === "Submitted" && isClient)
             actions +=
@@ -1416,9 +1417,15 @@ async function action(name: string, id: string) {
       report.textContent = new TextDecoder().decode(plaintext);
       report.dataset.verifiedDigest = String(digest);
       report.classList.add("report-open");
-      document
-        .querySelector(`#job-${id} .sealed-report`)
-        ?.classList.add("is-open");
+      const seal = document.querySelector<HTMLElement>(`#job-${id} .sealed-report`);
+      if (seal) {
+        seal.classList.add("is-open");
+        seal.querySelector("h4")!.textContent = "Your report is open.";
+        seal.querySelector("p")!.textContent = "Decrypted on this device. Matches the delivered report.";
+        seal.querySelector("button")!.textContent = "Open again";
+      }
+      const download = document.querySelector<HTMLButtonElement>(`[data-action="save"][data-id="${id}"]`);
+      if (download) download.dataset.eligible = "true";
       const pay = document.querySelector<HTMLButtonElement>(
         `[data-action="pay"][data-id="${id}"]`,
       );
@@ -1427,7 +1434,7 @@ async function action(name: string, id: string) {
       return {
         preserve: true,
         message:
-          "Report opened. Its stored bytes match the reviewer’s onchain commitment. Read it before approving payment.",
+          j.status === "Paid" ? "Report verified. This review has been paid." : "Report verified. Read it, then approve payment or raise a dispute.",
       };
     }
     case "export": {
@@ -1545,7 +1552,13 @@ $("#filter-board").onclick = () =>
   });
 // A manual refresh also recreates a stream whose bounded reconnects were exhausted.
 $("#refresh-board").onclick = () => run(startBoard);
+$("#board-order").onchange = () => renderBoard();
 $("#opportunities").onclick = (e) => {
+  if ((e.target as HTMLElement).closest("[data-reset-board]")) {
+    ($("#minimum-reward") as HTMLInputElement).value = "0";
+    void run(async () => { await startBoard(); return {preserve:true, message:"Showing all reward amounts."}; });
+    return;
+  }
   const b = (e.target as Element).closest<HTMLButtonElement>("[data-view-job]");
   if (b && boardState?.status === "live")
     run(async () => {
