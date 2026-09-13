@@ -70,11 +70,30 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
   }
   const pending=entry.pending as any;resumed.add(pending.context.ticket);
   const until=Date.now()+110000;let resent=false;
+  const pause=()=>new Promise<void>((resolve,reject)=>{
+   const signal=controller!.signal;
+   if(signal.aborted){reject(Error('Setup paused. Your progress is saved.'));return;}
+   const abort=()=>{clearTimeout(timer);reject(Error('Setup paused. Your progress is saved.'));};
+   const timer=setTimeout(()=>{signal.removeEventListener('abort',abort);resolve();},Math.max(0,Math.min(2500,until-Date.now())));
+   signal.addEventListener('abort',abort,{once:true});
+  });
   while(Date.now()<until){
    current(mine);
    message('Finishing your private reviewer access… You can keep this page open.');
-   const response=await fetch(`/api/enrollment?ticket=${encodeURIComponent(pending.context.ticket)}`,{cache:'no-store',redirect:'error',signal:AbortSignal.any([controller!.signal,AbortSignal.timeout(15000)])});
-   const result=await response.json();current(mine);
+   let response:Response,result:any;
+   try{
+    response=await fetch(`/api/enrollment?ticket=${encodeURIComponent(pending.context.ticket)}`,{cache:'no-store',redirect:'error',signal:AbortSignal.any([controller!.signal,AbortSignal.timeout(Math.max(1,Math.min(40000,until-Date.now())))])});
+    // Gateways may answer a temporary failure with HTML rather than JSON.
+    result=await response.json().catch(()=>({}));current(mine);
+   }catch{
+    current(mine);
+    message('Reconnecting to finish your private access… No need to sign again.');
+    await pause();continue;
+   }
+   if(response.status===408||response.status===429||response.status>=500){
+    message('Finishing setup… The service is busy; retrying automatically.');
+    await pause();continue;
+   }
    if(response.status===404&&!pending.submittedAt&&!resent){
     if(!allowSign)throw Error('One wallet confirmation is still needed. Select Continue setup.');
     resent=true;await submit(scope,entry,mine);continue;
@@ -90,12 +109,7 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
     await saveCredentialVault(scope,{holder:entry.holder,credential} as CredentialVaultEntry,{replace:!!entry.credential});current(mine);
     await hooks.changed();current(mine);message('Private access ready. You can accept a task.');return;
    }
-   await new Promise<void>((resolve,reject)=>{
-    const signal=controller!.signal;
-    const abort=()=>{clearTimeout(timer);reject(Error('Setup paused. Your progress is saved.'));};
-    const timer=setTimeout(()=>{signal.removeEventListener('abort',abort);resolve();},2500);
-    signal.addEventListener('abort',abort,{once:true});
-   });
+   await pause();
   }
   throw Error('Setup is taking longer than expected. Your progress is saved. Select Continue setup to try again.');
  }
