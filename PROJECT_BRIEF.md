@@ -22,7 +22,7 @@ Avalanche holds the money and verifies acceptance. Arkiv makes listings discover
 | Reviewer | Choose work, complete automatic setup, accept, deliver the report |
 | Issuer service | Validate signed enrollment requests, issue private passes, maintain revocation state |
 
-Enrollment is open. A separate issuer service validates the wallet-signed encrypted request and returns a signed pass automatically; nobody on the team must approve it. The pass proves enrollment, not assessed expertise or report quality. The Deaddrop team controls the issuer and dispute arbitrator.
+Enrollment is open. The server-side issuer validates the wallet-signed encrypted request and returns a signed pass automatically; nobody on the team must approve it. The pass proves enrollment, not assessed expertise or report quality. The Deaddrop team controls the issuer and dispute arbitrator.
 
 ## What exists today
 

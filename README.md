@@ -12,7 +12,7 @@ The product was previously called Cutout. The app URL and browser storage namesp
 
 ## Submission release
 
-Automatic enrollment removes the manual reviewer approval gate in this revision. Continuous issuer hosting and a fresh first-time paid flow still require release verification; the receipts below cover the earlier saved-pass flow.
+Automatic enrollment removes the manual reviewer approval gate in this revision. Hosted automatic issuance and a fresh first-time paid flow still require release verification; the receipts below cover the earlier saved-pass flow.
 
 The default repository commands now run Deaddrop. The final app includes the complete thermal landing, product explanation, lifecycle and FAQs. A new public review, **task #6**, completed browser proof → Fuji acceptance → encrypted Swarm delivery → client decryption → **0.1 test USDC payment**. Original browser keys and saved passes survived the release. [Release evidence](docs/deaddrop/evidence/submission/README.md), including clean-checkout builds, hosted checks and finalized receipts.
 
@@ -64,7 +64,7 @@ Open **http://127.0.0.1:18904/?view=demo**. Requires Node 24.12+. This starts th
 | Documents | **Swarm / Bee HTTP** | Public scopes and issuer snapshots; recipient-encrypted reports |
 | Qualification | **gnark Groth16 on BN254, Go → WebAssembly** | Prove a valid issuer-signed pass and current nonrevocation locally; verify onchain |
 | Report privacy | **WebCrypto + HPKE** | Encrypt locally and wrap document keys separately for each recipient |
-| Product | **TypeScript + Vite; Vercel** | Deaddrop interface, browser proving worker, public reads and encrypted application relay |
+| Product | **TypeScript + Vite; Vercel** | Deaddrop interface, browser proving worker, public reads and automatic enrollment |
 
 The [architecture](docs/deaddrop/ARCHITECTURE.md) maps each boundary to source. The [security model](docs/deaddrop/SECURITY.md) explains exactly what remains trusted or public.
 

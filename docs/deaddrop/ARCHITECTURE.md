@@ -2,7 +2,7 @@
 
 [Docs](../README.md) · [User flow](USER-FLOW.md) · [Security](SECURITY.md) · [Deployment](DEPLOYMENT.md)
 
-Deaddrop has three public infrastructure responsibilities: Avalanche determines task and payment state, Arkiv provides discovery, and Swarm carries documents. The participant's browser holds the private inputs and performs proving and encryption. The document read API has no financial signer. A separate enrollment endpoint relays encrypted applications to Arkiv with an operator-funded gas key; a separate persistent issuer worker validates requests and signs passes automatically.
+Deaddrop has three public infrastructure responsibilities: Avalanche determines task and payment state, Arkiv provides discovery, and Swarm carries documents. The participant's browser holds the private inputs and performs proving and encryption. The document read API has no financial signer. A separate enrollment endpoint relays encrypted applications to Arkiv with an operator-funded gas key; server-side issuance validates requests and signs passes automatically. Its encrypted allocation ledger uses private Vercel Blob storage; review documents remain on Swarm.
 
 ## Data path
 
@@ -74,7 +74,7 @@ All paths are relative to the repository root. The `experiments/qualification` n
 | Shell and guided walkthrough | [shell.ts](../../experiments/qualification/pilot/web/shell.ts), [demo.ts](../../experiments/qualification/pilot/web/demo.ts) |
 | Credential generation and validation | [holder-enrollment.ts](../../experiments/qualification/pilot/holder-enrollment.ts), [proof-files.ts](../../experiments/qualification/pilot/proof-files.ts) |
 | Browser proving | [browser-prover.ts](../../experiments/qualification/pilot/browser-prover.ts), [Go circuit](../../experiments/qualification/prover/circuit.go) |
-| Issuer allocation and signing | [issuer_registry.go](../../experiments/qualification/prover/issuer_registry.go), [issue-enrollment.mjs](../../experiments/qualification/pilot/issue-enrollment.mjs) |
+| Issuer allocation and signing | [issuer_registry.go](../../experiments/qualification/prover/issuer_registry.go), [automatic-issuer.ts](../../experiments/qualification/pilot/hosting/automatic-issuer.ts) |
 | Escrow and report key registry | [QualificationEscrow.sol](../../experiments/qualification/contracts/src/QualificationEscrow.sol), [QualificationKeys.sol](../../experiments/qualification/contracts/src/QualificationKeys.sol) |
 | Encryption and device persistence | [keys.ts](../../experiments/qualification/pilot/keys.ts) |
 | Discovery, native expiry, subscriptions | [listings.ts](../../experiments/qualification/pilot/listings.ts) |
@@ -83,6 +83,6 @@ All paths are relative to the repository root. The `experiments/qualification` n
 
 ## Hosting boundary
 
-Vercel serves static assets and a bounded Node function with public read routes and a separate encrypted application relay. It exposes public configuration, whole snapshots and task document reads. Its separate enrollment API receives signed encrypted applications and uses a narrowly purposed Arkiv relay key; it never receives holder secrets or the credential signing key. Browser wallets perform transactions, the browser worker generates proofs, and browser WebSockets connect to Arkiv directly. A source deployment manifest and matching proving artifacts are required for the active build; a missing live dependency is not replaced with fixture data.
+Vercel serves static assets and a bounded Node function with public read routes and encrypted enrollment. It exposes public configuration, whole snapshots and task document reads. The enrollment API validates wallet-signed encrypted applications and holds server-only issuer, channel-decryption, Blob-encryption and Arkiv relay secrets. These never enter frontend assets or the build output. The holder secret stays in the browser. Issuance commits its updated registry and ticket result together in an encrypted private Blob object before releasing a credential; conditional writes prevent concurrent functions from overwriting each other. Browser wallets perform financial transactions, the browser worker generates proofs, and browser WebSockets connect to Arkiv directly. A source deployment manifest and matching proving artifacts are required for the active build; a missing live dependency is not replaced with fixture data.
 
 Deaddrop uses an isolated Build Output API deployment with matching public proof artifacts and a verified contract configuration. [Deployment instructions](DEPLOYMENT.md) explain the distinction.

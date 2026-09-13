@@ -35,13 +35,13 @@ Discovery listings are checked against actual funded tasks and their creators. A
 
 Only the assigned reviewer commits delivery. The onchain digest authenticates exact stored bytes. Recipient-key bindings are checked before encryption, and only corresponding browser keys unwrap the report key. The UI requires successful opening before approval, but a direct contract call cannot establish that a human read a report.
 
-The application relay can delay or refuse publication, but holds only an Arkiv gas key, not the credential signing key or holder secret. Admission quotas are best-effort across serverless instances, backed by finite relay funds. A separate persistent issuer worker holds the signing key and durable allocation state. It decrypts validated requests and automatically returns encrypted credentials. Compromising that worker can authorize passes; it cannot recover browser holder secrets or sign user escrow transactions. Collecting a response checks its holder/issuer pairing, while actual proof acceptance verifies eligibility cryptographically. [Channel, vault and service boundaries](QUALIFICATION.md).
+The hosted enrollment service can delay or refuse issuance. Its server-only secrets include issuer signing and channel-decryption keys; private Blob storage holds an AES-GCM-encrypted allocation ledger and committed ticket results. Compromising the server environment can authorize passes and expose issuer-readable enrollment data. It does not provide browser holder secrets or user wallet signing keys. Admission quotas are best-effort across serverless instances, backed by finite relay funds. Collecting a response checks its holder/issuer pairing, while actual proof acceptance verifies eligibility cryptographically. [Channel, vault and service boundaries](QUALIFICATION.md).
 
 ## Recovery limits
 
 Keep the original browser profile and hostname. Report keys are origin-bound, nonextractable browser state. A wallet seed phrase does not restore them after browser storage loss. Credential holder backups are separate from report keys. The browser checks current recipient bindings before new encryption and rechecks before delivery. A rotation during pending wallet confirmation is not atomically prevented by the escrow. Rotation does not erase old ciphertext/plaintext or revoke somebody's existing ability to decrypt.
 
-Issuer allocation state is durable and tested against concurrent issuance and process interruption. It is not protected against a malicious issuer or whole-disk rollback. Never reset the deployed issuer registry to fix a local enrollment issue.
+The server-side issuer commits the updated allocation registry and ticket credential together before releasing the credential. ETag conditional writes handle concurrent updates, and same-ticket retries return the committed result. This does not protect against a malicious issuer or an administrator restoring an older ledger. After migration, the old local allocator is frozen; never issue from a stale copy or reset the deployed registry to repair enrollment. See current release evidence for the tested concurrency and interruption scope.
 
 ## Reviews and checks
 
