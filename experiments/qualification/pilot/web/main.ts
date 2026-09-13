@@ -1,3 +1,4 @@
+import { loadCredentialVault, saveCredentialVault, type CredentialVaultEntry, type CredentialVaultScope } from "../credential-vault";
 import { validateProofFile, validateProofPair } from "../proof-files";
 import "../../../qualification/runtime/style.css";
 import "./pilot.css";
@@ -96,7 +97,27 @@ let role: Role =
     : "client";
 let readiness: Readiness = { key: false, gas: null, balance: null };
 let chainNow = 0;
-let enrollmentMessage = "Issuer enrollment needed before accepting work";
+let enrollmentMessage = "Reviewer pass needed";
+let savedPass: CredentialVaultEntry | undefined;
+let enrollment: ReturnType<typeof mountEnrollment> | undefined;
+let issuerCoordinates: {issuerX:string;issuerY:string} | undefined;
+async function qualificationScope(): Promise<CredentialVaultScope | undefined> {
+  const owner=account,session=generation;
+  if(!owner)return undefined;
+  if(!issuerCoordinates){const [x,y]=await Promise.all([read("issuerX"),read("issuerY")]);issuerCoordinates={issuerX:String(x),issuerY:String(y)};}
+  if(session!==generation||account!==owner)return undefined;
+  return {chainId:config.chainId,escrow:config.escrow.toLowerCase(),...issuerCoordinates,wallet:owner.toLowerCase()};
+}
+async function syncSavedPass(){
+  const session=generation,scope=await qualificationScope();
+  const entry=scope?await loadCredentialVault(scope):undefined;
+  if(session!==generation)return;
+  savedPass=entry;
+  enrollmentMessage=entry?.credential && entry.credential.expiry>chainNow ? "Reviewer pass ready" : entry?.pending ? "Awaiting issuer approval" : "Reviewer pass needed";
+}
+function hasSavedPass(qualificationClass:number){
+  try{if(!savedPass?.credential)return false;validateProofPair(savedPass.credential,savedPass.holder,qualificationClass,chainNow);return true;}catch{return false;}
+}
 function currentReadiness() {
   return readiness.owner === account
     ? readiness
@@ -749,7 +770,7 @@ function render() {
               ? button("publish", j.id, "List this review")
               : "";
           if (eligibility.accept && !j.scopeError && !isClient)
-            actions = `${config.browserProver ? `<div class="local-prover"><h4>Cut a proof. Keep your credential.</h4><p class="fine"><strong>Credential JSON:</strong> the signed file returned by the Cutout team after approving your enrollment request. <strong>Private holder JSON:</strong> your saved <code>cutout-private-holder.json</code>.</p><p class="fine">The generated <code>cutout-enrollment-request.json</code> is for the issuer; it cannot cut a proof. These files are read locally and never uploaded.</p><button data-ui data-enrollment-help type="button" class="quiet">Where do I get these files?</button>${!account ? '<p class="error">Connect your reviewer wallet on Fuji to enable file selection.</p><button data-proof-connect type="button">Connect reviewer wallet</button>' : ""}<label class="fine">Credential JSON<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label class="fine">Private holder JSON<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label>${button("generate", j.id, "Cut a qualification proof", false)}${button("cancel-proof", j.id, "Cancel proof", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Accept this task")}` : ""}`;
+            actions = `${config.browserProver ? `<div class="local-prover"><h4>${hasSavedPass(Number(j.class)) ? "Your reviewer pass is ready." : "A reviewer pass is required."}</h4><p class="fine">${hasSavedPass(Number(j.class)) ? "Verify your eligibility privately, then accept this review." : "Apply once, or restore an existing pass in your workspace."}</p>${!account ? '<button data-proof-connect type="button">Connect reviewer wallet</button>' : !hasSavedPass(Number(j.class)) ? '<button data-ui data-enrollment-help type="button">Set up my reviewer pass</button>' : ""}${button("generate", j.id, "Verify my eligibility", hasSavedPass(Number(j.class)))}${button("cancel-proof", j.id, "Cancel", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p><details><summary>Use older credential files</summary><p class="fine">One-time import. Your pass will be saved privately in this browser.</p><label>Issued credential<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label>Original holder backup<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label></details></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Accept this task")}` : ""}`;
           if (role === "reviewer" && isClient && eligibility.accept) {
             actions = `<div class="local-prover" data-wallet-mismatch="${j.id}"><h4>This is the client's wallet.</h4><p>You connected <code>${esc(account!)}</code>, the account that funded this task. The Reviewer tab changes the view; it does not switch your wallet account.</p><p>To review as a separate participant, select your reviewer account in the wallet. Keep this task open; you do not need to list or fund it again.</p><button data-select-reviewer type="button">Choose reviewer account</button><button data-proof-connect type="button" class="quiet">Reconnect selected account</button><p class="fine">If the wallet keeps choosing this address, open its connected-site settings and connect only the reviewer account to Cutout. A separate reviewer browser profile also works.</p></div>`;
           }
@@ -899,7 +920,9 @@ async function connect(allowSwitch = true) {
     transport: custom(provider),
   });
   generation++;
+  await syncSavedPass();
   await refresh();
+  await enrollment?.refresh();
   if (account === owner)
     $("#notice").textContent =
       "Wallet connected. Your device key stays in this browser profile.";
@@ -1002,9 +1025,13 @@ async function checkProofFiles(id: string) {
       return;
     }
     validateProofPair(values[0], values[1], Number(job?.class), chainNow);
+    const scope=await qualificationScope();
+    if(!scope || !current())return;
+    await saveCredentialVault(scope,{credential:values[0],holder:values[1]} as unknown as CredentialVaultEntry);
+    if(!current())return;
+    await syncSavedPass();
     button.dataset.eligible = "true";
-    status.textContent =
-      "Both files selected and matched locally. Cut a proof to verify the issuer signature and current qualification.";
+    status.textContent = "Pass saved in this browser. Verify your eligibility to continue.";
   } catch (error) {
     if (current()) status.textContent = (error as Error).message;
   } finally {
@@ -1049,21 +1076,11 @@ async function generatePresentation(id: string) {
     document.querySelector<HTMLInputElement>(`[data-${kind}="${id}"]`)!,
   );
   try {
-    const privateFiles = await Promise.all(
-      inputs.map(async (input) => {
-        const file = input.files?.[0];
-        if (!file || file.size > 16_384)
-          throw Error("Select credential and holder JSON files below16KB each");
-        try {
-          return JSON.parse(await file.text());
-        } catch {
-          throw Error("A selected private file is not valid JSON");
-        }
-      }),
-    );
-    inputs.forEach((input) => {
-      input.value = "";
-    });
+    const scope=await qualificationScope();current();
+    const stored=scope?await loadCredentialVault(scope):undefined;current();
+    if(!stored?.credential)throw Error("Set up your reviewer pass first.");
+    const privateFiles: any[] = [stored.credential,stored.holder];
+    inputs.forEach((input) => { if(input) input.value = ""; });
     current();
     validateProofPair(
       privateFiles[0],
@@ -1754,6 +1771,8 @@ for (const event of ["accountsChanged", "chainChanged", "disconnect"])
     proofController?.abort();
     generation++;
     account = undefined;
+    savedPass = undefined;
+    enrollment?.clear();
     device = undefined;
     wallet = undefined;
     proofs.clear();
@@ -1764,14 +1783,14 @@ for (const event of ["accountsChanged", "chainChanged", "disconnect"])
       "Private document views cleared after wallet change.";
     render();
   });
-if (config.browserProver)
-  mountEnrollment(config, (message) => {
-    enrollmentMessage = message;
-    renderGuide();
+if (config.browserProver) {
+  enrollment=mountEnrollment(config,{
+    scope:qualificationScope,
+    connect:()=>{if(busy)throw Error("Finish the current wallet action first.");return connect();},
+    sign:async(message)=>{if(busy)throw Error("Finish the current wallet action first.");if(!wallet||!account)throw Error("Connect reviewer wallet first.");return wallet.signMessage({account,message});},
+    changed:async()=>{await syncSavedPass();render();},
+    state:(message)=>{enrollmentMessage=message;renderGuide();},
   });
-else $("#prepare-enrollment").hidden = true;
+  await enrollment.refresh();
+} else $("#prepare-enrollment").hidden = true;
 await refresh();
-
-if (config.browserProver)
-  $("#prover-help").textContent =
-    "After issuer approval, select your issued credential and saved private holder backup on an open task. Your browser generates a task-specific proof; the contract checks it before acceptance. The private files are never uploaded.";

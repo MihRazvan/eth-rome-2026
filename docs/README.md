@@ -21,7 +21,8 @@
 | Follow data and trust boundaries into code | [Architecture](cutout/ARCHITECTURE.md) |
 | Check privacy, issuer powers and payment rules | [Security model](cutout/SECURITY.md) |
 | Inspect deployed contracts or host Cutout | [Deployment](cutout/DEPLOYMENT.md) |
-| Operate test credential issuance | [Qualification provisioning](review-pass/QUALIFICATION-PROVISIONING.md) |
+| Understand file-free applications and pass storage | [Qualification workflow](cutout/QUALIFICATION.md) |
+| Operate legacy test credential issuance | [Qualification provisioning](review-pass/QUALIFICATION-PROVISIONING.md) |
 | Understand the visual decisions | [Design direction](design/cutout/DIRECTION.md) |
 
 ## Judge and submit

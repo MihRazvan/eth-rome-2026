@@ -34,11 +34,11 @@ Keep an existing participant on the hostname/profile where they registered their
 
 [Deployment manifest and finalized receipts](../review-pass/evidence/fuji-rollout/deployment.json) · [Source verification results](../review-pass/evidence/fuji-rollout/source-verification.json). The original rollout README is a dated record; its then-pending storage/funding gates do not describe today's active deployment.
 
-Public configuration is available at [/api/config](https://cutout-ethrome-2026.vercel.app/api/config). The [whole public status snapshot](https://cutout-ethrome-2026.vercel.app/api/snapshot) is checked against the current finalized issuer root. Task scope and report reads are derived from their actual escrow commitments. These endpoints do not issue credentials, prove with holder secrets, sign transactions or upload user reports.
+Public configuration is available at [/api/config](https://cutout-ethrome-2026.vercel.app/api/config). The [whole public status snapshot](https://cutout-ethrome-2026.vercel.app/api/snapshot) is checked against the current finalized issuer root. Task scope and report reads are derived from their actual escrow commitments. These document/config endpoints do not issue credentials or receive holder secrets. The separate `/api/enrollment` endpoint queues signed, encrypted applications on Arkiv using a dedicated gas relay key. The issuer approves offline and the browser collects the encrypted response. [Qualification service](QUALIFICATION.md).
 
 ## Build and deploy the existing project
 
-This is the authorized operator route, not required for a judge to try the app. It requires the existing verified Fuji manifest and matching **public** proving artifacts on disk. Private issuer/signing material is not needed by Vercel and must never be copied into its output.
+This is the authorized operator route, not required for a judge to try the app. It requires the existing verified Fuji manifest and matching **public** proving artifacts on disk. The credential signing key remains offline and must never enter Vercel output. The separate Arkiv gas relay key is a production Secret named `CUTOUT_ENROLLMENT_RELAY_KEY`, never a frontend environment variable.
 
 ```sh
 forge build --root experiments/qualification/contracts
@@ -48,7 +48,7 @@ vercel deploy --prebuilt --prod --cwd .runtime/review-pass-vercel --scope mihraz
 
 Run from the repository root after installing pinned dependencies, Go and Foundry. Compiling contracts supplies the ABIs consumed by the hosting builder. Use the configured, already linked Vercel project. The builder checks chain identity, deployed code, authorities, snapshot integrity and setup hashes before writing `.runtime/review-pass-vercel/.vercel/output`. It copies only allowed public artifacts. A stale/missing live dependency is a build error.
 
-**Do not deploy the repository root to replace Cutout.** Root `vercel.json` belongs to the earlier EXIT application. Cutout uses a separate Build Output API directory, static frontend and read-only Node function. Its Git auto-deployment is disconnected to avoid selecting the wrong app.
+**Do not deploy the repository root to replace Cutout.** Root `vercel.json` belongs to the earlier EXIT application. Cutout uses a separate Build Output API directory, static frontend and Node function with read-only document routes plus the encrypted enrollment relay. Its Git auto-deployment is disconnected to avoid selecting the wrong app.
 
 The public evidence manifest deliberately omits private/local paths and is not a standalone reproducible active-hosting config. A new operator must supply matching public setup artifacts or generate and deploy a separate verifier/setup; the old verifier cannot accept proofs from newly generated parameters. Never regenerate the existing issuer or setup to repair a missing file.
 

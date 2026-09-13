@@ -18,7 +18,7 @@ The first use case is a focused technical review, not a replacement for a full s
 
 ## How it works
 
-1. **Get qualified.** The reviewer's browser creates a private holder secret and an enrollment request. The issuer approves the request and returns a signed credential. The secret stays with the reviewer.
+1. **Get qualified.** Apply in Cutout. The browser saves your private pass and sends an encrypted application. After issuer approval, collect the pass in the app; no credential files need to change hands.
 2. **Fund a task.** The client writes a public scope and locks test USDC on Avalanche Fuji. A separate Arkiv transaction lists the task for discovery.
 3. **Cut a proof.** The reviewer proves, in their browser, that the required credential is valid and unrevoked. The proof is bound to this task and wallet. Fuji verifies it when they accept.
 4. **Seal the report.** The browser encrypts the report for the client and reviewer, uploads ciphertext to Swarm, and checks retrieval. A Fuji transaction commits its reference and hash.
@@ -69,6 +69,8 @@ The [architecture](docs/cutout/ARCHITECTURE.md) maps each boundary to source. Th
 | Swarm | Useful decentralized document storage | [Encryption, upload and retrieval](docs/cutout/bounties/SWARM.md) |
 
 We enter one Team1 track. Arkiv awards are not additive per team. These are targets, not claims that eligibility or awards have been confirmed. [Requirements and remaining submission items](docs/cutout/BOUNTIES.md).
+
+Reviewer passes now persist privately in the browser. Files are optional backups or a one-time migration path. [Qualification and approval workflow](docs/cutout/QUALIFICATION.md).
 
 ## What is verified
 

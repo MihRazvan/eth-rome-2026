@@ -2,7 +2,7 @@
 
 [Docs](../README.md) · [User flow](USER-FLOW.md) · [Security](SECURITY.md) · [Deployment](DEPLOYMENT.md)
 
-Cutout has three public infrastructure responsibilities: Avalanche determines task and payment state, Arkiv provides discovery, and Swarm carries documents. The participant's browser holds the private inputs and performs proving and encryption. The hosted read API has no transaction signer or credential-issuance endpoint.
+Cutout has three public infrastructure responsibilities: Avalanche determines task and payment state, Arkiv provides discovery, and Swarm carries documents. The participant's browser holds the private inputs and performs proving and encryption. The document read API has no financial signer. A separate enrollment endpoint relays encrypted applications to Arkiv with an operator-funded gas key; credential signing remains with the offline issuer.
 
 ## Data path
 
@@ -83,6 +83,6 @@ All paths are relative to the repository root. The `experiments/qualification` n
 
 ## Hosting boundary
 
-Vercel serves static assets and a bounded read-only Node function. It exposes public configuration, whole snapshots and task document reads; it does not receive holder files or private signing keys. Browser wallets perform transactions, the browser worker generates proofs, and browser WebSockets connect to Arkiv directly. A source deployment manifest and matching proving artifacts are required for the active build; a missing live dependency is not replaced with fixture data.
+Vercel serves static assets and a bounded read-only Node function. It exposes public configuration, whole snapshots and task document reads. Its separate enrollment API receives signed encrypted applications and uses a narrowly purposed Arkiv relay key; it never receives holder secrets or the credential signing key. Browser wallets perform transactions, the browser worker generates proofs, and browser WebSockets connect to Arkiv directly. A source deployment manifest and matching proving artifacts are required for the active build; a missing live dependency is not replaced with fixture data.
 
 The root Vercel configuration belongs to earlier EXIT. Cutout has an isolated build-output deployment. [Deployment instructions](DEPLOYMENT.md) explain the distinction.

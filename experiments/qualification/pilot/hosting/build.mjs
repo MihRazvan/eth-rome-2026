@@ -229,11 +229,20 @@ if (!pending) {
     resolve(dir, "worker.js"),
   );
 }
+if (!pending) {
+  const enrollment = JSON.parse(await readFile(resolve(root, "experiments/qualification/pilot/hosting/enrollment-public.json"), "utf8"));
+  if (Object.keys(enrollment).sort().join(",") !== "issuerX,issuerY,publicKey,relayAddress" || !/^0x[0-9a-f]{130}$/i.test(enrollment.publicKey) || !isAddress(enrollment.relayAddress)) throw Error("Invalid enrollment channel configuration");
+  const chain = createPublicClient({transport:http(rpcUrl)});
+  for (const field of ["issuerX", "issuerY"]) {
+    if (String(await chain.readContract({address:config.escrow,abi:config.abi.QualificationEscrow,functionName:field})) !== enrollment[field]) throw Error("Enrollment issuer differs from escrow");
+  }
+  config.enrollment = enrollment;
+}
 // Bundle dependencies into one function; no runtime env or filesystem config is required.
 const entry = resolve(stage, "read-entry.ts");
 await writeFile(
   entry,
-  `import {createPublicReadAPI} from ${JSON.stringify(resolve(root, "experiments/qualification/pilot/hosting/read-api.ts"))};\nconst api=createPublicReadAPI(${JSON.stringify(config)});\nexport default async function handler(req,res){res.setHeader('Cache-Control','no-store');res.setHeader('Vercel-CDN-Cache-Control','no-store');res.setHeader('Content-Type','application/json');try{const r=await api(req.url,req.method);res.statusCode=r.status;res.end(JSON.stringify(r.body,(_,v)=>typeof v==='bigint'?String(v):v));}catch{res.statusCode=503;res.end(JSON.stringify({error:'Public read service unavailable'}));}}\n`,
+  `import {createPublicReadAPI} from ${JSON.stringify(resolve(root, "experiments/qualification/pilot/hosting/read-api.ts"))};\nimport {createEnrollmentAPI} from ${JSON.stringify(resolve(root,"experiments/qualification/pilot/hosting/enrollment-api.ts"))};\nconst enrollment=createEnrollmentAPI(${JSON.stringify(config)});\nconst api=createPublicReadAPI(${JSON.stringify(config)});\nexport default async function handler(req,res){if(await enrollment(req,res))return;res.setHeader('Cache-Control','no-store');res.setHeader('Vercel-CDN-Cache-Control','no-store');res.setHeader('Content-Type','application/json');try{const r=await api(req.url,req.method);res.statusCode=r.status;res.end(JSON.stringify(r.body,(_,v)=>typeof v==='bigint'?String(v):v));}catch{res.statusCode=503;res.end(JSON.stringify({error:'Public read service unavailable'}));}}\n`,
 );
 const func = resolve(output, "functions/read.func");
 await build({

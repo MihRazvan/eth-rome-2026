@@ -52,6 +52,7 @@ const publicKeys = [
   "deploymentBlock",
   "arkiv",
   "abi",
+  "enrollment",
 ];
 class APIError extends Error {
   constructor(

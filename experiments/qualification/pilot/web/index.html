@@ -209,82 +209,28 @@
             id="reviewer-help"
             data-screen="help"
           >
-            <summary>Get qualified · issuer enrollment</summary>
+            <summary>Your reviewer pass</summary>
             <p class="eyebrow">CUTOUT TEST ISSUER · TECHNICAL REVIEW</p>
-            <h3>A qualification comes from an issuer.</h3>
-            <p>
-              The issuer assesses the reviewer and signs their qualification. In
-              this hackathon demo, the Cutout team issues temporary test
-              credentials. This is not professional accreditation, and the proof
-              does not establish that a report is correct.
-            </p>
-            <ol class="enrollment-steps">
-              <li>
-                <strong>Prepare your private pass.</strong> Create it in this
-                browser and save the private backup. No wallet payment is
-                required. Your secret stays on your device.
-              </li>
-              <li>
-                <strong>Get issuer approval.</strong> Share only the enrollment
-                request with the Cutout team through your existing private
-                contact. The issuer signs a time-limited technical-review
-                credential and returns the credential file. Creating a request
-                does not grant qualification or send an application
-                automatically.
-              </li>
-              <li>
-                <strong>Prove you qualify for a task.</strong> Select the issued
-                credential and your private holder backup on a funded task, then
-                cut a proof. The contract checks the issuer signature, expiry
-                and current revocation state before you can accept.
-              </li>
-            </ol>
+            <h3>Apply once. Keep your pass here.</h3>
+            <p>The Cutout team approves test reviewers. Your private pass stays in this browser and is used automatically when you accept work.</p>
             <div class="enrollment-card">
-              <h4>Prepare enrollment</h4>
-              <p id="enrollment-status" class="fine" role="status">
-                Already have an issued credential and its holder backup? Use
-                them on a task. Create a new pass only for a new enrollment.
-              </p>
-              <button id="prepare-enrollment" data-ui type="button">
-                Prepare my enrollment
-              </button>
-              <div id="enrollment-downloads" hidden>
-                <p class="fine">
-                  First save the private backup. Reloading, changing wallets or
-                  clearing this form discards this tab's copy. Never send that
-                  backup to the issuer.
-                </p>
-                <div class="actions">
-                  <button id="save-private-pass" data-ui type="button">
-                    1. Save private holder backup
-                  </button>
-                  <button id="save-enrollment-request" data-ui type="button">
-                    2. Download enrollment request
-                  </button>
-                  <button
-                    id="copy-enrollment-request"
-                    data-ui
-                    type="button"
-                    class="quiet"
-                  >
-                    Copy enrollment request
-                  </button>
-                  <button
-                    id="clear-enrollment"
-                    data-ui
-                    type="button"
-                    class="quiet"
-                  >
-                    Clear this form
-                  </button>
-                </div>
+              <p id="enrollment-status" role="status">Connect your reviewer wallet to get started.</p>
+              <div class="actions">
+                <button id="prepare-enrollment" data-ui type="button">Apply for a reviewer pass</button>
+                <button id="check-enrollment" data-ui type="button" class="quiet" hidden>Check approval</button>
+                <button id="enrollment-connect" data-ui type="button" hidden>Connect reviewer wallet</button>
               </div>
             </div>
-            <p id="prover-help">
-              Private files are read locally for proving. The issuer receives a
-              commitment, not your holder secret. Public payments still reveal
-              wallet addresses.
-            </p>
+            <details class="pass-backup"><summary>Backup or restore a pass</summary>
+              <p class="fine">Optional. Save a private backup before changing browsers or clearing site data. Your wallet cannot restore this pass by itself.</p>
+              <button id="save-private-pass" data-ui type="button" class="quiet">Save private backup</button>
+              <label>Restore a Cutout backup<input id="restore-private-pass" type="file" accept=".cutout,.json,application/json"></label>
+              <p class="fine">Already received the two older files? Import them once here.</p>
+              <label>Issued credential<input id="restore-credential" type="file" accept=".json,application/json"></label>
+              <label>Original holder backup<input id="restore-holder" type="file" accept=".json,application/json"></label>
+              <button id="restore-legacy-pass" data-ui type="button" class="quiet">Save existing pass to this browser</button>
+            </details>
+            <details><summary>How qualification works</summary><p id="prover-help" class="fine">The issuer approves eligibility. Your browser proves that approval without publishing your credential. Wallets and payments remain public. This is a temporary test pass, not professional accreditation.</p></details>
           </details>
           <div id="notice" role="status" aria-live="polite"></div>
           <section

@@ -1,0 +1,22 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {generateChannelKeys,sealEnrollment,openEnrollment,parseSealedEnrollment,parseApplication} from './enrollment-channel';
+const ctx={chainId:43113,escrow:`0x${'11'.repeat(20)}`,issuer:`0x${'22'.repeat(20)}`,ticket:'a'.repeat(64)};
+test('private enrollment encrypts both directions and rejects wrong keys, context and tampering',async()=>{
+ const issuer=await generateChannelKeys(),holder=await generateChannelKeys(),outsider=await generateChannelKeys();
+ const request={format:'cutout-enrollment-request',version:1,testOnly:true,chainId:43113,escrow:ctx.escrow,issuer:ctx.issuer,qualificationClass:'7',holderCommitment:'12345678901234567890',createdAt:1789000000};
+ const value={request,replyKey:holder.publicKey,applicant:`0x${'33'.repeat(20)}`};
+ const sealed=await sealEnrollment(value,issuer.publicKey,ctx,'application');
+ assert.ok(!JSON.stringify(sealed).includes(request.holderCommitment));
+ assert.deepEqual(parseApplication(await openEnrollment(sealed,issuer,ctx,'application'),ctx),value);
+ await assert.rejects(openEnrollment(sealed,outsider,ctx,'application'));
+ await assert.rejects(openEnrollment(sealed,issuer,{...ctx,ticket:'b'.repeat(64)},'application'));
+ await assert.rejects(openEnrollment(sealed,issuer,ctx,'approval'));
+ await assert.rejects(openEnrollment({...sealed,ciphertext:sealed.ciphertext.slice(0,-2)+(sealed.ciphertext.endsWith('00')?'ff':'00')},issuer,ctx,'application'));
+ const reply=await sealEnrollment({credential:'private-test'},holder.publicKey,ctx,'approval');
+ assert.deepEqual(await openEnrollment(reply,holder,ctx,'approval'),{credential:'private-test'});
+ await assert.rejects(openEnrollment(reply,issuer,ctx,'approval'));
+ assert.throws(()=>parseSealedEnrollment({...sealed,holderSecret:'never'}));
+ assert.throws(()=>parseApplication({...value,holderSecret:'never'},ctx));
+ assert.throws(()=>parseSealedEnrollment({...sealed,ciphertext:'0x'+'ff'.repeat(16000)}));
+});

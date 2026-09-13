@@ -6,15 +6,13 @@ The client buys a review. The reviewer does the work. The issuer decides who qua
 
 ## 1. Qualify before taking work
 
-In **Reviewer → Your workspace → Get qualified**, the browser generates a holder secret. Download the private holder backup and enrollment request. Send only the request to the Cutout team, which currently operates the experimental test issuer. After approval, the team returns a signed credential JSON.
+In **Reviewer → Your workspace → Your reviewer pass**, connect your reviewer wallet and click **Apply for a reviewer pass**. Sign the application message; no token approval or payment is requested. The browser creates and saves your private holder and reply key, then submits an encrypted application to the team's inbox.
 
-| File | What to do with it |
-| --- | --- |
-| Enrollment request | Send to the issuer for approval; it cannot generate a proof |
-| Private holder backup | Keep private; it is the secret needed to use the credential |
-| Issuer-returned credential | Keep private; select it alongside the matching holder backup when proving |
+The Cutout team reviews the request and approves test participation. Click **Check approval** to collect your pass into this browser. Later tasks use it automatically: you no longer download, send or select credential JSON files. Application and credential bytes are encrypted in the public inbox; the issuer never receives your holder secret.
 
-There is no public “approve myself” endpoint. The demo issuer approves test participation; no outside professional accreditor is integrated. Issuance is an offchain signature, not an NFT mint. [Issuer operator instructions](../review-pass/QUALIFICATION-PROVISIONING.md).
+**Backup or restore a pass** is optional. Existing users can import their old issued credential and matching holder file once. A private `.cutout` backup preserves a pass when changing browsers; it must remain private. Wallet recovery alone does not recover these browser secrets.
+
+There is no public “approve myself” endpoint. The team still performs actual issuer approval; no external professional accreditation is claimed. [Qualification architecture and operator workflow](QUALIFICATION.md).
 
 ## 2. Prepare each participant's browser
 
@@ -40,7 +38,7 @@ The listing has a native expiration time in blocks. When it expires, it disappea
 
 Find the task, open **View verified scope**, and check its terms. Cutout verifies the listing against finalized Fuji state rather than trusting advertisement text alone.
 
-Select the issuer-returned credential and original matching private holder file. **Cut a qualification proof** runs the Go prover inside a WebAssembly worker in the browser. It proves the issuer signature, required class, validity and nonrevocation, and binds the proof to this task and payment wallet. Private proof inputs stay local.
+Click **Verify my eligibility**. Cutout uses the saved private pass automatically and runs the Go prover inside a WebAssembly worker in the browser. It proves the issuer signature, required class, validity and nonrevocation, and binds the proof to this task and payment wallet. Private proof inputs stay local.
 
 After proof verification/simulation, click **Accept this task** and sign. The contract rechecks eligibility and freshness when the transaction executes. A generated proof alone does not reserve the task; another eligible reviewer can accept first.
 
