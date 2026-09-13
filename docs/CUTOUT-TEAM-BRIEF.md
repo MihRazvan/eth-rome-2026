@@ -22,27 +22,23 @@ The qualification proof checks the issuer's approval. It does not assess experti
 
 ## The story, step by step
 
-1. **Before the demo: the reviewer gets a credential.** Their browser creates a private secret and an enrollment request. They keep the secret and send the request to us. We return a signed credential. Approval happens here; generating the request does not approve anyone.
+1. **Before the demo: the reviewer gets a pass.** In Reviewer → Your workspace → Your reviewer pass, click **Apply for a reviewer pass** and sign the wallet message. The Cutout team manually approves the encrypted application. Click **Check approval** to collect the pass; it stays saved in this browser. Applying alone does not approve anyone.
 
 2. **The client posts a question and reserves USDC.** The public scope goes to Swarm. A Fuji transaction puts the reward in escrow and records the scope's hash and deadlines. Show that the money is actually there.
 
 3. **The client lists the task.** A separate Arkiv transaction puts a searchable advertisement on the job board. Reviewers discover it there. The advertisement expires; the money does not disappear with it.
 
-4. **The reviewer proves approval and accepts.** Select the issuer-returned credential and original private holder backup. The browser generates a proof of the issuer's signature, correct qualification, validity and nonrevocation, bound to this task and wallet. The files stay local. Then sign **Accept this task**; generating a proof alone does not reserve it.
+4. **The reviewer proves approval and accepts.** Click **Verify my eligibility** on the task. The browser uses the saved pass to prove the issuer's signature, correct qualification, validity and nonrevocation, bound to this task and wallet. Private inputs stay local. Then sign **Accept this task**; generating a proof alone does not reserve it.
 
 5. **The reviewer writes and seals the report.** Their browser encrypts it for the client and reviewer. Swarm stores the encrypted bytes. The reviewer signs a Fuji transaction recording the exact report reference and hash.
 
 6. **The client opens the report and approves payment.** The browser retrieves, checks and decrypts it. The client reads it and signs **Approve & pay**. The escrow sends USDC to the assigned reviewer.
 
-## The file confusion, resolved
+## The pass stays in the app
 
-| File | Meaning | Use |
-| --- | --- | --- |
-| `cutout-enrollment-request.json` | Request for approval | Send only this to the issuer. Never use it as a credential. |
-| `cutout-private-holder.json` | Secret needed to use that approval | Keep private; select in **Private holder JSON**. |
-| Credential JSON returned by us | Signed approval | Keep private; select in **Credential JSON**. |
+Normal enrollment and acceptance do not require a JSON handoff. The reviewer signs an application, waits for manual approval, clicks **Check approval**, then uses the saved pass on eligible tasks. The pass survives a reload in the same browser profile and wallet.
 
-Your issued test credential expires **13 September, 19:58 Rome / 20:58 Bucharest**. Use its original matching holder backup. If file controls are disabled, reconnect the reviewer wallet on Fuji.
+**Backup or restore a pass** is optional recovery. Save a private backup before changing browsers or clearing site data; the wallet cannot recover it alone. Anyone with the older issued credential and original holder backup can import them once with **Save existing pass to this browser**. Report decryption keys are separate and are not recovered by a pass backup.
 
 ## What to say to each sponsor
 
@@ -54,9 +50,9 @@ Your issued test credential expires **13 September, 19:58 Rome / 20:58 Bucharest
 
 ## Before walking up to the judges
 
-Prepare separate **Client** and **Reviewer** browser profiles, funded wallets, registered report keys, valid credential files and a funded task with time left. A role toggle alone does not switch wallets. Keep the same hostname/profile so document keys remain available.
+Prepare separate **Client** and **Reviewer** browser profiles, funded wallets, registered report keys, a current saved reviewer pass and a funded task with time left. A role toggle alone does not switch wallets. Keep the same hostname/profile so document keys remain available.
 
-Perform one complete real acceptance → delivery → opening → payment rehearsal and save its receipts. **That public paid sequence is not yet signed off in our evidence.** A successful proof simulation is not a payment. Public live tasks and storage exist, but show only completed actions as completed.
+The operator-controlled public Chromium run completed **task #4**: encrypted application and manual approval, saved-pass reload, funding **0.1 test USDC**, qualification and acceptance, Swarm delivery, exact client decryption and finalized payment. The reviewer received **100,000 USDC base units**. Real Arkiv native expiry and two-browser listing updates were also recorded. [Evidence and receipts](cutout/evidence/saved-pass/README.md). This used an operator test-wallet bridge; rehearse the teammate's actual wallet extensions separately before presenting.
 
 For a three-minute pitch, start with an already-funded task and its receipt, then show the reviewer and client stages. Prepare a clearly labelled recording if wallet timing is too slow. The `?view=demo` walkthrough simulates qualification and payment; call it a simulation before using it. Its encryption is real, but nothing is uploaded.
 

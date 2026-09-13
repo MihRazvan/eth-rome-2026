@@ -1,6 +1,6 @@
 # Cutout: the guide for presenting alone
 
-Start here. This guide replaces the older presentation narrative; the operator runbooks are for troubleshooting, not the pitch. Checked against the deployed implementation on 12 September 2026.
+Start here. This guide replaces the older presentation narrative; the operator runbooks are for troubleshooting, not the pitch. Updated for the saved-pass flow and public operator test on 13 September 2026.
 
 **App:** https://cutout-ethrome-2026.vercel.app  
 **No-wallet walkthrough:** https://cutout-ethrome-2026.vercel.app/?view=demo  
@@ -28,19 +28,11 @@ The product has three separate questions: **May this reviewer take the task? Can
 
 ### 0. The reviewer gets approved — prepare this before presenting
 
-**What the reviewer does:** In Reviewer → Your workspace → Get qualified, click Prepare my enrollment. Save the private holder backup and send only the enrollment request to the Cutout issuer. The issuer returns a signed credential file after approval.
+**What the reviewer does:** Connect the reviewer wallet. In **Reviewer → Your workspace → Your reviewer pass**, click **Apply for a reviewer pass** and sign the application message. It requests no payment. Wait for the Cutout team's manual approval, then click **Check approval**. The app collects and saves the approved pass in this browser for this wallet. Confirm **Reviewer pass ready** before funding the demonstration task.
 
-**What happens behind the screen:** The browser generates a random secret. It calculates a public commitment from that secret: a value the issuer can sign without receiving the secret itself. The issuer signs the commitment together with the qualification class, expiry and a private registry slot. This is a signed document, not a minted NFT or an onchain registration transaction.
+**What happens behind the screen:** The browser generates a private holder secret and a commitment the issuer can sign without receiving that secret. It encrypts the application for the issuer; the wallet signature authorizes submission. The operator reviews it and signs a credential covering the holder commitment, qualification class, expiry and allocated registry slot. An encrypted reply returns through the app; the browser decrypts and saves it. The issuer signing key stays with the offline operator. This is manual test approval, not automatic expertise assessment or an NFT mint.
 
-**The three files are different:**
-
-| File | Plain-English meaning | What to do with it |
-| --- | --- | --- |
-| `cutout-enrollment-request.json` | “Please issue a credential for this holder.” | Send to the issuer privately. It cannot produce a qualification proof. |
-| `cutout-private-holder.json` | The secret needed to use that credential. | Keep it on the reviewer's device. Select in **Private holder JSON**. |
-| The credential JSON returned by the issuer | “This issuer approves this holder for this kind of work until this time.” | Keep it private too. Select in **Credential JSON**. |
-
-Generating the first two files does **not** mean approval has happened. Issuance and private delivery are currently assisted by the team; there is no automatic assessment service. We have now issued your test credential from your enrollment request. Use it with your original holder backup, not a newly generated one. It expires **13 September at 20:58 Bucharest / 19:58 Rome**.
+**No routine file exchange:** the pass survives reload in the same browser profile. **Backup or restore a pass** offers an optional private backup before changing browsers or clearing site data. A wallet alone cannot restore it. People with the older **Issued credential** and **Original holder backup** can import them once using **Save existing pass to this browser**. An enrollment request is not a credential. These pass backups do not contain the separate report-decryption key.
 
 **Say:** “The reviewer gets approved once, then proves that approval separately for each task.” A current credential can serve multiple tasks; each task needs its own proof.
 
@@ -56,7 +48,7 @@ There are **three different keys/purposes**: the wallet signs money/contract act
 
 ### 2. The client writes the scope and funds the task
 
-**What they do:** Write the withdrawal-permission question, choose a reward such as 10 test USDC, then click **Fund & post task**. Approve the token allowance and funding transaction.
+**What they do:** Write the withdrawal-permission question, choose a reward such as 0.1 test USDC, then click **Fund & post task**. Approve the token allowance and funding transaction.
 
 **What happens:** The public scope document is uploaded to Swarm and retrieved to check its bytes. The Fuji escrow records the exact scope hash and storage reference, reward, qualification class and deadlines. The USDC moves from the client into the contract. The client cannot silently edit the scope after funding.
 
@@ -76,9 +68,9 @@ The listing has a limited lifetime: normally up to about 30 minutes, shortened i
 
 ### 4. The reviewer proves qualification and accepts
 
-**What they do:** Find the listing, open **View verified scope**, select the issued credential and matching private holder file, and click **Cut a qualification proof**. After it verifies, click **Accept this task** and sign.
+**What they do:** Find the listing, open **View verified scope** and click **Verify my eligibility**. The browser uses the saved pass automatically. After verification, click **Accept this task** and sign.
 
-**What happens:** A worker in the browser reads the two files locally. It also downloads the issuer's whole public revocation snapshot. It constructs a zero-knowledge proof that:
+**What happens:** A worker in the browser reads the saved credential and holder secret locally. It also downloads the issuer's whole public revocation snapshot. It constructs a zero-knowledge proof that:
 
 - The configured issuer signed this credential.
 - The reviewer knows its matching holder secret.
@@ -86,7 +78,7 @@ The listing has a limited lifetime: normally up to about 30 minutes, shortened i
 - Its hidden registry slot is not revoked under the current issuer state.
 - This presentation is bound to this task and the receiving wallet.
 
-The private files are not uploaded. The browser first simulates acceptance against the actual Fuji contract. The subsequent signed transaction submits the proof and public inputs; the contract verifies them and assigns the reviewer. Producing a proof alone does not reserve the task.
+The private proof inputs are not uploaded. The browser first simulates acceptance against the actual Fuji contract. The subsequent signed transaction submits the proof and public inputs; the contract verifies them and assigns the reviewer. Producing a proof alone does not reserve the task.
 
 **Say:** “The contract checks that an approved reviewer is taking the task. The client never needs the underlying credential.” The issuer, qualification class, receiving wallet, task and payment remain public. This is credential privacy, not an anonymous payment system.
 
@@ -116,7 +108,7 @@ The private files are not uploaded. The browser first simulates acceptance again
 
 **A credential is revoked:** a new issuer root prevents new acceptance with that credential. This does not cancel already accepted work or claw back payments. The issuer must publish the matching updated snapshot for new proofs to work.
 
-**A holder backup or document key is lost:** they are different losses. A wallet alone cannot recover either. Preserve the holder backup and browser profile; save needed decrypted reports locally. Key rotation does not erase plaintext someone already received.
+**A saved pass or document key is lost:** they are different losses. A wallet alone cannot recover either. Export an optional private pass backup before clearing site data, preserve the report's original browser profile and save needed decrypted reports locally. A pass backup does not restore document keys. Key rotation does not erase plaintext someone already received.
 
 **Someone copies a credential:** the credential alone is insufficient; they also need its holder secret. Someone who gets both could use them. This is not proof of a unique human, a nontransferable identity or a Sybil defense.
 
@@ -172,7 +164,7 @@ The [current Arkiv hub](https://hub.arkiv.network/ethrome) specifies native-expi
 
 **Lead with:** “Swarm holds the actual scope documents, encrypted reports and public issuer revocation snapshot. The report is encrypted in the browser before upload, so storage does not need to be trusted with its contents.”
 
-**Show:** write a distinctive report, upload it, show its content reference, retrieve it, verify the committed digest, and open it in the client browser. An unrelated browser must not be able to decrypt it. Do not publicly open the two private qualification files as part of this demo.
+**Show:** write a distinctive report, upload it, show its content reference, retrieve it, verify the committed digest, and open it in the client browser. An unrelated browser must not be able to decrypt it. Keep private pass backups and credential contents offscreen.
 
 **Expect these questions:**
 
@@ -202,7 +194,7 @@ This is an **experimental implementation with a single-process test Groth16 setu
 
 ## Presenting alone: rehearse this sequence
 
-Have two separate browser profiles ready, labelled **Client** and **Reviewer**. Keep the correct wallets, registered document keys, valid reviewer files and generous task deadlines ready before judges arrive. Do not try to explain issuer setup while simultaneously troubleshooting wallet confirmations.
+Have two separate browser profiles ready, labelled **Client** and **Reviewer**. Keep the correct wallets, registered document keys, a current saved reviewer pass and generous task deadlines ready before judges arrive. Do not try to explain issuer setup while simultaneously troubleshooting wallet confirmations.
 
 For a three-minute live presentation:
 
@@ -210,7 +202,7 @@ For a three-minute live presentation:
 | --- | --- | --- |
 | 0:00–0:25 | One concrete withdrawal-review brief | “We need a second reviewer. We want issuer-approved eligibility, a private report and reserved payment.” |
 | 0:25–0:50 | A pre-funded task and its real funding receipt | “The agreed scope and USDC reward are committed on Fuji.” |
-| 0:50–1:30 | Reviewer profile, selected files, proof and acceptance | “The browser proves current approval without uploading the credential. This transaction assigns the reviewer.” |
+| 0:50–1:30 | Reviewer profile, saved pass, proof and acceptance | “The browser proves current approval without uploading the credential. This transaction assigns the reviewer.” |
 | 1:30–2:10 | Write and seal a short report | “The report is encrypted locally, stored on Swarm, and its reference is committed onchain.” |
 | 2:10–2:45 | Client opens and approves | “The client checks the work and releases the reserved USDC.” |
 | 2:45–3:00 | Paid state and actual receipt | “Avalanche settles, Arkiv discovers, Swarm stores. Qualification and report contents are protected separately.” |
@@ -221,11 +213,11 @@ The `?view=demo` route is a **guided simulation** of funding, qualification and 
 
 ## What is actually verified today
 
-At the finalized Fuji read on **12 September, 18:06UTC**, task1 was refunded; task2 remained Open but its acceptance deadline had passed; task3 was Open with no assigned reviewer. An Open enum alone does not mean a task is still eligible. This read did not observe any accepted or paid task.
+The public operator-controlled Chromium run completed **task #4** on Fuji with **0.1 test USDC**: encrypted application, offline manual approval, collection and saved-pass reload, task funding, browser proof and acceptance, encrypted Swarm report delivery, exact client decryption, and finalized `approveAndPay`. The assigned reviewer’s USDC balance increased by **100,000 base units**. Actual Arkiv native expiry and a second browser receiving listing updates were also recorded. See the [saved-pass evidence and receipt bundle](cutout/evidence/saved-pass/README.md).
 
-Real public contracts and task funding, actual Arkiv listings, actual encrypted Swarm upload/retrieval, real issuer credential issuance, and browser proofs accepted by Fuji simulations have evidence. The local complete lifecycle also has test evidence. **The complete public reviewer-accepts → delivers → client-pays sequence is not yet signed off.** Do not say it is until its actual receipts exist. Current evidence: [file selection and funded-task simulation](design/cutout/evidence/proof-file-selection/README.md), [public storage](design/cutout/evidence/account-free-storage/README.md), [acceptance ledger](ACCEPTANCE.md).
+These were real public network actions using operator-owned test wallets through an automation bridge. They do not establish that the teammate's wallet extension or a new browser/device has passed. Use the [manual end-to-end checklist](CUTOUT-MANUAL-TEST.md) for that separate rehearsal. The guided demo still simulates qualification and payment.
 
-Before presenting, complete the [manual end-to-end checklist](CUTOUT-MANUAL-TEST.md), save the real receipts and capture the short Arkiv expiry/subscription evidence. Public demo availability does not automatically complete bounty eligibility. Submit the event entry and applicable sponsor entries, including their feedback/evidence. The current [Team1 Builder Hub page](https://build.avax.network/events/73a939b1-6d35-4847-9388-320024638249) has its own submission and lists Sunday16:00 Rome; the previously checked ETHRome manual listed Sunday10:00 Rome. Treat the earlier event deadline as the safe cutoff; do not assume the sponsor deadline extends it.
+Public demo availability does not automatically complete bounty eligibility. Submit the event entry and applicable sponsor entries, including their feedback/evidence. The current [Team1 Builder Hub page](https://build.avax.network/events/73a939b1-6d35-4847-9388-320024638249) has its own submission and lists Sunday16:00 Rome; the previously checked ETHRome manual listed Sunday10:00 Rome. Treat the earlier event deadline as the safe cutoff; do not assume the sponsor deadline extends it.
 
 ## Five questions to answer without reading
 
