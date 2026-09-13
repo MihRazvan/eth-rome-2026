@@ -4,6 +4,10 @@
 
 This index maps claims to dated artifacts. A successful read-only contract simulation is not a transaction. Local Anvil/Bee execution is not a public sponsor integration. The guided walkthrough's settlement is explicitly simulated.
 
+## Submission release
+
+The default repository commands now run Deaddrop. The final app includes the complete thermal landing, product explanation, lifecycle and FAQs. A new public review, **task #6**, completed browser proof → Fuji acceptance → encrypted Swarm delivery → client decryption → **0.1 test USDC payment**. Original browser keys and saved passes survived the release. [Release evidence](evidence/submission/README.md), including clean-checkout builds, hosted checks and finalized receipts.
+
 ## Deaddrop rebrand
 
 [13 September Deaddrop evidence](../design/deaddrop/evidence/README.md) records the thermal landing, dark working app, eleven hosted browser checks, preserved saved pass and exact paid-report decryption, plus passing qualification CI. The existing origin is retained for browser key continuity.

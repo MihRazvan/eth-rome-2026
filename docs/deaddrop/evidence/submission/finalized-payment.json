@@ -1,0 +1,63 @@
+{
+  "recordedAt": "2026-09-13T03:57:17.028Z",
+  "chainId": 43113,
+  "taskId": "6",
+  "escrow": "0xb431e570d506168711cc1f9f91e325b3114c62af",
+  "token": "0x5425890298aed601595a70AB815c96711a31Bc65",
+  "finalizedBlock": "58341523",
+  "finalizedBlockHash": "0x1c84992154e38da540aa76e87200acf41bdda64a0b399d0d356f5c61e4a4eea4",
+  "status": "Paid",
+  "reviewer": "0x7292C1652e831031175947daEcC7F85bF86381A1",
+  "balanceBefore": "100000",
+  "balanceAfter": "200000",
+  "delta": "100000",
+  "transactions": [
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "approve",
+      "hash": "0xd88b927157f8685934882cf7554225031475e2df164e1862adf93e9638d203e7",
+      "blockNumber": "58341452",
+      "blockHash": "0x64695ebc5c1ccaa725ffa9504525016673c7e6a2cdf5cd577c35b49997166d8d",
+      "status": "success"
+    },
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "createJobWithDocument",
+      "hash": "0x6d3e5f59da335751c0e2793e709a2c32b443b0e06eec46a914332a22deae9128",
+      "blockNumber": "58341457",
+      "blockHash": "0x772ce31c794df228967e8e53eadbd6707378b3829429c8662e6e7151e1741984",
+      "status": "success"
+    },
+    {
+      "role": "reviewer",
+      "chainId": 43113,
+      "action": "accept",
+      "hash": "0x79da810c885ab14f0659f4e1afddd87d807cfd7e30cc0c118276a8ddf8139990",
+      "blockNumber": "58341484",
+      "blockHash": "0x9436aa1739e325bf9fef1a3d51c6b40f1aa38cf30f774454cba749487e6526dc",
+      "status": "success"
+    },
+    {
+      "role": "reviewer",
+      "chainId": 43113,
+      "action": "submitDocument",
+      "hash": "0xd0319122cfa8b7b449600deb2a4cac4823fe1e10377929640ced5c804bb14da0",
+      "blockNumber": "58341489",
+      "blockHash": "0x0e5893a5d93707ca47952c2cd27117a69abdee0ff6b33a6df1aac4a256dd8a97",
+      "status": "success"
+    },
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "approveAndPay",
+      "hash": "0x5bc4a822d815c28763c9428a5618a0d388bc7a891a276ddca1bb0fc2e92fcd3f",
+      "blockNumber": "58341493",
+      "blockHash": "0xf13c0cf5f5a79f52a1d7486cdc64c733e57d786df7029d1bce2cc2de8d875842",
+      "status": "success"
+    }
+  ],
+  "documentReference": "0x4b6353e081b85500d10eb47181a9e89171bd2a1f2831a1dc77f96377248f6028",
+  "documentDigest": "0x56ef2de49e80095323173c71129337ace273249b5e88e966bc6277361a268c7c"
+}

@@ -7,8 +7,8 @@
 - Public Deaddrop: **https://cutout-ethrome-2026.vercel.app**
 - Preserved original origin: **https://review-pass-ethrome-2026.vercel.app**
 - Active source branch: **`main`**
-- Current application source at this documentation pass: **`8afc0e7`**. Later documentation-only commits do not change that deployed application.
-- Deployment: **`dpl_61mGwgZyBDWUEbrfJF7bKUsjmuBw`**; [build/deployment records](../design/deaddrop/evidence/README.md).
+- Current application source at this documentation pass: **`003c109`**. Later documentation-only commits do not change that deployed application.
+- Deployment: **`dpl_5mLw4U5Af5FaLyZ5AH55yu65XMN7`**; [build/deployment records](evidence/submission/README.md).
 
 Keep an existing participant on the hostname/profile where they registered their document key. The two aliases serve the same product, but browser key storage is origin-specific. A new hostname cannot recover another origin's private key.
 

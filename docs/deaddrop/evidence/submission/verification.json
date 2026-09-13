@@ -1,0 +1,38 @@
+{
+  "cleanCheckoutRevision": "126de202b8d665220a42225c365bf89e4b8a850b",
+  "commands": [
+    {
+      "command": "npm ci",
+      "result": "passed;47 packages installed;0 audit vulnerabilities"
+    },
+    {
+      "command": "npm run check",
+      "result": "passed:TypeScript,Node tests,Solidity tests,Go proof tests,production UI build"
+    },
+    {
+      "command": "npm run test:browser",
+      "result": "passed at1440,390,320px;local real encryption and explicit simulated settlement"
+    },
+    {
+      "command": "npm run build:hosting",
+      "result": "passed from clean worktree;downloaded hash-checked public artifacts;no secrets or new setup"
+    }
+  ],
+  "finalBrandChecks": {
+    "sourceRevision": "003c109690df5b5b7bc2bc9739773b7a448f81e2",
+    "focusedNodeTests": {
+      "passed": 47,
+      "skipped": 1,
+      "failed": 0
+    },
+    "typecheck": "passed",
+    "CI": "passed",
+    "hostedBrowserGroups": 12,
+    "pageErrors": 0
+  },
+  "secretScan": {
+    "scope": "Compared tracked files to configured deployment/rehearsal wallet keys;checked sensitive runtime filenames. Values not logged.",
+    "matches": 0,
+    "sensitiveTrackedFiles": 0
+  }
+}

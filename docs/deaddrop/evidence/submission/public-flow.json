@@ -1,0 +1,71 @@
+{
+  "date": "2026-09-13T03:50:31.298Z",
+  "origin": "https://cutout-ethrome-2026.vercel.app",
+  "addresses": {
+    "client": "0x7259c94d93d83E539B57ba7A360cB06Bd9b53a60",
+    "reviewer": "0x7292C1652e831031175947daEcC7F85bF86381A1"
+  },
+  "checks": [
+    "Both public wallets registered their own browser report keys",
+    "Client funded a new review with exact public Swarm scope and 0.1 test USDC through the app",
+    "Second browser received the actual new listing through its existing Arkiv WebSocket board, without refresh",
+    "Both public wallets registered their own browser report keys",
+    "Saved pass generated a real browser proof and passed funded-task simulation with no file selection",
+    "Reviewer signed acceptance; the deployed Fuji verifier assigned the funded task",
+    "Reviewer encrypted, uploaded and independently retrieved the report on public Swarm, then committed delivery on Fuji",
+    "Client recovered the exact report and paid; finalized Paid task and reviewer +0.1 USDC independently reconciled"
+  ],
+  "transactions": [
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "approve",
+      "hash": "0xd88b927157f8685934882cf7554225031475e2df164e1862adf93e9638d203e7"
+    },
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "createJobWithDocument",
+      "hash": "0x6d3e5f59da335751c0e2793e709a2c32b443b0e06eec46a914332a22deae9128"
+    },
+    {
+      "role": "client",
+      "chainId": 7738577,
+      "action": "Arkiv publication",
+      "hash": "0xd0d66aafd7e382e9452b96c0541accc00e8bde197a8c1c288d2685bd4a33e7f2"
+    },
+    {
+      "role": "reviewer",
+      "chainId": 43113,
+      "action": "accept",
+      "hash": "0x79da810c885ab14f0659f4e1afddd87d807cfd7e30cc0c118276a8ddf8139990"
+    },
+    {
+      "role": "reviewer",
+      "chainId": 43113,
+      "action": "submitDocument",
+      "hash": "0xd0319122cfa8b7b449600deb2a4cac4823fe1e10377929640ced5c804bb14da0"
+    },
+    {
+      "role": "client",
+      "chainId": 43113,
+      "action": "approveAndPay",
+      "hash": "0x5bc4a822d815c28763c9428a5618a0d388bc7a891a276ddca1bb0fc2e92fcd3f"
+    }
+  ],
+  "errors": [],
+  "scope": "Actual public Fuji/Arkiv/Swarm; isolated Chromium profiles and operator-owned wallet signing bridge, not a human extension test",
+  "taskId": "6",
+  "reviewerBalanceBefore": "100000",
+  "reviewerBalanceAfter": "200000",
+  "documentReference": "0x4b6353e081b85500d10eb47181a9e89171bd2a1f2831a1dc77f96377248f6028",
+  "documentDigest": "0x56ef2de49e80095323173c71129337ace273249b5e88e966bc6277361a268c7c",
+  "paymentReceipt": {
+    "hash": "0x5bc4a822d815c28763c9428a5618a0d388bc7a891a276ddca1bb0fc2e92fcd3f",
+    "blockNumber": "58341493",
+    "status": "success"
+  },
+  "firstListing": "Listing published: 0xce10086034ac3432b75d5fb61938bee08c476af5cc1c08b0bb04e1b66ee5453d; transaction 0xd0d66aafd7e382e9452b96c0541accc00e8bde197a8c1c288d2685bd4a33e7f2; expires at Arkiv block 382464. Reconnect your settlement wallet to continue.",
+  "sourceRevision": "126de202b8d665220a42225c365bf89e4b8a850b",
+  "harnessInterruption": "The runner retained an obsolete short-expiry wait. The already-funded task was resumed without another funding transaction. This was not an uninterrupted harness run."
+}

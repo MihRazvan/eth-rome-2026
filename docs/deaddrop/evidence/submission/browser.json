@@ -1,0 +1,15 @@
+{
+  "recordedAt": "2026-09-13T03:58:23.528Z",
+  "base": "https://cutout-ethrome-2026.vercel.app",
+  "checks": [
+    "Thermal landing, keyboard cooling, issuer explanation, 320px layout and client entry",
+    "Deaddrop branding, live task preview, distinct role/task/activity/settings navigation, configured Swarm storage readiness",
+    "Desktop walkthrough: invalid eligibility blocked; real AES-GCM encryption and drag-to-cut exact Unicode recovery; explicitly simulated payment; restart and live return",
+    "390px walkthrough and role navigation; keyboard decryption alternative; no horizontal overflow",
+    "Direct reviewer link renders reviewer heading and usable task sorting without a role-toggle repair",
+    "Guided walkthrough stays available when live configuration cannot load"
+  ],
+  "errors": [],
+  "storageWrites": [],
+  "scope": "Read-only hosted workspace plus explicit browser simulation. No funded transaction, credential proof or Swarm upload performed."
+}

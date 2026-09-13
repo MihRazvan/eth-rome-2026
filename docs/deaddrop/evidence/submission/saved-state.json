@@ -1,0 +1,16 @@
+{
+  "date": "2026-09-13T03:58:14.338Z",
+  "base": "https://cutout-ethrome-2026.vercel.app",
+  "checks": [
+    "Task 6 renders PAID; authorized client retrieves and decrypts exact committed Unicode report",
+    "Client reload retains report key; exact report opens again",
+    "Recovery is collapsed by default and available on demand; report download unlocks only after decryption, with a compact verified state",
+    "Reviewer pass persists across deployment/reload; no file picker or repeat application in normal flow",
+    "Renamed Deaddrop private backup downloads and restores the same saved pass; legacy extension remains accepted",
+    "Saved-pass workspace fits 390px without horizontal overflow"
+  ],
+  "errors": [],
+  "writes": 0,
+  "scope": "Read-only public production browser check with original operator-owned profiles and wallet account bridge; all signatures and transactions forbidden.",
+  "result": "passed"
+}
