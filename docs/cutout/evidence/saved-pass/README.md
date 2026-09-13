@@ -1,6 +1,6 @@
 # Saved reviewer passes and a paid public review
 
-Recorded **13 September 2026**, public Cutout application. The enrollment and paid lifecycle ran source `a52e21f`; final interface checks use `57fff10`. This is actual Fuji, Arkiv Tiramisu and public Swarm, driven through Chromium with **operator-owned test wallet signing bridges**. It is not a human wallet-extension test or production accreditation.
+Recorded **13 September 2026**, public Cutout application. The enrollment and paid lifecycle ran source `a52e21f`; final interface checks use `cf02149` (the `57fff10` interface plus a stale-wallet approval guard). This is actual Fuji, Arkiv Tiramisu and public Swarm, driven through Chromium with **operator-owned test wallet signing bridges**. It is not a human wallet-extension test or production accreditation.
 
 ## What happened
 
@@ -27,6 +27,8 @@ Recorded **13 September 2026**, public Cutout application. The enrollment and pa
 | [Paid task screenshot](paid-desktop.png), [saved pass](pass-desktop.png), [mobile pass](pass-mobile.png) | Final hosted interface with operator-generated non-sensitive test data |
 | [Public desktop/mobile walkthrough checks](hosted-browser.json) | Actual UI; guided qualification/payment are explicitly simulated |
 | [Build hashes](build.json), [deployment](deployment.json) | Exact final application source and public artifact hashes |
+| [Independent enrollment review](enrollment-review.md) | Verified fixes and explicit remaining service/browser trust boundaries |
+| [GitHub qualification CI](ci.json) | Full Go/protocol/security/contracts/transport/pilot/TypeScript/build workflow passed at final application source cf02149 |
 | [Focused test summary](verification.json) | 142 passing Node tests, one optional external skip, TypeScript/build and browser checks |
 
 Application records live for two days; approved passes have their own displayed expiry. The demonstration report is deliberately non-sensitive. Screenshots may show public wallet addresses and the synthetic report. The actual private holder, credential, reply key, report keys, operator keys and browser profiles are **not** in this evidence directory.

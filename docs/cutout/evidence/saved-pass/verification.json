@@ -1,6 +1,6 @@
 {
   "sourceForFocusedTests": "a52e21f",
-  "sourceForFinalUI": "57fff10",
+  "sourceForFinalUI": "cf02149",
   "nodeTests": {
     "total": 143,
     "passed": 142,
@@ -20,5 +20,13 @@
     "writes": 0
   },
   "actualPublicPaidTask": "4",
-  "notes": "No contract/circuit/setup changes; earlier contract tests remain separate. Harness interruptions retained in evidence README."
+  "notes": "No contract/circuit/setup changes; earlier contract tests remain separate. Harness interruptions retained in evidence README.",
+  "finalGuardFollowup": {
+    "source": "cf02149",
+    "focusedVaultChannelApiTests": 17,
+    "passed": 17,
+    "failed": 0,
+    "typescript": "passed",
+    "publicReadOnlyChecks": 9
+  }
 }

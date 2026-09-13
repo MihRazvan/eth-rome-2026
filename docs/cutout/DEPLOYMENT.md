@@ -7,8 +7,8 @@
 - Public Cutout: **https://cutout-ethrome-2026.vercel.app**
 - Preserved original origin: **https://review-pass-ethrome-2026.vercel.app**
 - Active source branch: **`review-pass/product`**
-- Current application source at this documentation pass: **`57fff10`**. Later documentation-only commits do not change that deployed application.
-- Deployment: **`dpl_GBXCpXne5U5ZopaUxCcDFQKyNHWy`**; [build/deployment records](evidence/saved-pass/README.md).
+- Current application source at this documentation pass: **`cf02149`**. Later documentation-only commits do not change that deployed application.
+- Deployment: **`dpl_DN1YhswG4qZNBSRdMoLVeG3iVJcM`**; [build/deployment records](evidence/saved-pass/README.md).
 
 Keep an existing participant on the hostname/profile where they registered their document key. The two aliases serve the same product, but browser key storage is origin-specific. A new hostname cannot recover another origin's private key.
 
