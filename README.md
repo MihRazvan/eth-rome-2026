@@ -1,26 +1,20 @@
 # Deaddrop
 
-![Deaddrop — Private work. Public settlement.](docs/design/deaddrop/assets/home.png)
+<img width="840" height="300" alt="deaddrop-cover-840x300" src="https://github.com/user-attachments/assets/36a6d79e-39d8-45d2-b23c-36f11404a660" />
 
 **Hire a qualified reviewer. Keep their credential private. Pay for the work.**
 
 Deaddrop lets a team fund a technical review in USDC, require a private proof of issuer-approved qualification, and receive an encrypted report. The client opens the report and approves payment; Avalanche settles it. Wallets and payments remain public.
 
-[Open Deaddrop](https://cutout-ethrome-2026.vercel.app) · [Interactive demo](https://cutout-ethrome-2026.vercel.app/?view=demo) · [Project brief](PROJECT_BRIEF.md) · [Quickstart](docs/deaddrop/QUICKSTART.md) · [User flow](docs/deaddrop/USER-FLOW.md) · [Architecture](docs/deaddrop/ARCHITECTURE.md) · [Bounties](docs/deaddrop/BOUNTIES.md) · [Docs index](docs/README.md)
+[Open Deaddrop](https://cutout-ethrome-2026.vercel.app) | [Interactive demo](https://cutout-ethrome-2026.vercel.app/?view=demo) | [Video demo](https://youtu.be/oYqHnYT8WfU) | [Project brief](PROJECT_BRIEF.md) | [Quickstart](docs/deaddrop/QUICKSTART.md) | [User flow](docs/deaddrop/USER-FLOW.md) | [Architecture](docs/deaddrop/ARCHITECTURE.md) | [Bounties](docs/deaddrop/BOUNTIES.md) | [Docs index](docs/README.md)
 
-The product was previously called Cutout. The app URL and browser storage namespaces are retained so existing participants keep their private keys. [Rebrand and bounty decisions](docs/design/deaddrop/README.md).
-
-## Submission release
-
-The default repository commands now run Deaddrop. The final app includes the complete thermal landing, product explanation, lifecycle and FAQs. A new public review, **task #6**, completed browser proof → Fuji acceptance → encrypted Swarm delivery → client decryption → **0.1 test USDC payment**. Original browser keys and saved passes survived the release. [Release evidence](docs/deaddrop/evidence/submission/README.md), including clean-checkout builds, hosted checks and finalized receipts.
+> The product was previously called Cutout. The app URL and browser storage namespaces are retained so existing participants keep their private keys. [Rebrand and bounty decisions](docs/design/deaddrop/README.md).
 
 ## Problem first
 
 A team needs a second pair of eyes on a sensitive change: “Can an unauthorized wallet withdraw after this permissions update?” It wants an approved reviewer and a funded agreement. The reviewer should not have to publish a reusable credential identifier for every small engagement, and the resulting report should stay between the participants.
 
 Deaddrop separates those responsibilities. An issuer approves the reviewer. A proof checks that approval without revealing the credential. The client evaluates the work. An escrow holds and pays the reward.
-
-The first use case is a focused technical review, not a replacement for a full security audit. External issuer partnerships and customer demand still need validation.
 
 ## How it works
 
@@ -30,11 +24,11 @@ The first use case is a focused technical review, not a replacement for a full s
 4. **Seal the report.** The browser encrypts the report for the client and reviewer, uploads ciphertext to Swarm, and checks retrieval. A Fuji transaction commits its reference and hash.
 5. **Open and pay.** The client retrieves and decrypts the report, then approves payment to the assigned reviewer.
 
+<img width="2120" height="1035" alt="deaddrop-user-flow" src="https://github.com/user-attachments/assets/9bd12635-6c7d-49ea-a96b-bd2720fafef2" />
+
 Read the [complete user flow](docs/deaddrop/USER-FLOW.md) for qualification issuance, wallet roles, deadlines and disputes.
 
 ![Deaddrop workspace on desktop](docs/design/deaddrop/assets/application.png)
-
-*Actual hosted application capture, 13 September 2026; the visible scope is an unfunded draft. For current deployment and verification scope, see [evidence](docs/deaddrop/EVIDENCE.md).*
 
 ## Try it
 
@@ -64,19 +58,19 @@ Open **http://127.0.0.1:18904/?view=demo**. Requires Node 24.12+. This starts th
 | Report privacy | **WebCrypto + HPKE** | Encrypt locally and wrap document keys separately for each recipient |
 | Product | **TypeScript + Vite; Vercel** | Deaddrop interface, browser proving worker, public reads and encrypted application relay |
 
+<img width="1780" height="1094" alt="deaddrop-tech-stack" src="https://github.com/user-attachments/assets/863169c2-69c9-428b-bf2b-bf51675a0ed0" />
+
 The [architecture](docs/deaddrop/ARCHITECTURE.md) maps each boundary to source. The [security model](docs/deaddrop/SECURITY.md) explains exactly what remains trusted or public.
 
 ## Bounty targets
 
 | Sponsor | Entry | Where to inspect |
 | --- | --- | --- |
-| Avalanche / Team1 | Track A — stablecoin payments for qualified work | [Integration and demo proof](docs/deaddrop/bounties/AVALANCHE.md) |
+| Avalanche / Team1 | Track B — asset rule, an eligibility or transfer policy, and settlement logic | [Integration and demo proof](docs/deaddrop/bounties/AVALANCHE.md) |
 | Arkiv | Mission 02, Mission 03; Best Use consideration | [Queries, expiry, subscriptions and feedback](docs/deaddrop/bounties/ARKIV.md) |
 | Swarm | Useful decentralized document storage | [Encryption, upload and retrieval](docs/deaddrop/bounties/SWARM.md) |
 
-We enter one Team1 track. Arkiv awards are not additive per team. These are targets, not claims that eligibility or awards have been confirmed. [Requirements and remaining submission items](docs/deaddrop/BOUNTIES.md).
-
-Reviewer passes now persist privately in the browser. Files are optional backups or a one-time migration path. [Qualification and approval workflow](docs/deaddrop/QUALIFICATION.md).
+> Reviewer passes now persist privately in the browser. Files are optional backups or a one-time migration path. [Qualification and approval workflow](docs/deaddrop/QUALIFICATION.md).
 
 ## What is verified
 
@@ -96,15 +90,6 @@ Avalanche Fuji C-Chain, **43113**. Links open exact-runtime source verification 
 
 Payment token: canonical Fuji test USDC, `0x5425890298aed601595a70AB815c96711a31Bc65`. [Public manifest, network details and hosting instructions](docs/deaddrop/DEPLOYMENT.md).
 
-## Explore the repository
+---
 
-| Path | Contents |
-| --- | --- |
-| [experiments/qualification/pilot/web](experiments/qualification/pilot/web) | Current Deaddrop frontend and guided demo |
-| [experiments/qualification/pilot](experiments/qualification/pilot) | Wallets, encryption, Arkiv, Swarm, browser prover and hosting |
-| [experiments/qualification/contracts](experiments/qualification/contracts) | Qualification escrow, document keys and contract tests |
-| [experiments/qualification/prover](experiments/qualification/prover) | Circuit, issuer registry, native/Go WASM prover |
-| [docs](docs/README.md) | Product, developer, presenter, sponsor and evidence paths |
-| [arkiv](arkiv) | Data schema and submission evidence matrix |
-
-Deaddrop was built during ETHRome 2026. Deployed `review-pass` protocol domains and existing browser storage names remain stable for compatibility. Superseded product experiments and internal planning are preserved in Git history. The [MIT license](LICENSE), [asset licenses](experiments/qualification/pilot/web/assets/README.md), dependency licenses and original commit history remain intact.
+Deaddrop was built with <3 during ETHRome 2026.
