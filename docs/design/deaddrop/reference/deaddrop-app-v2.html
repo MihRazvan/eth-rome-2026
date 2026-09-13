@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deaddrop — hire a qualified reviewer, keep their credential private</title>
+<meta name="description" content="Fund a technical review in USDC. The reviewer proves a collective approved them without revealing the credential. The report is encrypted to two keys. Payment settles on Avalanche Fuji.">
+<meta name="theme-color" content="#060404">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Deaddrop">
+<meta property="og:title" content="Deaddrop — leave the work, leave no heat">
+<meta property="og:description" content="Proof of qualification without the credential. Reports encrypted to two keys.">
+<meta property="og:image" content="og.jpg">
+<meta property="og:image:alt" content="The word Deaddrop over a thermal field with one area cooled to blue.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23060404'/%3E%3Cg fill='none' stroke='%23FFF3E2' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M8 6v20'/%3E%3Cpath d='M8 16 23 10'/%3E%3C/g%3E%3Ccircle cx='23' cy='10' r='2.4' fill='%23FF5A1F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;600;800&family=Azeret+Mono:wght@400;500&family=Archivo:wdth,wght@75..100,400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#060404;--panel:#0C0708;--panel2:#100A0B;
+  --line:#1F1619;--line2:#2D2024;--line3:#402E32;
+  --ember:#FF5A1F;--signal:#FFB061;--bone:#FFF3E2;
+  --cold:#5C9FF5;--ice:#7FD9FF;
+  --prose:#CFBCAF;--muted:#A79287;--bad:#FF6B4A;
+  --decay:cubic-bezier(.16,1,.3,1);--pad:clamp(16px,4vw,40px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--void);color:var(--bone);font-family:'Azeret Mono',ui-monospace,Menlo,monospace;
+  font-size:13px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hide{display:none !important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--pad)}
+.narrow{max-width:790px}
+
+/* ---------- ambient field ---------- */
+#field{position:fixed;inset:0;z-index:0;display:block;width:100%;height:100%;pointer-events:none}
+#veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:var(--void);opacity:0;transition:opacity .7s var(--decay)}
+body.app #veil{opacity:.94}
+#pins{position:fixed;inset:0;z-index:3;pointer-events:none}
+#shell{position:relative;z-index:2}
+
+/* ---------- type ---------- */
+.d1{font-family:'Martian Mono',monospace;font-weight:800;letter-spacing:-.055em;line-height:.94;
+  font-size:clamp(40px,11vw,132px)}
+.d2{font-family:'Martian Mono',monospace;font-weight:800;font-size:clamp(20px,3.4vw,34px);line-height:1.03;letter-spacing:-.045em}
+h2{font-family:'Martian Mono',monospace;font-weight:800;font-size:clamp(16px,2.3vw,21px);letter-spacing:-.03em}
+h3{font-family:'Martian Mono',monospace;font-size:14.5px;font-weight:600;letter-spacing:-.02em}
+.prose{font-family:'Archivo',system-ui,sans-serif;font-variation-settings:'wdth' 88;font-size:14.5px;line-height:1.64;color:var(--prose)}
+.prose+.prose{margin-top:12px}
+.prose b{color:var(--bone);font-weight:600}
+.lede{font-size:11px;color:var(--muted);letter-spacing:.05em;margin-bottom:20px}
+.fig{font-variant-numeric:tabular-nums}
+.meta{font-size:10.5px;letter-spacing:.06em;color:var(--muted)}
+
+/* ---------- app bar (app only, no nav on the landing) ---------- */
+.appbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:11px var(--pad);background:rgba(6,4,4,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:9px;color:var(--bone)}
+.brand span{font-family:'Martian Mono',monospace;font-weight:800;font-size:13px;letter-spacing:-.04em}
+.brand svg{transition:transform .4s var(--decay)}
+.brand:hover svg{transform:rotate(-14deg) scale(1.08)}
+.appbar #connect{margin-left:12px}
+@media(max-width:760px){
+  .tabs{margin-left:0}
+  .appbar #connect{margin-left:auto}
+}
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:8px;padding:12px 21px;font-size:12px;
+  background:var(--ember);color:var(--void);font-weight:500;border:1px solid var(--ember);overflow:hidden;
+  transition:transform .22s var(--decay),box-shadow .22s,background .2s,border-color .2s,color .2s}
+.btn::before{content:'';position:absolute;inset:0;background:var(--bone);transform:translateY(101%);
+  transition:transform .34s var(--decay);z-index:0}
+.btn>*,.btn{position:relative}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px -14px var(--ember)}
+.btn:hover::before{transform:translateY(0)}
+.btn:hover{color:var(--void)}
+.btn span{position:relative;z-index:1}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent;color:var(--ice);border-color:var(--ice)}
+.btn.ghost::before{background:var(--ice)}
+.btn.ghost:hover{color:var(--void);box-shadow:0 10px 26px -14px var(--ice)}
+.btn.quiet{background:transparent;color:var(--bone);border-color:var(--line3)}
+.btn.quiet::before{background:var(--line3)}
+.btn.quiet:hover{color:var(--bone);border-color:var(--bone);box-shadow:none}
+.btn.sm{padding:8px 14px;font-size:11px}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn[disabled]::before{display:none}
+.linkish{position:relative;color:var(--ice);padding:0;font:inherit;transition:color .2s}
+.linkish::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;
+  transform:scaleX(1);transform-origin:right;transition:transform .3s var(--decay)}
+.linkish:hover::after{transform:scaleX(0)}
+
+/* ---------- chips ---------- */
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:10px;padding:3px 8px;border:1px solid currentColor;
+  letter-spacing:.04em;text-transform:uppercase;transition:box-shadow .25s,transform .25s var(--decay)}
+.warm{color:var(--signal)}.hot{color:var(--ember)}.cool{color:var(--cold)}.ice{color:var(--ice)}
+.dim{color:var(--muted);border-style:dashed}
+
+/* ---------- cards ---------- */
+.card{position:relative;border:1px solid var(--line2);background:var(--panel);padding:17px 18px;
+  display:flex;flex-direction:column;gap:10px;overflow:hidden;
+  transition:border-color .3s,transform .3s var(--decay),background .3s}
+.card::before{content:'';position:absolute;left:0;top:0;height:2px;width:100%;background:var(--ember);
+  transform:scaleX(0);transform-origin:left;transition:transform .45s var(--decay)}
+.card:hover{border-color:var(--line3);transform:translateY(-3px);background:var(--panel2)}
+.card:hover::before{transform:scaleX(1)}
+.card .top{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:10px;color:var(--muted)}
+.card .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;
+  padding-top:11px;border-top:1px dotted var(--line2);font-size:11.5px}
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(auto-fill,minmax(262px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(288px,1fr))}
+
+.panel{border:1px solid var(--line2);background:var(--panel);padding:19px;transition:border-color .3s}
+.panel:hover{border-color:var(--line3)}
+.row{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px dotted var(--line2);
+  font-size:12px;flex-wrap:wrap;transition:color .2s}
+.row:last-child{border:0}
+.row .k{color:var(--muted);transition:color .2s}
+.row:hover .k{color:var(--prose)}
+.row .v{text-align:right}
+
+/* ---------- app list rows ---------- */
+.lr{position:relative;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:13px 2px 13px 0;
+  border-bottom:1px dotted var(--line2);cursor:pointer;
+  transition:padding-left .3s var(--decay),background .3s}
+.lr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--ember);
+  transform:scaleY(0);transform-origin:center;transition:transform .3s var(--decay)}
+.lr:hover{padding-left:12px;background:linear-gradient(90deg,rgba(255,90,31,.07),transparent 70%)}
+.lr:hover::before{transform:scaleY(1)}
+.lr:hover .chip{box-shadow:0 0 14px -4px currentColor}
+.lr .id{flex:0 0 62px;font-size:10.5px;color:var(--muted)}
+.lr .mid{flex:1 1 190px;min-width:0}
+.lr .mid b{display:block;font-family:'Martian Mono',monospace;font-size:13px;font-weight:600;letter-spacing:-.02em}
+.lr .mid span{font-size:10.5px;color:var(--muted)}
+.lr .note{flex:1 1 100%;font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 88;font-size:13.5px;
+  color:var(--prose);line-height:1.55;padding-top:6px;max-width:70ch}
+
+/* ---------- role bar / tabs / crumb ---------- */
+
+.pill{position:relative;font-size:10.5px;padding:6px 12px;border:1px dashed var(--line3);color:var(--muted);
+  letter-spacing:.04em;overflow:hidden;transition:color .25s,border-color .25s}
+.pill::before{content:'';position:absolute;inset:0;background:var(--ember);transform:scaleY(0);
+  transform-origin:bottom;transition:transform .3s var(--decay);z-index:-1}
+.pill:hover{color:var(--bone);border-color:var(--signal)}
+.pill.on{border-style:solid;border-color:var(--ember);background:var(--ember);color:var(--void)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.tab{position:relative;font-size:11px;padding:6px 12px;color:var(--muted);transition:color .2s}
+.tab::after{content:'';position:absolute;left:12px;right:12px;bottom:2px;height:1px;background:currentColor;
+  transform:scaleX(0);transform-origin:left;transition:transform .3s var(--decay)}
+.tab:hover{color:var(--bone)}
+.tab:hover::after,.tab.on::after{transform:scaleX(1)}
+.tab.on{color:var(--bone)}
+#crumb{position:relative;background:rgba(6,4,4,.94);padding:14px var(--pad) 4px;font-size:11px}
+/* ---------- landing sections ---------- */
+.stmt{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(22px,5vw,64px);align-items:start}
+@media(max-width:820px){.stmt{grid-template-columns:1fr}}
+.big{font-family:'Martian Mono',monospace;font-weight:800;font-size:clamp(21px,3.5vw,38px);
+  line-height:1.08;letter-spacing:-.04em;max-width:17ch}
+.big em{font-style:normal;color:var(--ember)}
+.spec{display:grid;grid-template-columns:repeat(4,1fr);margin-top:clamp(26px,4vw,50px);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+@media(max-width:820px){.spec{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.spec{grid-template-columns:1fr}}
+.spec div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;
+  padding:30px 22px;border-right:1px solid var(--line);transition:background .3s}
+.spec div:last-child{border-right:0}
+@media(max-width:820px){
+  .spec div:nth-child(2n){border-right:0}
+  .spec div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+@media(max-width:460px){.spec div{border-right:0}.spec div:not(:last-child){border-bottom:1px solid var(--line)}}
+.spec div:hover{background:var(--panel2)}
+.spec svg{color:var(--ice);opacity:.85;transition:transform .45s var(--decay),opacity .3s}
+.spec div:hover svg{transform:translateY(-3px) scale(1.08);opacity:1}
+.spec b{font-family:'Martian Mono',monospace;font-weight:800;font-size:clamp(17px,1.9vw,21px);
+  letter-spacing:-.035em;color:var(--ice);line-height:1;white-space:nowrap}
+.spec span{font-size:11px;line-height:1.5;color:var(--muted);max-width:22ch}
+.steps5{list-style:none;border-top:1px solid var(--line)}
+.steps5 li{position:relative;padding:19px 0 21px 22px;border-bottom:1px solid var(--line);
+  opacity:0;transform:translateY(16px);
+  transition:opacity .65s var(--decay),transform .65s var(--decay),
+             padding-left .3s var(--decay),background .3s;
+  transition-delay:calc(var(--i) * 95ms)}
+.steps5 li.in{opacity:1;transform:none}
+.steps5 li::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);
+  transform:scaleY(0);transform-origin:top;transition:transform .7s var(--decay);
+  transition-delay:calc(var(--i) * 95ms + 120ms)}
+.steps5 li.in::before{transform:scaleY(.34)}
+.steps5 li:hover{padding-left:32px;background:linear-gradient(90deg,rgba(255,255,255,.03),transparent 55%)}
+.steps5 li.in:hover::before{transform:scaleY(1);transition-delay:0ms}
+.steps5 .hd{display:flex;align-items:baseline;gap:14px}
+.steps5 .n{font-size:11px;color:var(--c);flex:0 0 24px}
+.steps5 b{font-family:'Martian Mono',monospace;font-weight:600;font-size:clamp(14.5px,1.85vw,18px);
+  letter-spacing:-.035em}
+.steps5 p{font-size:13.5px;line-height:1.55;margin:7px 0 0 38px;max-width:72ch;color:var(--muted)}
+@media(max-width:640px){.steps5 p{margin-left:0}}
+
+/* ---------- forms ---------- */
+.field{margin-bottom:15px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;background:var(--panel2);border:1px solid var(--line2);
+  padding:10px 12px;font-size:12.5px;transition:border-color .2s,background .2s}
+.field input:hover,.field textarea:hover,.field select:hover{border-color:var(--line3)}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--ice);outline:none;background:var(--panel)}
+.field textarea{min-height:88px;resize:vertical;font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 88;font-size:14px}
+.hint{font-size:10.5px;color:var(--muted);margin-top:5px}
+.err{font-size:11px;color:var(--bad);margin-top:5px;display:none}
+.field.bad input,.field.bad textarea{border-color:var(--bad)}
+.field.bad .err{display:block}
+.opt{display:flex;gap:9px;align-items:flex-start;padding:10px 11px;border:1px dashed var(--line3);width:100%;
+  text-align:left;margin-bottom:6px;transition:border-color .25s,background .25s,transform .25s var(--decay)}
+.opt:hover{background:var(--panel2);border-color:var(--signal);transform:translateX(3px)}
+.bx{width:12px;height:12px;border:1px solid var(--line3);flex:none;margin-top:3px;transition:background .2s,border-color .2s}
+.opt:hover .bx{border-color:var(--signal)}
+.opt.on{border-style:solid;border-color:var(--ice);background:var(--panel2)}
+.opt.on .bx{background:var(--ice);border-color:var(--ice)}
+
+/* ---------- layout shells ---------- */
+section{position:relative;padding:clamp(34px,5.5vw,68px) 0;border-bottom:1px solid var(--line);background:rgba(6,4,4,.94)}
+.foot{position:relative;padding:32px 0 90px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);background:rgba(6,4,4,.94)}
+.foot button{color:var(--muted);margin-right:16px;transition:color .2s}
+.foot button::after{display:none}
+.foot button:hover{color:var(--bone)}
+.foot .cols{display:flex;gap:26px;flex-wrap:wrap;justify-content:space-between;margin-bottom:16px}
+
+/* ---------- landing hero ---------- */
+#hero{min-height:calc(100svh - 10px);display:flex;flex-direction:column;justify-content:space-between;
+  gap:clamp(26px,5vw,60px);padding:clamp(22px,4vw,48px) var(--pad) clamp(18px,3vw,34px)}
+.hud{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:10.5px;letter-spacing:.05em;
+  color:var(--signal);transition:color .9s}
+.hud.chilled{color:var(--ice)}
+.wordmark u{text-decoration:none;color:var(--ember);transition:color .9s}
+.d1{text-shadow:0 0 60px rgba(255,90,31,.4);transition:text-shadow .9s}
+.d1.chilled{text-shadow:0 0 60px rgba(63,169,255,.4)}
+.d1.chilled u{color:var(--ice)}
+.doors{display:flex;gap:10px;flex-wrap:wrap;margin-top:clamp(20px,3vw,32px)}
+.cue{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end;
+  font-size:10.5px;color:var(--muted)}
+.bounce{display:inline-block;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+.fade{position:relative;height:clamp(70px,9vw,130px);background:linear-gradient(to bottom,transparent,rgba(6,4,4,.94))}
+.pin{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px}
+.pin i{position:absolute;inset:0;border:1px solid rgba(127,217,255,.9);border-radius:50%;animation:ping 2.2s ease-out infinite}
+.pin i:nth-child(2){animation-delay:.75s}
+.pin b{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:4px;height:4px;background:#EAF8FF;
+  border-radius:50%;box-shadow:0 0 9px var(--ice)}
+.pin u{position:absolute;left:16px;top:50%;transform:translateY(-50%);text-decoration:none;white-space:nowrap;
+  font-size:9px;letter-spacing:.02em;color:#EAF8FF;background:rgba(4,8,12,.88);
+  border:1px solid rgba(127,217,255,.45);padding:2px 5px}
+@keyframes ping{from{transform:scale(.3);opacity:.85}to{transform:scale(1);opacity:0}}
+
+/* ---------- overlays ---------- */
+#loader{position:fixed;inset:0;z-index:300;background:var(--void);display:grid;place-items:center;
+  transition:opacity .7s var(--decay),visibility .7s}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+#loader .scan{font-family:'Martian Mono',monospace;font-weight:800;font-size:clamp(24px,7vw,54px);letter-spacing:-.05em;line-height:1;color:var(--ember)}
+#loader .st{margin-top:16px;font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+#loader .bar{margin:18px auto 0;width:min(240px,62vw);height:2px;background:var(--line2);position:relative;overflow:hidden}
+#loader .bar i{position:absolute;inset:0 auto 0 0;width:0;background:var(--ember)}
+#cookie{position:fixed;left:0;right:0;bottom:0;z-index:120;background:var(--panel);border-top:1px solid var(--line3);
+  padding:13px var(--pad);display:none;gap:16px;align-items:center;flex-wrap:wrap}
+#cookie.show{display:flex}
+#cookie p{font-size:11.5px;color:var(--prose);max-width:70ch;flex:1;min-width:240px}
+#toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,26px);z-index:140;opacity:0;background:var(--panel);
+  border:1px solid var(--line3);padding:11px 16px;font-size:11.5px;transition:opacity .3s,transform .35s var(--decay);
+  pointer-events:none;max-width:90vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- app pieces ---------- */
+.steps{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:20px}
+.step{flex:1;min-width:108px;padding:10px 12px;border:1px solid var(--line2);background:var(--panel);
+  font-size:10.5px;color:var(--muted);transition:border-color .3s,color .3s}
+.step b{display:block;font-weight:400;font-size:9.5px;letter-spacing:.06em;margin-bottom:3px}
+.step.done{border-color:var(--line3);color:var(--ice)}
+.step.now{border-color:var(--ember);color:var(--bone)}
+.step.now b{color:var(--ember)}
+.trace{font-size:11px;line-height:1.9;color:var(--muted);border-left:1px solid var(--line2);padding-left:14px;min-height:140px}
+.trace b{color:var(--ice);font-weight:400}
+.meter{height:3px;background:var(--line2);position:relative;overflow:hidden;margin:14px 0}
+.meter i{position:absolute;inset:0 auto 0 0;width:0;background:var(--ember);transition:width .25s linear}
+.term{font-size:11px;background:#0A0506;border:1px solid var(--line2);padding:12px 13px;line-height:1.7;word-break:break-all}
+.term .o{color:var(--signal)}
+#sealwrap{position:relative;border:1px solid var(--line2);overflow:hidden;background:var(--panel)}
+#cover{position:absolute;inset:0;background:#120C0D;display:grid;place-items:center;text-align:center;padding:16px}
+#edge{position:absolute;top:0;bottom:0;width:2px;background:var(--ice);opacity:0;box-shadow:0 0 14px var(--ice)}
+#track{position:relative;height:48px;margin-top:10px;background:var(--panel2);border:1px solid var(--line2);touch-action:none}
+#track .ln{position:absolute;left:14px;right:14px;top:23px;height:1px;background:repeating-linear-gradient(90deg,var(--line3) 0 5px,transparent 5px 10px)}
+#tfill{position:absolute;left:14px;top:23px;width:0;height:1px;background:var(--ice)}
+#grip{position:absolute;left:14px;top:9px;width:30px;height:30px;margin-left:-15px;background:var(--ice);
+  display:grid;place-items:center;cursor:grab;touch-action:none;transition:transform .2s var(--decay),box-shadow .2s}
+#grip:hover{transform:scale(1.12);box-shadow:0 0 18px -4px var(--ice)}
+#grip:active{cursor:grabbing;transform:scale(1.04)}
+.nothing{display:grid;grid-template-columns:1fr auto;border:1px solid var(--line2)}
+.nothing div{padding:11px 14px;border-bottom:1px dotted var(--line2);font-size:12.5px;display:flex;align-items:center;transition:background .25s}
+.nothing div:nth-last-child(-n+2){border-bottom:0}
+.nothing div:nth-child(even){justify-content:flex-end;color:var(--ice);font-size:11px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:11px 13px;border-bottom:1px dotted var(--line2);vertical-align:top}
+th{font-size:10px;letter-spacing:.06em;color:var(--muted);font-weight:400;text-transform:uppercase}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:var(--panel2)}
+td.mono{word-break:break-all}
+#jump{position:sticky;top:0;z-index:30;background:rgba(6,4,4,.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);padding:11px var(--pad);display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+
+@media (max-width:640px){
+  .steps{flex-direction:column}
+  .row .v{text-align:left}
+  #hero{min-height:auto;padding-top:40px;padding-bottom:40px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+@media (max-width:640px){
+  .steps{flex-direction:column}.row .v{text-align:left}
+  #hero{min-height:auto;padding-top:34px;padding-bottom:34px;gap:40px}
+}
+</style>
+</head>
+<body>
+
+<div id="loader" role="status" aria-live="polite">
+  <div style="text-align:center;padding:20px">
+    <div class="scan" aria-hidden="true">########</div>
+    <p class="st">calibrating sensor</p>
+    <div class="bar" aria-hidden="true"><i></i></div>
+    <p class="sr">Loading Deaddrop.</p>
+  </div>
+</div>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div id="veil"></div>
+<div id="pins" aria-hidden="true"></div>
+
+<div id="shell">
+<div class="appbar hide" id="appbar">
+  <button type="button" class="brand" data-go="home">
+    <svg width="22" height="22" viewBox="0 0 26 26" fill="none" stroke="#FFF3E2" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M6 4.5V21"/><path d="M6 12.5 19 8"/><circle cx="19" cy="8" r="1.6" fill="#FF5A1F" stroke="none"/></svg>
+    <span>Deaddrop</span>
+  </button>
+  <div id="roleset" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+    <span class="meta">as</span>
+    <button type="button" class="pill" data-r="client">client</button>
+    <button type="button" class="pill" data-r="reviewer">reviewer</button>
+    <button type="button" class="pill" data-r="collective">collective</button>
+  </div>
+  <nav class="tabs" id="tabset" aria-label="Sections">
+    <button type="button" class="tab" data-go="tasks">Tasks</button>
+    <button type="button" class="tab" data-go="people">People</button>
+  </nav>
+  <button class="btn sm ghost" id="connect"><span>Connect wallet</span></button>
+  <span class="meta" id="rolehint" style="flex:1 1 100%;color:var(--prose)"></span>
+</div>
+
+<div id="crumb" class="hide"></div>
+
+<main id="main">
+
+<!-- ===================== HOME ===================== -->
+<div data-view="home">
+  <div id="hero">
+    <div class="hud" id="hud">
+      <span>thermal · 8–14µm · passive</span>
+      <span id="temp">field 34.2°C</span>
+      <span id="count">0 caches cooling</span>
+    </div>
+    <div>
+      <h1 class="d1" id="bigmark">Dead<u>drop</u></h1>
+      <p class="prose" style="max-width:34ch;margin-top:clamp(16px,2vw,24px);font-size:clamp(15px,1.7vw,19px)">
+        Hire a qualified reviewer. Keep their credential private. Pay for the work.</p>
+      <div class="doors">
+        <button type="button" class="btn" data-door="client"><span>I need a review</span></button>
+        <button type="button" class="btn ghost" data-door="reviewer"><span>I do reviews</span></button>
+        <button type="button" class="btn quiet" data-door="collective"><span>I vouch for people</span></button>
+      </div>
+    </div>
+    <div class="cue">
+      <span>tap the field — the signature cools where you leave a cache</span>
+      <span id="log">nothing has been left here yet</span>
+      <span class="bounce">↓</span>
+    </div>
+  </div>
+
+  <div class="fade"></div>
+
+  <section>
+    <div class="wrap">
+      <div class="stmt">
+        <p class="big">Somebody you cannot name did work you can hold a collective <em>responsible</em> for.</p>
+        <div>
+          <p class="prose">A team needs a second pair of eyes on a sensitive change. It wants someone an issuer has already approved, and a funded agreement before any work starts.</p>
+          <p class="prose">The reviewer should not have to publish a reusable credential for every small job, and the findings should stay between the two of them. Deaddrop splits those responsibilities so nobody hands over more than the job actually needs.</p>
+        </div>
+      </div>
+      <div class="spec">
+        <div><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3 21 21"/><path d="M10.6 5.1A9.6 9.6 0 0 1 12 5c5 0 9 4.5 9 7a12 12 0 0 1-2.2 3.2"/><path d="M6.4 6.6C3.9 8.2 3 10.6 3 12c0 2.5 4 7 9 7a9.6 9.6 0 0 0 3.6-.7"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg><b>nothing</b><span>collected about you</span></div>
+        <div><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="9" r="3.2"/><path d="M9.9 11.2 15 16.3l1.7-1.7 1.6 1.6 1.9-1.9-4.4-4.4"/><circle cx="16.5" cy="17.5" r="3.2"/></svg><b>two keys</b><span>can open a report</span></div>
+        <div><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.2V12l3.1 2"/></svg><b>24 hours</b><span>before a proof expires</span></div>
+        <div><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 19h18.8L14.4 6.2a2.7 2.7 0 0 0-4.8 0Z"/><path d="M9.2 19 12 13.6 14.8 19"/></svg><b>Fuji</b><span>testnet, test USDC</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 style="margin-bottom:6px">Five steps, and nobody ever meets</h2>
+      <p class="lede">the accent cools as the work completes</p>
+      <ol class="steps5">
+        <li style="--i:0;--c:var(--ember)"><div class="hd"><span class="n">01</span><b>A collective assesses you</b></div>
+          <p class="prose">It vouches for you against its own rubric and issues a credential you hold yourself. We never see it, and never store it.</p></li>
+        <li style="--i:1;--c:#FF7A3D"><div class="hd"><span class="n">02</span><b>A client funds a task</b></div>
+          <p class="prose">Public scope, escrowed USDC, and a listing that expires by itself. No claim by the deadline and the escrow refunds — nothing has to delete it.</p></li>
+        <li style="--i:2;--c:var(--signal)"><div class="hd"><span class="n">03</span><b>You cut a proof</b></div>
+          <p class="prose">In your browser you prove the credential is valid and unrevoked, bound to this task and wallet. Single use, twenty-four hours, unlinkable to your other proofs.</p></li>
+        <li style="--i:3;--c:var(--cold)"><div class="hd"><span class="n">04</span><b>The report is sealed</b></div>
+          <p class="prose">Encrypted to two keys and padded to a fixed size, so its length leaks neither scope nor severity. Stored on Swarm, its reference committed onchain.</p></li>
+        <li style="--i:4;--c:var(--ice)"><div class="hd"><span class="n">05</span><b>They open it and pay</b></div>
+          <p class="prose">The client decrypts locally, reads it, and releases escrow to the address bound at acceptance. Nobody met. Nobody learned a name.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section style="border-bottom:0">
+    <div class="wrap">
+      <div style="text-align:center">
+        <h2 style="margin-bottom:20px">Leave the work. Leave no heat.</h2>
+        <button type="button" class="btn" data-door="client"><span>Fund a review</span></button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== APP LISTS ===================== -->
+<div data-view="tasks" class="hide"><section style="border-bottom:0"><div class="wrap"><div id="appBody"></div></div></section></div>
+<div data-view="people" class="hide"><section style="border-bottom:0"><div class="wrap"><div id="appBody2"></div></div></section></div>
+
+<!-- ===================== POST ===================== -->
+<div data-view="post" class="hide">
+  <section style="border-bottom:0"><div class="wrap">
+    <h1 class="d2" style="margin-bottom:20px">Post a review task</h1>
+    <div class="grid g2" style="align-items:start">
+      <form data-validate data-done="Escrow locked and the listing published." id="postForm" class="panel">
+        <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="hp1">Company</label><input id="hp1" tabindex="-1" autocomplete="off" data-hp></div>
+        <div class="field"><label for="ptitle">What needs reviewing</label>
+          <input id="ptitle" data-rule="required" value="Fee-switch hook change" autocomplete="off">
+          <p class="hint">Public. Anyone querying the board sees this.</p><p class="err" role="alert"></p></div>
+        <div class="field"><label for="pscope">Scope</label>
+          <textarea id="pscope" data-rule="required min">Uniswap v4 hook, 340 lines changed. Look for fee accounting errors and reentrancy on the settle path.</textarea>
+          <p class="hint">Stored on Swarm, hashed onchain. Nothing identifying unless you mean it.</p><p class="err" role="alert"></p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+          <div class="field"><label for="preward">Reward, test USDC</label><input id="preward" inputmode="decimal" data-rule="required amount" value="1800"><p class="err" role="alert"></p></div>
+          <div class="field"><label for="pdays">Deadline, days</label><input id="pdays" inputmode="numeric" data-rule="required days" value="4"><p class="err" role="alert"></p></div>
+        </div>
+        <div class="field"><label>Who may claim it</label><div id="colls"></div>
+          <p class="hint">You trust a collective's assessment, not a resume. <span id="collErr" style="color:var(--bad)"></span></p></div>
+        <div class="field"><label for="plevel">Minimum level</label>
+          <select id="plevel"><option value="1">Level 1 and above</option><option value="2">Level 2 and above</option><option value="3" selected>Level 3 only</option></select></div>
+        <button class="btn" type="submit"><span>Fund escrow and publish</span></button>
+        <p class="hint" style="margin-top:10px">If nobody claims it by the deadline, the listing lapses and escrow refunds automatically.</p>
+      </form>
+      <div>
+        <p class="meta" style="margin-bottom:8px">live preview</p>
+        <div class="card" style="margin-bottom:14px">
+          <div class="top"><span>RT-0431</span><span class="chip dim">draft</span></div>
+          <h3 id="pvTitle">Fee-switch hook change</h3>
+          <p class="prose" style="font-size:13px" id="pvScope"></p>
+          <div class="foot"><span class="chip warm" id="pvWho">11 qualified nearby</span><span class="fig" id="pvReward">1,800 USDC</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="margin-bottom:10px">What this does not guarantee</h3>
+          <p class="prose" style="font-size:13.5px">Deaddrop guarantees the reviewer was vetted by a collective you named. It does not guarantee the review is good. If the work is weak, dispute it and the collective rules on the escrow.</p>
+          <p class="prose" style="font-size:13.5px">Your escrow payment is public onchain, so the reviewer's identity is protected but their payout address is not.</p>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ===================== TASK ===================== -->
+<div data-view="task" class="hide">
+  <section style="border-bottom:0"><div class="wrap">
+    <div class="steps">
+      <div class="step done"><b>01</b>Assessed</div><div class="step done"><b>02</b>Task funded</div>
+      <div class="step now"><b>03</b>Cut a proof</div><div class="step"><b>04</b>Seal the report</div><div class="step"><b>05</b>Open and pay</div>
+    </div>
+    <h1 class="d2" style="margin-bottom:18px">Fee-switch hook change</h1>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <div class="panel" style="margin-bottom:14px">
+          <h3 style="margin-bottom:10px">Scope</h3>
+          <p class="prose">Uniswap v4 hook, 340 lines changed. Look for fee accounting errors and reentrancy on the settle path. Reproduce anything you report, or say clearly that it does not reproduce.</p>
+          <p class="prose">A full audit is out of scope and will not be paid as one.</p>
+        </div>
+        <div class="panel">
+          <h3 style="margin-bottom:10px">Terms</h3>
+          <div class="row"><span class="k">Reward, escrowed</span><span class="v fig">1,800.00 USDC</span></div>
+          <div class="row"><span class="k">Network</span><span class="v">Avalanche Fuji · 43113</span></div>
+          <div class="row"><span class="k">Deadline</span><span class="v">4 days from claim</span></div>
+          <div class="row"><span class="k">Accepts</span><span class="v">Sigil Collective · level 3</span></div>
+          <div class="row"><span class="k">Scope hash</span><span class="v fig">0x7f31…a094</span></div>
+          <div class="row"><span class="k">Escrow</span><span class="v fig">0xb431…62af</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="margin-bottom:12px">Claim this task</h3>
+        <p class="prose" style="font-size:13.5px">Claiming spends one proof. If you do not have a live one, cut it first — it lasts 24 hours and works once.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+          <button type="button" class="btn" data-go="proof"><span>Cut a proof</span></button>
+          <button class="btn ghost" id="claimBtn"><span>Claim with proof</span></button>
+        </div>
+        <p class="hint" id="claimMsg" style="margin-top:12px">No live proof. Cut one to claim.</p>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ===================== PROOF ===================== -->
+<div data-view="proof" class="hide">
+  <section style="border-bottom:0"><div class="wrap">
+    <h1 class="d2" style="margin-bottom:20px">Cut a proof</h1>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <div class="panel" style="margin-bottom:14px">
+          <h3 style="margin-bottom:10px">Cutting from</h3>
+          <div class="row"><span class="k">Qualification</span><span class="v">Solidity, level 3</span></div>
+          <div class="row"><span class="k">Collective</span><span class="v">Sigil Collective</span></div>
+          <div class="row"><span class="k">Issued</span><span class="v">March 2026</span></div>
+          <div class="row"><span class="k">Status</span><span class="v" style="color:var(--ice)">valid · checked 2 min ago</span></div>
+        </div>
+        <div class="panel" id="proofBox">
+          <h3 style="margin-bottom:10px;color:var(--muted)">No live proof</h3>
+          <p class="prose" style="font-size:13.5px">Generate one. It expires 24 hours after cutting and is spent the moment you claim.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="margin-bottom:6px">Prove it locally</h3>
+        <p class="prose" style="font-size:13.5px;margin-bottom:10px">Everything runs in this tab. The credential never leaves the machine, and there is no server that could read it.</p>
+        <div class="meter" aria-hidden="true"><i id="mfill"></i></div>
+        <div class="trace" id="trace" role="status" aria-live="polite"><span style="color:var(--signal)">idle · nothing generated</span></div>
+        <button class="btn" id="proveBtn" style="margin-top:16px"><span>Generate proof</span></button>
+        <div class="panel" style="margin-top:16px;background:var(--panel2)">
+          <h3 style="margin-bottom:8px">What a client learns</h3>
+          <p class="prose" style="font-size:13.5px">That some holder of a Sigil level 3 credential was unrevoked at the moment of claiming. Not which holder, not when you were assessed, not what you reviewed before. Two clients cannot compare proofs and tell they hired the same person.</p>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ===================== DELIVER ===================== -->
+<div data-view="deliver" class="hide">
+  <section style="border-bottom:0"><div class="wrap">
+    <div class="steps">
+      <div class="step done"><b>01</b>Assessed</div><div class="step done"><b>02</b>Task funded</div>
+      <div class="step done"><b>03</b>Proof spent</div><div class="step now"><b>04</b>Seal the report</div><div class="step"><b>05</b>Open and pay</div>
+    </div>
+    <h1 class="d2" style="margin-bottom:18px">Seal the report</h1>
+    <div class="grid g2" style="align-items:start">
+      <form data-validate data-done="Sealed, uploaded and committed." id="sealForm" class="panel">
+        <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="hp2">Reference</label><input id="hp2" tabindex="-1" autocomplete="off" data-hp></div>
+        <div class="field"><label for="sum">Finding summary</label>
+          <input id="sum" data-rule="required" placeholder="Rounding on the partial-exit path drains dust" autocomplete="off"><p class="err" role="alert"></p></div>
+        <div class="field"><label for="bodyt">Report</label>
+          <textarea id="bodyt" data-rule="required min" placeholder="Reproduction steps, affected function, severity and the conditions that trigger it."></textarea><p class="err" role="alert"></p></div>
+        <div class="field"><label for="sev">Severity</label>
+          <select id="sev"><option>Informational</option><option>Low</option><option selected>Medium</option><option>Critical</option></select>
+          <p class="hint">Ciphertext is padded to a fixed size, so length does not leak severity.</p></div>
+        <button class="btn" type="submit"><span>Encrypt and seal</span></button>
+        <p class="hint" style="margin-top:10px">Revoke this reviewer tomorrow and this delivery still gets paid.</p>
+      </form>
+      <div>
+        <div class="panel" style="margin-bottom:14px">
+          <h3 style="margin-bottom:10px">Recipients</h3>
+          <div class="row"><span class="k">You, reviewer</span><span class="v fig">0x4c19…7ab2</span></div>
+          <div class="row"><span class="k">Client</span><span class="v fig">0x9d70…1f55</span></div>
+          <div class="row"><span class="k">The collective</span><span class="v" style="color:var(--muted)">cannot read it</span></div>
+          <div class="row"><span class="k">Anybody else</span><span class="v" style="color:var(--muted)">cannot read it</span></div>
+        </div>
+        <div class="panel hide" id="receipt">
+          <h3 style="margin-bottom:10px;color:var(--ice)">Sealed</h3>
+          <div class="row"><span class="k">Ciphertext</span><span class="v fig">64 KB, padded</span></div>
+          <div class="row"><span class="k">Swarm reference</span><span class="v fig">bzz:8f21…c4d9</span></div>
+          <div class="row"><span class="k">Retrieval check</span><span class="v" style="color:var(--ice)">confirmed before commit</span></div>
+          <div class="row"><span class="k">Onchain commit</span><span class="v fig">0x2ad7…90be</span></div>
+          <button type="button" class="btn ghost" data-go="open" style="margin-top:14px"><span>View as the client</span></button>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ===================== OPEN ===================== -->
+<div data-view="open" class="hide">
+  <section style="border-bottom:0"><div class="wrap">
+    <div class="steps">
+      <div class="step done"><b>01</b>Assessed</div><div class="step done"><b>02</b>Task funded</div>
+      <div class="step done"><b>03</b>Proof spent</div><div class="step done"><b>04</b>Report sealed</div><div class="step now"><b>05</b>Open and pay</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap;margin-bottom:14px">
+      <div><p class="meta">RT-0402 · Sigil Collective</p><h1 class="d2" style="margin-top:6px">Withdrawal queue accounting</h1></div>
+      <span class="meta" id="sealState">sealed to your key · 41 KB</span>
+    </div>
+    <div id="sealwrap">
+      <div style="padding:17px 19px 19px">
+        <p class="meta" style="margin-bottom:8px">decrypted locally · 6 findings · 1 critical</p>
+        <p class="prose"><b>Critical.</b> The partial-exit path rounds the shortfall toward the pool, so a caller can repeat small exits to drain the rounding dust. Round toward the queue and add an invariant test.</p>
+        <p class="prose" style="color:var(--muted)">Five lower-severity findings follow, covering event ordering, a stale comment on the escape hatch, and three gas notes.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+          <button class="btn" id="payBtn"><span>Approve and pay 3,000 USDC</span></button>
+          <button type="button" class="btn quiet" data-go="dispute"><span>Dispute delivery</span></button>
+        </div>
+        <p class="hint" id="payMsg" style="margin-top:10px"></p>
+      </div>
+      <div id="cover">
+        <div>
+          <svg width="60" height="46" viewBox="0 0 90 70" aria-hidden="true"><rect x="6" y="10" width="78" height="50" fill="none" stroke="#FF5A1F" stroke-width="2"/><path d="M6 10 45 40 84 10" fill="none" stroke="#FF5A1F" stroke-width="2"/></svg>
+          <p class="meta" style="margin-top:12px">encrypted · nothing readable until you open it</p>
+        </div>
+      </div>
+      <div id="edge"></div>
+    </div>
+    <div id="track">
+      <div class="ln"></div><div id="tfill"></div>
+      <div id="grip" role="slider" tabindex="0" aria-label="Drag to open the sealed report" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#060404" stroke-width="2" aria-hidden="true"><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <span class="meta" style="position:absolute;right:12px;top:16px" id="trackHint">drag the probe to open</span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:9px">
+      <button class="btn quiet sm" id="autoOpen"><span>Open without dragging</span></button>
+      <span class="meta">Your key decrypts it in the browser. Nothing leaves this tab.</span>
+    </div>
+  </div></section>
+</div>
+
+<!-- ===================== ASSESS ===================== -->
+<div data-view="assess" class="hide">
+  <section style="border-bottom:0"><div class="wrap">
+    <h1 class="d2" style="margin-bottom:20px">Assess someone</h1>
+    <div class="grid g2" style="align-items:start">
+      <form data-validate data-done="Credential issued." id="assessForm" class="panel">
+        <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="hp3">Ref</label><input id="hp3" tabindex="-1" autocomplete="off" data-hp></div>
+        <div class="field"><label for="addr">Where to send the credential</label>
+          <input id="addr" data-rule="required addr" value="0x8f21c40Ab7e92" autocomplete="off">
+          <p class="hint">Their wallet. You know who they are. After this, nobody else will.</p><p class="err" role="alert"></p></div>
+        <div class="field"><label for="qkind">Qualification</label>
+          <select id="qkind"><option>Solidity</option><option>Protocol economics</option><option>Cryptography</option></select></div>
+        <div class="field"><label>What they demonstrated</label><div id="rubric"></div>
+          <p class="hint">Your rubric sets the level. Tick only what you saw. <span id="rubErr" style="color:var(--bad)"></span></p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+          <div class="field"><label for="valid">Valid for</label><select id="valid"><option>6 months</option><option selected>12 months</option><option>24 months</option></select></div>
+          <div class="field"><label for="note">Your note</label><input id="note" placeholder="private to you"><p class="hint">never published, never onchain</p></div>
+        </div>
+        <button class="btn" type="submit"><span>Issue credential</span></button>
+      </form>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="top"><span id="asCap">not issued yet</span><span class="chip dim" id="asTag">draft</span></div>
+          <h3 id="asQual">Solidity, no level yet</h3>
+          <p class="prose" style="font-size:13px" id="asMeta">handle assigned on issue · Sigil Collective</p>
+          <div class="foot"><span class="meta" id="asLevel">tick the rubric</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="margin-bottom:10px">What you are signing up to</h3>
+          <p class="prose" style="font-size:13.5px">Clients accept work from this person because your name is on it, without seeing who they are. You can revoke at any time, which blocks new claims immediately and leaves already-submitted work payable.</p>
+          <p class="prose" style="font-size:13.5px">You will not see which of your holders claimed a task, or read any review they deliver. If a client disputes a delivery, ruling on it is yours.</p>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ===================== DISPUTE ===================== -->
+<div data-view="dispute" class="hide">
+  <section style="border-bottom:0"><div class="wrap narrow">
+    <h1 class="d2" style="margin-bottom:8px">Rule on a dispute</h1>
+    <p class="lede">RT-0356 · bridge message ordering · 4,100 USDC escrowed</p>
+    <div class="panel" style="margin-bottom:14px">
+      <div class="row"><span class="k">Client says</span><span class="v" style="max-width:44ch">Findings restate the spec and miss the reordering case that prompted the review.</span></div>
+      <div class="row"><span class="k">Reviewer says</span><span class="v" style="max-width:44ch">The reordering case is out of the posted scope, which named the relay path only.</span></div>
+      <div class="row"><span class="k">Delivered</span><span class="v">within deadline, 2 days early</span></div>
+      <div class="row"><span class="k">You can read</span><span class="v" style="color:var(--muted)">neither the scope nor the report</span></div>
+    </div>
+    <p class="prose">A dispute is the one moment a collective weighs in on quality. To rule you need both parties to grant you a read key — until they do, you are ruling on their statements alone, and you should say so.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+      <button class="btn" data-rule-btn="release"><span>Release to reviewer</span></button>
+      <button class="btn quiet" data-rule-btn="refund"><span>Refund the client</span></button>
+      <button class="btn ghost" data-rule-btn="split"><span>Split the escrow</span></button>
+    </div>
+    <p class="hint" id="ruleMsg" style="margin-top:12px">Your ruling executes onchain and cannot be reversed.</p>
+  </div></section>
+</div>
+
+<!-- ===================== KEYS ===================== -->
+<div data-view="keys" class="hide">
+  <section style="border-bottom:0"><div class="wrap narrow">
+    <h1 class="d2" style="margin-bottom:8px">Device keys</h1>
+    <p class="lede">generated here, never transmitted, not recoverable from a wallet signature</p>
+    <div class="panel" style="margin-bottom:14px">
+      <div class="row"><span class="k">This device</span><span class="v fig">key-7f2a…19c4 · active</span></div>
+      <div class="row"><span class="k">Registered onchain</span><span class="v">hash only, block 41,190,006</span></div>
+      <div class="row"><span class="k">Reports openable</span><span class="v">4</span></div>
+      <div class="row"><span class="k">Retired</span><span class="v fig">key-0b81…77de · revoked 2 Sep</span></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn quiet" id="rotateBtn"><span>Rotate key</span></button>
+      <button class="btn ghost" id="revokeBtn"><span>Revoke old keys</span></button>
+    </div>
+    <p class="hint" id="keyMsg" style="margin-top:12px">Rotating changes what you can open next. It never affects what you already sent.</p>
+    <p class="prose" style="margin-top:20px">Clearing site data destroys these keys, and reports sealed to them become unreadable by you. Another device cannot recover them from a wallet signature — that is deliberate, and it is why there is no account to reset.</p>
+  </div></section>
+</div>
+
+<!-- ===================== DOCS ===================== -->
+<div data-view="docs" class="hide">
+  <div id="jump">
+    <span class="meta" style="margin-right:8px">jump to</span>
+    <button type="button" class="tab" data-sec="flow">How it runs</button>
+    <button type="button" class="tab" data-sec="architecture">Architecture</button>
+    <button type="button" class="tab" data-sec="security">Security</button>
+    <button type="button" class="tab" data-sec="evidence">Evidence</button>
+    <button type="button" class="tab" data-sec="deployments">Deployments</button>
+    <button type="button" class="tab" data-sec="bounties">Bounties</button>
+    <button type="button" class="tab" data-sec="quickstart">Quickstart</button>
+  </div>
+
+  <div id="doc-flow" style="scroll-margin-top:110px">
+    <section><div class="wrap narrow">
+      <h2 style="margin-bottom:6px">Three roles</h2><p class="lede">everyone sees a different, deliberately incomplete picture</p>
+      <div class="grid g3">
+        <div class="card"><h3>Collective</h3><p class="prose" style="font-size:13.5px">Assesses people its own way and issues a credential the holder keeps. Publishes signed status snapshots. Rules on disputes. Cannot see which holder claimed what, and cannot read any report.</p></div>
+        <div class="card"><h3>Reviewer</h3><p class="prose" style="font-size:13.5px">Holds one credential. Cuts a single-use proof to claim a task. Seals the report to two keys. Gets paid to a public address.</p></div>
+        <div class="card"><h3>Client</h3><p class="prose" style="font-size:13.5px">Funds a task, names the collectives it trusts, opens the report and approves payment. Learns that someone qualified did the work, never who.</p></div>
+      </div>
+      <h2 style="margin:34px 0 6px">Rules that matter</h2><p class="lede">the edges people trip on</p>
+      <div class="panel">
+        <div class="row"><span class="k">A proof is single use</span><span class="v">expires 24 h after cutting, spent on claim</span></div>
+        <div class="row"><span class="k">Proofs are unlinkable</span><span class="v">two clients cannot tell they hired the same person</span></div>
+        <div class="row"><span class="k">Revocation is forward-only</span><span class="v">blocks new claims, submitted work still pays</span></div>
+        <div class="row"><span class="k">Listings expire themselves</span><span class="v">no claim by the deadline, escrow refunds</span></div>
+        <div class="row"><span class="k">Renewal is not reassessment</span><span class="v">extends the same credential</span></div>
+        <div class="row"><span class="k">Disputes go to the collective</span><span class="v">its ruling releases, refunds or splits</span></div>
+      </div>
+    </div></section>
+  </div>
+
+  <div id="doc-architecture" style="scroll-margin-top:110px">
+    <section><div class="wrap">
+      <h2 style="margin-bottom:6px">Architecture</h2><p class="lede">each boundary maps to one layer</p>
+      <div class="panel" style="padding:0;overflow-x:auto">
+        <table>
+          <thead><tr><th>Layer</th><th>Technology</th><th>Responsibility</th></tr></thead>
+          <tbody>
+            <tr><td>Settlement</td><td class="mono">Avalanche Fuji · Solidity · test USDC</td><td>Hold rewards, enforce proof-bound assignment, commit delivery, settle payment</td></tr>
+            <tr><td>Discovery</td><td class="mono">Arkiv Tiramisu</td><td>Wallet-owned queryable listings with native expiry and websocket updates</td></tr>
+            <tr><td>Documents</td><td class="mono">Swarm · Bee HTTP</td><td>Public scopes and issuer snapshots; recipient-encrypted reports</td></tr>
+            <tr><td>Qualification</td><td class="mono">gnark Groth16 · BN254 · Go→WASM</td><td>Prove issuer approval and nonrevocation locally; verify onchain</td></tr>
+            <tr><td>Report privacy</td><td class="mono">WebCrypto · HPKE</td><td>Encrypt locally, wrap document keys per recipient</td></tr>
+            <tr><td>Product</td><td class="mono">TypeScript · Vite · Vercel</td><td>Interface, browser proving worker, public read API</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="prose" style="margin-top:18px;max-width:64ch">Arkiv is the index, not the store: attributes carry what you query on, the bytes stay on Swarm. Arkiv is also not a confidentiality layer, so nothing identifying goes in an attribute — only commitments and hashes.</p>
+    </div></section>
+  </div>
+
+  <div id="doc-security" style="scroll-margin-top:110px">
+    <section><div class="wrap narrow">
+      <h2 style="margin-bottom:6px">What stays public</h2><p class="lede">unavoidable, and stated rather than implied</p>
+      <div class="panel">
+        <div class="row"><span class="k">Wallet addresses</span><span class="v">public on Fuji</span></div>
+        <div class="row"><span class="k">Payments and amounts</span><span class="v">public on Fuji</span></div>
+        <div class="row"><span class="k">Task scope</span><span class="v">public by design</span></div>
+        <div class="row"><span class="k">Listing attributes</span><span class="v">public and queryable on Arkiv</span></div>
+        <div class="row"><span class="k">That a proof verified</span><span class="v">public — the credential is not</span></div>
+      </div>
+      <h2 style="margin:34px 0 6px">What we do not claim</h2><p class="lede">the part most projects leave out</p>
+      <p class="prose"><b>Not untraceable.</b> Reusing one wallet across tasks links those tasks regardless of the proof. Use a fresh payout address per assignment if it matters.</p>
+      <p class="prose"><b>Not one human, one credential.</b> Multiple credentials under different secrets evade any such rule unless issuance handles uniqueness.</p>
+      <p class="prose"><b>Not a quality guarantee.</b> A proof says a collective approved someone in a class. It says nothing about whether this review is any good.</p>
+      <p class="prose"><b>Not collusion-proof.</b> A malicious collective can isolate a person with unique classes, tailored snapshots or selective revocation.</p>
+    </div></section>
+  </div>
+
+  <div id="doc-evidence" style="scroll-margin-top:110px">
+    <section><div class="wrap narrow">
+      <h2 style="margin-bottom:6px">Verified</h2><p class="lede">has an artifact behind it</p>
+      <div class="panel">
+        <div class="row"><span class="k">Fuji contracts</span><span class="v" style="color:var(--ice)">deployed and source-verified</span></div>
+        <div class="row"><span class="k">Public funding and listings</span><span class="v" style="color:var(--ice)">real transactions</span></div>
+        <div class="row"><span class="k">Swarm round trips</span><span class="v" style="color:var(--ice)">encrypted upload and retrieval</span></div>
+        <div class="row"><span class="k">Browser proofs</span><span class="v" style="color:var(--ice)">accepted by the deployed verifier</span></div>
+        <div class="row"><span class="k">Full paid lifecycle</span><span class="v" style="color:var(--ice)">passes locally on Anvil and Bee</span></div>
+      </div>
+      <h2 style="margin:34px 0 6px">Not signed off</h2><p class="lede">stated plainly rather than omitted</p>
+      <div class="panel">
+        <div class="row"><span class="k">Public acceptance → delivery → payment</span><span class="v" style="color:var(--signal)">not yet end to end</span></div>
+        <div class="row"><span class="k">Arkiv mission recordings</span><span class="v" style="color:var(--signal)">not yet recorded</span></div>
+        <div class="row"><span class="k">Contracts</span><span class="v" style="color:var(--signal)">not audited</span></div>
+        <div class="row"><span class="k">External issuer partnerships</span><span class="v" style="color:var(--signal)">unvalidated</span></div>
+      </div>
+    </div></section>
+  </div>
+
+  <div id="doc-deployments" style="scroll-margin-top:110px">
+    <section><div class="wrap">
+      <h2 style="margin-bottom:6px">Deployments</h2><p class="lede">Avalanche Fuji C-Chain · chain 43113</p>
+      <div class="panel" style="padding:0;overflow-x:auto">
+        <table>
+          <thead><tr><th>Contract</th><th>Address</th></tr></thead>
+          <tbody>
+            <tr><td>Qualification escrow</td><td class="mono">0xb431e570d506168711cc1f9f91e325b3114c62af</td></tr>
+            <tr><td>Groth16 verifier</td><td class="mono">0x9c1293e7e499d56fdc52186e7624dcfa04dfcbd1</td></tr>
+            <tr><td>Document-key registry</td><td class="mono">0x181db4e48a0e76fdc50101085ac3b831464792c1</td></tr>
+            <tr><td>Payment token, test USDC</td><td class="mono">0x5425890298aed601595a70AB815c96711a31Bc65</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="prose" style="margin-top:18px">Testnet only. No mainnet deployment, no custom L1, no real user funds.</p>
+    </div></section>
+  </div>
+
+  <div id="doc-bounties" style="scroll-margin-top:110px">
+    <section><div class="wrap">
+      <h2 style="margin-bottom:6px">Bounty targets</h2><p class="lede">targets, not claims that eligibility or awards are confirmed</p>
+      <div class="grid g3">
+        <div class="card"><div class="top"><span>Arkiv</span><span class="chip warm">$2,500</span></div><h3>Query depth and expiry</h3>
+          <p class="prose" style="font-size:13.5px">Listings as typed entities with compound filters. Claiming writes a short lease that lapses if the reviewer walks away, so absence is the signal and nothing deletes anything.</p></div>
+        <div class="card"><div class="top"><span>Swarm</span><span class="chip warm">$1,000</span></div><h3>Encrypted reports</h3>
+          <p class="prose" style="font-size:13.5px">Real uploads and retrievals of padded ciphertext, wrapped per recipient. No origin server means nobody can withhold a delivered report.</p></div>
+        <div class="card"><div class="top"><span>Team1</span><span class="chip warm">$1,000</span></div><h3>Rules to settlement</h3>
+          <p class="prose" style="font-size:13.5px">An eligibility policy enforced onchain gating a payment: proof-bound assignment, deadline, release or refund. One track only.</p></div>
+      </div>
+    </div></section>
+  </div>
+
+  <div id="doc-quickstart" style="scroll-margin-top:110px">
+    <section style="border-bottom:0"><div class="wrap narrow">
+      <h2 style="margin-bottom:6px">Quickstart</h2><p class="lede">requires Node 24.12+</p>
+      <div class="term">
+        <div>$ git clone --branch review-pass/product \</div>
+        <div>&nbsp;&nbsp;https://github.com/MihRazvan/eth-rome-2026.git</div>
+        <div>$ cd eth-rome-2026</div>
+        <div>$ npm ci</div>
+        <div>$ npx vite experiments/qualification/pilot/web \</div>
+        <div>&nbsp;&nbsp;--host 127.0.0.1 --port 18904 --strictPort</div>
+        <div class="o">→ http://127.0.0.1:18904/</div>
+      </div>
+      <p class="prose" style="margin-top:18px">The live workspace needs a configured backend: two wallet roles, test funds, registered browser report keys and an issuer-approved credential. Storage needs no Swarm account of your own.</p>
+    </div></section>
+  </div>
+</div>
+
+<!-- ===================== PRIVACY ===================== -->
+<div data-view="privacy" class="hide">
+  <section><div class="wrap narrow">
+    <h1 class="d2" style="margin-bottom:16px">We collect nothing</h1>
+    <p class="prose" style="font-size:16.5px;color:var(--bone)">This is the whole policy. It is short because there is almost nothing to describe.</p>
+    <p class="prose">Deaddrop is a static page plus a set of contracts. No accounts, no database, no login, no email capture, no advertising, nobody to sell anything to. We did not build the plumbing that would let us watch you, which is a stronger guarantee than promising not to look.</p>
+  </div></section>
+  <section><div class="wrap narrow">
+    <h2 style="margin-bottom:6px">What we collect</h2><p class="lede">the complete list</p>
+    <div class="nothing">
+      <div>Your name</div><div>nothing</div>
+      <div>Your email address</div><div>nothing</div>
+      <div>Your IP address, logged by us</div><div>nothing</div>
+      <div>Analytics, page views, session recordings</div><div>nothing</div>
+      <div>Cookies</div><div>nothing</div>
+      <div>Device fingerprints</div><div>nothing</div>
+      <div>Advertising identifiers</div><div>nothing</div>
+      <div>The contents of your reports</div><div>nothing</div>
+      <div>Your credential or issuer history</div><div>nothing</div>
+      <div>Anything sold or shared</div><div>nothing</div>
+    </div>
+  </div></section>
+  <section style="border-bottom:0"><div class="wrap narrow">
+    <h2 style="margin-bottom:6px">What stays on your device</h2><p class="lede">local only, never transmitted</p>
+    <div class="panel">
+      <div class="row"><span class="k">Notice dismissed</span><span class="v">one flag, so the banner stops reappearing</span></div>
+      <div class="row"><span class="k">Wallet address</span><span class="v">only if you connect</span></div>
+      <div class="row"><span class="k">Credential and device keys</span><span class="v">non-extractable, never leave the browser</span></div>
+    </div>
+    <p class="prose" style="margin-top:16px"><b>Reusing one wallet across tasks links those tasks</b>, regardless of the proof. We keep saying this in the interface rather than burying it here. We do not claim you are untraceable.</p>
+  </div></section>
+</div>
+
+<!-- ===================== TERMS ===================== -->
+<div data-view="terms" class="hide">
+  <section><div class="wrap narrow">
+    <h1 class="d2" style="margin-bottom:16px">Your keys, your call</h1>
+    <p class="prose" style="font-size:16.5px;color:var(--bone)">Short version: unaudited testnet software, we hold none of your funds, and every decision here is yours.</p>
+  </div></section>
+  <section><div class="wrap narrow">
+    <h2 style="margin-bottom:6px">No custody</h2>
+    <p class="prose">Test assets move between your wallet and a contract you interact with directly. We cannot freeze, reverse, recover or redirect a transaction, and neither can anyone else operating this interface. If you send funds to the wrong place or approve something you did not understand, those assets are gone.</p>
+    <h2 style="margin:34px 0 6px">You are responsible for</h2>
+    <div class="panel">
+      <div class="row"><span class="k">Your wallet and seed phrase</span><span class="v">we never see either</span></div>
+      <div class="row"><span class="k">Your device keys</span><span class="v">clearing site data destroys them</span></div>
+      <div class="row"><span class="k">What you publish as a scope</span><span class="v">public and permanent</span></div>
+      <div class="row"><span class="k">Every transaction you sign</span><span class="v">final on confirmation</span></div>
+      <div class="row"><span class="k">Whether the work was any good</span><span class="v">a proof is not a quality guarantee</span></div>
+      <div class="row"><span class="k">Your own tax and legal position</span><span class="v">entirely yours</span></div>
+    </div>
+  </div></section>
+  <section style="border-bottom:0"><div class="wrap narrow">
+    <h2 style="margin-bottom:6px">No warranty, no liability</h2>
+    <p class="prose">Provided as-is and as-available, without warranty of any kind, express or implied, including merchantability, fitness for a particular purpose and non-infringement.</p>
+    <p class="prose">To the fullest extent the law allows, the contributors are not liable for loss of funds, data or keys, missed deadlines, disclosure of information you chose to publish, failures of Avalanche, Arkiv or Swarm, or any indirect or consequential damages.</p>
+    <h2 style="margin:34px 0 6px">Acceptable use and disputes</h2>
+    <p class="prose">Do not use Deaddrop to commission or deliver anything illegal, to launder value, to evade sanctions, or to test systems you are not authorised to test. Publishing a scope here is not that authorisation.</p>
+    <p class="prose">Agreements about a review are between client and reviewer. We are not a party, do not arbitrate, and will not take a side.</p>
+  </div></section>
+</div>
+
+<!-- ===================== 404 ===================== -->
+<div data-view="404" class="hide">
+  <section style="border-bottom:0"><div class="wrap narrow">
+    <h1 class="d2" style="margin-bottom:14px">404 — expired</h1>
+    <p class="prose">Nothing was deleted to produce this page. In Deaddrop, absence is a normal state — an entity reaches its expiry and stops being returned by queries, with no cleanup job involved.</p>
+    <p style="margin-top:22px"><button type="button" class="btn" data-go="tasks"><span>Back to the app</span></button></p>
+  </div></section>
+</div>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="cols">
+      <div><p style="color:var(--bone);margin-bottom:8px">Deaddrop</p><p>Fuji testnet · test USDC · not audited</p></div>
+      <nav aria-label="Footer">
+        <button type="button" data-go="home">Home</button>
+        <button type="button" data-go="tasks">App</button>
+        <button type="button" data-go="docs">Docs</button>
+        <button type="button" data-go="privacy">Privacy</button>
+        <button type="button" data-go="terms">Terms</button>
+      </nav>
+    </div>
+    <p>© <span id="year">2026</span> Deaddrop. No analytics, no cookies, no accounts.</p>
+  </div>
+</footer>
+</div>
+
+<div id="cookie" role="region" aria-label="Privacy notice">
+  <p><b style="color:var(--bone)">We do not surveil you.</b> No cookies, no analytics, no third-party scripts. The only thing kept in your browser is whether you dismissed this notice and, if you connect, your wallet address.</p>
+  <button class="btn sm quiet" id="ack"><span>I understand</span></button>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+var RM=matchMedia('(prefers-reduced-motion: reduce)').matches, mem={};
+var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return mem[k]||null}},
+           set:function(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}};
+if(location.protocol==='http:'&&location.hostname.indexOf('.')>-1)
+  location.replace('https:'+location.href.substring(location.protocol.length));
+
+/* ================= THERMAL FIELD ================= */
+var cv=document.getElementById('field');
+var gl=cv.getContext('webgl',{antialias:false,alpha:false})||cv.getContext('experimental-webgl',{antialias:false,alpha:false});
+var FRAG=[
+'precision highp float;',
+'uniform float u_t; uniform vec2 u_r; uniform float u_amp;',
+'uniform vec3 w0,w1,w2,w3,w4,w5,w6,w7;',
+'float hs(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+'float nz(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);',
+' return mix(mix(hs(i),hs(i+vec2(1.0,0.0)),f.x),mix(hs(i+vec2(0.0,1.0)),hs(i+vec2(1.0,1.0)),f.x),f.y);}',
+'float fbm(vec2 p){float s=0.0,a=0.5;for(int i=0;i<5;i++){s+=a*nz(p);p*=2.03;a*=0.5;}return s;}',
+'vec3 ramp(float x){ x=clamp(x,0.0,1.0);',
+' vec3 c=mix(vec3(0.02,0.0,0.03), vec3(0.35,0.02,0.14), smoothstep(0.0,0.32,x));',
+' c=mix(c, vec3(0.85,0.16,0.05), smoothstep(0.28,0.58,x));',
+' c=mix(c, vec3(1.0,0.60,0.10), smoothstep(0.55,0.80,x));',
+' c=mix(c, vec3(1.0,0.96,0.86), smoothstep(0.78,1.0,x));',
+' return c;}',
+'vec3 chillramp(float x){ x=clamp(x,0.0,1.0);',
+' vec3 c=mix(vec3(0.008,0.020,0.038), vec3(0.043,0.153,0.290), smoothstep(0.0,0.40,x));',
+' c=mix(c, vec3(0.118,0.435,0.851), smoothstep(0.36,0.70,x));',
+' return mix(c, vec3(0.600,0.878,1.000), smoothstep(0.70,1.0,x));}',
+'float well(vec3 w, vec2 uv){',
+' if(w.z<=0.001) return 0.0;',
+' float d=length(uv-w.xy);',
+' float core=w.z*exp(-d*d*34.0);',
+' float ring=w.z*exp(-pow((d-0.055-0.035*w.z)*15.0,2.0))*0.42;',
+' return core+ring;}',
+'void main(){',
+' vec2 uv=(gl_FragCoord.xy-0.5*u_r)/u_r.y;',
+' float t=u_t*0.11;',
+' float v=fbm(uv*1.7+vec2(t,t*0.6));',
+' v+=0.55*smoothstep(0.55,0.0,length(uv-vec2(sin(t*1.7)*0.5,-0.12)));',
+' v+=0.40*smoothstep(0.42,0.0,length(uv-vec2(-0.55+cos(t*1.1)*0.2,0.16)));',
+' v+=0.30*smoothstep(0.34,0.0,length(uv-vec2(0.62,0.26)));',
+' v*=0.92+0.16*fbm(uv*9.0-t*5.0);',
+' v*=u_amp;',
+' float chill=0.0;',
+' chill+=well(w0,uv); chill+=well(w1,uv); chill+=well(w2,uv); chill+=well(w3,uv);',
+' chill+=well(w4,uv); chill+=well(w5,uv); chill+=well(w6,uv); chill+=well(w7,uv);',
+' chill=clamp(chill,0.0,1.3)*u_amp;',
+' v=max(v-chill*1.7,0.0);',
+' float sweep=smoothstep(0.06,0.0,abs(fract(uv.y*0.35-u_t*0.06)-0.5))*u_amp;',
+' vec3 col=ramp(v)+sweep*vec3(0.16,0.07,0.02);',
+' col=mix(col, chillramp(chill*0.95+v*0.2), clamp(chill*1.3,0.0,1.0));',
+' col*=0.93+0.07*hs(gl_FragCoord.xy+u_t);',
+' gl_FragColor=vec4(col,1.0);',
+'}'].join('\n');
+
+var uT,uR,uA,uW=[],ok=false;
+if(gl){
+  var mkS=function(t,s){var h=gl.createShader(t);gl.shaderSource(h,s);gl.compileShader(h);
+    if(!gl.getShaderParameter(h,gl.COMPILE_STATUS)){console.error('shader:',gl.getShaderInfoLog(h));return null}return h};
+  var vsh=mkS(gl.VERTEX_SHADER,'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}'),
+      fsh=mkS(gl.FRAGMENT_SHADER,FRAG);
+  if(vsh&&fsh){
+    var pr=gl.createProgram();gl.attachShader(pr,vsh);gl.attachShader(pr,fsh);gl.linkProgram(pr);
+    if(gl.getProgramParameter(pr,gl.LINK_STATUS)){
+      gl.useProgram(pr);
+      var bf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bf);
+      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+      var lp=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(lp);gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
+      uT=gl.getUniformLocation(pr,'u_t');uR=gl.getUniformLocation(pr,'u_r');uA=gl.getUniformLocation(pr,'u_amp');
+      for(var i=0;i<8;i++)uW.push(gl.getUniformLocation(pr,'w'+i));
+      ok=true;
+    } else console.error('link:',gl.getProgramInfoLog(pr));
+  }
+}
+if(!ok) cv.style.background='linear-gradient(150deg,#2E0A10,#8A1C12 42%,#FF5A1F 78%,#FFB061)';
+
+var wells=[],seq=0,t0=performance.now(),amp=1,ampTarget=1;
+var pins=document.getElementById('pins'),hud=document.getElementById('hud'),
+    tempEl=document.getElementById('temp'),cntEl=document.getElementById('count'),logEl=document.getElementById('log');
+
+function strength(w,now){var age=(now-w.born)/1000;
+  if(age<0.5)return age/0.5;
+  var left=w.ttl-age; if(left<=0)return -1;
+  if(left<1.8)return Math.max(0,left/1.8); return 1}
+
+function frame(now){
+  if(ok){
+    amp+=(ampTarget-amp)*0.055;
+    var d=Math.min(window.devicePixelRatio||1,1.5);
+    var w=Math.max(1,cv.clientWidth*d|0),h=Math.max(1,cv.clientHeight*d|0);
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;gl.viewport(0,0,w,h)}
+    var total=0;
+    for(var i=wells.length-1;i>=0;i--){
+      var s=strength(wells[i],now);
+      if(s<0){if(wells[i].el)wells[i].el.remove();wells.splice(i,1);
+        if(logEl)logEl.textContent='a cache expired on its own — no delete call, no cleanup job';continue}
+      wells[i].s=s;total+=s;
+    }
+    for(var j=0;j<8;j++){var q=wells[j];
+      if(q)gl.uniform3f(uW[j],q.x,q.y,q.s); else gl.uniform3f(uW[j],0,0,0)}
+    gl.uniform1f(uT,RM?5.2:(now-t0)/1000);
+    gl.uniform2f(uR,cv.width,cv.height);
+    gl.uniform1f(uA,amp);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    if(CURRENT==='home'){
+      var chilled=Math.min(1,total/2.0);
+      if(tempEl)tempEl.textContent='field '+(34.2-chilled*27.9).toFixed(1)+'\u00B0C';
+      if(cntEl)cntEl.textContent=wells.length+' cache'+(wells.length===1?'':'s')+' cooling';
+      if(hud)hud.classList.toggle('chilled',chilled>0.28);
+      var bm=document.getElementById('bigmark');
+      if(bm)bm.classList.toggle('chilled',chilled>0.28);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+function drop(cx,cy){
+  if(wells.length>=8){if(logEl)logEl.textContent='sensor saturated — let a cache expire first';return}
+  var W=window.innerWidth,H=window.innerHeight;
+  var ttl=9+Math.random()*7,id='drop-'+String(++seq).padStart(3,'0');
+  var el=document.createElement('div');el.className='pin';
+  el.style.left=cx+'px';el.style.top=cy+'px';
+  el.innerHTML='<i></i><i></i><b></b><u>'+id+' \u00B7 '+Math.round(ttl)+'s</u>';
+  pins.appendChild(el);
+  var w={x:(cx-W/2)/H,y:(H/2-cy)/H,born:performance.now(),ttl:ttl,s:0,el:el};
+  wells.push(w);
+  if(logEl)logEl.textContent=id+' left \u00B7 signature cooling \u00B7 lapses in '+Math.round(ttl)+'s';
+  var iv=setInterval(function(){
+    var left=w.ttl-(performance.now()-w.born)/1000,u=el.querySelector('u');
+    if(left<=0||!u){clearInterval(iv);return}
+    u.textContent=id+' \u00B7 '+Math.ceil(left)+'s';
+  },250);
+}
+document.getElementById('hero').addEventListener('pointerdown',function(e){
+  if(e.target.closest('button'))return;
+  drop(e.clientX,e.clientY);
+});
+
+/* ================= toast ================= */
+var tEl=document.getElementById('toast'),tT;
+function toast(m){tEl.textContent=m;tEl.classList.add('show');clearTimeout(tT);
+  tT=setTimeout(function(){tEl.classList.remove('show')},3200)}
+
+/* ================= app data ================= */
+var WHO={client:'acme-protocol.eth',reviewer:'you are Deaddrop #7',collective:'Sigil Collective'};
+var ROLEHINT={
+ client:'You are the client. You see work arrive, never who did it.',
+ reviewer:'You are the reviewer. You hold the credential; nobody else stores it.',
+ collective:'You are the collective. You vouch for people, and cannot read their reviews.'};
+var DATA={
+client:{
+ tasks:{h:'Reviews you commissioned',s:'You see the work arrive. You never see who did it.',cta:'Fund a review',route:'post',rows:[
+  {a:'RT-0418',b:'Fee-switch hook change',c:'1,800 USDC · 4 days',t:'Open',x:'3 qualified nearby',go:'task',
+   m:'Listed on Arkiv, expires with the deadline. The first valid proof from a collective you named takes it.'},
+  {a:'RT-0411',b:'Oracle failover path',c:'2,400 USDC · 2 days',t:'In progress',x:'Deaddrop #7',go:'task',
+   m:'They proved a valid, unrevoked credential. Their identity and past reviews stay hidden from you.'},
+  {a:'RT-0402',b:'Withdrawal queue accounting',c:'3,000 USDC · today',t:'Sealed',x:'cold · ready to open',go:'open',
+   m:'Encrypted to your key and stored on Swarm. Opening decrypts it here in your browser.'}]},
+ people:{h:'Collectives you trust',s:'You pick whose judgement counts. Their reviewers can claim your tasks.',cta:'Fund a review',route:'post',rows:[
+  {a:'SIGIL',b:'Sigil Collective',c:'Solidity 1–3 · 24 credentialed',t:'Accepted',x:'2 tasks',
+   m:'Publishes signed status snapshots to Swarm, so the escrow checks revocations against a public record rather than asking them.'},
+  {a:'ASSAY',b:'Assay Guild',c:'Protocol economics · 11',t:'Accepted',x:'1 task',
+   m:'Renews every 12 months. A renewal does not change the credential a reviewer already holds.'},
+  {a:'LUMEN',b:'Lumen Review Co-op',c:'Cryptography · 7',t:'Not used',x:'never accepted',
+   m:'Adding a collective widens who can claim future tasks. Tasks already posted are unaffected.'}]},
+ activity:[
+  {a:'09:41',b:'Proof verified, task claimed',c:'RT-0411',t:'Onchain'},
+  {a:'08:12',b:'Review sealed and stored',c:'RT-0402',t:'Swarm'},
+  {a:'2 Sep',b:'Listing expired, escrow refunded',c:'RT-0397',t:'Onchain'}]},
+reviewer:{
+ tasks:{h:'Tasks you qualify for',s:'Claim with a proof. The client learns a Sigil reviewer took it, nothing more.',cta:'Cut a proof',route:'proof',rows:[
+  {a:'RT-0418',b:'Fee-switch hook change',c:'1,800 USDC · 4 days',t:'Open',x:'acme-protocol.eth',go:'task',
+   m:'Claiming spends a live proof. If you do not have one, cut it first — it lasts 24 hours.'},
+  {a:'RT-0411',b:'Oracle failover path',c:'2,400 USDC · 2 days',t:'Yours',x:'draft saved',go:'deliver',
+   m:'Sealed in this browser before it leaves. Revoke you tomorrow and this still gets paid.'},
+  {a:'RT-0389',b:'Vault share rounding',c:'1,200 USDC · closed',t:'Paid',x:'6 Sep',
+   m:'Paid to your wallet. The payment is public, the review is not.'}]},
+ people:{h:'Your credential',s:'Assessed once, held by you. Deaddrop never stores it.',cta:'Cut a proof',route:'proof',rows:[
+  {a:'SIGIL',b:'Solidity, level 3',c:'Sigil Collective · since March',t:'Valid',x:'checked 2 min ago',go:'proof',
+   m:'A proof shows it is valid and unrevoked, expires in 24 hours, and cannot be linked to your other proofs.'},
+  {a:'ASSAY',b:'Protocol economics',c:'Assay Guild · lapsed February',t:'Expired',x:'renew to use',
+   m:'Expired credentials cannot claim. Assay can renew without a fresh assessment.'},
+  {a:'KEYS',b:'Device keys',c:'key-7f2a…19c4 · active',t:'Valid',x:'4 reports openable',go:'keys',
+   m:'Generated here, non-extractable. Another device cannot recover them from a wallet signature.'}]},
+ activity:[
+  {a:'09:41',b:'Proof cut and spent',c:'RT-0411',t:'Local'},
+  {a:'6 Sep',b:'Paid',c:'RT-0389 · 1,200 USDC',t:'Onchain'}]},
+collective:{
+ tasks:{h:'Work riding on your name',s:'Tasks your holders claimed. You see the task, never the review.',cta:'Assess someone',route:'assess',rows:[
+  {a:'RT-0411',b:'Oracle failover path',c:'acme-protocol.eth · 2,400',t:'In progress',x:'a holder',
+   m:'You can see that a holder claimed it. You cannot see which one, and you cannot read the review.'},
+  {a:'RT-0356',b:'Bridge message ordering',c:'lumen-labs.eth · 4,100',t:'Disputed',x:'needs a ruling',go:'dispute',
+   m:'A dispute is the one time you weigh in on quality. Your ruling releases, refunds or splits the escrow.'}]},
+ people:{h:'Your roster',s:'Everyone you assessed. Clients check a public record, not you.',cta:'Assess someone',route:'assess',rows:[
+  {a:'#2',b:'Solidity, level 3',c:'since March · 14 reviews',t:'Valid',x:'nothing in flight',
+   m:'Revoking blocks new claims from the moment it lands. Nothing already submitted is affected.'},
+  {a:'#4',b:'Protocol economics',c:'since January · 9 reviews',t:'Valid',x:'1 in flight',
+   m:'This one has a review awaiting approval. Revoking blocks their next claim; that delivery still pays.'},
+  {a:'#9',b:'Solidity, level 2',c:'since November · 21 reviews',t:'Expiring',x:'12 days left',
+   m:'Renewing extends the same credential. No reassessment needed.'}]},
+ activity:[
+  {a:'11:02',b:'Snapshot published',c:'24 valid · 1 revoked',t:'Swarm'},
+  {a:'Yst',b:'Credential issued',c:'#11 · Solidity, level 2',t:'Onchain'}]}};
+var TAG={'In progress':'hot','Yours':'hot','Sealed':'ice','Paid':'ice','Disputed':'hot','Expiring':'warm',
+ 'Expired':'dim','Not used':'dim','Swarm':'dim','Local':'dim','Onchain':'cool','Open':'warm','Valid':'ice','Accepted':'ice'};
+var role=store.get('dd.role')||'client', openRow=null;
+function appHost(n){return document.getElementById(n==='tasks'?'appBody':'appBody2')}
+
+function renderApp(sec,host){
+  var d=DATA[role][sec];
+  var html='<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:16px">'
+   +'<div><h1 class="d2">'+d.h+'</h1><p class="prose" style="font-size:13.5px;margin-top:8px;max-width:56ch">'+d.s+'</p></div>'
+   +'<button type="button" class="btn" data-go="'+d.route+'"><span>'+d.cta+'</span></button></div>';
+  html+=d.rows.map(function(r,i){
+    return '<div class="lr" data-i="'+i+'"><span class="id">'+r.a+'</span>'
+     +'<span class="mid"><b>'+r.b+'</b><span>'+r.c+'</span></span>'
+     +'<span class="chip '+(TAG[r.t]||'dim')+'">'+r.t+'</span>'
+     +'<span class="meta" style="flex:0 0 auto">'+r.x+'</span>'
+     +(r.go?'<button type="button" class="btn sm quiet" data-go="'+r.go+'"><span>Open</span></button>':'')
+     +(openRow===i?'<span class="note">'+r.m+'</span>':'')+'</div>';
+  }).join('');
+  if(sec==='tasks'&&DATA[role].activity){
+    html+='<div style="margin-top:32px;padding-top:18px;border-top:1px solid var(--line)">'
+      +'<p class="meta" style="margin-bottom:10px">recent activity</p>'
+      +DATA[role].activity.map(function(r){
+        return '<div class="row" style="border-bottom:1px dotted var(--line2)">'
+         +'<span class="k" style="flex:0 0 62px">'+r.a+'</span>'
+         +'<span style="flex:1 1 180px">'+r.b+'</span>'
+         +'<span class="meta">'+r.c+'</span>'
+         +'<span class="chip '+(TAG[r.t]||'dim')+'">'+r.t+'</span></div>';
+      }).join('')+'</div>';
+  }
+  host.innerHTML=html;
+  host.querySelectorAll('.lr').forEach(function(el){
+    el.addEventListener('click',function(e){
+      if(e.target.closest('[data-go]'))return;
+      var i=+el.dataset.i; openRow=(openRow===i?null:i); renderApp(sec,host);
+    });
+  });
+}
+function paintRoles(){
+  document.querySelectorAll('.pill').forEach(function(p){p.classList.toggle('on',p.dataset.r===role)});
+  document.getElementById('rolehint').textContent=WHO[role]+' — '+ROLEHINT[role];
+}
+document.querySelectorAll('.pill').forEach(function(p){
+  p.addEventListener('click',function(){
+    if(p.dataset.r===role)return;
+    role=p.dataset.r; store.set('dd.role',role); openRow=null; paintRoles();
+    if(APPSEC[CURRENT]) renderApp(CURRENT,appHost(CURRENT)); else go('tasks');
+    toast(ROLEHINT[role]);
+  });
+});
+
+/* ================= routing ================= */
+var APPSEC={tasks:1,people:1};
+var LABEL={home:'Home',tasks:'Tasks',people:'People',task:'the task'};
+var PARENT={post:'tasks',task:'tasks',proof:'people',deliver:'task',open:'tasks',
+ assess:'people',dispute:'tasks',keys:'people',docs:'home',privacy:'home',terms:'home','404':'home'};
+var ROUTES={home:1,tasks:1,people:1,post:1,task:1,proof:1,deliver:1,open:1,assess:1,
+ dispute:1,keys:1,docs:1,privacy:1,terms:1,'404':1};
+var views=document.querySelectorAll('[data-view]');
+var CURRENT='home';
+function go(name){
+  if(!ROUTES[name])name='404';
+  CURRENT=name;
+  var isApp=(name!=='home');
+  document.body.classList.toggle('app',isApp);
+  ampTarget = name==='home' ? 1 : (name==='404' ? 0.45 : 0.16);
+  if(name!=='home'){ pins.innerHTML=''; wells.length=0; }
+  views.forEach(function(v){v.classList.toggle('hide',v.dataset.view!==name)});
+  var cr=document.getElementById('crumb'), up=PARENT[name];
+  cr.classList.toggle('hide',!up);
+  if(up)cr.innerHTML='<button type="button" class="linkish" data-go="'+up+'"><span class="ar">\u2190</span> '+LABEL[up]+'</button>';
+  document.getElementById('appbar').classList.toggle('hide',name==='home');
+  document.getElementById('roleset').classList.toggle('hide',!APPSEC[name]);
+  document.getElementById('tabset').classList.toggle('hide',!APPSEC[name]);
+  document.getElementById('rolehint').classList.toggle('hide',!APPSEC[name]);
+  document.querySelectorAll('.tab[data-go]').forEach(function(a){a.classList.toggle('on',a.dataset.go===name)});
+  if(APPSEC[name]) renderApp(name,appHost(name));
+  document.title=(name==='home'?'Deaddrop — hire a qualified reviewer, keep their credential private'
+    :name.charAt(0).toUpperCase()+name.slice(1)+' · Deaddrop');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+document.addEventListener('click',function(e){
+  var dr=e.target.closest('[data-door]');
+  if(dr){e.preventDefault();e.stopPropagation();
+    role=dr.dataset.door;store.set('dd.role',role);openRow=null;paintRoles();
+    go(role==='collective'?'people':'tasks');toast(ROLEHINT[role]);return}
+  var t=e.target.closest('[data-go],[data-sec]');
+  if(!t)return;
+  e.preventDefault();e.stopPropagation();
+  if(t.dataset.sec&&!t.dataset.go){
+    var el=document.getElementById('doc-'+t.dataset.sec);
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+    document.querySelectorAll('#jump .tab').forEach(function(b){b.classList.toggle('on',b===t)});
+    return}
+  go(t.dataset.go);
+},true);
+
+/* ================= wallet ================= */
+var cbtn=document.getElementById('connect');
+function shortA(a){return a.slice(0,6)+'\u2026'+a.slice(-4)}
+function paintW(){var a=store.get('dd.addr');
+  cbtn.innerHTML='<span>'+(a?shortA(a):'Connect wallet')+'</span>';
+  cbtn.setAttribute('aria-label',a?'Wallet connected '+a:'Connect a wallet')}
+cbtn.addEventListener('click',function(){
+  if(store.get('dd.addr')){store.set('dd.addr','');paintW();toast('Disconnected. Nothing was kept.');return}
+  if(window.ethereum&&window.ethereum.request){
+    window.ethereum.request({method:'eth_requestAccounts'}).then(function(acc){
+      if(acc&&acc[0]){store.set('dd.addr',acc[0]);paintW();toast('Connected on Fuji. No account created.')}
+    }).catch(function(){toast('Connection refused. Nothing was sent.')});
+  } else {
+    var demo='0x';for(var i=0;i<40;i++)demo+='0123456789abcdef'[(Math.random()*16)|0];
+    store.set('dd.addr',demo);paintW();toast('No injected wallet — using a labelled demo address.');
+  }
+});
+paintW();
+
+/* ================= cookie ================= */
+var ck=document.getElementById('cookie');
+if(store.get('dd.notice')!=='seen')setTimeout(function(){ck.classList.add('show')},1400);
+document.getElementById('ack').addEventListener('click',function(){
+  store.set('dd.notice','seen');ck.classList.remove('show');toast('Nothing stored but that dismissal.')});
+
+/* ================= validation ================= */
+document.querySelectorAll('form[data-validate]').forEach(function(f){
+  f.setAttribute('novalidate','');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();var good=true,first=null;
+    f.querySelectorAll('[data-rule]').forEach(function(inp){
+      var fld=inp.closest('.field'),msg='',v=(inp.value||'').trim(),rule=inp.dataset.rule;
+      if(rule.indexOf('required')>-1&&!v)msg='This is required.';
+      else if(rule.indexOf('addr')>-1&&!/^0x[0-9a-fA-F]/.test(v)&&!/\.eth$/.test(v))msg='That is not a wallet address or an ENS name.';
+      else if(rule.indexOf('min')>-1&&v.length<12)msg='Give at least 12 characters of detail.';
+      else if(rule.indexOf('amount')>-1){var n=parseFloat(v.replace(/[^0-9.]/g,''));
+        if(isNaN(n)||n<=0)msg='Enter an amount above zero.';else if(n>1000000)msg='Test USDC only — under 1,000,000.'}
+      else if(rule.indexOf('days')>-1){var dd=parseInt(v,10);if(isNaN(dd)||dd<1||dd>60)msg='Between 1 and 60 days.'}
+      if(fld){fld.classList.toggle('bad',!!msg);var er=fld.querySelector('.err');if(er)er.textContent=msg}
+      inp.setAttribute('aria-invalid',msg?'true':'false');
+      if(msg&&!first)first=inp; if(msg)good=false;
+    });
+    var hp=f.querySelector('[data-hp]');
+    if(hp&&hp.value){toast('Rejected.');return}
+    if(!good){if(first)first.focus();toast('Check the highlighted fields.');return}
+    toast(f.dataset.done||'Submitted.');
+    f.dispatchEvent(new CustomEvent('dd:valid'));
+  });
+  f.querySelectorAll('[data-rule]').forEach(function(inp){
+    inp.addEventListener('input',function(){var fld=inp.closest('.field');if(fld)fld.classList.remove('bad')})});
+});
+
+/* ================= post ================= */
+var COLL=[{n:'Sigil Collective',d:'Solidity · 24 credentialed',lv:{1:24,2:19,3:11},on:true},
+ {n:'Assay Guild',d:'Protocol economics · 11',lv:{1:11,2:8,3:4},on:false},
+ {n:'Lumen Review Co-op',d:'Cryptography · 7',lv:{1:7,2:5,3:2},on:false}];
+function drawColls(){
+  var host=document.getElementById('colls'); if(!host)return;
+  host.innerHTML=COLL.map(function(c,i){return '<button type="button" class="opt'+(c.on?' on':'')+'" data-c="'+i+'">'
+   +'<span class="bx"></span><span><b style="font-size:12.5px;display:block">'+c.n+'</b><span class="meta">'+c.d+'</span></span></button>'}).join('');
+  host.querySelectorAll('[data-c]').forEach(function(b){
+    b.addEventListener('click',function(){COLL[+b.dataset.c].on=!COLL[+b.dataset.c].on;
+      document.getElementById('collErr').textContent='';drawColls();previewPost()})});
+}
+function previewPost(){
+  var t=document.getElementById('ptitle'); if(!t)return;
+  var sel=COLL.filter(function(c){return c.on}),lv=document.getElementById('plevel').value;
+  var n=sel.reduce(function(a,c){return a+c.lv[lv]},0);
+  document.getElementById('pvTitle').textContent=t.value.trim()||'Untitled task';
+  var sc=document.getElementById('pscope').value.trim();
+  document.getElementById('pvScope').textContent=sc?sc.slice(0,92)+(sc.length>92?'…':''):'no scope yet';
+  document.getElementById('pvWho').textContent=sel.length?n+' qualified nearby':'nobody can claim this';
+  var rw=parseFloat(document.getElementById('preward').value.replace(/[^0-9.]/g,''));
+  document.getElementById('pvReward').textContent=(isNaN(rw)?'—':rw.toLocaleString())+' USDC';
+}
+['ptitle','pscope','preward','pdays','plevel'].forEach(function(id){
+  var el=document.getElementById(id); if(el)el.addEventListener('input',previewPost)});
+var postForm=document.getElementById('postForm');
+if(postForm)postForm.addEventListener('dd:valid',function(){
+  if(!COLL.some(function(c){return c.on})){document.getElementById('collErr').textContent='Pick at least one collective.';return}
+  toast('RT-0431 live. Escrow holds the reward until you approve or the deadline passes.');
+  setTimeout(function(){go('tasks')},700);
+});
+drawColls();previewPost();
+
+/* ================= proof ================= */
+var haveProof=false,proofTimer=null,proofExp=0,proofBox=document.getElementById('proofBox');
+function tickProof(){
+  if(!haveProof||!proofBox)return;
+  var s=Math.max(0,Math.floor((proofExp-Date.now())/1000));
+  var h=String(Math.floor(s/3600)).padStart(2,'0'),m=String(Math.floor(s/60)%60).padStart(2,'0'),ss=String(s%60).padStart(2,'0');
+  proofBox.innerHTML='<h3 style="margin-bottom:10px;color:var(--ice)">Live proof</h3>'
+   +'<div class="row"><span class="k">Handle</span><span class="v fig">0x9f…3b</span></div>'
+   +'<div class="row"><span class="k">Expires in</span><span class="v fig">'+h+':'+m+':'+ss+'</span></div>'
+   +'<div class="row"><span class="k">Uses left</span><span class="v">1 — spent on claim</span></div>'
+   +'<p style="margin-top:14px"><button type="button" class="btn sm ghost" data-go="task"><span>Claim a task with it</span></button></p>';
+}
+(function(){
+  var btn=document.getElementById('proveBtn'); if(!btn)return;
+  var tr=document.getElementById('trace'),fill=document.getElementById('mfill');
+  var L=[['loading credential from this device',380],
+   ['fetching the collective snapshot — whole set, not your index',680],
+   ['rebuilding the authentication path locally',580],
+   ['binding to task 0x7f31…a094 and wallet',420],
+   ['deriving task-scoped nullifier',360],
+   ['proving — groth16 / bn254 in this tab',1300],
+   ['proof written · 812 bytes',280]];
+  btn.addEventListener('click',function(){
+    if(btn.disabled)return;
+    btn.disabled=true;tr.innerHTML='';fill.style.width='0%';fill.style.background='var(--ember)';
+    var i=0;
+    (function next(){
+      if(i>=L.length){
+        var d=document.createElement('div');
+        d.innerHTML='<b>qualified: true</b> · credential withheld · unrevoked · bound';
+        tr.appendChild(d);fill.style.background='var(--ice)';
+        btn.disabled=false;btn.innerHTML='<span>Cut another</span>';
+        haveProof=true;proofExp=Date.now()+864e5;tickProof();
+        clearInterval(proofTimer);proofTimer=setInterval(tickProof,1000);
+        toast('Proof cut locally. Nothing was uploaded.');
+        return;
+      }
+      var d=document.createElement('div');d.textContent='· '+L[i][0];
+      tr.appendChild(d);fill.style.width=(((i+1)/L.length)*100)+'%';
+      setTimeout(function(){i++;next()},L[i][1]);
+    })();
+  });
+})();
+var claimBtn=document.getElementById('claimBtn');
+if(claimBtn)claimBtn.addEventListener('click',function(){
+  var msg=document.getElementById('claimMsg');
+  if(!haveProof){msg.textContent='No live proof. Cut one first — it takes about twenty seconds.';toast('Cut a proof first.');return}
+  haveProof=false;clearInterval(proofTimer);
+  msg.textContent='Claimed as Deaddrop #7. Your proof is spent; the next task needs a fresh one.';
+  toast('Task claimed. Proof spent.');
+  setTimeout(function(){go('deliver')},900);
+});
+
+/* ================= deliver ================= */
+var sealForm=document.getElementById('sealForm');
+if(sealForm)sealForm.addEventListener('dd:valid',function(){
+  document.getElementById('receipt').classList.remove('hide');
+});
+
+/* ================= open ================= */
+(function(){
+  var track=document.getElementById('track'); if(!track)return;
+  var grip=document.getElementById('grip'),cover=document.getElementById('cover'),
+      tfill=document.getElementById('tfill'),edge=document.getElementById('edge'),
+      st=document.getElementById('sealState'),hint=document.getElementById('trackHint');
+  var p=0,done=false,drag=false;
+  function set(v){
+    p=Math.max(0,Math.min(1,v));
+    var L=track.clientWidth-28;
+    grip.style.left=(14+L*p)+'px';tfill.style.width=(L*p)+'px';
+    cover.style.clipPath='polygon('+(p*100).toFixed(1)+'% 0,100% 0,100% 100%,'+(p*100).toFixed(1)+'% 100%)';
+    edge.style.left='calc('+(p*100).toFixed(1)+'% - 1px)';
+    edge.style.opacity=(p>0&&p<1)?1:0;
+    grip.setAttribute('aria-valuenow',Math.round(p*100));
+    if(p>0&&!done)st.textContent='opening…';
+    if(p>=1&&!done){done=true;st.textContent='opened '+new Date().toLocaleTimeString();
+      hint.textContent='opened';grip.style.background='var(--ember)';
+      toast('Decrypted locally. Retrieval left no account behind.')}
+  }
+  var at=function(e){var r=track.getBoundingClientRect();return (e.clientX-r.left-14)/(r.width-28)};
+  grip.addEventListener('pointerdown',function(e){if(done)return;drag=true;grip.setPointerCapture(e.pointerId)});
+  grip.addEventListener('pointermove',function(e){if(drag)set(at(e))});
+  grip.addEventListener('pointerup',function(){drag=false;if(!done&&p<1)set(0)});
+  grip.addEventListener('keydown',function(e){
+    if(done)return;
+    if(e.key==='ArrowRight'||e.key==='ArrowUp'){set(p+0.1);e.preventDefault()}
+    if(e.key==='ArrowLeft'||e.key==='ArrowDown'){set(p-0.1);e.preventDefault()}
+    if(e.key==='End'||e.key==='Enter'){set(1);e.preventDefault()}
+  });
+  track.addEventListener('pointerdown',function(e){if(done||e.target===grip)return;set(at(e))});
+  document.getElementById('autoOpen').addEventListener('click',function(){
+    if(done)return;var v=p;var t=setInterval(function(){v+=0.06;set(v);if(v>=1)clearInterval(t)},16)});
+  document.getElementById('payBtn').addEventListener('click',function(){
+    var m=document.getElementById('payMsg'),b=document.getElementById('payBtn');
+    if(!done){m.textContent='Open it first. You should not pay for a review you have not read.';toast('Open the report first.');return}
+    b.disabled=true;b.innerHTML='<span>Paid · 3,000 USDC</span>';b.style.background='var(--ice)';b.style.borderColor='var(--ice)';
+    m.textContent='Settled on Fuji. The reviewer keeps this credential for their next client.';
+    toast('Escrow released on Fuji.');
+  });
+  set(0);
+})();
+
+/* ================= assess ================= */
+var RUB=[{t:'Read a live codebase and found a real bug',w:1},
+ {t:'Explained severity and blast radius, not just the defect',w:1},
+ {t:'Wrote a reproducible test for the finding',w:1},
+ {t:'Reviewed an assembly or low-level path',w:2},
+ {t:'Caught an economic or incentive flaw, not only a code flaw',w:2}];
+var rubOn=[true,true,true,false,false];
+function level(){var s=RUB.reduce(function(a,r,i){return a+(rubOn[i]?r.w:0)},0);return s>=6?3:s>=4?2:s>=2?1:0}
+function drawRub(){
+  var host=document.getElementById('rubric'); if(!host)return;
+  host.innerHTML=RUB.map(function(r,i){return '<button type="button" class="opt'+(rubOn[i]?' on':'')+'" data-k="'+i+'">'
+   +'<span class="bx"></span><span style="font-size:12.5px;line-height:1.45">'+r.t+'</span></button>'}).join('');
+  host.querySelectorAll('[data-k]').forEach(function(b){
+    b.addEventListener('click',function(){rubOn[+b.dataset.k]=!rubOn[+b.dataset.k];
+      document.getElementById('rubErr').textContent='';drawRub();previewAssess(false)})});
+}
+function previewAssess(issued){
+  var q=document.getElementById('qkind'); if(!q)return;
+  var L=level();
+  document.getElementById('asQual').textContent=q.value+(L?', level '+L:', no level yet');
+  document.getElementById('asMeta').textContent=(issued?'Deaddrop #25':'handle assigned on issue')
+   +' · Sigil Collective · '+document.getElementById('valid').value;
+  document.getElementById('asLevel').textContent=L?(issued?'portable from this moment':'level '+L+' from the boxes you ticked'):'tick at least one item';
+  var tag=document.getElementById('asTag');
+  tag.textContent=issued?'valid':'draft';tag.className='chip '+(issued?'ice':'dim');
+  document.getElementById('asCap').textContent=issued?'issued':'not issued yet';
+}
+['qkind','valid'].forEach(function(id){var el=document.getElementById(id);
+  if(el)el.addEventListener('input',function(){previewAssess(false)})});
+var assessForm=document.getElementById('assessForm');
+if(assessForm)assessForm.addEventListener('dd:valid',function(){
+  if(!level()){document.getElementById('rubErr').textContent='Tick what they demonstrated, or there is no level to issue.';return}
+  previewAssess(true);
+  toast('Deaddrop #25 issued at level '+level()+'. Next status snapshot publishes in 4 hours.');
+});
+drawRub();previewAssess(false);
+
+/* ================= dispute / keys ================= */
+document.querySelectorAll('[data-rule-btn]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var m=document.getElementById('ruleMsg'),k=b.dataset.ruleBtn;
+    m.textContent = k==='release' ? 'Released 4,100 USDC to the reviewer. The client keeps the report either way.'
+     : k==='refund' ? 'Refunded 4,100 USDC to the client. The reviewer keeps the credential.'
+     : 'Split 2,050 USDC each. Both parties are notified onchain; neither is named to the other.';
+    toast('Ruling executed on Fuji.');
+  });
+});
+var rot=document.getElementById('rotateBtn');
+if(rot)rot.addEventListener('click',function(){
+  document.getElementById('keyMsg').textContent='New key generated in this browser. Reports sealed to the old one stay readable until you revoke it.';
+  toast('Key rotated locally.')});
+var rev=document.getElementById('revokeBtn');
+if(rev)rev.addEventListener('click',function(){
+  document.getElementById('keyMsg').textContent='Old keys revoked. Anything sealed to them can no longer be opened, including by you.';
+  toast('Revoked. This cannot be undone.')});
+
+/* ================= loader ================= */
+(function(){
+  var el=document.getElementById('loader'),bar=el.querySelector('.bar i'),
+      st=el.querySelector('.st'),scan=el.querySelector('.scan');
+  var lines=['calibrating sensor','sweeping 8–14µm','no heat retained','field ready'];
+  var word='DEADDROP',chars='\u2591\u2592\u2593#*+=-\u00B7';
+  var start=performance.now(),DUR=RM?60:1600,li=-1;
+  (function tick(now){
+    var k=Math.min(1,(now-start)/DUR);
+    bar.style.width=(k*100)+'%';
+    var ni=Math.min(lines.length-1,Math.floor(k*lines.length));
+    if(ni!==li){li=ni;st.textContent=lines[ni]}
+    var out='',settled=Math.floor(k*k*word.length);
+    for(var i=0;i<word.length;i++)out+= i<settled?word[i]:chars[(Math.random()*chars.length)|0];
+    scan.textContent=out;
+    scan.style.color=k<0.55?'#FF5A1F':(k<0.85?'#FFB061':'#FFF3E2');
+    if(k<1)requestAnimationFrame(tick);
+    else{scan.textContent=word;setTimeout(function(){el.classList.add('gone')},RM?0:300)}
+  })(start);
+})();
+
+(function(){
+  var items=document.querySelectorAll('.steps5 li');
+  if(!items.length)return;
+  if(RM||!('IntersectionObserver' in window)){
+    items.forEach(function(el){el.classList.add('in')});return;
+  }
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.25,rootMargin:'0px 0px -8% 0px'});
+  items.forEach(function(el){io.observe(el)});
+})();
+document.getElementById('year').textContent=new Date().getFullYear();
+paintRoles();go('home');
+})();
+</script>
+</body>
+</html>

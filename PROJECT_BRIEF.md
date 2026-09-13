@@ -1,10 +1,10 @@
-# Cutout — project brief
+# Deaddrop — project brief
 
 [App](https://cutout-ethrome-2026.vercel.app) · [Walkthrough](https://cutout-ethrome-2026.vercel.app/?view=demo) · [Docs](docs/README.md)
 
 ## The idea
 
-Cutout is a paid technical-review workspace. A client funds a precise question, an issuer-approved reviewer proves eligibility without publishing their credential, and an encrypted report is delivered before payment approval.
+Deaddrop is a paid technical-review workspace. A client funds a precise question, an issuer-approved reviewer proves eligibility without publishing their credential, and an encrypted report is delivered before payment approval.
 
 For example: a small protocol team changes a withdrawal permission and wants an independent review of that change. It can publish a non-sensitive scope, reserve a USDC reward, and require an approved qualification. The reviewer can accept without turning their credential into a public identifier across every engagement.
 
@@ -22,7 +22,7 @@ Avalanche holds the money and verifies acceptance. Arkiv makes listings discover
 | Reviewer | Obtain approval, prove eligibility, accept, deliver the report |
 | Issuer | Assess applicants, sign credentials, publish revocation state |
 
-Today the issuer and dispute arbitrator are the Cutout team. Test enrollment is manually approved. The circuit verifies that approval; it does not measure expertise or work quality.
+Today the issuer and dispute arbitrator are the Deaddrop team. Test enrollment is manually approved. The circuit verifies that approval; it does not measure expertise or work quality.
 
 ## What exists today
 

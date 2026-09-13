@@ -1,32 +1,34 @@
-# Cutout
+# Deaddrop
 
-![Cutout — Good work. Less exposure.](docs/cutout/assets/banner.svg)
+![Deaddrop — Private work. Public settlement.](docs/design/deaddrop/assets/home.png)
 
 **Hire a qualified reviewer. Keep their credential private. Pay for the work.**
 
-Cutout lets a team fund a technical review in USDC, require a private proof of issuer-approved qualification, and receive an encrypted report. The client opens the report and approves payment; Avalanche settles it. Wallets and payments remain public.
+Deaddrop lets a team fund a technical review in USDC, require a private proof of issuer-approved qualification, and receive an encrypted report. The client opens the report and approves payment; Avalanche settles it. Wallets and payments remain public.
 
-[Open Cutout](https://cutout-ethrome-2026.vercel.app) · [Interactive demo](https://cutout-ethrome-2026.vercel.app/?view=demo) · [Project brief](PROJECT_BRIEF.md) · [Quickstart](docs/cutout/QUICKSTART.md) · [User flow](docs/cutout/USER-FLOW.md) · [Architecture](docs/cutout/ARCHITECTURE.md) · [Bounties](docs/cutout/BOUNTIES.md) · [Docs index](docs/README.md)
+[Open Deaddrop](https://cutout-ethrome-2026.vercel.app) · [Interactive demo](https://cutout-ethrome-2026.vercel.app/?view=demo) · [Project brief](PROJECT_BRIEF.md) · [Quickstart](docs/cutout/QUICKSTART.md) · [User flow](docs/cutout/USER-FLOW.md) · [Architecture](docs/cutout/ARCHITECTURE.md) · [Bounties](docs/cutout/BOUNTIES.md) · [Docs index](docs/README.md)
+
+The product was previously called Cutout. The app URL and browser storage namespaces are retained so existing participants keep their private keys. [Rebrand and bounty decisions](docs/design/deaddrop/README.md).
 
 ## Problem first
 
 A team needs a second pair of eyes on a sensitive change: “Can an unauthorized wallet withdraw after this permissions update?” It wants an approved reviewer and a funded agreement. The reviewer should not have to publish a reusable credential identifier for every small engagement, and the resulting report should stay between the participants.
 
-Cutout separates those responsibilities. An issuer approves the reviewer. A proof checks that approval without revealing the credential. The client evaluates the work. An escrow holds and pays the reward.
+Deaddrop separates those responsibilities. An issuer approves the reviewer. A proof checks that approval without revealing the credential. The client evaluates the work. An escrow holds and pays the reward.
 
 The first use case is a focused technical review, not a replacement for a full security audit. External issuer partnerships and customer demand still need validation.
 
 ## How it works
 
-1. **Get qualified.** Apply in Cutout. The browser saves your private pass and sends an encrypted application. After issuer approval, collect the pass in the app; no credential files need to change hands.
+1. **Get qualified.** Apply in Deaddrop. The browser saves your private pass and sends an encrypted application. After issuer approval, collect the pass in the app; no credential files need to change hands.
 2. **Fund a task.** The client writes a public scope and locks test USDC on Avalanche Fuji. A separate Arkiv transaction lists the task for discovery.
-3. **Cut a proof.** The reviewer proves, in their browser, that the required credential is valid and unrevoked. The proof is bound to this task and wallet. Fuji verifies it when they accept.
+3. **Prove eligibility.** The reviewer proves, in their browser, that the required credential is valid and unrevoked. The proof is bound to this task and wallet. Fuji verifies it when they accept.
 4. **Seal the report.** The browser encrypts the report for the client and reviewer, uploads ciphertext to Swarm, and checks retrieval. A Fuji transaction commits its reference and hash.
 5. **Open and pay.** The client retrieves and decrypts the report, then approves payment to the assigned reviewer.
 
 Read the [complete user flow](docs/cutout/USER-FLOW.md) for qualification issuance, wallet roles, deadlines and disputes.
 
-![Cutout workspace on desktop](docs/cutout/assets/application.png)
+![Deaddrop workspace on desktop](docs/design/deaddrop/assets/application.png)
 
 *Actual hosted application capture, 13 September 2026; the visible scope is an unfunded draft. For current deployment and verification scope, see [evidence](docs/cutout/EVIDENCE.md).*
 
@@ -56,7 +58,7 @@ Open **http://127.0.0.1:18904/?view=demo**. Requires Node 24.12+. This starts th
 | Documents | **Swarm / Bee HTTP** | Public scopes and issuer snapshots; recipient-encrypted reports |
 | Qualification | **gnark Groth16 on BN254, Go → WebAssembly** | Prove issuer approval and current nonrevocation locally; verify onchain |
 | Report privacy | **WebCrypto + HPKE** | Encrypt locally and wrap document keys separately for each recipient |
-| Product | **TypeScript + Vite; Vercel** | Cutout interface, browser proving worker, public reads and encrypted application relay |
+| Product | **TypeScript + Vite; Vercel** | Deaddrop interface, browser proving worker, public reads and encrypted application relay |
 
 The [architecture](docs/cutout/ARCHITECTURE.md) maps each boundary to source. The [security model](docs/cutout/SECURITY.md) explains exactly what remains trusted or public.
 
@@ -94,11 +96,11 @@ Payment token: canonical Fuji test USDC, `0x5425890298aed601595a70AB815c96711a31
 
 | Path | Contents |
 | --- | --- |
-| [experiments/qualification/pilot/web](experiments/qualification/pilot/web) | Current Cutout frontend and guided demo |
+| [experiments/qualification/pilot/web](experiments/qualification/pilot/web) | Current Deaddrop frontend and guided demo |
 | [experiments/qualification/pilot](experiments/qualification/pilot) | Wallets, encryption, Arkiv, Swarm, browser prover and hosting |
 | [experiments/qualification/contracts](experiments/qualification/contracts) | Qualification escrow, document keys and contract tests |
 | [experiments/qualification/prover](experiments/qualification/prover) | Circuit, issuer registry, native/Go WASM prover |
 | [docs](docs/README.md) | Product, developer, presenter, sponsor and evidence paths |
 | [arkiv](arkiv) | Data schema and submission evidence matrix |
 
-Cutout evolved from Review Pass during ETHRome 2026. Existing `review-pass` protocol names and paths preserve deployed compatibility and browser key namespaces. Earlier EXIT work is retained in [history](docs/history/EXIT.md), with its original code and [handoff](docs/handoff/PRODUCT.md). The [MIT license](LICENSE), [asset licenses](experiments/qualification/pilot/web/assets/README.md), dependency licenses and real Git history remain intact.
+Deaddrop evolved from Review Pass during ETHRome 2026. Existing `review-pass` protocol names and paths preserve deployed compatibility and browser key namespaces. Earlier EXIT work is retained in [history](docs/history/EXIT.md), with its original code and [handoff](docs/handoff/PRODUCT.md). The [MIT license](LICENSE), [asset licenses](experiments/qualification/pilot/web/assets/README.md), dependency licenses and real Git history remain intact.
