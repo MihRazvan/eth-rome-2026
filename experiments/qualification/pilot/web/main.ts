@@ -452,9 +452,10 @@ function renderBoard() {
   $("#board-live").dataset.live = String(live);
   $("#board-summary").textContent = state?.listings.length ? `${state.listings.length} ${state.listings.length === 1 ? "review" : "reviews"} ${live ? "available" : "last seen · reconnect to open"}` : live ? "No matching reviews right now" : "Checking available reviews";
   const order = ($("#board-order") as HTMLSelectElement).value as BoardOrder;
+  const filtered = Number(($("#minimum-reward") as HTMLInputElement).value) > 0;
   $("#opportunities").innerHTML = state?.listings.length
     ? opportunityMarkup(state.listings, order, !!live, tokenSymbol)
-    : `<div class="board-empty"><span aria-hidden="true" class="board-empty-mark">⌑</span><h3>${live ? "Make room for your next review." : "The board is reconnecting."}</h3><p>${live ? "There are no funded reviews matching your reward filter. Try a lower minimum, or come back when a client posts new work." : "Your accepted work is still in Activity. Refresh the board to try again."}</p>${live ? '<button data-ui data-reset-board class="quiet">Show all rewards</button>' : ''}</div>${config.chainId === 31338 ? '<p class="fine">This public board is separate from the local rehearsal. <a href="#jobs">Open local rehearsal tasks below</a>.</p>' : ""}`;
+    : `<div class="board-empty"><span aria-hidden="true" class="board-empty-mark">⌑</span><h3>${live ? "Make room for your next review." : "The board is reconnecting."}</h3><p>${live ? "There are no funded reviews matching your reward filter. Try a lower minimum, or come back when a client posts new work." : "Your accepted work is still in Activity. Refresh the board to try again."}</p>${live ? filtered ? '<button data-ui data-reset-board class="quiet">Show all rewards</button>' : '<button data-ui data-board-demo>Try the guided demo</button>' : ''}</div>${config.chainId === 31338 ? '<p class="fine">This public board is separate from the local rehearsal. <a href="#jobs">Open local rehearsal tasks below</a>.</p>' : ""}`;
   if (state?.removed.some((x) => x.reason === "native-expired"))
     $("#discovery-change").textContent =
       "A discovery lease is no longer active. Its escrow and accepted work remain on the settlement chain.";
@@ -1554,6 +1555,7 @@ $("#filter-board").onclick = () =>
 $("#refresh-board").onclick = () => run(startBoard);
 $("#board-order").onchange = () => renderBoard();
 $("#opportunities").onclick = (e) => {
+  if ((e.target as HTMLElement).closest("[data-board-demo]")) { $("#try-demo").click(); return; }
   if ((e.target as HTMLElement).closest("[data-reset-board]")) {
     ($("#minimum-reward") as HTMLInputElement).value = "0";
     void run(async () => { await startBoard(); return {preserve:true, message:"Showing all reward amounts."}; });
