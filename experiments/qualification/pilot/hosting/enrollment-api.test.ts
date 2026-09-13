@@ -76,3 +76,12 @@ test('automatic setup returns durable encrypted credential despite Arkiv patch r
  await api({method:'GET',url:`/api/enrollment?ticket=${ctx.ticket}`,headers:{}},res);
  assert.equal(res.statusCode,200);assert.deepEqual(res.body,{status:'approved',approval});assert.equal(patched,1);
 });
+
+
+test('pending Deaddrop manual-era signatures remain valid after automatic enrollment rollout', async()=>{
+ const s=await setup();
+ const digest=sha256(bytesToHex(new TextEncoder().encode(JSON.stringify(s.body.envelope))));
+ const message=enrollmentAuthorization(ctx,digest,s.body.expires,true).replace('Cutout test qualification application','Deaddrop test qualification application');
+ const signature=await account.signMessage({message});
+ assert.equal((await s.request('POST',{...s.body,signature})).status,201);
+});

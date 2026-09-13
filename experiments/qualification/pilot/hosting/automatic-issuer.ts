@@ -36,6 +36,8 @@ export async function allocateCredential(ticket:string,digest:string,deps:any){
 }
 export function createAutomaticIssuer(config:any,deps:any={}){
  return async(record:any)=>{
+  let phase="authorization";
+  try {
   const encoded=deps.secrets??process.env.DEADDROP_ISSUER_SECRETS;
   if(!encoded)throw Error('Automatic reviewer setup unavailable');
   const secrets=JSON.parse(Buffer.from(encoded,'base64').toString('utf8'));
@@ -48,16 +50,19 @@ export function createAutomaticIssuer(config:any,deps:any={}){
   // Validate reply key before allocating. The issuer never receives a holder secret.
   await sealEnrollment({check:true},application.replyKey,context,'approval');
   const chain=createPublicClient({transport:http(config.rpcUrl,{timeout:10000,retryCount:0})});
+  phase="chain-time";
   const block=await chain.getBlock({blockTag:'finalized'});
   if(config.chainId!==43113||application.request.createdAt>Number(block.timestamp)+60||application.request.createdAt<Number(block.timestamp)-7*86400)throw Error('Enrollment is outside its validity window');
   const expiry=Number(block.timestamp)+86400;
   const credential=await allocateCredential(record.ticket,digest,{
    read:async()=>{
+    phase='ledger-read';
     const result=await get(PATH,{access:'private',useCache:false});
     if(!result||result.statusCode!==200)throw Error('Issuer ledger unavailable; automatic reset forbidden');
     return {state:decryptIssuerState(Buffer.from(await new Response(result.stream).arrayBuffer()),storageKey),etag:result.blob.etag};
    },
    issue:async(registry:any)=>{
+    phase='credential-signing';
     const dir=await mkdtemp(join(tmpdir(),'deaddrop-issuer-'));
     try{
      const files={'issuer-key.json':secrets.issuerKey,'issuer-public.json':secrets.issuerPublic,'registry-state.json':registry};
@@ -68,9 +73,10 @@ export function createAutomaticIssuer(config:any,deps:any={}){
      return {credential,registry:JSON.parse(await readFile(join(dir,'registry-state.json'),'utf8'))};
     }finally{await rm(dir,{recursive:true,force:true});}
    },
-   commit:(next:any,etag:string)=>put(PATH,encryptIssuerState(next,storageKey),{access:'private',addRandomSuffix:false,allowOverwrite:true,ifMatch:etag,contentType:'application/octet-stream'}),
+   commit:(next:any,etag:string)=>{phase='ledger-commit';return put(PATH,encryptIssuerState(next,storageKey),{access:'private',addRandomSuffix:false,allowOverwrite:true,ifMatch:etag,contentType:'application/octet-stream'});},
    conflict:(e:unknown)=>e instanceof BlobPreconditionFailedError,
   });
-  return sealEnrollment(credential,application.replyKey,context,'approval');
+  return await sealEnrollment(credential,application.replyKey,context,'approval');
+  }catch(error:any){console.error(JSON.stringify({event:'automatic-enrollment-retry',phase,code:typeof error?.code==='string'?error.code:'operation-failed',kind:error?.name??'Error'}));throw Error('Automatic setup is retrying');}
  };
 }

@@ -259,11 +259,12 @@ await build({
     emptyOutDir: true,
     sourcemap: false,
     target: "node24",
-    rollupOptions: { output: { entryFileNames: "index.mjs" } },
+    rollupOptions: { output: { entryFileNames: "index.mjs", chunkFileNames: "chunks/[name]-[hash].mjs" } },
   },
   logLevel: "warn",
 });
 
+await writeFile(resolve(func,"package.json"),json({type:"module"}));
 // Public executable only; signer keys and durable allocator are runtime secrets.
 await exec('go',['build','-trimpath','-o',resolve(func,'issuer'),'.'],{
  cwd:resolve(root,'experiments/qualification/prover'),

@@ -70,7 +70,7 @@ The [architecture](docs/deaddrop/ARCHITECTURE.md) maps each boundary to source. 
 
 | Sponsor | Entry | Where to inspect |
 | --- | --- | --- |
-| Avalanche / Team1 | Track A — stablecoin payments for technical reviews | [Integration and demo proof](docs/deaddrop/bounties/AVALANCHE.md) |
+| Avalanche / Team1 | Track B — eligibility policy and settlement logic | [Integration and demo proof](docs/deaddrop/bounties/AVALANCHE.md) |
 | Arkiv | Mission 02, Mission 03; Best Use consideration | [Queries, expiry, subscriptions and feedback](docs/deaddrop/bounties/ARKIV.md) |
 | Swarm | Useful decentralized document storage | [Encryption, upload and retrieval](docs/deaddrop/bounties/SWARM.md) |
 
