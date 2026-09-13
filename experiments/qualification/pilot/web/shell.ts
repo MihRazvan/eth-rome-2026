@@ -76,6 +76,7 @@ export function revealInWorkspace(target: HTMLElement) {
   }
 }
 export function mountShell() {
+  document.body.dataset.role = new URL(location.href).searchParams.get("role") === "reviewer" ? "reviewer" : "client";
   document.querySelectorAll<HTMLButtonElement>(".rail-nav [data-view]").forEach(
     (b) =>
       (b.onclick = () => {

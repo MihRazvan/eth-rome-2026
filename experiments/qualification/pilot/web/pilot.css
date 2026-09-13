@@ -1846,3 +1846,5 @@ body[data-view="help"] .device-settings > summary {
   .board-empty { padding:32px 18px; }
   .sealed-report.is-open .sealed-art { border-right:1px dashed var(--line); border-bottom:0; padding:10px; }
 }
+.board-sort { display:grid; gap:8px; }
+.board-sort select { width:100%; margin:0; }
