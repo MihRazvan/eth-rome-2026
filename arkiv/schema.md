@@ -1,4 +1,4 @@
-# Review Pass Arkiv schema — version2
+# Cutout Arkiv schema — version2
 
 Current product on `review-pass/product`. The earlier EXIT schema remains below as historical documentation. Implementation: [`pilot/listings.ts`](../experiments/qualification/pilot/listings.ts), SDK0.8.1/Tiramisu7738577.
 
@@ -18,13 +18,15 @@ An entity advertises a funded technical-review opportunity. It is owned and crea
 | `reward` | typed `u256`, six-decimal base units |
 | `acceptbefore` | typed `u64`, Unix seconds |
 
+Attributes are deliberately public selection criteria, not a confidentiality mechanism. Reward, token, qualification class and acceptance cutoff need typed comparisons; replacing them all with hashes would prevent that discovery query. Title and content-addressed scope metadata stay in the public payload because they are displayed and authenticated after querying, not used as our indexed filters. Neither location contains the reviewer’s credential identifier or private report.
+
 Payload version2 additionally carries the client wallet, public title (max120UTF8bytes), and public scope reference/SHA256. It includes no credential identifier, holder secret, report plaintext or decryption key. Public payment-wallet and timing metadata remain linkable.
 
 The board uses a frozen compound query over application/kind/schema/taskclass/qualificationclass/settlementchain/escrow, with optional token/minimumreward. It selects native metadata and all pages, bounded to100pages/10000entities. Before display, it checks creator and owner against the client, and public terms/digest/reference/reward/deadlines against the configured escrow. An attacker duplicate cannot hide the valid record. Read errors preserve an unavailable state, never an empty success.
 
 True WSS entity events and `newHeads` drive reconciliation without a polling interval or historical `fromBlock`. Since natural expiry emits no event, a received head reaching a known lease boundary triggers the same query; only successful absence removes the entry. Reconnect reconciles current state rather than claiming complete event replay. Client/worker financial history comes from settlement events, independent of Arkiv retention.
 
-[Detailed API and semantics](../experiments/qualification/pilot/LISTINGS.md) · [feedback](../feedback.md) · [submission evidence and missing public gates](submission.md)
+[Detailed API and semantics](../experiments/qualification/pilot/LISTINGS.md) · [feedback](../feedback.md) · [current submission evidence](submission.md)
 
 ---
 

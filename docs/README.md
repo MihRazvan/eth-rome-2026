@@ -23,7 +23,7 @@
 | Inspect deployed contracts or host Cutout | [Deployment](cutout/DEPLOYMENT.md) |
 | Understand file-free applications and pass storage | [Qualification workflow](cutout/QUALIFICATION.md) |
 | Operate legacy test credential issuance | [Qualification provisioning](review-pass/QUALIFICATION-PROVISIONING.md) |
-| Understand the visual decisions | [Design direction](design/cutout/DIRECTION.md) |
+| Understand the visual decisions | [Design direction](design/cutout/DIRECTION.md), [selective UX priorities](cutout/UX-PRIORITIES.md) |
 
 ## Judge and submit
 

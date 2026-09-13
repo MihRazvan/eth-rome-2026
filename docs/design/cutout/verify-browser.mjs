@@ -158,6 +158,16 @@ try {
   checks.push(
     "390px walkthrough and role navigation; keyboard decryption alternative; no horizontal overflow",
   );
+  const deepLink = await browser.newPage();
+  deepLink.on("pageerror", (e) => errors.push(e.message));
+  await deepLink.goto(`${base}/?role=reviewer`);
+  await deepLink.waitForFunction(() => document.querySelector("#readiness")?.children.length > 0);
+  assert.equal(await deepLink.locator("#workspace-title").textContent(), "Find your next review");
+  assert.equal(await deepLink.locator("#commission").isVisible(), false);
+  await deepLink.locator("#board-order").selectOption("reward");
+  assert.equal(await deepLink.locator("#board-order").inputValue(), "reward");
+  await deepLink.close();
+  checks.push("Direct reviewer link renders reviewer heading and usable task sorting without a role-toggle repair");
   const offline = await browser.newPage();
   offline.on("pageerror", (e) => errors.push(e.message));
   await offline.route("**/api/config", (r) => r.abort());

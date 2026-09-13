@@ -1,0 +1,12 @@
+{
+  "source": "4f67608",
+  "deployment": {
+    "id": "dpl_8GKnxs7ajBUfXwBUjMzMS2BLQein",
+    "url": "https://review-pass-ethrome-2026-18z7bicbh-mihrazvans-projects.vercel.app",
+    "inspectorUrl": "https://vercel.com/mihrazvans-projects/review-pass-ethrome-2026/8GKnxs7ajBUfXwBUjMzMS2BLQein",
+    "readyState": "READY",
+    "target": "production",
+    "deploymentApiUrl": "https://api.vercel.com/v13/deployments/dpl_8GKnxs7ajBUfXwBUjMzMS2BLQein"
+  },
+  "publicUrl": "https://cutout-ethrome-2026.vercel.app"
+}

@@ -1,4 +1,4 @@
-# Current product: Review Pass
+# Current product: Cutout
 
 The current reproducible sponsor feedback is [feedback.md](feedback.md); see [Arkiv schema](arkiv/schema.md) and [submission evidence](arkiv/submission.md). The earlier EXIT feedback below is retained as project history.
 

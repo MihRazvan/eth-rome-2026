@@ -4,7 +4,11 @@
 
 This index maps claims to dated artifacts. A successful read-only contract simulation is not a transaction. Local Anvil/Bee execution is not a public sponsor integration. The guided walkthrough's settlement is explicitly simulated.
 
-## Latest: saved pass and public paid review
+## Latest interface follow-up
+
+[Selective UX follow-up](evidence/ux-followup/README.md) records clearer task cards/sorting, the opened-report state, direct reviewer links and an actual empty-board-to-demo path. Public reads and paid-report decryption were checked; populated card screenshots are explicitly labelled visual fixtures. No new funded transaction was made.
+
+## Saved pass and public paid review
 
 [13 September saved-pass evidence](evidence/saved-pass/README.md) contains actual encrypted application/approval collection, browser persistence, full paid public task #4, finalized receipts and a reviewer balance increase of 0.1 test USDC. The same run captured real two-browser Arkiv publication and an unchanged query through native expiry. This supersedes earlier missing-public-lifecycle observations below. The actual UI used operator-controlled test wallet signing bridges, not a human wallet-extension session.
 

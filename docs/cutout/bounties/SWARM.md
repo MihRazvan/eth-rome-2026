@@ -2,7 +2,7 @@
 
 [All bounties](../BOUNTIES.md) · [Security](../SECURITY.md) · [Evidence](../EVIDENCE.md)
 
-**Swarm carries the actual review documents.** Public scopes and whole issuer status snapshots are readable. Reports are encrypted in the browser for their intended recipients before upload. Fuji commits the document reference and digest; Swarm supplies the retrievable bytes.
+**Swarm carries the actual review documents.** Public scopes and whole issuer status snapshots are readable. Reports are encrypted in the browser for their intended recipients before upload. Fuji commits the document reference and digest; Swarm supplies the retrievable bytes. This makes a delivered report independently addressable and verifiable beyond a Cutout-hosted file URL, subject to network retention and recipient key availability.
 
 ## Integration
 

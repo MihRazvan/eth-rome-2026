@@ -1,3 +1,15 @@
+# Latest — selective UX follow-up
+
+13 September2026. Appsource **4f67608**, Vercel **dpl_8GKnxs7ajBUfXwBUjMzMS2BLQein**, https://cutout-ethrome-2026.vercel.app. User supplied external AI bounty/privacy suggestions but explicitly prioritized UX/look/feel. [Selective decisions](cutout/UX-PRIORITIES.md): keep TrackA, optional SwarmID/account-free uploads, actual existing WSS/native-expiry semantics, whole snapshots and task-scoped proof. Do not implement heartbeat cancellation, jitter, duplicated key authority or fake indexer migration. Padding/distinct payout remain deferred; no anonymity/permanent-availability claim.
+
+Shipped reviewer cards with reward/acceptance deadline/verified-scope hierarchy, closing-soon/highest-reward presentation sorting, compact live status/disclosed diagnostics and useful empty-board demo CTA. Existing typed compound Arkiv query and financial/proof/storage formats unchanged. Opened reports now show compact verified status and enable download only after successful decryption. Direct ?role=reviewer heading fixed. No public funded writes in this pass; task4 remainsPaid, original private pass/report keys and issuer registry preserved.
+
+Verification:20 focused board/listing tests and TS/build passed. Actual desktop/mobile hosted5checks pass; additional actual emptypublicboard3checks pass with0errors. Public paid-task client decrypt/reload/saved-pass/recovery5checks passed on27df5ce (final4f adds only empty-boardCTA). Labelled synthetic frozen-DOM cards used only for populated layout screenshots, never published as real listings. [Evidence](cutout/evidence/ux-followup/README.md). Full qualification CI passed at final appsource4f67608 (run34732573733); exact steps retained in evidence.
+
+Continue teammate extension-wallet rehearsal and manual issuer approvals as needed; do not re-fund settledtask4. Submission video/slides/forms remain separate human work. Normal commits/pushes authorized, rootEXIT hosting untouched.
+
+---
+
 # 13 September acceptance — saved reviewer passes and completed public task #4
 
 13 September 2026. Active application source **cf02149**, Vercel **dpl_DN1YhswG4qZNBSRdMoLVeG3iVJcM**, https://cutout-ethrome-2026.vercel.app. Normal qualification is Apply → explicit offline issuer approval → Check approval → saved browser pass → Verify my eligibility. No normal credential JSON exchange. Private backup/one-time legacy import is optional. Compact task workspace and disclosure-based recovery/settings deployed. Issuer expertise remains a trust decision; this is test participation, not accreditation.

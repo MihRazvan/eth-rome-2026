@@ -25,10 +25,12 @@ The supplied shell is the selected direction. The brand sheet supplies tokens; t
 
 ## Implementation boundaries
 
-Preserve the existing onchain setup and browser key namespaces. Brand changes must not rotate device keys or strand earlier reports. Use Swarm ID's supported `containerId` and button configuration to put account controls in the workspace rather than floating over the page. Its app metadata uses Cutout. Live uploads still require an authenticated account and usable storage. Operator-sponsored onboarding is not claimed until configured and verified.
+Preserve the existing onchain setup and browser key namespaces. Brand changes must not rotate device keys or strand earlier reports. The active gateway-funded adapter requires no customer storage account. Swarm ID remains optional; its account controls belong inside the workspace if that adapter is selected. The older account/postage prerequisite was superseded by verified public gateway uploads and the paid task #4 lifecycle.
 
 In the live report flow, the prominent cut/open action performs actual retrieval, commitment verification and recipient decryption. Approval is enabled only after that report was opened in the current rendered session; the action rechecks its current committed digest. This is a client experience safeguard, not a new escrow restriction.
 
 ## Verification
+
+The reviewer board now uses paper task cards with a reward stub, acceptance cutoff and presentation sorting. After decryption, the sealed-report interaction becomes a compact verified state. [Selective UX decisions](../../cutout/UX-PRIORITIES.md).
 
 Record current rendered desktop/mobile evidence, keyboard walkthrough, real browser AES-GCM roundtrip, sponsor/network failure behavior and exact test results in `docs/ACCEPTANCE.md`. Earlier public cryptographic verification and funded wallet receipts remain historical evidence. A newly styled page does not prove a completed public funded lifecycle.

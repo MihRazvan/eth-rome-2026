@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-13T02:15:52.404Z",
+  "checks": [
+    "Actual public Arkiv board connected and returned no eligible listings",
+    "Direct reviewer heading correct",
+    "Empty board starts explicitly labelled guided demo on390px"
+  ],
+  "errors": [],
+  "scope": "Actual public read-only board; no fixtures, wallet or writes. Empty result is a dated observation, not a permanent expectation."
+}
