@@ -28,7 +28,7 @@ export function createEnrollmentAPI(config:EnrollmentServiceConfig, deps:any={})
    }
    if(req.method!=='POST'||url.pathname!=='/api/enrollment'){respond(405,{error:'Method not allowed'});return true;}
    const origin=req.headers.origin;
-   if(!origin || !['https://cutout-ethrome-2026.vercel.app','https://review-pass-ethrome-2026.vercel.app'].includes(origin)){respond(403,{error:'Open applications inside Cutout'});return true;}
+   if(!origin || !['https://cutout-ethrome-2026.vercel.app','https://review-pass-ethrome-2026.vercel.app'].includes(origin)){respond(403,{error:'Open applications inside Deaddrop'});return true;}
    if(!String(req.headers['content-type']??'').startsWith('application/json')){respond(415,{error:'JSON required'});return true;}
    let raw='';
    if(req.body!==undefined) raw=typeof req.body==='string'?req.body:JSON.stringify(req.body);

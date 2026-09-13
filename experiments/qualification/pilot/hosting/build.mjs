@@ -309,7 +309,7 @@ await writeFile(
 );
 await writeFile(
   resolve(output, "static/404.html"),
-  '<!doctype html><html lang="en"><meta charset="utf-8"><title>Not found — Review Pass</title><h1>Page not found</h1><a href="/">Return to Review Pass</a></html>',
+  '<!doctype html><html lang="en"><meta charset="utf-8"><title>Not found — Deaddrop</title><h1>Page not found</h1><a href="/">Return to Deaddrop</a></html>',
 );
 await writeFile(
   resolve(output, "static/robots.txt"),

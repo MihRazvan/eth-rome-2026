@@ -1,4 +1,0 @@
-interface:
-  display_name: "Verify EXIT"
-  short_description: "Check EXIT release and live-test readiness"
-  default_prompt: "Use $exit-verify to verify EXIT and record concrete live-test readiness."

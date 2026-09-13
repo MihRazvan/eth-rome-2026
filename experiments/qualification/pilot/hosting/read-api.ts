@@ -116,7 +116,7 @@ export function createPublicReadAPI(
     publicConfig.chainId !== 43113
   )
     throw Error(
-      "Hosted Review Pass requires an explicit Fuji deployment status",
+      "Hosted Deaddrop requires an explicit Fuji deployment status",
     );
   if (publicConfig.status === "active") {
     if (

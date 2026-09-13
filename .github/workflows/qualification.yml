@@ -1,9 +1,9 @@
-name: Verify qualification experiment
+name: Verify Deaddrop
 on:
   push:
-    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json']
+    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json', 'package.json', 'tsconfig.json', 'vite.config.ts', 'scripts/**']
   pull_request:
-    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json']
+    paths: ['experiments/qualification/**', '.github/workflows/qualification.yml', 'package-lock.json', 'package.json', 'tsconfig.json', 'vite.config.ts', 'scripts/**']
   workflow_dispatch:
 jobs:
   proof-and-protocol:
@@ -38,3 +38,5 @@ jobs:
       - run: npx tsc --ignoreConfig --noEmit --target ES2022 --module ESNext --moduleResolution bundler --skipLibCheck --types node,vite/client --lib ES2022,DOM experiments/qualification/pilot/*.ts experiments/qualification/pilot/web/main.ts experiments/qualification/pilot/web/boot.ts experiments/qualification/pilot/hosting/*.ts
       - run: |
           node --input-type=module -e 'import {build} from "vite"; await build({configFile:false,root:"experiments/qualification/pilot/web",build:{outDir:"/tmp/review-pass-pilot-build",emptyOutDir:true}})'
+
+      - run: npm run test:browser

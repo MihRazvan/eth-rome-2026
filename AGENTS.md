@@ -1,7 +1,7 @@
-# Current product: Cutout
-Start with `docs/README.md`, `docs/cutout/ARCHITECTURE.md` and `docs/CONTINUATION.md`. Cutout is the user-approved pivot on `review-pass/product`; its active source is under `experiments/qualification/`. The EXIT contract below is preserved for earlier work, not an instruction to restore the old product. Use `docs/cutout/` for current submission/deployment guidance.
+# Deaddrop
 
-# EXIT
-Read docs/handoff/PRODUCT.md and WORKFLOW.md. Canonical requirements P1–P7 are mandatory. Track actual results in docs/ACCEPTANCE.md; restart from docs/CONTINUATION.md. Never label fixtures, local-chain tests or unverified sponsor paths as live integrations.
+Read README.md and docs/README.md. Current application, proof system and contracts live under experiments/qualification/. Run npm run check and npm run test:browser for the relevant release gates.
 
-Integrator owns root configuration, lockfile, shared quote schema, generated ABIs, deployment manifests and pushes. Writers use isolated worktrees from an explicit commit and only assigned paths. Preserve handoff documents and dependency licenses. No secrets in Git or logs. Normal coherent commits/pushes are authorized; no force pushes.
+Keep credentials, holder secrets, wallet keys and browser profiles out of Git and logs. Preserve deployed protocol formats and origin-bound browser storage across visual or naming changes. Never label local fixtures or simulated payment as public network evidence. Real receipts and verification scope belong in docs/deaddrop/evidence/.
+
+Use isolated worktrees from an explicit commit for parallel writers. The integrator owns root configuration, lockfile, deployment artifacts, main integration and pushes. Preserve licenses and real Git history; no force pushes. Follow existing user authorization for deployment and testnet actions.

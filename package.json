@@ -1,5 +1,5 @@
 {
-  "name": "exit-withdrawal-market",
+  "name": "deaddrop",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,46 +8,34 @@
     "node": ">=24.12.0"
   },
   "scripts": {
-    "dev": "vite apps/web --host 127.0.0.1 --port 5173",
-    "build": "vite build apps/web",
-    "test": "vitest run",
-    "test:contracts": "forge test",
+    "dev": "vite --config vite.config.ts --host 127.0.0.1 --port 18904",
+    "build": "vite build --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts --host 127.0.0.1 --port 18904",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm test && npm run test:contracts && npm run build",
-    "test:source": "forge test --root packages/source -vv",
-    "abi": "forge build && tsx scripts/export-abis.ts",
-    "deploy:local": "tsx scripts/deploy.ts",
-    "deploy:fuji": "tsx scripts/deploy.ts --fuji",
-    "start:local": "node scripts/start-local.mjs",
-    "api": "tsx packages/runtime/server.ts",
-    "probe:sponsors": "tsx scripts/probe-sponsors.ts",
-    "test:browser": "playwright test",
-    "scenario": "tsx scripts/scenario.ts",
-    "verify:record": "tsx scripts/verify-record.ts",
-    "preflight": "node --env-file-if-exists=.env --import tsx scripts/preflight.ts",
-    "inspect:claim": "tsx scripts/inspect-claim.ts",
-    "research:economics": "tsx scripts/viability-scenarios.ts"
+    "test": "node --import tsx --test experiments/qualification/pilot/*.test.ts experiments/qualification/pilot/hosting/*.test.ts experiments/qualification/pilot/web/publish-snapshot.test.ts experiments/qualification/transport/*.test.ts",
+    "test:contracts": "forge test --root experiments/qualification/contracts",
+    "test:proofs": "go -C experiments/qualification/prover test -count=1 ./...",
+    "check": "npm run typecheck && npm test && npm run test:contracts && npm run test:proofs && npm run build",
+    "test:browser": "node scripts/test-demo.mjs",
+    "preflight": "node experiments/qualification/pilot/preflight.mjs",
+    "build:hosting": "node scripts/build-hosting.mjs",
+    "pilot:start": "node --import tsx experiments/qualification/pilot/start.mjs",
+    "pilot:test": "node --import tsx experiments/qualification/pilot/browser-test.mjs"
   },
   "dependencies": {
     "@arkiv-network/sdk": "0.8.1",
     "@hpke/core": "1.9.0",
     "@hpke/dhkem-x25519": "1.8.0",
     "@openzeppelin/contracts": "5.6.1",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
     "viem": "2.56.3"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
     "@types/node": "22.20.2",
-    "@types/react": "19.3.0",
-    "@types/react-dom": "19.3.0",
-    "@vitejs/plugin-react": "6.1.1",
     "fake-indexeddb": "6.2.5",
     "prettier": "3.9.6",
     "tsx": "4.23.13",
     "typescript": "7.0.2",
-    "vite": "8.3.0",
-    "vitest": "5.0.0"
+    "vite": "8.3.0"
   }
 }

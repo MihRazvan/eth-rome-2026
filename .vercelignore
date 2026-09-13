@@ -11,6 +11,3 @@ packages/source/out
 packages/source/cache
 test-results
 playwright-report
-docs
-contracts
-test
