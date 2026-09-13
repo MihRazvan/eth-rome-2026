@@ -1,7 +1,11 @@
 import "../../../qualification/runtime/style.css";
 import "./pilot.css";
+import "./deaddrop.css";
+import "./deaddrop-home.css";
 import { mountShell } from "./shell";
 mountShell();
+import { mountThermalField } from "./thermal";
+mountThermalField();
 import { createSwarmStorage } from "../swarm-id";
 import {
   mountSnapshotPublisher,
@@ -11,7 +15,7 @@ import {
 async function setupPage(reason: string, publication?: SnapshotPublication) {
   document.body.dataset.role = "client";
   document.getElementById("environment")!.textContent =
-    "CUTOUT · PUBLIC TESTNET SETUP IN PROGRESS";
+    "DEADDROP · PUBLIC TESTNET SETUP IN PROGRESS";
   document.getElementById("connect")!.hidden = true;
   const main = document.getElementById("live-workspace")!;
   main.replaceChildren();
@@ -123,7 +127,7 @@ try {
 } catch {
   if (activeDeployment) {
     document.getElementById("environment")!.textContent =
-      "CUTOUT · CONNECTION UNAVAILABLE";
+      "DEADDROP · CONNECTION UNAVAILABLE";
     document.getElementById("connect")!.hidden = true;
     const message = document.createElement("p");
     message.setAttribute("role", "alert");
@@ -134,12 +138,15 @@ try {
     retry.onclick = () => window.location.reload();
     document.getElementById("live-workspace")!.replaceChildren(message, retry);
   } else {
-    document.getElementById("environment")!.textContent = "CUTOUT · CONNECTION UNAVAILABLE";
+    document.getElementById("environment")!.textContent =
+      "DEADDROP · CONNECTION UNAVAILABLE";
     document.getElementById("connect")!.hidden = true;
     const panel = document.createElement("section");
     panel.className = "journey";
-    panel.innerHTML = '<div><h2>We could not connect.</h2><p role="status">Reload to reconnect your workspace. Your onchain tasks and saved browser pass are preserved.</p><button id="retry-workspace" data-ui type="button">Retry connection</button><p class="fine">You can still explore the guided demo from the sidebar.</p></div>';
-    panel.querySelector<HTMLButtonElement>("#retry-workspace")!.onclick = () => location.reload();
+    panel.innerHTML =
+      '<div><h2>We could not connect.</h2><p role="status">Reload to reconnect your workspace. Your onchain tasks and saved browser pass are preserved.</p><button id="retry-workspace" data-ui type="button">Retry connection</button><p class="fine">You can still explore the guided demo from the navigation.</p></div>';
+    panel.querySelector<HTMLButtonElement>("#retry-workspace")!.onclick = () =>
+      location.reload();
     document.getElementById("live-workspace")!.replaceChildren(panel);
   }
 }

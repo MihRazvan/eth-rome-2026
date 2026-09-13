@@ -2,6 +2,8 @@ import { loadCredentialVault, saveCredentialVault, type CredentialVaultEntry, ty
 import { validateProofFile, validateProofPair } from "../proof-files";
 import "../../../qualification/runtime/style.css";
 import "./pilot.css";
+import "./deaddrop.css";
+import "./deaddrop-home.css";
 import { revealInWorkspace } from "./shell";
 import { mountEnrollment } from "./enrollment";
 import { opportunityMarkup, type BoardOrder } from "../board-presentation";
@@ -183,7 +185,7 @@ function renderGuide() {
   ) {
     next.title = "Check document storage";
     next.text =
-      "Cutout covers document uploads through Swarm’s public gateway. Retry the connection; no separate account or drive is needed.";
+      "Deaddrop covers document uploads through Swarm’s public gateway. Retry the connection; no separate account or drive is needed.";
   }
   $("#journey-role").textContent =
     role === "client" ? "YOUR CLIENT WORKSPACE" : "YOUR REVIEWER WORKSPACE";
@@ -774,13 +776,13 @@ function render() {
           if (eligibility.accept && !j.scopeError && !isClient)
             actions = `${config.browserProver ? `<div class="local-prover"><h4>${hasSavedPass(Number(j.class)) ? "Your reviewer pass is ready." : "A reviewer pass is required."}</h4><p class="fine">${hasSavedPass(Number(j.class)) ? "Verify your eligibility privately, then accept this review." : "Apply once, or restore an existing pass in your workspace."}</p>${!account ? '<button data-proof-connect type="button">Connect reviewer wallet</button>' : !hasSavedPass(Number(j.class)) ? '<button data-ui data-enrollment-help type="button">Set up my reviewer pass</button>' : ""}${button("generate", j.id, "Verify my eligibility", hasSavedPass(Number(j.class)))}${button("cancel-proof", j.id, "Cancel", false)}<p class="fine" id="proof-progress-${j.id}" role="status"></p><details><summary>Use older credential files</summary><p class="fine">One-time import. Your pass will be saved privately in this browser.</p><label>Issued credential<input type="file" accept=".json,application/json" data-credential="${j.id}"${!account ? " disabled" : ""}></label><label>Original holder backup<input type="file" accept=".json,application/json" data-holder="${j.id}"${!account ? " disabled" : ""}></label></details></div>` : ""}<details><summary>Advanced: use a local proving CLI</summary><p class="fine">Download the whole issuer snapshot; no credential identifier goes in the URL. The contract checks the authoritative root again at acceptance.</p><a href="/api/snapshot" download="snapshot.json">Download issuer snapshot</a><pre id="command-${j.id}">Connect your wallet, then prepare a proof request.</pre>${button("prepare", j.id, "Prepare local prover command")}<label class="fine">Import PUBLIC proof JSON (never your credential or holder file)<input type="file" accept=".json,application/json" data-proof="${j.id}"${!account ? " disabled" : ""}></label></details>${proofs.has(j.id) ? `<p class="fine">Proof checked against the current contract. Accepting still requires your wallet signature.</p>${button("accept", j.id, "Accept this task")}` : ""}`;
           if (role === "reviewer" && isClient && eligibility.accept) {
-            actions = `<div class="local-prover" data-wallet-mismatch="${j.id}"><h4>This is the client's wallet.</h4><p>You connected <code>${esc(account!)}</code>, the account that funded this task. The Reviewer tab changes the view; it does not switch your wallet account.</p><p>To review as a separate participant, select your reviewer account in the wallet. Keep this task open; you do not need to list or fund it again.</p><button data-select-reviewer type="button">Choose reviewer account</button><button data-proof-connect type="button" class="quiet">Reconnect selected account</button><p class="fine">If the wallet keeps choosing this address, open its connected-site settings and connect only the reviewer account to Cutout. A separate reviewer browser profile also works.</p></div>`;
+            actions = `<div class="local-prover" data-wallet-mismatch="${j.id}"><h4>This is the client's wallet.</h4><p>You connected <code>${esc(account!)}</code>, the account that funded this task. The Reviewer tab changes the view; it does not switch your wallet account.</p><p>To review as a separate participant, select your reviewer account in the wallet. Keep this task open; you do not need to list or fund it again.</p><button data-select-reviewer type="button">Choose reviewer account</button><button data-proof-connect type="button" class="quiet">Reconnect selected account</button><p class="fine">If the wallet keeps choosing this address, open its connected-site settings and connect only the reviewer account to Deaddrop. A separate reviewer browser profile also works.</p></div>`;
           }
           if (j.status === "Accepted" && isWorker)
             actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Seal & deliver report", eligibility.submit)}`;
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
             actions =
-              `<div class="sealed-report"><div class="sealed-art" aria-hidden="true"><svg viewBox="0 0 120 80"><path d="M8 12h104v58H8Z" fill="#F04E23" stroke="currentColor"/><path d="m8 12 52 37 52-37" fill="none" stroke="currentColor"/></svg></div><div><h4>A review, just for you.</h4><p class="fine">Cut along the line to open your private report.</p><label class="cut-track">Drag to cut<input type="range" min="0" max="100" value="0" data-cut="${j.id}" aria-label="Cut open report for task ${j.id}"${!account ? " disabled" : ""}></label>${button("retrieve", j.id, "Cut open report")}</div></div>` +
+              `<div class="sealed-report"><div class="sealed-art" aria-hidden="true"><svg viewBox="0 0 120 80"><path d="M8 12h104v58H8Z" fill="#F04E23" stroke="currentColor"/><path d="m8 12 52 37 52-37" fill="none" stroke="currentColor"/></svg></div><div><h4>A review, just for you.</h4><p class="fine">Open the encrypted delivery privately on this device.</p><label class="cut-track">Slide to open<input type="range" min="0" max="100" value="0" data-cut="${j.id}" aria-label="Open private report for task ${j.id}"${!account ? " disabled" : ""}></label>${button("retrieve", j.id, "Open private report")}</div></div>` +
               (isClient || isWorker ? button("save", j.id, "Download report", false) : "") +
               `<details class="report-recovery"><summary>Encrypted backup & device recovery</summary><p class="fine">Demo storage is temporary. Keep a downloaded copy. Use an older device key only when recovering a report encrypted to it.</p>${button("export", j.id, "Export encrypted backup")}<label class="fine">Device key<select data-history="${j.id}"><option value="">Current device key</option></select></label></details>`;
           if (j.status === "Submitted" && isClient)
@@ -1019,7 +1021,7 @@ async function checkProofFiles(id: string) {
     if (!current()) return;
     if (values.some((value) => !value)) {
       status.textContent = !values[0]
-        ? "Select the signed credential returned by the Cutout issuer. An enrollment request is not a credential."
+        ? "Select the signed credential returned by the Deaddrop issuer. An enrollment request is not a credential."
         : "Select the private holder backup you saved when preparing this enrollment.";
       return;
     }
@@ -1717,7 +1719,7 @@ document.addEventListener("click", (e) => {
     void run(async () => {
       if (!window.ethereum)
         throw new WalletNetworkError(
-          "Open Cutout in a browser with your reviewer wallet.",
+          "Open Deaddrop in a browser with your reviewer wallet.",
         );
       await requestWalletAccountSelection(window.ethereum);
       await connect();

@@ -36,7 +36,7 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
   const response=await fetch('/api/enrollment',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({applicant:scope.wallet,envelope:pending.envelope,expires,signature}),signal:controller?.signal});
   const result=await response.json();current(mine);
   if(!response.ok)throw Error(result.error||'Application was not confirmed. Check approval before retrying.');
-  message('Application received. The Cutout team will review it. Your pass will arrive here after approval.');
+  message('Application received. The Deaddrop team will review it. Your pass will arrive here after approval.');
   $('prepare-enrollment').hidden=true;$('check-enrollment').hidden=false;hooks.state('Awaiting issuer approval');
  }
  $('prepare-enrollment').onclick=()=>run(async(mine)=>{
@@ -67,7 +67,7 @@ export function mountEnrollment(config:any, hooks:{ scope():Promise<CredentialVa
     await submit(scope,entry,mine);return;
   }
   if(!response.ok)throw Error(result.error||'Approval check unavailable. Try again.');
-  if(result.status!=='approved'){message('Your application is waiting for the Cutout team. Check back after approval.');return;}
+  if(result.status!=='approved'){message('Your application is waiting for the Deaddrop team. Check back after approval.');return;}
   const credential=parseApproval(await openEnrollment(result.approval,pending.reply as ChannelKeys,pending.context,'approval'));
   current(mine);
   if(Number(credential.expiry)<=Math.floor(Date.now()/1000)){

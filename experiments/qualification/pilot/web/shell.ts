@@ -1,9 +1,12 @@
 // Presentation navigation stays available even when a sponsor network is offline.
 let cleanupDemo: (() => void) | undefined;
-let requestedView = "tasks";
+let requestedView = "home";
 const el = (id: string) => document.getElementById(id)!;
 export async function setView(view: string) {
   requestedView = view;
+  const url = new URL(location.href);
+  url.searchParams.set("view", view);
+  history.replaceState(null, "", url);
   document.body.dataset.view = view;
   document.querySelectorAll<HTMLElement>("[data-screen]").forEach((node) => {
     node.hidden = node.dataset.screen !== view;
@@ -14,10 +17,14 @@ export async function setView(view: string) {
       if (node.dataset.view === view) node.setAttribute("aria-current", "page");
       else node.removeAttribute("aria-current");
     });
-  el("live-workspace").hidden = view === "demo";
+  el("dd-home").hidden = view !== "home";
+  document.querySelector<HTMLElement>(".cutout-shell")!.hidden =
+    view === "home";
+  el("live-workspace").hidden = !["tasks", "activity", "help"].includes(view);
+  window.dispatchEvent(new Event("deaddrop:view"));
   el("cutout-demo").hidden = view !== "demo";
   document.querySelector<HTMLElement>(".workspace-heading")!.hidden =
-    view === "demo";
+    view === "demo" || view === "issuer" || view === "home";
   const reviewer = document.body.dataset.role === "reviewer";
   const copy =
     view === "activity"
@@ -48,9 +55,6 @@ export async function setView(view: string) {
   el("post-task").hidden = true;
   el("intro-demo").textContent = "How it works ↗";
   el("intro-demo").hidden = view !== "tasks";
-  el("rail-caption").textContent = reviewer
-    ? "Let your work speak."
-    : "Make room for good work.";
   el("post-task").textContent = reviewer ? "Find a task" : "Post a task";
   el("view-caption").textContent =
     view === "tasks"
@@ -76,11 +80,70 @@ export function revealInWorkspace(target: HTMLElement) {
   }
 }
 export function mountShell() {
-  document.body.dataset.role = new URL(location.href).searchParams.get("role") === "reviewer" ? "reviewer" : "client";
+  document.body.dataset.role =
+    new URL(location.href).searchParams.get("role") === "reviewer"
+      ? "reviewer"
+      : "client";
   document.querySelectorAll<HTMLButtonElement>(".rail-nav [data-view]").forEach(
     (b) =>
       (b.onclick = () => {
         void setView(b.dataset.view!);
+      }),
+  );
+  document.querySelector<HTMLAnchorElement>(".skip")!.onclick = (event) => {
+    event.preventDefault();
+    void setView("tasks");
+    el("main").focus();
+  };
+  document.querySelectorAll<HTMLElement>("[data-home]").forEach(
+    (node) =>
+      (node.onclick = (event) => {
+        event.preventDefault();
+        void setView("home");
+      }),
+  );
+  document.querySelectorAll<HTMLButtonElement>("[data-demo]").forEach(
+    (node) =>
+      (node.onclick = () => {
+        void setView("demo");
+      }),
+  );
+  document.querySelectorAll<HTMLButtonElement>("[data-entry]").forEach(
+    (node) =>
+      (node.onclick = () => {
+        const role = node.dataset.entry!;
+        if (role === "issuer") {
+          void setView("issuer");
+          return;
+        }
+        const roleButton = el(`start-${role}`) as HTMLButtonElement;
+        if (roleButton.disabled) {
+          document
+            .querySelectorAll<HTMLElement>("[data-entry-status]")
+            .forEach((message) => {
+              message.hidden = false;
+              message.textContent =
+                "Finish the current wallet action before switching roles.";
+            });
+          return;
+        }
+        document
+          .querySelectorAll<HTMLElement>("[data-entry-status]")
+          .forEach((message) => {
+            message.hidden = true;
+            message.textContent = "";
+          });
+        const url = new URL(location.href);
+        url.searchParams.set("role", role);
+        history.replaceState(null, "", url);
+        document.body.dataset.role = role;
+        roleButton.click();
+        void setView(node.dataset.entryView || "tasks");
+        if (node.dataset.entryView === "help") {
+          const pass = document.getElementById("reviewer-help");
+          if (pass instanceof HTMLDetailsElement) pass.open = true;
+        }
+        window.scrollTo({ top: 0, behavior: "instant" });
       }),
   );
   for (const id of ["try-demo", "intro-demo"])
@@ -121,9 +184,14 @@ export function mountShell() {
   window.addEventListener("cutout:role", () => {
     void setView("tasks");
   });
+  const params = new URL(location.href).searchParams;
+  const view = params.get("view");
   void setView(
-    new URL(location.href).searchParams.get("view") === "demo"
-      ? "demo"
-      : "tasks",
+    view &&
+      ["home", "tasks", "activity", "help", "demo", "issuer"].includes(view)
+      ? view
+      : params.has("role")
+        ? "tasks"
+        : "home",
   );
 }

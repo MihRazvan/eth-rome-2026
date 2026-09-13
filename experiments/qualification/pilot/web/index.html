@@ -3,97 +3,83 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#17150F" />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="./assets/qualification-cutout.svg"
-    />
+    <meta name="theme-color" content="#060404" />
+    <link rel="icon" type="image/svg+xml" href="./assets/deaddrop.svg" />
     <meta
       name="description"
-      content="Cutout: qualified reviewers, private reports. Post a task, fund the reward, and receive a report encrypted for you and the reviewer."
+      content="Deaddrop: qualified reviewers, private reports. Post a task, fund the reward, and receive a report encrypted for you and the reviewer."
     />
-    <title>Cutout — Qualified work. Private by design.</title>
+    <title>Deaddrop — Qualified work. Private by design.</title>
     <script type="module" src="/boot.ts"></script>
   </head>
-  <body data-role="client" data-view="tasks">
+  <body data-role="client" data-view="home">
+    <canvas id="dd-field" aria-hidden="true"></canvas>
+    <div id="dd-veil" aria-hidden="true"></div>
+    <section id="dd-home" aria-label="Deaddrop introduction">
+      <header class="dd-hud">
+        <a href="/" aria-label="Deaddrop home">◈ DEADDROP</a
+        ><span>PRIVATE WORK. PUBLIC SETTLEMENT.</span
+        ><span>FUJI / TESTNET EDITION</span>
+      </header>
+      <div class="dd-hero">
+        <p class="dd-overline">QUALIFIED TO KNOW. FREE TO STAY PRIVATE.</p>
+        <h1>Dead<span>drop</span></h1>
+        <p class="dd-lead">
+          Prove you qualify. Leave the report encrypted. <br />Get paid without
+          publishing your credential.
+        </p>
+        <div class="dd-doors">
+          <button data-ui data-entry="client">
+            I need a review <span>↗</span></button
+          ><button data-ui data-entry="reviewer" class="dd-cold">
+            I do the reviewing <span>↗</span></button
+          ><button data-ui data-entry="issuer" class="dd-text">
+            Who qualifies? ↗
+          </button>
+        </div>
+        <p data-entry-status role="status" hidden></p>
+        <button data-ui class="dd-demo-link" data-demo>
+          Walk through the exchange <span>↗</span
+          ><small>No wallet needed · simulated payment</small>
+        </button>
+      </div>
+      <footer class="dd-home-footer">
+        <button data-ui id="dd-cool">
+          ＋ Tap to cool the field
+          <small>Interactive visual · no transaction</small></button
+        ><span>Private credentials.<br />Public payment wallets.</span
+        ><span>ETHROME 2026<br />AVALANCHE / ARKIV / SWARM</span>
+      </footer>
+    </section>
     <a class="skip" href="#main">Skip to your workspace</a>
     <div class="cutout-shell">
-      <aside class="cutout-rail" aria-label="Cutout navigation">
-        <a class="brand-wordmark" href="/" aria-label="Cutout home"
-          ><svg viewBox="0 0 360 100" role="img" aria-label="Cutout">
-            <defs>
-              <mask id="wordmark-cut">
-                <rect width="360" height="100" fill="white" />
-                <circle cx="166" cy="44" r="9" fill="black" />
-                <path d="M150 72C150 55 182 55 182 72Z" fill="black" />
-              </mask>
-            </defs>
-            <text
-              x="0"
-              y="78"
-              font-family="Archivo,sans-serif"
-              font-size="88"
-              font-weight="800"
-              letter-spacing="-5"
-              fill="currentColor"
-              mask="url(#wordmark-cut)"
-            >
-              Cutout
-            </text>
-          </svg></a
+      <header class="dd-appbar">
+        <a class="brand-wordmark" href="/" data-home aria-label="Deaddrop home"
+          ><span aria-hidden="true">◈</span><span>Deaddrop</span></a
         >
-        <div class="rail-portrait" aria-hidden="true">
-          <svg viewBox="0 0 160 180">
-            <path
-              d="M8 24V8h16M136 8h16v16M152 156v16h-16M24 172H8v-16"
-              fill="none"
-              stroke="currentColor"
-            />
-            <g class="portrait-person">
-              <circle cx="80" cy="59" r="27" />
-              <path d="M24 151c0-42 25-63 56-63s56 21 56 63Z" />
-            </g>
-            <circle class="portrait-hole" cx="80" cy="59" r="11" />
-          </svg>
-        </div>
-        <p class="rail-caption" id="rail-caption">Make room for good work.</p>
-        <nav class="rail-nav">
-          <button data-ui data-view="tasks" aria-current="page">
-            <span aria-hidden="true">⌑</span> Tasks</button
-          ><button data-ui data-view="activity">
-            <span aria-hidden="true">↳</span> Activity</button
-          ><button data-ui data-view="help">
-            <span aria-hidden="true">⊕</span> Your workspace
+        <div class="role-switch" aria-label="Choose your role">
+          <button id="start-client" data-role="client" aria-pressed="true">
+            Client</button
+          ><button
+            id="start-reviewer"
+            data-role="reviewer"
+            aria-pressed="false"
+          >
+            Reviewer
           </button>
+        </div>
+        <nav class="rail-nav" aria-label="Workspace">
+          <button data-ui data-view="tasks">Tasks</button
+          ><button data-ui data-view="activity">Activity</button
+          ><button data-ui data-view="help">Your workspace</button>
         </nav>
-        <div class="rail-bottom">
-          <button data-ui id="try-demo" class="rail-demo">
-            Try the demo <span aria-hidden="true">↗</span>
-          </button>
-          <p>No wallet needed.</p>
-          <span class="rail-network"><i></i> Avalanche Fuji</span
-          ><small>Testnet edition / ETHRome 2026</small>
+        <button data-ui id="try-demo" class="rail-demo">Try demo ↗</button>
+        <div class="topbar-wallet">
+          <span class="testnet-label">Fuji testnet</span
+          ><button id="connect" disabled>Loading wallet…</button>
         </div>
-      </aside>
-      <main class="cutout-main" id="main">
-        <div class="cutout-topbar">
-          <div class="role-switch" aria-label="Choose your role">
-            <button id="start-client" data-role="client" aria-pressed="true">
-              Client</button
-            ><button
-              id="start-reviewer"
-              data-role="reviewer"
-              aria-pressed="false"
-            >
-              Reviewer
-            </button>
-          </div>
-          <div class="topbar-wallet">
-            <span class="testnet-label">Test assets only</span
-            ><button id="connect" disabled>Loading wallet…</button>
-          </div>
-        </div>
+      </header>
+      <main class="cutout-main" id="main" tabindex="-1">
         <section class="intro workspace-heading">
           <div>
             <p class="eyebrow" id="view-caption">CLIENT / NEW REVIEW</p>
@@ -108,43 +94,61 @@
               </button>
             </div>
           </div>
-          <div class="workspace-art" aria-hidden="true">
-            <svg viewBox="0 0 240 220">
-              <path
-                d="M24 22h155l35 34v144H24Z"
-                fill="#E0D3B2"
-                stroke="#17150F"
-              />
-              <path d="M179 22v34h35" fill="none" stroke="#17150F" />
-              <path
-                d="M38 174h160M38 184h89"
-                stroke="#9A907A"
-                stroke-dasharray="4 5"
-              />
-              <circle cx="118" cy="80" r="27" fill="#17150F" />
-              <path d="M63 155c0-40 24-59 55-59s55 19 55 59Z" fill="#17150F" />
-              <circle cx="118" cy="80" r="11" fill="#E0D3B2" />
-              <path
-                d="M15 12h14M15 12v14M207 207h16v-16"
-                fill="none"
-                stroke="#17150F"
-              />
-              <circle cx="182" cy="157" r="26" fill="#F04E23" />
-              <path
-                d="m169 157 9 9 18-20"
-                stroke="#17150F"
-                stroke-width="3"
-                fill="none"
-              /></svg
-            ><span>Keep the qualification.<br />Cut out the identifier.</span>
-          </div>
         </section>
         <section
           id="cutout-demo"
           class="cutout-demo"
           hidden
-          aria-label="Guided Cutout demo"
+          aria-label="Guided Deaddrop demo"
         ></section>
+        <section data-screen="issuer" class="dd-issuer" hidden>
+          <p class="eyebrow">THE TRUST BEHIND THE PROOF</p>
+          <h1>
+            Someone checks the person.<br />The contract checks the proof.
+          </h1>
+          <p>
+            A qualification is an issuer’s approval to review. It is not a
+            guarantee that a report is good.
+          </p>
+          <div class="dd-issuer-steps">
+            <article>
+              <span>01 / APPLY</span>
+              <h2>Keep your secret.</h2>
+              <p>
+                Your browser creates a private holder secret. You send an
+                encrypted application, signed with your wallet.
+              </p>
+            </article>
+            <article>
+              <span>02 / APPROVAL</span>
+              <h2>A human makes the call.</h2>
+              <p>
+                In this test edition, the Deaddrop team manually approves
+                applications. Check approval in your workspace to save your pass
+                in this browser.
+              </p>
+            </article>
+            <article>
+              <span>03 / VERIFY</span>
+              <h2>Show just enough.</h2>
+              <p>
+                For each task, your browser proves that your issuer-approved
+                credential is valid. Fuji verifies the proof and binds the
+                assignment to its payment wallet.
+              </p>
+            </article>
+          </div>
+          <button data-ui data-entry="reviewer" data-entry-view="help">
+            Open your reviewer pass ↗
+          </button>
+          <p data-entry-status role="status" hidden></p>
+          <p class="fine">
+            One experimental test issuer. No professional certification implied.
+            Wallets and payment history are public; credential details and
+            reports stay private. The client evaluates the work before releasing
+            payment.
+          </p>
+        </section>
         <div id="live-workspace">
           <section
             class="journey"
@@ -210,27 +214,88 @@
             data-screen="help"
           >
             <summary>Your reviewer pass</summary>
-            <p class="eyebrow">CUTOUT TEST ISSUER · TECHNICAL REVIEW</p>
+            <p class="eyebrow">DEADDROP TEST ISSUER · TECHNICAL REVIEW</p>
             <h3>Apply once. Keep your pass here.</h3>
-            <p>The Cutout team approves test reviewers. Your private pass stays in this browser and is used automatically when you accept work.</p>
+            <p>
+              The Deaddrop team approves test reviewers. Your private pass stays
+              in this browser and is used automatically when you accept work.
+            </p>
             <div class="enrollment-card">
-              <p id="enrollment-status" role="status">Connect your reviewer wallet to get started.</p>
+              <p id="enrollment-status" role="status">
+                Connect your reviewer wallet to get started.
+              </p>
               <div class="actions">
-                <button id="prepare-enrollment" data-ui type="button">Apply for a reviewer pass</button>
-                <button id="check-enrollment" data-ui type="button" class="quiet" hidden>Check approval</button>
-                <button id="enrollment-connect" data-ui type="button" hidden>Connect reviewer wallet</button>
+                <button id="prepare-enrollment" data-ui type="button">
+                  Apply for a reviewer pass
+                </button>
+                <button
+                  id="check-enrollment"
+                  data-ui
+                  type="button"
+                  class="quiet"
+                  hidden
+                >
+                  Check approval
+                </button>
+                <button id="enrollment-connect" data-ui type="button" hidden>
+                  Connect reviewer wallet
+                </button>
               </div>
             </div>
-            <details class="pass-backup"><summary>Backup or restore a pass</summary>
-              <p class="fine">Optional. Save a private backup before changing browsers or clearing site data. Your wallet cannot restore this pass by itself.</p>
-              <button id="save-private-pass" data-ui type="button" class="quiet">Save private backup</button>
-              <label>Restore a Cutout backup<input id="restore-private-pass" type="file" accept=".cutout,.json,application/json"></label>
-              <p class="fine">Already received the two older files? Import them once here.</p>
-              <label>Issued credential<input id="restore-credential" type="file" accept=".json,application/json"></label>
-              <label>Original holder backup<input id="restore-holder" type="file" accept=".json,application/json"></label>
-              <button id="restore-legacy-pass" data-ui type="button" class="quiet">Save existing pass to this browser</button>
+            <details class="pass-backup">
+              <summary>Backup or restore a pass</summary>
+              <p class="fine">
+                Optional. Save a private backup before changing browsers or
+                clearing site data. Your wallet cannot restore this pass by
+                itself.
+              </p>
+              <button
+                id="save-private-pass"
+                data-ui
+                type="button"
+                class="quiet"
+              >
+                Save private backup
+              </button>
+              <label
+                >Restore a Deaddrop backup<input
+                  id="restore-private-pass"
+                  type="file"
+                  accept=".cutout,.json,application/json"
+              /></label>
+              <p class="fine">
+                Already received the two older files? Import them once here.
+              </p>
+              <label
+                >Issued credential<input
+                  id="restore-credential"
+                  type="file"
+                  accept=".json,application/json"
+              /></label>
+              <label
+                >Original holder backup<input
+                  id="restore-holder"
+                  type="file"
+                  accept=".json,application/json"
+              /></label>
+              <button
+                id="restore-legacy-pass"
+                data-ui
+                type="button"
+                class="quiet"
+              >
+                Save existing pass to this browser
+              </button>
             </details>
-            <details><summary>How qualification works</summary><p id="prover-help" class="fine">The issuer approves eligibility. Your browser proves that approval without publishing your credential. Wallets and payments remain public. This is a temporary test pass, not professional accreditation.</p></details>
+            <details>
+              <summary>How qualification works</summary>
+              <p id="prover-help" class="fine">
+                The issuer approves eligibility. Your browser proves that
+                approval without publishing your credential. Wallets and
+                payments remain public. This is a temporary test pass, not
+                professional accreditation.
+              </p>
+            </details>
           </details>
           <div id="notice" role="status" aria-live="polite"></div>
           <section
@@ -239,16 +304,49 @@
             data-screen="tasks"
           >
             <div class="section-top">
-              <div><p class="eyebrow">Funded work. Private reports.</p><h2>Find a task</h2></div>
-              <span id="board-live" class="board-live" role="status">Connecting…</span>
+              <div>
+                <p class="eyebrow">Funded work. Private reports.</p>
+                <h2>Find a task</h2>
+              </div>
+              <span id="board-live" class="board-live" role="status"
+                >Connecting…</span
+              >
             </div>
             <div class="board-toolbar">
-              <div class="board-filter"><label for="minimum-reward">Minimum reward (test USDC)</label><div><input id="minimum-reward" inputmode="decimal" value="0" /><button id="filter-board" class="quiet">Apply filter</button></div></div>
-              <label class="board-sort" for="board-order">Sort reviews<select id="board-order"><option value="deadline">Closing soon</option><option value="reward">Highest reward</option></select></label>
+              <div class="board-filter">
+                <label for="minimum-reward">Minimum reward (test USDC)</label>
+                <div>
+                  <input
+                    id="minimum-reward"
+                    inputmode="decimal"
+                    value="0"
+                  /><button id="filter-board" class="quiet">
+                    Apply filter
+                  </button>
+                </div>
+              </div>
+              <label class="board-sort" for="board-order"
+                >Sort reviews<select id="board-order">
+                  <option value="deadline">Closing soon</option>
+                  <option value="reward">Highest reward</option>
+                </select></label
+              >
             </div>
-            <div class="board-count"><p id="board-summary" role="status">Checking available reviews</p><button id="refresh-board" class="quiet">Refresh</button></div>
+            <div class="board-count">
+              <p id="board-summary" role="status">Checking available reviews</p>
+              <button id="refresh-board" class="quiet">Refresh</button>
+            </div>
             <div id="opportunities"></div>
-            <details class="board-diagnostics"><summary>How the live board works</summary><p class="fine">Listings expire automatically. An expired listing leaves the board; it does not cancel funded or accepted work. Wallets and task timing are public.</p><p id="discovery-status" class="fine">Connecting to Arkiv…</p><p id="discovery-change" class="fine" role="status"></p></details>
+            <details class="board-diagnostics">
+              <summary>How the live board works</summary>
+              <p class="fine">
+                Listings expire automatically. An expired listing leaves the
+                board; it does not cancel funded or accepted work. Wallets and
+                task timing are public.
+              </p>
+              <p id="discovery-status" class="fine">Connecting to Arkiv…</p>
+              <p id="discovery-change" class="fine" role="status"></p>
+            </details>
           </section>
           <details class="device-settings" data-screen="help">
             <summary>Private reports &amp; storage</summary>
@@ -460,7 +558,7 @@ Review the public payment authorization flow. Identify permission bypasses, cite
           </details>
         </div>
         <footer>
-          <span>Cutout / Qualified work. Private by design.</span
+          <span>Deaddrop / Qualified work. Private by design.</span
           ><span id="contracts"></span
           ><span class="experiment" id="environment">Connecting to Fuji…</span>
         </footer>
