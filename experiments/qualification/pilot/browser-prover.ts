@@ -27,7 +27,7 @@ export async function proveInBrowser(
   try {
     check();
     options.onProgress(
-      "Loading public proof parameters. Your private files stay in this browser.",
+      "Loading public proof parameters. Your private pass stays in this browser.",
     );
     const setup = await Promise.all(
       names.map(async (name) => {

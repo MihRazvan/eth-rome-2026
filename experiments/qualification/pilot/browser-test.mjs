@@ -430,6 +430,8 @@ try {
     .locator(`[data-history="${id}"] option`)
     .nth(1)
     .getAttribute("value");
+  if (!(await customer.page.locator(`[data-history="${id}"]`).isVisible()))
+    await customer.page.locator(`#job-${id} .report-recovery > summary`).click();
   await customer.page.locator(`[data-history="${id}"]`).selectOption(old);
   await click(customer.page, `[data-action="retrieve"][data-id="${id}"]`);
   assert.equal(
@@ -571,6 +573,8 @@ try {
   );
   await click(customer.page, "#connect");
   await showControl(customer.page, `[data-action="retrieve"][data-id="${id}"]`);
+  if (!(await customer.page.locator(`[data-history="${id}"]`).isVisible()))
+    await customer.page.locator(`#job-${id} .report-recovery > summary`).click();
   await customer.page.locator(`[data-history="${id}"]`).selectOption(old);
   await click(customer.page, `[data-action="retrieve"][data-id="${id}"]`);
   await click(customer.page, `[data-action="pay"][data-id="${id}"]`);

@@ -742,7 +742,7 @@ function render() {
                 : j.status === "Submitted"
                   ? `Report delivered. The client can approve payment or dispute by ${date(j.reviewBefore)}. After that, the reviewer can claim payment unless disputed.`
                   : j.status === "Paid"
-                    ? "Complete. The funded reward was paid to the assigned reviewer. Keep a downloaded copy; storage availability depends on its remaining lifetime."
+                    ? "Paid to the reviewer. Download a copy of your report."
                     : j.status === "Refunded"
                       ? "Closed. The reward was returned to the client."
                       : j.status === "Disputed"
@@ -778,12 +778,9 @@ function render() {
             actions = `<label class="fine" for="review-${j.id}">Private review for you and the client</label><textarea class="doc" id="review-${j.id}"></textarea>${button("submit", j.id, "Seal & deliver report", eligibility.submit)}`;
           if (["Submitted", "Paid", "Disputed", "Resolved"].includes(j.status))
             actions =
-              `<div class="sealed-report"><div class="sealed-art" aria-hidden="true"><svg viewBox="0 0 120 80"><path d="M8 12h104v58H8Z" fill="#F04E23" stroke="currentColor"/><path d="m8 12 52 37 52-37" fill="none" stroke="currentColor"/></svg></div><div><h4>A review, just for you.</h4><p class="fine">Cut along the line to retrieve and decrypt the report in this browser.</p><label class="cut-track">Drag to cut<input type="range" min="0" max="100" value="0" data-cut="${j.id}" aria-label="Cut open report for task ${j.id}"${!account ? " disabled" : ""}></label>${button("retrieve", j.id, "Cut open report")}</div></div>` +
-              button("export", j.id, "Export encrypted review") +
-              (isClient || isWorker
-                ? button("save", j.id, "Save decrypted report")
-                : "") +
-              `<label class="fine">Device key<select data-history="${j.id}"><option value="">Current device key</option></select></label>`;
+              `<div class="sealed-report"><div class="sealed-art" aria-hidden="true"><svg viewBox="0 0 120 80"><path d="M8 12h104v58H8Z" fill="#F04E23" stroke="currentColor"/><path d="m8 12 52 37 52-37" fill="none" stroke="currentColor"/></svg></div><div><h4>A review, just for you.</h4><p class="fine">Cut along the line to open your private report.</p><label class="cut-track">Drag to cut<input type="range" min="0" max="100" value="0" data-cut="${j.id}" aria-label="Cut open report for task ${j.id}"${!account ? " disabled" : ""}></label>${button("retrieve", j.id, "Cut open report")}</div></div>` +
+              (isClient || isWorker ? button("save", j.id, "Download report") : "") +
+              `<details class="report-recovery"><summary>Encrypted backup & device recovery</summary><p class="fine">Demo storage is temporary. Keep a downloaded copy. Use an older device key only when recovering a report encrypted to it.</p>${button("export", j.id, "Export encrypted backup")}<label class="fine">Device key<select data-history="${j.id}"><option value="">Current device key</option></select></label></details>`;
           if (j.status === "Submitted" && isClient)
             actions +=
               button(
@@ -812,7 +809,7 @@ function render() {
             account?.toLowerCase() === config.arbitrator.toLowerCase()
           )
             actions += button("resolve", j.id, "Arbitrate 50 / 50 split");
-          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>TASK ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body">${progress}<h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p><p class="stage-hint">${esc(stageHint)}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
+          return `<article class="ticket" id="job-${j.id}"><div class="ticket-head"><span>TASK ${j.id}</span><span class="status">${j.status.toUpperCase()}</span></div><div class="ticket-body">${progress}<h3>${esc(j.scope?.title ?? "Technical review")}</h3>${j.scope ? `<p class="scope">${esc(j.scope.scope)}</p><p class="fine">Public scope verified against funding commitment.</p>` : `<p class="fine">${esc(j.scopeError || "Legacy assignment: no scope document attached.")}</p>`}<details class="task-people"><summary>People & verification</summary><p class="fine">Client ${esc(j.client)}<br>${j.worker !== "0x" + "0".repeat(40) ? `Reviewer ${esc(j.worker)}` : "Open to a currently qualified reviewer"}</p></details><div class="reward"><strong>${formatUnits(j.amount, 6)} <small>${tokenSymbol}</small></strong><span>${isClient ? "YOUR COMMISSION" : isWorker ? "YOUR ASSIGNMENT" : j.status.toUpperCase()}</span></div><details class="task-deadlines"><summary>All deadlines</summary><p class="fine">Accept ${new Date(Number(j.acceptBefore) * 1000).toLocaleString()} · submit ${new Date(Number(j.submitBefore) * 1000).toLocaleString()} · review ${new Date(Number(j.reviewBefore) * 1000).toLocaleString()}</p></details><p class="stage-hint">${esc(stageHint)}</p><div class="actions">${publish}${actions}</div><pre id="document-${j.id}"></pre></div></article>`;
         })
         .join("")
     : `<article class="ticket empty-state"><div class="ticket-body"><h3>${role === "reviewer" ? "Your next review starts here." : "Make room for your first review."}</h3><p class="terms">${role === "reviewer" ? "Choose an open task from the board. Your accepted work and delivered reports will appear here." : "Post a specific question and fund its reward. You can follow the review from acceptance to payment here."}</p><button data-ui data-back-tasks>${role === "reviewer" ? "Find a task" : "Post a task"}</button></div></article>`;

@@ -133,8 +133,13 @@ try {
     retry.textContent = "Reload workspace";
     retry.onclick = () => window.location.reload();
     document.getElementById("live-workspace")!.replaceChildren(message, retry);
-  } else
-    await setupPage(
-      "The public deployment configuration is unavailable. Funded reviews remain disabled until it is restored.",
-    );
+  } else {
+    document.getElementById("environment")!.textContent = "CUTOUT · CONNECTION UNAVAILABLE";
+    document.getElementById("connect")!.hidden = true;
+    const panel = document.createElement("section");
+    panel.className = "journey";
+    panel.innerHTML = '<div><h2>We could not connect.</h2><p role="status">Reload to reconnect your workspace. Your onchain tasks and saved browser pass are preserved.</p><button id="retry-workspace" data-ui type="button">Retry connection</button><p class="fine">You can still explore the guided demo from the sidebar.</p></div>';
+    panel.querySelector<HTMLButtonElement>("#retry-workspace")!.onclick = () => location.reload();
+    document.getElementById("live-workspace")!.replaceChildren(panel);
+  }
 }

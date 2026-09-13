@@ -26,7 +26,7 @@ export async function createHolderInBrowser(options: {
   onProgress(message: string): void;
 }): Promise<Holder> {
   if (options.signal.aborted) throw Error("Holder creation cancelled");
-  options.onProgress("Creating your private qualification backup in this browser…");
+  options.onProgress("Preparing your private reviewer pass…");
   const worker = new Worker("/prover/worker.js");
   try {
     return await new Promise<Holder>((resolve, reject) => {
