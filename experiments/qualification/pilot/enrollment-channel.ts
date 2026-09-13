@@ -57,14 +57,15 @@ export function parseApproval(v:any) { return validateProofFile('credential',v);
 export function enrollmentAuthorization(c:ChannelContext, hash:string, expires:number, legacy = false) {
   c=channelContext(c);
   if(!/^0x[0-9a-f]{64}$/.test(hash) || !Number.isSafeInteger(expires)) throw Error('Invalid application authorization');
-  return `${legacy ? "Cutout" : "Deaddrop"} test qualification application\nChain: ${c.chainId}\nEscrow: ${c.escrow}\nIssuer: ${c.issuer}\nRequest: ${c.ticket}\nEncrypted application SHA-256: ${hash}\nExpires: ${expires}\nThis requests manual issuer approval. No payment or token approval.`;
+  return `${legacy ? "Cutout test qualification application" : "Deaddrop reviewer setup"}\nChain: ${c.chainId}\nEscrow: ${c.escrow}\nIssuer: ${c.issuer}\nRequest: ${c.ticket}\nEncrypted application SHA-256: ${hash}\nExpires: ${expires}\n${legacy ? "This requests manual issuer approval." : "Create my private reviewer access automatically. This does not certify professional expertise."} No payment or token approval.`;
 }
 
 // Previously signed applications remain collectable through the visual rebrand.
 // Both labels authorize the exact same context, ciphertext digest and expiry.
 export async function verifyEnrollmentAuthorization(applicant: Hex, context: ChannelContext, digest: string, expires: number, signature: Hex) {
-  for (const legacy of [false, true]) {
-    if (await verifyMessage({ address: applicant, message: enrollmentAuthorization(context, digest, expires, legacy), signature })) return true;
+  const messages = [enrollmentAuthorization(context, digest, expires), enrollmentAuthorization(context, digest, expires, true), enrollmentAuthorization(context, digest, expires, true).replace("Cutout test qualification application", "Deaddrop test qualification application")];
+  for (const message of messages) {
+    if (await verifyMessage({ address: applicant, message, signature })) return true;
   }
   return false;
 }

@@ -7,6 +7,7 @@ import {
   rm,
   copyFile,
   readdir,
+  chmod,
 } from "node:fs/promises";
 import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -262,6 +263,13 @@ await build({
   },
   logLevel: "warn",
 });
+
+// Public executable only; signer keys and durable allocator are runtime secrets.
+await exec('go',['build','-trimpath','-o',resolve(func,'issuer'),'.'],{
+ cwd:resolve(root,'experiments/qualification/prover'),
+ env:{...process.env,GOOS:'linux',GOARCH:'amd64',CGO_ENABLED:'0'},maxBuffer:65536,
+});
+await chmod(resolve(func,'issuer'),0o755);
 await writeFile(
   resolve(func, ".vc-config.json"),
   json({
@@ -334,7 +342,7 @@ async function scan(dir) {
     )
       throw Error("Non-public file in build output");
     const bytes = await readFile(path);
-    if (!/\.(wasm|key|r1cs)$/.test(name) && bytes.includes(Buffer.from(root)))
+    if (!/(\.(wasm|key|r1cs)$|\/issuer$)/.test(name) && bytes.includes(Buffer.from(root)))
       throw Error("Absolute checkout path leaked into build output");
     inventory.push({ path: name, bytes: bytes.length, sha256: sha(bytes) });
   }

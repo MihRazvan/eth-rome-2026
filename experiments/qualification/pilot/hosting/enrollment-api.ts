@@ -1,9 +1,11 @@
+import { createAutomaticIssuer } from './automatic-issuer';
 import { createHmac } from 'node:crypto';
 import { createPublicClient, http, sha256, bytesToHex, type Hex } from 'viem';
 import { verifyEnrollmentAuthorization, parseSealedEnrollment, MAX_ENROLLMENT_BYTES } from '../enrollment-channel';
 import { enrollmentInbox } from '../enrollment-inbox';
 export type EnrollmentServiceConfig = { chainId:number; escrow:Hex; issuer:Hex; rpcUrl:string; enrollment?: { publicKey:Hex;relayAddress:Hex;issuerX:string;issuerY:string } };
 export function createEnrollmentAPI(config:EnrollmentServiceConfig, deps:any={}) {
+ const issue=deps.issue??createAutomaticIssuer(config);
  const now=deps.now??(()=>Math.floor(Date.now()/1000));
  let writes=Promise.resolve(); // Avoid nonce collisions within this function instance. Cross-instance retries are deduplicated by ticket.
  return async function handle(req:any,res:any) {
@@ -12,11 +14,11 @@ export function createEnrollmentAPI(config:EnrollmentServiceConfig, deps:any={})
   if(!url.pathname.startsWith('/api/enrollment'))return false;
   res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type','application/json');
   let release:(()=>void)|undefined;
-  if(req.method==='POST'){const before=writes;writes=new Promise<void>(resolve=>{release=resolve;});await before;}
+  if(req.method==='POST'||req.method==='GET'){const before=writes;writes=new Promise<void>(resolve=>{release=resolve;});await before;}
   try {
    const service=config.enrollment;
    const key=deps.key??process.env.CUTOUT_ENROLLMENT_RELAY_KEY;
-   if(!service || !key) {respond(503,{error:'Applications are temporarily unavailable. Your saved pass is safe.'});return true;}
+   if(!service || !key) {respond(503,{error:'Reviewer setup is temporarily unavailable. Your saved access is safe.'});return true;}
    const inbox=deps.inbox??enrollmentInbox({relayAddress:service.relayAddress,escrow:config.escrow},key);
    if(req.method==='GET' && url.pathname==='/api/enrollment') {
     const ticket=url.searchParams.get('ticket');
@@ -24,11 +26,18 @@ export function createEnrollmentAPI(config:EnrollmentServiceConfig, deps:any={})
     const rows=await inbox.query({ticket});
     const row=rows.find((r:any)=>r.record.ticket===ticket && r.record.approval)??rows.find((r:any)=>r.record.ticket===ticket);
     if(!row){respond(404,{status:'missing'});return true;}
+    if(!row.record.approval && (deps.issue||process.env.DEADDROP_ISSUER_SECRETS)) {
+     const approval=await issue(row.record);
+     // Allocation is already durably committed before issue returns. An Arkiv
+     // nonce/indexing failure must not strand this browser; later GETs retry publication.
+     try{await inbox.approve(row.key,{...row.record,approval,approvedAt:now()});}catch{}
+     respond(200,{status:'approved',approval});return true;
+    }
     respond(200,{status:row.record.approval?'approved':'pending',approval:row.record.approval??null});return true;
    }
    if(req.method!=='POST'||url.pathname!=='/api/enrollment'){respond(405,{error:'Method not allowed'});return true;}
    const origin=req.headers.origin;
-   if(!origin || !['https://cutout-ethrome-2026.vercel.app','https://review-pass-ethrome-2026.vercel.app'].includes(origin)){respond(403,{error:'Open applications inside Deaddrop'});return true;}
+   if(!origin || !['https://cutout-ethrome-2026.vercel.app','https://review-pass-ethrome-2026.vercel.app'].includes(origin)){respond(403,{error:'Open reviewer setup inside Deaddrop'});return true;}
    if(!String(req.headers['content-type']??'').startsWith('application/json')){respond(415,{error:'JSON required'});return true;}
    let raw='';
    if(req.body!==undefined) raw=typeof req.body==='string'?req.body:JSON.stringify(req.body);
@@ -45,14 +54,14 @@ export function createEnrollmentAPI(config:EnrollmentServiceConfig, deps:any={})
    if(existing.length){if(existing[0].record.digest!==digest)throw Error('Application reference already used');respond(200,{status:existing[0].record.approval?'approved':'pending'});return true;}
    const bucket=createHmac('sha256',key).update(body.applicant.toLowerCase()).digest('hex');
    const prior=await inbox.query({bucket});
-   if(prior.length>=3){respond(429,{error:'You already have applications in progress. Check your saved pass.'});return true;}
+   if(prior.length>=3){respond(429,{error:'Your access is already being set up. Continue setup in your workspace.'});return true;}
    const all=await inbox.query({});
-   if(all.length>=100){respond(429,{error:'The test issuer inbox is full. Please try later.'});return true;}
+   if(all.length>=100){respond(429,{error:'Reviewer setup is busy. Please try again shortly.'});return true;}
    const balance=deps.balance??((address:Hex)=>createPublicClient({transport:http(config.rpcUrl,{timeout:10000,retryCount:0})}).getBalance({address}));
-   if(await balance(body.applicant)<1000000000000000n){respond(400,{error:'Add Fuji test AVAX to your reviewer wallet before applying. You will need it to accept work.'});return true;}
+   if(await balance(body.applicant)<1000000000000000n){respond(400,{error:'Add Fuji test AVAX to your reviewer wallet to continue. You will need it to accept work.'});return true;}
    const record={version:1,ticket:c.ticket,applicant:body.applicant.toLowerCase(),expires:body.expires,signature:body.signature,digest,envelope,createdAt:now()};
    await inbox.create(record,bucket);
    respond(201,{status:'pending'});return true;
-  } catch {respond(503,{error:'Application was not confirmed. Check status before retrying; your private pass remains in this browser.'});return true;} finally {release?.();}
+  } catch {respond(503,{error:'Setup was not confirmed. Continue setup to retry safely; your private access remains in this browser.'});return true;} finally {release?.();}
  };
 }

@@ -50,7 +50,7 @@ export async function setView(view: string) {
             ]
           : [
               "Post a review task",
-              "A qualified reviewer. A report encrypted for both of you.",
+              "A second pair of eyes. A report encrypted for both of you.",
             ];
   el("workspace-title").textContent = copy[0];
   el("workspace-description").textContent = copy[1];

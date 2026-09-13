@@ -55,6 +55,7 @@ try {
 const registry = resolve(
   flags["--registry"] ?? ".runtime/review-pass-fuji/issuer",
 );
+try { await stat(resolve(registry, "MIGRATED")); throw Error("Issuer allocation moved to its hosted persistent service; this local copy is read-only."); } catch(e) { if(e.code!=="ENOENT") throw e; }
 const publicIssuer = JSON.parse(
   await readFile(resolve(registry, "issuer-public.json"), "utf8"),
 );

@@ -56,11 +56,23 @@ test('one service instance serializes concurrent retries and prefers an approved
 test('Deaddrop authorization and already-signed Cutout applications both retain exact ciphertext binding', async () => {
  const s=await setup();
  const digest=sha256(bytesToHex(new TextEncoder().encode(JSON.stringify(s.body.envelope))));
- assert.match(enrollmentAuthorization(ctx,digest,s.body.expires), /^Deaddrop test qualification application/);
+ assert.match(enrollmentAuthorization(ctx,digest,s.body.expires), /^Deaddrop reviewer setup/);
  const signature=await account.signMessage({message:enrollmentAuthorization(ctx,digest,s.body.expires,true)});
  assert.equal((await s.request('POST',{...s.body,signature})).status,201);
  assert.equal(s.writes(),1);
  const altered={...s.body.envelope,context:{...ctx,ticket:'b'.repeat(64)}};
  assert.equal((await s.request('POST',{...s.body,signature,envelope:altered})).status,503);
  assert.equal(s.writes(),1);
+});
+
+test('automatic setup returns durable encrypted credential despite Arkiv patch retry',async()=>{
+ const s=await setup();await s.request('POST');
+ s.deps.issue=undefined;
+ // Rebuild because the issuer is captured when creating the API.
+ const config:any={...ctx,rpcUrl:'https://api.avax-test.network/ext/bc/C/rpc',enrollment:{publicKey:'public',relayAddress:account.address,issuerX:'1',issuerY:'2'}};
+ let patched=0;const approval={ciphertext:'sealed-private-credential'};
+ const api=createEnrollmentAPI(config,{...s.deps,issue:async()=>approval,inbox:{...s.deps.inbox,approve:async()=>{patched++;throw Error('nonce retry');}}});
+ const res:any={setHeader(){},end(s:string){this.body=JSON.parse(s);}};
+ await api({method:'GET',url:`/api/enrollment?ticket=${ctx.ticket}`,headers:{}},res);
+ assert.equal(res.statusCode,200);assert.deepEqual(res.body,{status:'approved',approval});assert.equal(patched,1);
 });
