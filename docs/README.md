@@ -1,46 +1,34 @@
 # Deaddrop documentation
 
-Current product: **Deaddrop** (previously Cutout). Existing technical document paths and the hosted origin are preserved for compatibility.
+[Project overview](../README.md) · [Open the app](https://cutout-ethrome-2026.vercel.app)
 
-[Project README](../README.md) · [Open Deaddrop](https://cutout-ethrome-2026.vercel.app)
+Deaddrop connects issuer-approved reviewers with paid technical review tasks. The credential stays private, the report is encrypted for its recipients, and payment settles publicly on Avalanche Fuji.
 
-## Understand and try it
+## Try the product
 
-| You want to… | Start here |
+| Guide | What it covers |
 | --- | --- |
-| Understand the problem and product | [Project brief](../PROJECT_BRIEF.md) |
-| Try it without funds or an account | [Judge walkthrough](CUTOUT-JUDGE-TUTORIAL.md) |
-| Understand every user step | [User flow](cutout/USER-FLOW.md) |
-| Present it in plain English | [Presentation cue sheet](CUTOUT-TEAM-BRIEF.md) |
-| Answer technical sponsor questions | [Presenter guide](CUTOUT-PRESENTER-GUIDE.md) |
-| Run a real two-wallet review | [End-to-end manual test](CUTOUT-MANUAL-TEST.md) |
+| [Three-minute walkthrough](deaddrop/TRY-IT.md) | No wallet or setup; understand the flow with real browser encryption and simulated settlement |
+| [User flow](deaddrop/USER-FLOW.md) | Each participant’s actions and what happens behind them |
+| [End-to-end test](deaddrop/TESTING.md) | Two wallets, a saved reviewer pass, real testnet delivery and payment |
 
-## Build and inspect
+## Build and understand
 
-| You want to… | Start here |
+| Guide | What it covers |
 | --- | --- |
-| Run the UI or complete local stack | [Quickstart](cutout/QUICKSTART.md) |
-| Follow data and trust boundaries into code | [Architecture](cutout/ARCHITECTURE.md) |
-| Check privacy, issuer powers and payment rules | [Security model](cutout/SECURITY.md) |
-| Inspect deployed contracts or host Deaddrop | [Deployment](cutout/DEPLOYMENT.md) |
-| Understand file-free applications and pass storage | [Qualification workflow](cutout/QUALIFICATION.md) |
-| Operate legacy test credential issuance | [Qualification provisioning](review-pass/QUALIFICATION-PROVISIONING.md) |
-| Understand the visual decisions | [Deaddrop design and bounty decisions](design/deaddrop/README.md), [earlier Cutout direction](design/cutout/DIRECTION.md) |
+| [Quickstart](deaddrop/QUICKSTART.md) | Run the interface, complete local stack and verification commands |
+| [Architecture](deaddrop/ARCHITECTURE.md) | Proof, settlement, discovery, documents and source map |
+| [Qualification](deaddrop/QUALIFICATION.md) | Encrypted applications, manual issuance and saved browser passes |
+| [Security model](deaddrop/SECURITY.md) | What is private, what remains public, trusted roles and recovery limits |
+| [Deployment](deaddrop/DEPLOYMENT.md) | Public contracts, network configuration and hosting |
 
-## Judge and submit
+## Inspect the submission
 
-- [Bounty requirements and submission checklist](cutout/BOUNTIES.md)
-- [Avalanche / Team1 Track A](cutout/bounties/AVALANCHE.md)
-- [Arkiv Missions 02 / 03 and Best Use](cutout/bounties/ARKIV.md), [schema](../arkiv/schema.md), [feedback](../feedback.md)
-- [Swarm integration](cutout/bounties/SWARM.md)
-- [Verification evidence index](cutout/EVIDENCE.md)
+- [Bounty map and submission checklist](deaddrop/BOUNTIES.md)
+- [Avalanche / Team1 Track A](deaddrop/bounties/AVALANCHE.md)
+- [Arkiv Missions 02 / 03](deaddrop/bounties/ARKIV.md), [schema](../arkiv/schema.md) and [SDK feedback](../feedback.md)
+- [Swarm](deaddrop/bounties/SWARM.md)
+- [Verification evidence](deaddrop/EVIDENCE.md), including the paid public review and native-expiry receipts
+- [Visual design](design/deaddrop/README.md)
 
-## Engineering history
-
-The pages above describe the current product. Dated evidence records describe what was observed at that time; earlier blockers can be superseded without changing the original record.
-
-- [Acceptance ledger](ACCEPTANCE.md) and [restart handoff](CONTINUATION.md): chronological engineering records, newest first.
-- [Review Pass research](review-pass/README.md), [earlier product runbook](review-pass/RUNBOOK.md), [feasibility workbench](../experiments/qualification/README.md): how Deaddrop reached its current implementation. Earlier Swarm ID and undeployed-workspace assumptions are superseded by the current deployment guide.
-- [EXIT history](history/EXIT.md), [original handoff](handoff/PRODUCT.md), [research](research/README.md), [viability work](viability/README.md): the earlier withdrawal-market direction, retained with its source and provenance.
-
-`docs/DEPLOYMENT.md` and `docs/SUBMISSION.md` are EXIT-era documents. Use the current equivalents under `docs/cutout/` for Deaddrop.
+Dated evidence retains the project name and observations from its original execution. Earlier product research and internal presentation notes are available in Git history; they are not part of the current product guide. Compatibility paths and the existing app hostname remain unchanged so returning users retain their private browser keys.

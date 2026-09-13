@@ -21,4 +21,4 @@ The opt-in Swarm test actually initializes the canonical remote identity iframe 
 
 Independent ciphertext recovery also succeeded from local Bee1635 using `retrieve-report.mjs`, without the application API or a wallet. The export still needs an authorized retained device key for decryption; the private test plaintext and key files were not archived.
 
-Latest runtime intentionally retains the completed local rehearsal: two paid jobs and a revoked credential. The old snapshot pointer returns409. Use the [runbook](../RUNBOOK.md) to allocate a fresh credential/deployment and restart only18889 for another full user test.
+Latest runtime intentionally retains the completed local rehearsal: two paid jobs and a revoked credential. The old snapshot pointer returns409. Use the [runbook](https://github.com/MihRazvan/eth-rome-2026/blob/c50937c/docs/review-pass/RUNBOOK.md) to allocate a fresh credential/deployment and restart only18889 for another full user test.

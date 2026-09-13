@@ -7,7 +7,7 @@
 - Listing changes recover from transient hydration/query failures on subsequent real heads. Publication outcomes/receipts remain visible to the client after network switches. Manual Refresh recreates exhausted subscriptions.
 - Existing isolated client/reviewer Swarm upload sessions were not ready. Public scope/report uploads, funded settlement and native listing expiry remain blocked on usable authentication; no recovery phrase, postage signer, browser session or private key was extracted.
 
-The [short manual checklist](../../../../CUTOUT-MANUAL-TEST.md) separates immediately usable walkthrough review from the real funded test. Automated synthetic/fault-injected tests must remain identified as such alongside public traffic evidence.
+The [short manual checklist](../../../../deaddrop/TESTING.md) separates immediately usable walkthrough review from the real funded test. Automated synthetic/fault-injected tests must remain identified as such alongside public traffic evidence.
 
 Recovery evidence: `initial-socket-recovery.json` deliberately throws on the first browser WebSocket construction, then uses genuine public Arkiv subscriptions; `established-socket-recovery.json` deliberately closes an established socket after five seconds, then confirms a new real connection and fresh-query recovery. These are isolated transport/board probes with a verification stub, not funded settlement validation or evidence of a missed Cutout task being recovered. No sponsor writes occurred. An earlier harness failed because the Vite library bundle lacked a NODE_ENV definition; that harness error was corrected before collecting these results.
 
