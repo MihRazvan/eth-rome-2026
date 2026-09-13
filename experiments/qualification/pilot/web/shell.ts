@@ -3,7 +3,9 @@ let cleanupDemo: (() => void) | undefined;
 let requestedView = "home";
 const el = (id: string) => document.getElementById(id)!;
 export async function setView(view: string) {
+  const changedView = requestedView !== view;
   requestedView = view;
+  if (changedView) window.scrollTo({ top: 0, behavior: "instant" });
   const url = new URL(location.href);
   url.searchParams.set("view", view);
   history.replaceState(null, "", url);
@@ -108,6 +110,20 @@ export function mountShell() {
         void setView("demo");
       }),
   );
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-home-action]")
+    .forEach((node) => {
+      node.onclick = () => {
+        const action = node.dataset.homeAction;
+        const target =
+          action === "demo"
+            ? document.querySelector<HTMLButtonElement>("#dd-home [data-demo]")
+            : document.querySelector<HTMLButtonElement>(
+                `#dd-home [data-entry="${action}"]`,
+              );
+        target?.click();
+      };
+    });
   document.querySelectorAll<HTMLButtonElement>("[data-entry]").forEach(
     (node) =>
       (node.onclick = () => {

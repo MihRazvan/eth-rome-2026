@@ -1,4 +1,4 @@
-# Cutout assets
+# Deaddrop assets
 
 The Cutout visual direction comes from the six HTML studies supplied by the project owner on 12 September 2026. The artwork here is a new vector implementation of their paper, perforation, silhouette and envelope motifs. Decorative artwork contains no claim about a user's credential or task state.
 

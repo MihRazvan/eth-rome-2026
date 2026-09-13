@@ -93,7 +93,8 @@ export function mountThermalField() {
   let wells: { x: number; y: number; born: number }[] = [],
     frameId = 0,
     last = 0,
-    disposed = false;
+    disposed = false,
+    heroVisible = true;
   const start = performance.now();
   function draw(now: number) {
     const ratio = Math.min(devicePixelRatio || 1, 1, 1200 / innerWidth);
@@ -120,6 +121,7 @@ export function mountThermalField() {
     if (
       disposed ||
       document.hidden ||
+      !heroVisible ||
       document.body.dataset.view !== "home" ||
       motion.matches
     )
@@ -135,7 +137,7 @@ export function mountThermalField() {
     frameId = 0;
     if (disposed || document.hidden) return;
     draw(performance.now());
-    if (!motion.matches && document.body.dataset.view === "home")
+    if (!motion.matches && heroVisible && document.body.dataset.view === "home")
       frameId = requestAnimationFrame(tick);
   }
   function cool(x: number, y: number) {
@@ -147,7 +149,12 @@ export function mountThermalField() {
     wells = wells.slice(-8);
     draw(performance.now());
   }
-  const home = document.getElementById("dd-home")!;
+  const home = document.querySelector<HTMLElement>(".dd-home-stage")!;
+  const visibility = new IntersectionObserver(([entry]) => {
+    heroVisible = entry.isIntersecting;
+    refresh();
+  });
+  visibility.observe(home);
   const pointer = (event: PointerEvent) => {
     if (!(event.target as Element).closest("button,a"))
       cool(event.clientX, event.clientY);
@@ -177,6 +184,7 @@ export function mountThermalField() {
     document.removeEventListener("visibilitychange", refresh);
     motion.removeEventListener("change", refresh);
     home.removeEventListener("pointerdown", pointer);
+    visibility.disconnect();
     gl.deleteBuffer(buffer);
     gl.deleteProgram(program);
     gl.deleteShader(vertex);

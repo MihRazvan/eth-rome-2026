@@ -16,40 +16,240 @@
     <canvas id="dd-field" aria-hidden="true"></canvas>
     <div id="dd-veil" aria-hidden="true"></div>
     <section id="dd-home" aria-label="Deaddrop introduction">
-      <header class="dd-hud">
-        <a href="/" aria-label="Deaddrop home">◈ DEADDROP</a
-        ><span>PRIVATE WORK. PUBLIC SETTLEMENT.</span
-        ><span>FUJI / TESTNET EDITION</span>
-      </header>
-      <div class="dd-hero">
-        <p class="dd-overline">QUALIFIED TO KNOW. FREE TO STAY PRIVATE.</p>
-        <h1>Dead<span>drop</span></h1>
-        <p class="dd-lead">
-          Prove you qualify. Leave the report encrypted. <br />Get paid without
-          publishing your credential.
-        </p>
-        <div class="dd-doors">
-          <button data-ui data-entry="client">
-            I need a review <span>↗</span></button
-          ><button data-ui data-entry="reviewer" class="dd-cold">
-            I do the reviewing <span>↗</span></button
-          ><button data-ui data-entry="issuer" class="dd-text">
-            Who qualifies? ↗
+      <div class="dd-home-stage">
+        <header class="dd-hud">
+          <a href="/" aria-label="Deaddrop home">◈ DEADDROP</a
+          ><span>PRIVATE WORK. PUBLIC SETTLEMENT.</span
+          ><span>FUJI / TESTNET EDITION</span>
+        </header>
+        <div class="dd-hero">
+          <p class="dd-overline">QUALIFIED TO KNOW. FREE TO STAY PRIVATE.</p>
+          <h1>Dead<span>drop</span></h1>
+          <p class="dd-lead">
+            Prove you qualify. Leave the report encrypted. <br />Get paid
+            without publishing your credential.
+          </p>
+          <div class="dd-doors">
+            <button data-ui data-entry="client">
+              I need a review <span>↗</span></button
+            ><button data-ui data-entry="reviewer" class="dd-cold">
+              I do the reviewing <span>↗</span></button
+            ><button data-ui data-entry="issuer" class="dd-text">
+              Who qualifies? ↗
+            </button>
+          </div>
+          <p data-entry-status role="status" hidden></p>
+          <button data-ui class="dd-demo-link" data-demo>
+            Walk through the exchange <span>↗</span
+            ><small>No wallet needed · simulated payment</small>
           </button>
         </div>
-        <p data-entry-status role="status" hidden></p>
-        <button data-ui class="dd-demo-link" data-demo>
-          Walk through the exchange <span>↗</span
-          ><small>No wallet needed · simulated payment</small>
-        </button>
+        <footer class="dd-home-footer">
+          <button data-ui id="dd-cool">
+            ＋ Tap to cool the field
+            <small>Interactive visual · no transaction</small></button
+          ><a class="dd-scroll" href="#dd-statement">How the exchange works ↓</a
+          ><span>Private credentials.<br />Public payment wallets.</span
+          ><span>ETHROME 2026<br />AVALANCHE / ARKIV / SWARM</span>
+        </footer>
       </div>
-      <footer class="dd-home-footer">
-        <button data-ui id="dd-cool">
-          ＋ Tap to cool the field
-          <small>Interactive visual · no transaction</small></button
-        ><span>Private credentials.<br />Public payment wallets.</span
-        ><span>ETHROME 2026<br />AVALANCHE / ARKIV / SWARM</span>
-      </footer>
+      <div class="dd-home-story">
+        <section class="dd-story-section" aria-labelledby="dd-statement">
+          <div class="dd-statement">
+            <h2 id="dd-statement">
+              Good work needs trust.<br /><em>Not your whole identity.</em>
+            </h2>
+            <div>
+              <p>
+                A sensitive code change needs a second pair of eyes. You want an
+                approved reviewer, a clear scope and the reward agreed before
+                work starts.
+              </p>
+              <p>
+                Deaddrop lets the reviewer prove they qualify without publishing
+                their credential. The findings are encrypted for the client and
+                reviewer. Payment follows the work.
+              </p>
+            </div>
+          </div>
+          <div class="dd-spec" aria-label="Product essentials">
+            <div>
+              <span class="dd-spec-icon" aria-hidden="true">◇</span
+              ><strong>A proof</strong
+              ><span>Eligibility without publishing<br />the credential</span>
+            </div>
+            <div>
+              <span class="dd-spec-icon" aria-hidden="true">⌘</span
+              ><strong>Two recipients</strong
+              ><span>A report encrypted for<br />the client and reviewer</span>
+            </div>
+            <div>
+              <span class="dd-spec-icon" aria-hidden="true">◷</span
+              ><strong>Clear deadlines</strong
+              ><span>Task terms and a funded reward<br />recorded onchain</span>
+            </div>
+            <div>
+              <span class="dd-spec-icon" aria-hidden="true">△</span
+              ><strong>Test USDC</strong
+              ><span>Real settlement on<br />Avalanche Fuji testnet</span>
+            </div>
+          </div>
+        </section>
+        <section class="dd-story-section" aria-labelledby="dd-flow-title">
+          <p class="dd-section-label">THE EXCHANGE / FROM TRUST TO PAYMENT</p>
+          <h2 id="dd-flow-title">Five steps. Just enough exposure.</h2>
+          <p class="dd-section-lead">
+            The work moves forward. The credential stays private.
+          </p>
+          <ol class="dd-flow">
+            <li>
+              <span>01</span>
+              <div>
+                <h3>Get approved once.</h3>
+                <p>
+                  Apply in the app. The test issuer reviews your application and
+                  signs a qualification. Collect it into this browser with Check
+                  approval.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span>02</span>
+              <div>
+                <h3>Fund a clear agreement.</h3>
+                <p>
+                  The client posts a public scope and locks test USDC in escrow.
+                  The task appears on the live board until its listing expires.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span>03</span>
+              <div>
+                <h3>Prove you qualify.</h3>
+                <p>
+                  Your browser makes a proof for this task and payment wallet.
+                  The contract verifies it before assigning the review.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span>04</span>
+              <div>
+                <h3>Leave an encrypted report.</h3>
+                <p>
+                  The reviewer encrypts the findings for both participants,
+                  stores the encrypted document on Swarm and commits its
+                  reference onchain.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span>05</span>
+              <div>
+                <h3>Read the work. Release the reward.</h3>
+                <p>
+                  The client retrieves and decrypts the report in their browser.
+                  Approving it pays the wallet bound to the accepted proof.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </section>
+        <section
+          class="dd-story-section dd-questions"
+          aria-labelledby="dd-questions-title"
+        >
+          <div>
+            <p class="dd-section-label">BEFORE YOU BEGIN</p>
+            <h2 id="dd-questions-title">
+              Private.<br />With clear boundaries.
+            </h2>
+          </div>
+          <div class="dd-answers">
+            <details>
+              <summary>What can other people see?</summary>
+              <p>
+                Task scopes, rewards, wallets and payment history are public.
+                The credential itself is not published with a proof. Reports are
+                encrypted, but their size and recipient metadata remain visible.
+                Reusing a wallet links your activity.
+              </p>
+            </details>
+            <details>
+              <summary>Who approves reviewers?</summary>
+              <p>
+                The Deaddrop team manually approves test applications. A
+                qualification proves that issuer’s approval, not professional
+                accreditation or report quality. The client still evaluates the
+                work.
+              </p>
+              <button data-ui data-home-action="issuer" class="dd-inline-link">
+                How qualification works ↗
+              </button>
+            </details>
+            <details>
+              <summary>Do I need a storage account or JSON files?</summary>
+              <p>
+                No storage account is required for current uploads. Apply and
+                collect your reviewer pass inside the app. Keep the same browser
+                profile: your saved pass and private report keys live here. A
+                private pass backup is optional; it does not back up report
+                keys.
+              </p>
+            </details>
+            <details>
+              <summary>What if a review never finishes?</summary>
+              <p>
+                Escrow has explicit deadline and dispute routes. A listing
+                disappearing from the board does not move funds. Refunds require
+                an eligible onchain action; disputes in this test edition use
+                the team’s arbitrator.
+              </p>
+            </details>
+            <details>
+              <summary>Can I try it without funding a wallet?</summary>
+              <p>
+                Yes. The walkthrough encrypts and decrypts a report in your
+                browser, with simulated qualification and payment. The live
+                exchange needs Fuji test AVAX, client test USDC and an approved
+                reviewer pass.
+              </p>
+              <button data-ui data-home-action="demo" class="dd-inline-link">
+                Open the walkthrough ↗
+              </button>
+            </details>
+          </div>
+        </section>
+        <section
+          class="dd-story-section dd-final-entry"
+          aria-labelledby="dd-final-title"
+        >
+          <p class="dd-section-label">THE WORK IS YOURS. KEEP IT THAT WAY.</p>
+          <h2 id="dd-final-title">
+            A second pair of eyes.<br /><em>A smaller public footprint.</em>
+          </h2>
+          <div class="dd-doors">
+            <button data-ui data-home-action="client">
+              Fund a review <span>↗</span></button
+            ><button data-ui data-home-action="demo" class="dd-cold">
+              Try the walkthrough <span>↗</span>
+            </button>
+          </div>
+          <p class="dd-final-note">
+            Test edition · test assets · no wallet needed for the walkthrough
+          </p>
+        </section>
+        <footer class="dd-story-footer">
+          <span>◈ Deaddrop / ETHRome 2026</span
+          ><a
+            href="https://github.com/MihRazvan/eth-rome-2026"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Explore the source ↗</a
+          ><span>AVALANCHE / ARKIV / SWARM</span>
+        </footer>
+      </div>
     </section>
     <a class="skip" href="#main">Skip to your workspace</a>
     <div class="cutout-shell">
