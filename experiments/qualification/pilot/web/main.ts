@@ -33,6 +33,7 @@ import {
 } from "../keys";
 import {
   nextStep,
+  documentKeySetup,
   deadlineEligibility,
   type Role,
   type Readiness,
@@ -200,7 +201,6 @@ function renderGuide() {
   $("#next-step").dataset.target = next.target;
   ($("#create") as HTMLButtonElement).dataset.eligible = String(
     Boolean(account) &&
-      r.key &&
       storageReady &&
       r.balance !== null &&
       r.balance >= chosenReward() &&
@@ -229,7 +229,7 @@ function renderGuide() {
       "Private reports",
       r.key
         ? "This browser can receive new reports"
-        : "Enable this browser’s encryption key",
+        : "Enabled automatically when you fund or accept",
     ],
     [
       storageReady,
@@ -941,6 +941,27 @@ async function register() {
     config.keyRegistry,
   );
 }
+async function ensureDocumentKey(purpose: "fund" | "accept") {
+  const session=generation,owner=account,currentDevice=device;
+  if(!owner||!currentDevice)throw Error("Connect your payment wallet to continue.");
+  const assertCurrent=()=>{if(session!==generation||account!==owner||device!==currentDevice)throw Error("Wallet changed. No further transaction was sent.");};
+  const [pub,binding,block]=await Promise.all([getDevicePublicKey(currentDevice),keyBinding(owner),client.getBlock()]);
+  assertCurrent();
+  const setup=documentKeySetup(binding,pub,Number(block.timestamp));
+  if(setup==="ready")return;
+  if(setup==="confirm-replacement"){
+    const accepted=window.confirm("This wallet is registered to another browser key. Use the original browser to keep its report access. Register this browser for future reports instead? Existing reports still need the original browser key; this does not recover them.");
+    assertCurrent();
+    if(!accepted)throw Error("Use the original browser for this wallet, or enable this browser in Your workspace → Private reports & storage when you are ready to change its key.");
+  }
+  $("#notice").textContent=purpose==="fund"
+    ? "First, confirm one transaction to enable private reports for this browser. Then you can fund the reward."
+    : "First, confirm one transaction to enable private reports for this browser. Then confirm your task assignment.";
+  await register();assertCurrent();
+  const registered=await keyBinding(owner);assertCurrent();
+  const now=Number((await client.getBlock()).timestamp);assertCurrent();
+  if(documentKeySetup(registered,pub,now)!=="ready")throw Error("Private report setup was not confirmed. Retry to continue safely.");
+}
 async function validatePresentation(id: string, p: any, owner: Address) {
   if (
     !/^0x[a-f0-9]{512}$/i.test(p.proof) ||
@@ -1313,6 +1334,7 @@ async function action(name: string, id: string) {
       const p = proofs.get(id);
       if (!p || BigInt(p.publicInputs[6]) !== BigInt(account!))
         throw Error("Proof recipient must be your connected wallet");
+      await ensureDocumentKey("accept");
       await tx("accept", [BigInt(id), p.proof, p.publicInputs.map(BigInt)]);
       proofs.delete(id);
       break;
@@ -1634,13 +1656,6 @@ $("#create").onclick = () =>
   run(async () => {
     const session = generation,
       owner = account!;
-    const binding = await keyBinding(account!);
-    if (
-      binding.publicKey === "0x" ||
-      binding.expiresAt <= Number((await client.getBlock()).timestamp)
-    )
-      throw Error("Register a current client document key first");
-    const now = (await client.getBlock()).timestamp;
     const value = (id: string) => ($(`#${id}`) as HTMLInputElement).value;
     if (!/^\d{1,9}(\.\d{1,6})?$/.test(value("task-reward")))
       throw Error("Enter a positive reward with at most6decimal places");
@@ -1650,11 +1665,16 @@ $("#create").onclick = () =>
     );
     if (minutes.some((v) => !Number.isInteger(v) || v < 2 || v > 10080))
       throw Error("Each stage must last between2minutes and7days");
+    if (!($(`#scope-public`) as HTMLInputElement).checked)
+      throw Error("Confirm this scope is safe to publish");
+    if(!value("task-title").trim()||!value("task-scope").trim()||amount<=0n)
+      throw Error("Add a title, review scope and positive reward before funding.");
+    await ensureDocumentKey("fund");
+    if(generation!==session||account!==owner)throw Error("Wallet changed; task was not funded.");
+    const now = (await client.getBlock()).timestamp;
     const acceptBefore = Number(now) + minutes[0] * 60,
       submitBefore = acceptBefore + minutes[1] * 60,
       reviewBefore = submitBefore + minutes[2] * 60;
-    if (!($(`#scope-public`) as HTMLInputElement).checked)
-      throw Error("Confirm this scope is safe to publish");
     const encoded = encodeTerms({
       format: "review-pass-public-terms",
       version: 1,

@@ -33,12 +33,6 @@ export function nextStep(
         ? "This local wallet needs test ETH. Ask the demo operator to fund this address on the local chain."
         : "Get test AVAX on Fuji, then check your balance again.",
     };
-  if (!state.key)
-    return {
-      target: "register",
-      title: "Enable private reports",
-      text: "Register this browser’s encryption key. Only you and your review counterpart can decrypt reports addressed to it.",
-    };
   if (!storageReady)
     return {
       target: "connect-storage",
@@ -57,12 +51,12 @@ export function nextStep(
     ? {
         target: "commission",
         title: "Set the scope and fund your review",
-        text: "Your funding transaction fixes the exact scope and reward. After delivery, you inspect the private report before approving payment.",
+        text: "Write the scope and fund the reward. Private report access is enabled automatically if this browser needs it.",
       }
     : {
         target: "opportunity-section",
         title: "Choose a funded review",
-        text: "You need a qualification from this deployment’s test issuer. Each acceptance uses a fresh proof bound to the task and your payment wallet.",
+        text: "Choose a task. Your private access, task proof and report encryption are prepared as you accept; confirm the required transactions in your wallet.",
       };
 }
 export function deadlineEligibility(
@@ -82,4 +76,11 @@ export function deadlineEligibility(
       (status === "Open" && t >= accept) ||
       (status === "Accepted" && t > submit),
   };
+}
+
+/** Never replace a different browser key as an incidental part of accepting work. */
+export function documentKeySetup(binding:{publicKey:string;expiresAt:number},localKey:string,now:number):"ready"|"register"|"confirm-replacement" {
+  if(binding.publicKey === "0x")return "register";
+  if(binding.publicKey.toLowerCase() !== localKey.toLowerCase())return "confirm-replacement";
+  return binding.expiresAt > now ? "ready" : "register";
 }
